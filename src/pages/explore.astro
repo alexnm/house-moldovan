@@ -5,7 +5,7 @@ import BaseLayout from "~/layouts/BaseLayout.astro";
 import { en } from "~/i18n/en";
 import { getAllRegions } from "~/lib/regions";
 import { getAllPlaces, getEnFeed } from "~/lib/content";
-import heroImage from "~/assets/peru/machu-picchu.JPG";
+import heroImage from "~/assets/peru/machu-picchu.jpg";
 
 const [places, feed, regions] = await Promise.all([
   getAllPlaces(),
