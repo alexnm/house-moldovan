@@ -7,6 +7,6 @@ order: 4
 images:
   - ../../assets/argentina/iguazu-bossetti.jpg
   - ../../assets/argentina/laguna-de-los-tres.jpg
-  - ../../assets/peru/machu-picchu.jpg
+  - ../../assets/peru/machu-picchu.JPG
   - ../../assets/chile/valparaiso-de-mi-amor.jpg
 ---

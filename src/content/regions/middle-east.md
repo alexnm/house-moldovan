@@ -6,7 +6,7 @@ accent: terracotta
 order: 3
 images:
   - ../../assets/jordan/petra-camel.jpg
-  - ../../assets/uae/dubai-downtown.jpg
+  - ../../assets/uae/dubai-downtown.JPG
   - ../../assets/jordan/wadi-rum-2.jpg
   - ../../assets/israel/jerusalem-dome-of-the-rock.jpg
 ---
