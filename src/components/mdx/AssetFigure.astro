@@ -1,0 +1,17 @@
+---
+import AssetImage from "~/components/mdx/AssetImage.astro";
+
+type Props = {
+  path: string;
+  alt: string;
+  caption: string;
+  sizes?: string;
+};
+
+const { path, alt, caption, sizes } = Astro.props;
+---
+
+<figure>
+  <AssetImage path={path} alt={alt} sizes={sizes} />
+  <figcaption>{caption}</figcaption>
+</figure>

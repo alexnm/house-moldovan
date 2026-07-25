@@ -1,0 +1,49 @@
+---
+import RoLayout from "~/layouts/RoLayout.astro";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import { ro } from "~/i18n/ro";
+import { getAllRanges, getHikes, rangeNameByTrailId } from "~/lib/content";
+import { accentForRange } from "~/lib/ranges";
+
+const hikes = await getHikes();
+const ranges = await getAllRanges();
+const rangeNames = rangeNameByTrailId(ranges);
+---
+
+<RoLayout
+  title={`${ro.feed.title} · ${ro.siteName}`}
+  description={ro.feed.intro}
+>
+  <section class="mx-auto max-w-canvas pad-canvas pt-32">
+    <p class="micro text-ink-faint">{ro.feed.title}</p>
+    <h1
+      class="display mt-3 text-[clamp(2rem,3vw+1rem,4.2rem)] leading-[1.02] text-balance"
+      style="font-family: var(--font-display-ro)"
+    >
+      {ro.feed.intro}
+    </h1>
+  </section>
+
+  <section class="mx-auto my-16 max-w-canvas pad-canvas">
+    <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {
+        hikes.map((h) => (
+          <li>
+            <ArticleCard
+              href={`/ro/${h.id}`}
+              title={h.data.title}
+              kicker={`${ro.difficulty[h.data.difficulty]} · ${ro.units.distance(h.data.distance)}`}
+              meta={ro.units.duration(h.data.duration)}
+              image={h.data.hero}
+              imageAlt={h.data.title}
+              size="md"
+              accent={accentForRange(h.data.range.id)}
+              regionLabel={rangeNames.get(h.data.range.id) ?? h.data.range.id}
+              transitionName={`hike-${h.id}`}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</RoLayout>

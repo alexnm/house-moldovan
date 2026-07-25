@@ -1,0 +1,175 @@
+---
+import { ro } from "~/i18n/ro";
+import {
+  ELEVATION_PROFILE_LAYOUT,
+  renderProfileSvg,
+  type ElevationPoint,
+} from "~/lib/gpx";
+
+export interface Props {
+  profile: ElevationPoint[];
+  minElevation: number;
+  maxElevation: number;
+  /** GPX-derived length: chart geometry + hover position along the track. */
+  distanceKm: number;
+  /** Frontmatter distance shown next to the profile title (not necessarily GPX length). */
+  publishedDistanceKm: number;
+}
+
+const {
+  profile,
+  minElevation,
+  maxElevation,
+  distanceKm,
+  publishedDistanceKm,
+} = Astro.props;
+const svg = renderProfileSvg(profile, distanceKm);
+---
+
+<figure
+  class="motion-reveal elevation-profile-figure section section-y-tight"
+  data-elevation-profile
+>
+  <figcaption class="mb-3 flex items-baseline justify-between">
+    <span class="micro text-ink-faint">{ro.hike.profile}</span>
+    <span class="micro text-ink-dim">
+      {ro.units.elevation(minElevation)} – {ro.units.elevation(maxElevation)} ·
+      {ro.units.distance(publishedDistanceKm)}
+    </span>
+  </figcaption>
+  <div
+    class="overflow-clip rounded border border-line bg-surface-2"
+    set:html={svg}
+  />
+</figure>
+
+<script
+  define:vars={{
+    profile,
+    distanceKm,
+    elevLayout: ELEVATION_PROFILE_LAYOUT,
+  }}
+>
+  (function () {
+    if (!Array.isArray(profile) || profile.length < 2) return;
+
+    function interpolate(ps, d) {
+      if (d <= ps[0].d) return { d, h: ps[0].h };
+      const last = ps[ps.length - 1];
+      if (d >= last.d) return { d, h: last.h };
+      let lo = 0;
+      let hi = ps.length - 1;
+      while (hi - lo > 1) {
+        const mid = (lo + hi) >> 1;
+        if (ps[mid].d <= d) lo = mid;
+        else hi = mid;
+      }
+      const a = ps[lo];
+      const b = ps[hi];
+      const t = (d - a.d) / (b.d - a.d || 1);
+      return { d, h: a.h + t * (b.h - a.h) };
+    }
+
+    function fmtElev(m) {
+      return `${Math.round(m).toLocaleString("ro-RO")} m`;
+    }
+    function fmtDist(km) {
+      return km < 1
+        ? `${Math.round(km * 1000)} m`
+        : `${km.toLocaleString("ro-RO", { maximumFractionDigits: 1 })} km`;
+    }
+
+    document.querySelectorAll("[data-elevation-profile]").forEach((wrap) => {
+      const svg = wrap.querySelector("svg");
+      const hit = svg?.querySelector(".elev-hit");
+      const group = svg?.querySelector(".elev-hover-group");
+      const vline = svg?.querySelector(".elev-vline");
+      const dot = svg?.querySelector(".elev-dot");
+      const label = svg?.querySelector(".elev-readout");
+      const distLabel = svg?.querySelector(".elev-readout-dist");
+      if (!svg || !hit || !group || !vline || !dot || !label || !distLabel)
+        return;
+
+      const W = elevLayout.width;
+      const ml = elevLayout.marginLeft;
+      const mr = elevLayout.marginRight;
+      const mt = elevLayout.marginTop;
+      const mb = elevLayout.marginBottom;
+      const innerL = ml;
+      const innerR = W - mr;
+      const innerT = mt;
+      const innerB = elevLayout.height - mb;
+
+      const xs = profile.map((p) => p.d);
+      const xMin = Math.min(...xs);
+      const xMax = distanceKm;
+      const xR = xMax - xMin || 1;
+      const ys = profile.map((p) => p.h);
+      const yMin = Math.min(...ys);
+      const yMax = Math.max(...ys);
+      const yR = yMax - yMin || 1;
+
+      const sx = (d) => innerL + ((d - xMin) / xR) * (innerR - innerL);
+      const sy = (h) => innerB - ((h - yMin) / yR) * (innerB - innerT);
+
+      const labelY = innerT + 14;
+      const distY = innerT + 28;
+
+      function clientToSvg(svgEl, clientX, clientY) {
+        const pt = svgEl.createSVGPoint();
+        pt.x = clientX;
+        pt.y = clientY;
+        const ctm = svgEl.getScreenCTM();
+        if (!ctm) return null;
+        return pt.matrixTransform(ctm.inverse());
+      }
+
+      function hide() {
+        group.setAttribute("opacity", "0");
+      }
+
+      function showAt(clientX, clientY) {
+        const loc = clientToSvg(svg, clientX, clientY);
+        if (!loc) return;
+        const mx = loc.x;
+        const my = loc.y;
+        if (mx < innerL || mx > innerR || my < innerT || my > innerB) {
+          hide();
+          return;
+        }
+        const d = xMin + ((mx - innerL) / (innerR - innerL)) * xR;
+        const { h } = interpolate(profile, d);
+        const px = sx(d);
+        const py = sy(h);
+
+        vline.setAttribute("x1", String(px));
+        vline.setAttribute("x2", String(px));
+
+        dot.setAttribute("cx", String(px));
+        dot.setAttribute("cy", String(py));
+
+        label.textContent = fmtElev(h);
+        distLabel.textContent = fmtDist(d);
+
+        const nearRight = px > innerR - 72;
+        const anchor = nearRight ? "end" : "start";
+        const dx = nearRight ? -6 : 6;
+        label.setAttribute("x", String(px));
+        label.setAttribute("y", String(labelY));
+        label.setAttribute("text-anchor", anchor);
+        label.setAttribute("dx", String(dx));
+        distLabel.setAttribute("x", String(px));
+        distLabel.setAttribute("y", String(distY));
+        distLabel.setAttribute("text-anchor", anchor);
+        distLabel.setAttribute("dx", String(dx));
+
+        group.setAttribute("opacity", "1");
+      }
+
+      hit.addEventListener("pointermove", (e) => {
+        showAt(e.clientX, e.clientY);
+      });
+      hit.addEventListener("pointerleave", hide);
+    });
+  })();
+</script>

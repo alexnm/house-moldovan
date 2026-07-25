@@ -1,0 +1,23 @@
+---
+import RhythmGrid from "~/components/home/RhythmGrid.astro";
+import { en } from "~/i18n/en";
+import type { AnyEnArticle } from "~/lib/content";
+
+export interface Props {
+  feed: AnyEnArticle[];
+}
+
+const { feed } = Astro.props;
+---
+
+{
+  feed.length > 0 ? (
+    <section class="section section-y-tight">
+      <RhythmGrid articles={feed} />
+    </section>
+  ) : (
+    <p class="pad-canvas mx-auto max-w-canvas py-16 text-ink-dim">
+      {en.journal.empty}
+    </p>
+  )
+}

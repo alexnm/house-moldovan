@@ -1,0 +1,30 @@
+---
+interface Props {
+  /** Larger type for footer / masthead */
+  size?: "nav" | "footer";
+  /** When false, render a non-link (footer masthead) */
+  link?: boolean;
+  class?: string;
+}
+
+const { size = "nav", link = true, class: className } = Astro.props;
+
+const classes = [
+  "site-logo",
+  size === "nav" && "nav-link",
+  size === "footer" && "site-logo--footer",
+  className,
+];
+---
+
+{
+  link ? (
+    <a href="/" class:list={["link-accent", ...classes]}>
+      <span class="site-logo__soft">House</span><span class="site-logo__strong">Moldovan</span>
+    </a>
+  ) : (
+    <p class:list={classes}>
+      <span class="site-logo__soft">House</span><span class="site-logo__strong">Moldovan</span>
+    </p>
+  )
+}

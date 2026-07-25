@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export type ItineraryDayRow = {
+  dayIndex: number;
+  description: string;
+  locations: { label: string; country: CollectionEntry<"places"> }[];
+};
+
+export interface Props {
+  days: ItineraryDayRow[];
+}
+
+const { days } = Astro.props;
+---
+
+<section class="motion-reveal space-y-0" aria-label="Itinerary by day">
+  {
+    days.map((d) => (
+      <div
+        class="grid scroll-mt-24 grid-cols-[2.75rem_1fr] gap-x-4 gap-y-1 border-t border-line py-5 first:border-t-0 first:pt-0 sm:grid-cols-[3.5rem_1fr] sm:gap-x-5"
+        id={`itinerary-day-${d.dayIndex}`}
+      >
+        <div class="pt-[3px]">
+          <p class="micro text-accent-ink">Day {d.dayIndex}</p>
+          <p class="display text-2xl leading-none text-ink-faint">
+            {String(d.dayIndex).padStart(2, "0")}
+          </p>
+        </div>
+        <div>
+          <p class="text-lg leading-snug text-ink sm:text-xl">
+            {d.locations.map((loc, i) => (
+              <span>
+                {i > 0 ? <span class="text-ink-faint"> &bull; </span> : null}
+                <span>
+                  {loc.country.data.flag} {loc.label}
+                </span>
+              </span>
+            ))}
+          </p>
+          <p class="text-[0.95rem] leading-relaxed text-balance text-ink-dim">
+            {d.description}
+          </p>
+        </div>
+      </div>
+    ))
+  }
+</section>

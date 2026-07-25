@@ -1,0 +1,101 @@
+---
+export interface Props {
+  label: string;
+  href: string;
+  menuId: string;
+  active?: boolean;
+  panelClass?: string;
+  panelInnerClass?: string;
+}
+
+const {
+  label,
+  href,
+  menuId,
+  active = false,
+  panelClass = "left-0",
+  panelInnerClass = "",
+} = Astro.props;
+
+const panelId = `${menuId}-menu`;
+---
+
+<li class="nav-dropdown group relative" data-nav-dropdown>
+  <a
+    href={href}
+    class:list={["nav-link link-accent", active && "is-active"]}
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-controls={panelId}
+    id={`${menuId}-trigger`}
+  >
+    {label}
+  </a>
+  <div
+    id={panelId}
+    class:list={[
+      "nav-dropdown__panel absolute top-full z-50 w-max pt-2",
+      "pointer-events-none opacity-0 transition-opacity duration-micro ease-cinema",
+      panelClass,
+    ]}
+    inert
+  >
+    <div
+      class:list={[
+        "rounded-lg border border-line bg-surface-2 shadow-lift",
+        panelInnerClass,
+      ]}
+    >
+      <slot />
+    </div>
+  </div>
+</li>
+
+<script>
+  function initNavDropdowns() {
+    document.querySelectorAll("[data-nav-dropdown]").forEach((root) => {
+      if (root.hasAttribute("data-nav-dropdown-ready")) return;
+      root.setAttribute("data-nav-dropdown-ready", "");
+
+      const trigger = root.querySelector<HTMLAnchorElement>(
+        "a[aria-haspopup='true']",
+      );
+      const panel = root.querySelector<HTMLElement>(".nav-dropdown__panel");
+      if (!trigger || !panel) return;
+
+      const open = () => {
+        panel.classList.remove("pointer-events-none", "opacity-0");
+        panel.removeAttribute("inert");
+        trigger.setAttribute("aria-expanded", "true");
+      };
+
+      const close = () => {
+        panel.classList.add("pointer-events-none", "opacity-0");
+        panel.setAttribute("inert", "");
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      close();
+
+      root.addEventListener("mouseenter", open);
+      root.addEventListener("mouseleave", close);
+      root.addEventListener("focusin", open);
+      root.addEventListener("focusout", (event) => {
+        if (!(event instanceof FocusEvent)) return;
+        const next = event.relatedTarget;
+        if (next instanceof Node && root.contains(next)) return;
+        close();
+      });
+
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          close();
+          trigger.focus();
+        }
+      });
+    });
+  }
+
+  initNavDropdowns();
+  document.addEventListener("astro:page-load", initNavDropdowns);
+</script>

@@ -1,0 +1,97 @@
+---
+import type { ImageMetadata } from "astro";
+import CoverImage from "~/components/media/CoverImage.astro";
+import type { Accent } from "~/lib/accent";
+import { cardAccentStyle } from "~/lib/accent";
+
+export interface Props {
+  href: string;
+  name: string;
+  flag: string;
+  tagline: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Named regional accent for the photo color wash. */
+  accent?: Accent;
+}
+
+const { href, name, flag, tagline, image, imageAlt, accent } = Astro.props;
+const alt = imageAlt ?? `Scenes from ${name}`;
+const onPhoto = image != null;
+---
+
+<li class="motion-reveal-media">
+  <a
+    href={href}
+    class:list={[
+      "country-card group relative flex aspect-4/3 flex-col overflow-clip rounded-sm sm:aspect-4/5",
+      onPhoto ? "text-white" : "bg-surface-2 text-ink",
+    ]}
+    style={accent ? cardAccentStyle(accent) : undefined}
+  >
+    {
+      image && (
+        <>
+          <CoverImage
+            src={image}
+            alt={alt}
+            widths={[320, 480, 640, 800]}
+            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+            format="avif"
+            quality={82}
+            wrapperClass="motion-hover-media absolute inset-0"
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+          <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/94 via-black/35 to-transparent"
+            aria-hidden="true"
+          />
+          {accent && (
+            <div
+              class="country-card__tint pointer-events-none absolute inset-0"
+              aria-hidden="true"
+            />
+          )}
+        </>
+      )
+    }
+
+    <div class="relative z-10 mt-auto px-4 pb-4 md:px-5 md:pb-5">
+      <h3
+        class="display flex flex-wrap items-baseline gap-x-2 text-[clamp(2.35rem,3vw,2.75rem)] leading-[0.9] tracking-[-0.035em] text-balance drop-shadow-[0_2px_12px_oklch(0_0_0/0.55)]"
+        class:list={[!onPhoto && "text-ink"]}
+      >
+        <span aria-hidden="true">{flag}</span>
+        <span>{name}</span>
+      </h3>
+      <p
+        class="mt-3 max-w-[26ch] font-sans text-[0.95rem] leading-snug text-pretty"
+        class:list={[onPhoto ? "text-white/85" : "text-ink-dim"]}
+      >
+        {tagline}
+      </p>
+    </div>
+  </a>
+</li>
+
+<style>
+  .country-card {
+    --card-accent: var(--color-accent);
+  }
+  /* Beat Astro's unlayered `[data-astro-image]{height:auto}` (replaced elements
+     ignore inset-stretching, so object-cover needs an explicit height). */
+  .country-card img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .country-card__tint {
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--card-accent) 38%, black) 0%,
+      transparent 58%
+    );
+    opacity: 0.55;
+    mask-image: linear-gradient(to top, black 0%, transparent 50%);
+  }
+</style>

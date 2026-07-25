@@ -1,0 +1,24 @@
+---
+import { en } from "~/i18n/en";
+
+interface Props {
+  title: string;
+  summary: string;
+}
+
+const { title, summary } = Astro.props;
+---
+
+<section class="pad-canvas mx-auto max-w-canvas pt-32">
+  <header class="mt-3 max-w-[40rem]">
+    <a href="/journal" class="micro link-accent link-accent--dim">
+      {en.journal.seeEntire}
+    </a>
+    <h1 class="display page-title mt-3 text-balance">{title}</h1>
+    <p
+      class="mt-4 max-w-[38ch] font-sans text-lg leading-snug text-pretty text-ink-dim"
+    >
+      {summary}
+    </p>
+  </header>
+</section>

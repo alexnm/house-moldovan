@@ -1,0 +1,109 @@
+---
+import type { CollectionEntry } from "astro:content";
+import RoLayout from "./RoLayout.astro";
+import Hero from "~/components/article/Hero.astro";
+import Prose from "~/components/article/Prose.astro";
+import TrailStats from "~/components/hike/TrailStats.astro";
+import ElevationProfile from "~/components/hike/ElevationProfile.astro";
+import HikeMap from "~/components/hike/HikeMap.astro";
+import { ro } from "~/i18n/ro";
+import { accentForRange } from "~/lib/ranges";
+import { getRange } from "~/lib/content";
+import { getGpxTrack, hasGpxElevationProfile, parseGpx } from "~/lib/gpx";
+
+export interface Props {
+  entry: CollectionEntry<"hikes">;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+
+const range = await getRange(data.range);
+if (!range) throw new Error(`Range not found for hike ${entry.id}`);
+const accent = accentForRange(range.id, range.data.accent);
+
+const track = parseGpx(data.gpx);
+const gpxTrack = getGpxTrack(data.gpx);
+const gpxHref = data.gpx.startsWith("/") ? data.gpx : `/${data.gpx}`;
+const showElevationProfile = hasGpxElevationProfile(track);
+
+const heroMeta = `${data.shape} · ${ro.units.distance(data.distance)} · +${ro.units.elevation(data.elevationGain)}`;
+---
+
+<RoLayout
+  title={`${data.title} · ${ro.siteName}`}
+  description={`${data.title} — ${range.data.name}`}
+  type="article"
+  ogImage={`/ro/og/${entry.id}.png`}
+  noindex={data.draft}
+>
+  <article style={`--accent: ${accent}; --color-accent: ${accent}`}>
+    <Hero
+      image={data.hero}
+      alt={data.title}
+      kicker={range.data.name}
+      title={data.title}
+      meta={heroMeta}
+      transitionName={`hike-${entry.id}`}
+    />
+
+    <TrailStats
+      distance={data.distance}
+      shape={data.shape}
+      elevationGain={data.elevationGain}
+      summit={data.summit}
+      duration={data.duration}
+      difficulty={data.difficulty}
+      waymark={data.waymark}
+      season={data.season}
+    />
+
+    <section class="section section-y-tight">
+      <p
+        class="micro flex flex-wrap items-center justify-between gap-2 text-ink-faint"
+      >
+        <span>
+          {ro.hike.trailhead}: {data.trailhead.name}
+          {
+            data.trailhead.access && (
+              <span class="text-ink-dim"> · {data.trailhead.access}</span>
+            )
+          }
+        </span>
+        {
+          !gpxTrack && (
+            <a
+              href={gpxHref}
+              download
+              class="link-accent link-accent--dim shrink-0"
+            >
+              {ro.hike.gpxDownload} ↓
+            </a>
+          )
+        }
+      </p>
+    </section>
+
+    {gpxTrack && <HikeMap line={gpxTrack.line} gpxHref={gpxHref} />}
+
+    {showElevationProfile && (
+      <ElevationProfile
+        profile={track.profile}
+        minElevation={track.minElevation}
+        maxElevation={track.maxElevation}
+        distanceKm={track.distanceKm}
+        publishedDistanceKm={data.distance}
+      />
+    )}
+
+    <Prose class="mt-16 pad-canvas">
+      <slot />
+    </Prose>
+
+    <nav class="section my-24 max-w-prose">
+      <a href="/ro/trasee" class="link-more link-accent link-accent--dim">
+        ← {ro.hike.backToFeed}
+      </a>
+    </nav>
+  </article>
+</RoLayout>

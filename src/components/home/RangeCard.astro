@@ -1,0 +1,114 @@
+---
+import type { ImageMetadata } from "astro";
+import CoverImage from "~/components/media/CoverImage.astro";
+
+export interface Props {
+  href: string;
+  title: string;
+  summary?: string;
+  /** Pre-rendered label (e.g. `ro.range.countOf(n)`). */
+  countLabel: string;
+  /** Full range accent (OKLCH etc.) — border + highlights only. */
+  accent: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  as?: "h2" | "h3";
+}
+
+const {
+  href,
+  title,
+  summary,
+  countLabel,
+  accent,
+  image,
+  imageAlt,
+  as = "h2",
+} = Astro.props;
+
+const alt = imageAlt ?? `Peisaj din ${title}`;
+
+const titleClass =
+  "display text-xl leading-[1.05] text-balance md:text-2xl text-ink";
+---
+
+<li class="motion-reveal-media">
+  <a
+    href={href}
+    class="range-card motion-hover-lift group flex aspect-[5/4] flex-col overflow-clip rounded border border-line bg-surface-2 hover:shadow-lift"
+    style={`--range-accent:${accent}`}
+  >
+    <div
+      class="relative h-1/2 min-h-0 w-full shrink-0 overflow-hidden bg-surface-3"
+    >
+      {
+        image ? (
+          <CoverImage
+            src={image}
+            alt={alt}
+            widths={[480, 720, 960, 1200]}
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            format="avif"
+            quality={82}
+            wrapperClass="motion-hover-media h-full w-full"
+            class="h-full w-full object-cover"
+          />
+        ) : (
+          <div
+            class="h-full w-full bg-gradient-to-br from-surface-3 to-line/30"
+            aria-hidden="true"
+          />
+        )
+      }
+    </div>
+
+    <div class="flex min-h-0 flex-1 flex-col bg-surface-2">
+      <div
+        class="h-1 w-full shrink-0"
+        style={`background:${accent}`}
+        aria-hidden="true"
+      >
+      </div>
+
+      <div
+        class="range-card__body relative flex min-h-0 flex-1 flex-col p-6 md:p-7"
+      >
+        <div class="relative min-w-0">
+          {
+            as === "h3" ? (
+              <h3
+                class={titleClass}
+                style="font-family: var(--font-display-ro)"
+              >
+                {title}
+              </h3>
+            ) : (
+              <h2
+                class={titleClass}
+                style="font-family: var(--font-display-ro)"
+              >
+                {title}
+              </h2>
+            )
+          }
+          {
+            summary && (
+              <p class="mt-3 max-w-[40ch] text-[0.95rem] leading-snug text-pretty text-ink-dim">
+                {summary}
+              </p>
+            )
+          }
+        </div>
+        <div class="mt-auto flex items-center justify-between gap-3 pt-2">
+          <span class="micro text-ink-dim">{countLabel}</span>
+          <span
+            class="motion-hover-chevron text-lg text-ink-dim"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </div>
+      </div>
+    </div>
+  </a>
+</li>

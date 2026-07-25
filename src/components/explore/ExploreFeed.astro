@@ -1,0 +1,91 @@
+---
+import CountryCard from "~/components/home/CountryCard.astro";
+import { placeShortName } from "~/lib/articlePlaces";
+import { en } from "~/i18n/en";
+import { placeThumbnailForCountry } from "~/lib/placeCover";
+import { regionIdFromPlace, type RegionEntry } from "~/lib/regions";
+import type { CollectionEntry } from "astro:content";
+import type { AnyEnArticle } from "~/lib/content";
+
+export interface Props {
+  regions: RegionEntry[];
+  places: CollectionEntry<"places">[];
+  feed: AnyEnArticle[];
+}
+
+const { regions, places, feed } = Astro.props;
+
+const regionSections = regions
+  .map((region) => ({
+    region,
+    countries: places
+      .filter((p) => regionIdFromPlace(p) === region.id)
+      .sort((a, b) => a.data.name.localeCompare(b.data.name)),
+  }))
+  .filter((section) => section.countries.length > 0);
+---
+
+{
+  regionSections.length > 0 && (
+    <>
+      <div class="section section-y-lg section-stack pt-4 md:pt-6">
+        {regionSections.map(({ region, countries }) => {
+          const { accent, name, tagline, order } = region.data;
+          return (
+            <section
+              class="motion-reveal accent-scope scroll-mt-28"
+              id={`region-${region.id}`}
+              data-accent={accent}
+            >
+              <header class="section-header flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+                <div class="min-w-0">
+                  <p class="micro mb-2 text-accent-ink">
+                    {en.region.chapter(order)}
+                  </p>
+                  <h2 class="display section-heading text-balance">
+                    <a
+                      href={`/explore/region/${region.id}`}
+                      class="text-accent-ink transition-opacity duration-ui ease-cinema hover:opacity-85"
+                    >
+                      {name}
+                    </a>
+                  </h2>
+                  <p class="mt-3 max-w-prose font-sans text-lg leading-snug text-pretty text-ink-dim">
+                    {tagline}
+                  </p>
+                </div>
+                <a
+                  href={`/explore/region/${region.id}`}
+                  class="link-more link-accent link-accent--dim hidden shrink-0 sm:inline"
+                >
+                  {en.explore.viewRegion(name)} →
+                </a>
+              </header>
+
+              <ul class="grid-countries">
+                {countries.map((country) => (
+                  <CountryCard
+                    href={`/explore/${country.id}`}
+                    name={placeShortName(country)}
+                    flag={country.data.flag}
+                    tagline={country.data.tagline}
+                    image={placeThumbnailForCountry(country, feed)}
+                    imageAlt={`Scenes from ${country.data.name}`}
+                    accent={accent}
+                  />
+                ))}
+              </ul>
+
+              <a
+                href={`/explore/region/${region.id}`}
+                class="link-more link-accent link-accent--dim mt-(--space-block) inline-block sm:hidden"
+              >
+                {en.explore.viewRegion(name)} →
+              </a>
+            </section>
+          );
+        })}
+      </div>
+    </>
+  )
+}

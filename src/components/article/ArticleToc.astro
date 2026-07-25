@@ -1,0 +1,49 @@
+---
+import { en } from "~/i18n/en";
+import type { TocSection } from "~/lib/bodyToc";
+
+export interface Props {
+  sections: TocSection[];
+}
+
+const { sections } = Astro.props;
+---
+
+<aside
+  class="md:sticky md:top-24 md:self-start"
+  aria-label={en.article.onThisPage}
+>
+  <p class="micro mb-3 text-ink-faint">
+    {en.article.onThisPage}
+  </p>
+  <nav>
+    <ol class="space-y-3 ">
+      {
+        sections.map((section) => (
+          <li class="pl-0.5">
+            <a
+              class="line-clamp-3 min-w-0 break-words text-left text-sm font-medium leading-snug text-ink transition-colors duration-ui ease-cinema hover:text-accent-ink"
+              href={`#${section.slug}`}
+            >
+              {section.text}
+            </a>
+            {section.subsections.length > 0 && (
+              <ol class="mt-1.5 space-y-1.5 ps-3">
+                {section.subsections.map((sub) => (
+                  <li>
+                    <a
+                      class="line-clamp-2 min-w-0 break-words text-left text-sm leading-snug text-ink-dim transition-colors duration-ui ease-cinema hover:text-accent-ink"
+                      href={`#${sub.slug}`}
+                    >
+                      {sub.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+</aside>

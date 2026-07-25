@@ -1,0 +1,23 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import HikeLayout from "~/layouts/HikeLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const all = await getCollection("hikes");
+  return all.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: CollectionEntry<"hikes">;
+}
+const { entry } = Astro.props as Props;
+const { Content } = await render(entry);
+---
+
+<HikeLayout entry={entry}>
+  <Content />
+</HikeLayout>

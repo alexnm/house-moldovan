@@ -1,0 +1,97 @@
+---
+import "leaflet/dist/leaflet.css";
+import { ro } from "~/i18n/ro";
+
+export interface Props {
+  /** GeoJSON vertex order: [lng, lat]. */
+  line: [number, number][];
+  /** Public URL to the GPX file (e.g. `/trasee/foo.gpx`). */
+  gpxHref: string;
+}
+
+const { line, gpxHref } = Astro.props;
+---
+
+<figure
+  class="motion-reveal section section-y-tight"
+  aria-label={ro.hike.mapCaption}
+>
+  <figcaption class="micro mb-3 flex items-baseline justify-between gap-3 text-ink-faint">
+    <span>{ro.hike.mapCaption}</span>
+    <a
+      href={gpxHref}
+      download
+      class="link-accent link-accent--dim shrink-0"
+    >
+      {ro.hike.gpxDownload} ↓
+    </a>
+  </figcaption>
+  <div
+    id="hike-route-map"
+    class="hike-route-map isolate z-0 h-[min(22rem,55vh)] w-full overflow-hidden rounded-lg border border-line bg-surface-2 [&_.leaflet-container]:h-full [&_.leaflet-container]:font-sans [&_.leaflet-container]:text-[11px]"
+    data-line={JSON.stringify(line)}
+  >
+  </div>
+</figure>
+
+<script>
+  import L from "leaflet";
+
+  (() => {
+    const el = document.getElementById("hike-route-map");
+    const raw = el?.dataset.line;
+    if (!el || raw == null || raw === "") return;
+
+    const line = JSON.parse(raw) as [number, number][];
+    const stroke =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-accent")
+        .trim() || "#3388ff";
+    const latlngs: L.LatLngExpression[] = line.map(([lng, lat]) => [lat, lng]);
+
+    const mount = (): void => {
+      if (el.dataset.mounted === "1") return;
+      el.dataset.mounted = "1";
+
+      const map = L.map(el, {
+        scrollWheelZoom: false,
+        attributionControl: true,
+      });
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+
+      const poly = L.polyline(latlngs, {
+        color: stroke,
+        weight: 4,
+        opacity: 0.92,
+        lineJoin: "round",
+      }).addTo(map);
+
+      map.fitBounds(poly.getBounds().pad(0.1));
+      requestAnimationFrame(() => {
+        map.invalidateSize();
+      });
+    };
+
+    if (typeof IntersectionObserver !== "undefined") {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              io.disconnect();
+              mount();
+              break;
+            }
+          }
+        },
+        { rootMargin: "120px" },
+      );
+      io.observe(el);
+    } else {
+      mount();
+    }
+  })();
+</script>

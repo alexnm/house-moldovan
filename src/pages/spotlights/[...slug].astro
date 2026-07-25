@@ -1,0 +1,25 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import SpotlightLayout from "~/layouts/SpotlightLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const all = await getCollection("spotlights");
+  return all.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: CollectionEntry<"spotlights">;
+}
+
+const { entry } = Astro.props as Props;
+const hasIntro = (entry.body?.trim().length ?? 0) > 0;
+const { Content } = await render(entry);
+---
+
+<SpotlightLayout entry={entry} hasIntro={hasIntro}>
+  <Content />
+</SpotlightLayout>

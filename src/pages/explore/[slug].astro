@@ -1,0 +1,126 @@
+---
+import type { GetStaticPaths } from "astro";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import Hero from "~/components/article/Hero.astro";
+import { en } from "~/i18n/en";
+import {
+  getRegion,
+  getAllRegions,
+  regionIdFromPlace,
+  regionMapById,
+} from "~/lib/regions";
+import {
+  getAllPlaces,
+  getEnFeed,
+  getPlace,
+  countryRefsFromArticle,
+  primaryCountryFromArticle,
+} from "~/lib/content";
+import { articleHref, articleKicker } from "~/lib/articles";
+import { countryLine } from "~/lib/articlePlaces";
+import type { Accent } from "~/lib/accent";
+import { requirePlaceCoverFromFrontmatter } from "~/lib/placeCover";
+
+export const getStaticPaths = (async () => {
+  const places = await getAllPlaces();
+  return places.map((country) => ({ params: { slug: country.id } }));
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug!;
+const [feed] = await Promise.all([getEnFeed()]);
+const country = await getPlace(slug);
+if (!country) {
+  return Astro.redirect("/explore");
+}
+
+const articles = feed.filter((a) => {
+  const ids = countryRefsFromArticle(a).map((r) => r.id);
+  return ids.includes(country.id);
+});
+
+const cover = requirePlaceCoverFromFrontmatter(country);
+const regionEntry = await getRegion(country.data.region);
+const accent: Accent =
+  country.data.accent ?? regionEntry?.data.accent ?? "jade";
+const regionLabel = regionEntry?.data.name ?? regionIdFromPlace(country);
+const regionsById = regionMapById(await getAllRegions());
+
+const enriched = await Promise.all(
+  articles.map(async (a) => {
+    const href = articleHref(a);
+    const kicker = articleKicker(a);
+    const primary = await getPlace(primaryCountryFromArticle(a));
+    const regionId = primary ? regionIdFromPlace(primary) : undefined;
+    const region = regionId ? regionsById.get(regionId) : undefined;
+    const resolved = (
+      await Promise.all(a.data.country.map((ref) => getPlace(ref)))
+    ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
+    return {
+      a,
+      href,
+      kicker,
+      countryMeta: countryLine(resolved),
+      accent: primary?.data.accent ?? region?.data.accent,
+      regionLabel: region?.data.name,
+    };
+  }),
+);
+---
+
+<BaseLayout
+  title={`${country.data.name} · ${en.siteName}`}
+  description={country.data.tagline}
+>
+  <Hero
+    image={cover}
+    alt={`${country.data.name}: ${country.data.tagline}`}
+    kicker={regionLabel}
+    kickerHref={`/explore/region/${country.data.region.id}`}
+    title={country.data.name}
+    titleFlag={country.data.flag}
+    meta={country.data.tagline}
+    accent={accent}
+  />
+
+  <section id="stories" class="section section-y scroll-mt-28">
+    <header class="section-header">
+      <h2 class="display section-heading">
+        {en.places.storiesHeading(country.data.name)}
+      </h2>
+    </header>
+    {
+      enriched.length > 0 ? (
+        <ul class="grid-cards">
+          {enriched.map((item) => (
+            <li>
+              <ArticleCard
+                href={item.href}
+                title={item.a.data.title}
+                kicker={item.kicker}
+                meta={item.countryMeta}
+                image={item.a.data.hero}
+                imageAlt={item.a.data.title}
+                size="md"
+                aspectClass="aspect-[4/5]"
+                accent={item.accent}
+                regionLabel={item.regionLabel}
+                transitionName={`hero-${item.a.id}`}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="space-y-4 py-12">
+          <p class="text-ink-dim">{en.places.noStoriesYet}</p>
+          <p>
+            <a href="/explore" class="link-more link-accent link-accent--dim">
+              ← {en.places.backToExplore}
+            </a>
+          </p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

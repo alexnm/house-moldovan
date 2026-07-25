@@ -1,0 +1,66 @@
+---
+export interface ItemLink {
+  label: string;
+  href: string;
+}
+export interface Item {
+  label: string;
+  value: string | number | ItemLink[];
+}
+export interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<div class="border-y border-line">
+  {/* Stamp stack — below sm: label beside value, one item per row */}
+  <dl
+    class="pad-canvas mx-auto flex max-w-canvas flex-col gap-y-2 py-3.5 sm:hidden"
+  >
+    {
+      items.map((it) => (
+        <div class="flex min-w-0 items-baseline gap-x-2">
+          <dt class="micro shrink-0 text-accent-ink">{it.label}</dt>
+          <dd class="min-w-0 font-medium text-ink">
+            {Array.isArray(it.value)
+              ? it.value.map((link, i) => (
+                  <>
+                    {i > 0 && <span class="text-ink-faint"> · </span>}
+                    <a href={link.href} class="link-accent">
+                      {link.label}
+                    </a>
+                  </>
+                ))
+              : it.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  {/* Fact grid — sm+: label above value; column borders from lg */}
+  <dl
+    class="pad-canvas mx-auto hidden max-w-canvas grid-cols-4 overflow-hidden sm:grid"
+  >
+    {
+      items.map((it) => (
+        <div class="px-5 py-5 first:pl-0 last:pr-0 lg:border-line lg:not-last:border-r">
+          <dt class="micro text-accent-ink">{it.label}</dt>
+          <dd class="mt-1 font-medium text-ink">
+            {Array.isArray(it.value)
+              ? it.value.map((link, i) => (
+                  <>
+                    {i > 0 && <span class="text-ink-faint"> · </span>}
+                    <a href={link.href} class="link-accent">
+                      {link.label}
+                    </a>
+                  </>
+                ))
+              : it.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>

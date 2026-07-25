@@ -1,0 +1,32 @@
+---
+import AssetFigure from "~/components/mdx/AssetFigure.astro";
+
+type ImageItem = {
+  path: string;
+  alt: string;
+  caption: string;
+};
+
+type Props = {
+  left: ImageItem;
+  right: ImageItem;
+};
+
+const { left, right } = Astro.props;
+const sizes = "(min-width: 640px) 21rem, 100vw";
+---
+
+<figure class="figure-pair">
+  <AssetFigure
+    path={left.path}
+    alt={left.alt}
+    caption={left.caption}
+    sizes={sizes}
+  />
+  <AssetFigure
+    path={right.path}
+    alt={right.alt}
+    caption={right.caption}
+    sizes={sizes}
+  />
+</figure>

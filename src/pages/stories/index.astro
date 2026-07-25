@@ -1,0 +1,34 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import JournalIndexHeader from "~/components/journal/JournalIndexHeader.astro";
+import RhythmGrid from "~/components/home/RhythmGrid.astro";
+import { en } from "~/i18n/en";
+import { getStories, type AnyEnArticle } from "~/lib/content";
+
+const raw = await getStories();
+const articles: AnyEnArticle[] = raw.map((e) => ({
+  ...e,
+  kind: "story" as const,
+}));
+---
+
+<BaseLayout
+  title={`${en.storiesIndex.metaTitle} · ${en.siteName}`}
+  description={en.storiesIndex.intro}
+>
+  <JournalIndexHeader
+    title={en.nav.stories}
+    summary={en.storiesIndex.intro}
+  />
+  {
+    articles.length > 0 ? (
+      <section class="section section-y-tight">
+        <RhythmGrid articles={articles} />
+      </section>
+    ) : (
+      <p class="pad-canvas mx-auto max-w-canvas py-16 text-ink-dim">
+        {en.journal.empty}
+      </p>
+    )
+  }
+</BaseLayout>

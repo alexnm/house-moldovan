@@ -1,0 +1,195 @@
+export const en = {
+  locale: "en" as const,
+  htmlLang: "en",
+  intlLocale: "en-GB",
+  siteName: "House Moldovan",
+  description:
+    "A photographic travel journal with stories, itineraries and spotlights from our travels around the world",
+  nav: {
+    journal: "Journal",
+    explore: "Explore",
+    stories: "Stories",
+    spotlights: "Spotlights",
+    itineraries: "Itineraries",
+    about: "About",
+    ro: "Hiking in Romania",
+    openMenu: "Open menu",
+  },
+  home: {
+    kicker: "Travel journal",
+    regionsHeading: "Explore by region",
+    recentHeading: "Recent journal notes",
+    exploreCta: "See all countries",
+    seeAll: "See entire journal",
+  },
+  journal: {
+    title: "Journal",
+    /** SEO <title> for the hub; the full feed of every note. */
+    metaTitle: "Travel Journal — Stories, Spotlights & Itineraries",
+    metaDescription:
+      "The complete House Moldovan travel journal: every story, photo spotlight and multi-day itinerary from our trips across South America, Asia, the Middle East and Europe.",
+    intro: "Latest journal notes",
+    featuredKicker: "Featured story",
+    seeEntire: "See entire journal",
+    empty:
+      "No notes match this filter. Try Stories, Spotlights, or Itineraries above.",
+    pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
+  },
+  storiesIndex: {
+    metaTitle: "Travel Stories & Destination Guides",
+    intro: "Dedicated travel guides about a place we visited",
+  },
+  spotlightsIndex: {
+    metaTitle: "Photo Spotlights from Around the World",
+    intro: "Photo highlights capturing a place or an experience",
+  },
+  itinerariesIndex: {
+    metaTitle: "Multi-Day Travel Itineraries",
+    intro: "Multi-day trips across different locations",
+  },
+  explore: {
+    title: "Explore",
+    intro: "Explore the world",
+    sub: "Start from a region, open a country, and read the notes tied to it.",
+    regionsNav: "Jump to region",
+    viewRegion: (name: string) => `Explore ${name}`,
+  },
+  places: {
+    countOf: (n: number) => `${n} ${n === 1 ? "note" : "notes"}`,
+    noStoriesYet: "No notes from here yet.",
+    backToExplore: "Back to Explore",
+    storiesHeading: (name: string) => `From ${name}`,
+  },
+  region: {
+    /** Meta label on articles (not the chapter stamp). */
+    kicker: "Region",
+    chapter: (order: number) => `Chapter - 0${order}`,
+    countriesHeading: "Explore by country",
+    routesHeading: "Routes across borders",
+    storiesHeading: (name: string) => `From ${name}`,
+    backToExplore: "All regions",
+    openCountry: (name: string) => `Open ${name}`,
+  },
+  about: {
+    title: "About",
+    kicker: "About",
+    heroTitle: "House Moldovan",
+    heroSummary: "A few words about us and our travel journal",
+    introP1:
+      "Hi there, fellow travelers! We are Mela and Alex, the two people behind House Moldovan. We are based in Romania and we've been travelling together since 2012.",
+    introP2: {
+      start:
+        "We started this site to keep our travel writing and photography in one place: honest impressions from the trips we took, organized so you can ",
+      exploreLink: "browse by region",
+      mid: " or follow along in ",
+      journalLink: "the journal",
+      end: ".",
+    },
+    notesKicker: "What's in the journal",
+    notesHeading: "The journal",
+    notes: {
+      stories: {
+        title: "Stories",
+        description:
+          "Travel guides about a place we visited or an experience we had.",
+        href: "/stories",
+        cta: "Read stories",
+      },
+      spotlights: {
+        title: "Spotlights",
+        description: "Photo-first pieces that capture a mood or a single day.",
+        href: "/spotlights",
+        cta: "Browse spotlights",
+      },
+      itineraries: {
+        title: "Itineraries",
+        description:
+          "Multi-day routes across cities and borders, with day-by-day plans.",
+        href: "/itineraries",
+        cta: "See itineraries",
+      },
+    },
+    authorsKicker: "Who writes",
+    authorsHeading: "Mela & Alex",
+    authorsIntro:
+      "We take all the photos and write all the content ourselves. Edi is our little travel companion and he's been part of our travels since 2024.",
+    melaAlt: "Mela on a stone bridge in Bruges",
+    alexAlt: "Alex carrying Edi on his shoulders in the Dolomites",
+    melaAlexAlt: "The whole family walking on a path",
+    sisterSite:
+      "For hiking routes in the Romanian Carpathians, in Romanian, see our sister site",
+    sisterSiteLabel: "Pe creastă",
+    exploreCta: "Start exploring",
+    journalCta: "Read the journal",
+  },
+  article: {
+    story: "Story",
+    spotlight: "Spotlight",
+    itinerary: "Itinerary",
+    published: "Published",
+    days: (n: number) => (n === 1 ? "1 day" : `${n} days`),
+    country: "Country",
+    countries: "Countries",
+    months: "Best months",
+    type: "Destination type",
+    storyType: {
+      culture: "Cultural",
+      nature: "Nature",
+      "city-break": "City break",
+      beach: "Beach",
+      hiking: "Hiking",
+    },
+    backToJournal: "Back to the journal",
+    moreFrom: (place: string) => `More from ${place}`,
+    nextRead: "Continue reading",
+    itineraryHighlights: "Highlights",
+    itineraryTravelTips: "Quick tips",
+    onThisPage: "On this page",
+  },
+  units: {
+    km: "km",
+    m: "m",
+    distance: (km: number) =>
+      km < 1
+        ? `${Math.round(km * 1000)} m`
+        : `${km.toLocaleString("en-GB", { maximumFractionDigits: 1 })} km`,
+  },
+  date: {
+    long: (d: Date) =>
+      d.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+    short: (d: Date) =>
+      d.toLocaleDateString("en-GB", { month: "short", year: "numeric" }),
+  },
+  rss: {
+    title: "House Moldovan",
+    description:
+      "Latest stories, spotlights and itineraries across four regions.",
+  },
+  notFound: {
+    metaTitle: "Page not found",
+    metaDescription:
+      "This page isn't on our map, head back to House Moldovan and pick a story, spotlight, or itinerary from the journal.",
+    heroTitle: "Off the map",
+    heroSummary:
+      "You've wandered down a path we never wrote. A wrong turn at a crossroads, a bookmark gone stale, or maybe a URL typo. No country, story, or itinerary lives here.",
+    homeCta: "Back home",
+  },
+  footer: {
+    rights: "All photographs and writing belong to the author.",
+    themeLight: "Light mode",
+    themeDark: "Dark mode",
+    aboutUs: "About us",
+    instagramLabel: "Instagram",
+    instagramUrl: "https://www.instagram.com/housemoldovan/",
+    subscribeLabel: "Subscribe",
+    rssLabel: "Subscribe via RSS",
+    roCta: "Drumeții în România",
+    roKicker: "Romanian sister site",
+  },
+} as const;
+
+export type EnStrings = typeof en;

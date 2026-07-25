@@ -1,0 +1,55 @@
+---
+import type { WaymarkCode } from "~/lib/waymarks";
+import { parseWaymarkCode, waymarksAriaLabel } from "~/lib/waymarks";
+
+export interface Props {
+  marks: readonly WaymarkCode[];
+  size?: number;
+}
+
+const { marks, size = 18 } = Astro.props;
+const px = size;
+const ariaIntro = marks.length === 1 ? "Marcaj" : "Marcaje";
+---
+
+<span
+  class="inline-flex flex-wrap items-center gap-1.5"
+  aria-label={`${ariaIntro}: ${waymarksAriaLabel(marks)}`}
+>
+  {
+    marks.map((code) => {
+      const parsed = parseWaymarkCode(code);
+      if (!parsed) return null;
+      const { shape, color } = parsed;
+      return (
+        <span
+          class="relative inline-block flex-none rounded-sm bg-[#f5f3ec]"
+          style={`width:${px}px;height:${px}px`}
+          aria-hidden="true"
+        >
+          {shape === "cross" && (
+            <svg viewBox="0 0 18 18" class="absolute inset-0 h-full w-full">
+              <rect x="2" y="7" width="14" height="4" fill={color} />
+              <rect x="7" y="2" width="4" height="14" fill={color} />
+            </svg>
+          )}
+          {shape === "line" && (
+            <svg viewBox="0 0 18 18" class="absolute inset-0 h-full w-full">
+              <rect x="7" y="2" width="4" height="14" fill={color} />
+            </svg>
+          )}
+          {shape === "triangle" && (
+            <svg viewBox="0 0 18 18" class="absolute inset-0 h-full w-full">
+              <polygon points="9,3 16,15 2,15" fill={color} />
+            </svg>
+          )}
+          {shape === "dot" && (
+            <svg viewBox="0 0 18 18" class="absolute inset-0 h-full w-full">
+              <circle cx="9" cy="9" r="4.5" fill={color} />
+            </svg>
+          )}
+        </span>
+      );
+    })
+  }
+</span>

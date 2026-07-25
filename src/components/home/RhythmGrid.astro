@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "./ArticleCard.astro";
+import type { AnyEnArticle } from "~/lib/content";
+import { getPlace, primaryCountryFromArticle } from "~/lib/content";
+import { countryLine } from "~/lib/articlePlaces";
+import type { Accent } from "~/lib/accent";
+import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
+import { articleHref, articleKicker } from "~/lib/articles";
+import { buildRhythmCells } from "~/lib/rhythmGrid";
+
+export interface Props {
+  articles: AnyEnArticle[];
+}
+
+const { articles } = Astro.props;
+const regionsById = regionMapById(await getAllRegions());
+
+type Enriched = {
+  a: AnyEnArticle;
+  accent?: Accent;
+  regionLabel?: string;
+  countryMeta: string;
+};
+
+const enriched: Enriched[] = await Promise.all(
+  articles.map(async (a) => {
+    const primary = await getPlace(primaryCountryFromArticle(a));
+    const regionId = primary ? regionIdFromPlace(primary) : undefined;
+    const region = regionId ? regionsById.get(regionId) : undefined;
+    const resolved = (
+      await Promise.all(a.data.country.map((ref) => getPlace(ref)))
+    ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
+    return {
+      a,
+      accent: primary?.data.accent ?? region?.data.accent,
+      regionLabel: region?.data.name,
+      countryMeta: countryLine(resolved),
+    };
+  }),
+);
+
+const cells = buildRhythmCells(enriched);
+---
+
+<div
+  class="rhythm-grid grid grid-cols-1 items-stretch gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3"
+>
+  {
+    cells.map(({ item, span }) => (
+      <div class:list={["min-h-0", span === 2 && "lg:col-span-2"]}>
+        <ArticleCard
+          href={articleHref(item.a)}
+          title={item.a.data.title}
+          kicker={articleKicker(item.a)}
+          meta={item.countryMeta}
+          image={item.a.data.hero}
+          imageAlt={item.a.data.title}
+          size={span === 2 ? "lg" : "md"}
+          aspectClass={
+            span === 2
+              ? "aspect-[4/3] md:aspect-auto md:h-full md:min-h-(--rhythm-single-h)"
+              : "aspect-[4/3] md:aspect-[4/5]"
+          }
+          accent={item.accent}
+          regionLabel={item.regionLabel}
+          transitionName={`hero-${item.a.id}`}
+        />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .rhythm-grid {
+    --rhythm-col: 100%;
+    --rhythm-single-h: calc(var(--rhythm-col) * 5 / 4);
+  }
+
+  @media (width >= 768px) {
+    .rhythm-grid {
+      --rhythm-col: calc((100% - var(--grid-gap)) / 2);
+    }
+  }
+
+  @media (width >= 1024px) {
+    .rhythm-grid {
+      --rhythm-col: calc((100% - 2 * var(--grid-gap)) / 3);
+    }
+  }
+</style>

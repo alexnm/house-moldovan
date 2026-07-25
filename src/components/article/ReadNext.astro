@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import type { AnyEnArticle } from "~/lib/content";
+import { getPlace, primaryCountryFromArticle } from "~/lib/content";
+import { countryLine } from "~/lib/articlePlaces";
+import type { Accent } from "~/lib/accent";
+import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
+import { articleHref, articleKicker } from "~/lib/articles";
+import { en } from "~/i18n/en";
+
+export interface Props {
+  articles: AnyEnArticle[];
+}
+
+const { articles } = Astro.props;
+const regionsById = regionMapById(await getAllRegions());
+
+type Enriched = {
+  a: AnyEnArticle;
+  href: string;
+  kicker: string;
+  countryMeta: string;
+  accent?: Accent;
+  regionLabel?: string;
+};
+
+const enriched: Enriched[] = await Promise.all(
+  articles.map(async (a) => {
+    const primary = await getPlace(primaryCountryFromArticle(a));
+    const regionId = primary ? regionIdFromPlace(primary) : undefined;
+    const region = regionId ? regionsById.get(regionId) : undefined;
+    const resolved = (
+      await Promise.all(a.data.country.map((ref) => getPlace(ref)))
+    ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
+    return {
+      a,
+      href: articleHref(a),
+      kicker: articleKicker(a),
+      countryMeta: countryLine(resolved),
+      accent: primary?.data.accent ?? region?.data.accent,
+      regionLabel: region?.data.name,
+    };
+  }),
+);
+---
+
+<section class="section" aria-labelledby="read-next-heading">
+  <h2 id="read-next-heading" class="display subsection-heading mb-(--space-header) text-ink">
+    {en.article.nextRead}
+  </h2>
+  <div class:list={[enriched.length > 1 ? "grid-cards" : "mx-auto max-w-2xl"]}>
+    {
+      enriched.map((item) => (
+        <ArticleCard
+          href={item.href}
+          title={item.a.data.title}
+          kicker={item.kicker}
+          meta={item.countryMeta}
+          image={item.a.data.hero}
+          imageAlt={item.a.data.title}
+          size="md"
+          aspectClass="aspect-[4/5]"
+          accent={item.accent}
+          regionLabel={item.regionLabel}
+          transitionName={`hero-${item.a.id}`}
+        />
+      ))
+    }
+  </div>
+</section>

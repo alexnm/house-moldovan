@@ -1,0 +1,112 @@
+---
+import { en } from "~/i18n/en";
+import SiteLogo from "~/components/layout/SiteLogo.astro";
+import ThemeToggle from "~/components/layout/ThemeToggle.astro";
+import { getAllRegions } from "~/lib/regions";
+
+const year = new Date().getFullYear();
+const regions = await getAllRegions();
+
+const journalLinks = [
+  { href: "/journal", label: en.nav.journal },
+  { href: "/stories", label: en.nav.stories },
+  { href: "/itineraries", label: en.nav.itineraries },
+  { href: "/spotlights", label: en.nav.spotlights },
+];
+---
+
+<footer class="mt-32 border-t border-line">
+  <div
+    class="pad-canvas mx-auto grid max-w-canvas grid-cols-2 gap-x-8 gap-y-10 py-16 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-12"
+  >
+    <div class="col-span-2 md:col-span-1">
+      <SiteLogo size="footer" link={false} />
+      <p class="mt-3 max-w-md text-ink-dim">
+        {en.description}
+      </p>
+      <p class="micro mt-8 text-ink-faint">
+        © {year}. {en.footer.rights}
+      </p>
+      <ThemeToggle
+        lightLabel={en.footer.themeLight}
+        darkLabel={en.footer.themeDark}
+      />
+    </div>
+
+    <div>
+      <ul class="space-y-2 text-ink-dim">
+        {
+          journalLinks.map((link) => (
+            <li>
+              <a href={link.href} class="link-accent link-accent--dim">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <ul class="space-y-2 text-ink-dim">
+        <li>
+          <a href="/explore" class="link-accent link-accent--dim">
+            {en.nav.explore}
+          </a>
+        </li>
+        {
+          regions.map((region) => (
+            <li>
+              <a
+                href={`/explore/region/${region.id}`}
+                class="link-accent link-accent--dim"
+              >
+                {region.data.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <ul class="space-y-2 text-ink-dim">
+        <li>
+          <a href="/about" class="link-accent link-accent--dim">
+            {en.footer.aboutUs}
+          </a>
+        </li>
+        <li>
+          <a
+            href={en.footer.instagramUrl}
+            class="link-accent link-accent--dim"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {en.footer.instagramLabel}
+          </a>
+        </li>
+        <li>
+          <a href="/rss.xml" class="link-accent link-accent--dim">
+            {en.footer.subscribeLabel}
+          </a>
+        </li>
+      </ul>
+
+      {
+        /* <a
+        href="/ro"
+        class="mt-10 block rounded-lg border border-line p-4 transition-colors duration-ui ease-cinema hover:border-line-strong"
+      >
+        <p class="micro text-ink-faint">{en.footer.roKicker}</p>
+        <p
+          class="display mt-1 text-lg"
+          style="font-family: var(--font-display-ro)"
+        >
+          {en.footer.roCta} →
+        </p>
+      </a> */
+      }
+    </div>
+  </div>
+</footer>

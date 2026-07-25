@@ -1,0 +1,76 @@
+---
+import { ro } from "~/i18n/ro";
+import type { WaymarkCode } from "~/lib/waymarks";
+import WaymarkBadge from "./WaymarkBadge.astro";
+
+export interface Props {
+  distance: number;
+  shape: "dus-intors" | "circuit" | "traversare";
+  elevationGain: number;
+  elevationLoss?: number;
+  summit?: number;
+  duration: readonly [number, number];
+  difficulty: "usor" | "mediu" | "dificil" | "tehnic";
+  waymark: readonly WaymarkCode[];
+  season: ReadonlyArray<"primavara" | "vara" | "toamna" | "iarna">;
+}
+
+const {
+  distance,
+  shape,
+  elevationGain,
+  elevationLoss,
+  summit,
+  duration,
+  difficulty,
+  waymark,
+  season,
+} = Astro.props;
+
+const seasonLabel = season.map((s) => ro.season[s]).join(", ");
+
+const stats = [
+  { label: ro.hike.distance, value: ro.units.distance(distance) },
+  {
+    label: ro.hike.elevationGain,
+    value: `+${ro.units.elevation(elevationGain)}`,
+  },
+  ...(elevationLoss !== undefined && elevationLoss !== elevationGain
+    ? [
+        {
+          label: ro.hike.elevationLoss,
+          value: `-${ro.units.elevation(elevationLoss)}`,
+        },
+      ]
+    : []),
+  ...(summit
+    ? [{ label: ro.hike.summit, value: ro.units.elevation(summit) }]
+    : []),
+  { label: ro.hike.duration, value: ro.units.duration(duration) },
+  { label: ro.hike.shape, value: ro.shape[shape] },
+  { label: ro.hike.difficulty, value: ro.difficulty[difficulty] },
+  { label: ro.hike.season, value: seasonLabel },
+];
+---
+
+<section
+  class="motion-reveal section section-y-tight"
+  aria-label={ro.hike.distance}
+>
+  <dl
+    class="grid grid-cols-2 gap-px overflow-hidden rounded border border-line bg-line sm:grid-cols-3 lg:grid-cols-4"
+  >
+    {
+      stats.map((s) => (
+        <div class="bg-surface px-5 py-5">
+          <dt class="micro text-ink-dim">{s.label}</dt>
+          <dd class="mt-2 font-mono text-lg text-ink">{s.value}</dd>
+        </div>
+      ))
+    }
+    <div class="bg-surface px-5 py-5">
+      <dt class="micro text-ink-dim">{ro.hike.waymark}</dt>
+      <dd class="mt-2"><WaymarkBadge marks={waymark} /></dd>
+    </div>
+  </dl>
+</section>

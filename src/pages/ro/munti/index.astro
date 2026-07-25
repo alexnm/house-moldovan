@@ -1,0 +1,55 @@
+---
+import RoLayout from "~/layouts/RoLayout.astro";
+import RangeCard from "~/components/home/RangeCard.astro";
+import { ro } from "~/i18n/ro";
+import { getAllRanges, getHikes } from "~/lib/content";
+import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
+import { accentForRange } from "~/lib/ranges";
+
+const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
+const counts = new Map<string, number>();
+for (const h of hikes)
+  counts.set(h.data.range.id, (counts.get(h.data.range.id) ?? 0) + 1);
+
+const list = ranges
+  .filter((r) => counts.has(r.id))
+  .sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0));
+---
+
+<RoLayout
+  title={`${ro.nav.munti} · ${ro.siteName}`}
+  description="Toate masivele cu trasee descrise."
+>
+  <section class="mx-auto max-w-canvas pad-canvas pt-32">
+    <p class="micro text-ink-faint">{ro.nav.munti}</p>
+    <h1
+      class="display mt-3 text-[clamp(2rem,3vw+1rem,4.2rem)] leading-[1.02] text-balance"
+      style="font-family: var(--font-display-ro)"
+    >
+      Traseele împărțite pe grupe de munți.
+    </h1>
+  </section>
+
+  <ul
+    class="mx-auto my-16 grid max-w-canvas grid-cols-1 gap-4 pad-canvas md:grid-cols-2 lg:grid-cols-3"
+  >
+    {
+      list.map((r) => {
+        const accent = accentForRange(r.id, r.data.accent);
+        const cover = trailCoverFromFrontmatterPath(r.data.cover);
+        return (
+          <RangeCard
+            href={`/ro/munti/${r.id}`}
+            title={r.data.name}
+            summary={r.data.summary}
+            countLabel={ro.range.countOf(counts.get(r.id) ?? 0)}
+            accent={accent}
+            image={cover}
+            imageAlt={`Peisaj din ${r.data.name}`}
+            as="h2"
+          />
+        );
+      })
+    }
+  </ul>
+</RoLayout>

@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-21T19:19:00.000Z",
+  "title": "Design System: House Moldovan",
+  "extensions": {
+    "colorMeta": {
+      "accent-sun": {
+        "role": "primary",
+        "displayName": "Film Sun",
+        "canonical": "oklch(0.92 0.14 98)",
+        "tonalRamp": [
+          "oklch(0.22 0.04 98)",
+          "oklch(0.35 0.08 98)",
+          "oklch(0.48 0.1 98)",
+          "oklch(0.58 0.11 98)",
+          "oklch(0.72 0.12 98)",
+          "oklch(0.84 0.13 98)",
+          "oklch(0.92 0.14 98)",
+          "oklch(0.96 0.08 98)"
+        ]
+      },
+      "surface-film": {
+        "role": "neutral",
+        "displayName": "Film Surface",
+        "canonical": "oklch(0.13 0.014 55)",
+        "tonalRamp": [
+          "oklch(0.1 0.012 55)",
+          "oklch(0.13 0.014 55)",
+          "oklch(0.18 0.016 55)",
+          "oklch(0.2 0.016 55)",
+          "oklch(0.28 0.014 55)",
+          "oklch(0.4 0.016 55)",
+          "oklch(0.55 0.012 55)",
+          "oklch(0.7 0.012 75)"
+        ]
+      },
+      "ink-warm": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(0.96 0.012 75)",
+        "tonalRamp": [
+          "oklch(0.13 0.014 55)",
+          "oklch(0.28 0.014 55)",
+          "oklch(0.45 0.012 75)",
+          "oklch(0.6 0.012 75)",
+          "oklch(0.7 0.014 75)",
+          "oklch(0.8 0.012 75)",
+          "oklch(0.9 0.014 75)",
+          "oklch(0.96 0.012 75)"
+        ]
+      },
+      "region-south-america": {
+        "role": "secondary",
+        "displayName": "Andean Jade",
+        "canonical": "oklch(0.75 0.175 155)",
+        "tonalRamp": [
+          "oklch(0.2 0.05 155)",
+          "oklch(0.32 0.08 155)",
+          "oklch(0.45 0.11 155)",
+          "oklch(0.55 0.14 155)",
+          "oklch(0.65 0.16 155)",
+          "oklch(0.75 0.175 155)",
+          "oklch(0.84 0.12 155)",
+          "oklch(0.92 0.06 155)"
+        ]
+      },
+      "region-asia": {
+        "role": "secondary",
+        "displayName": "Temple Gold",
+        "canonical": "oklch(0.9 0.19 85)",
+        "tonalRamp": [
+          "oklch(0.22 0.05 85)",
+          "oklch(0.36 0.09 85)",
+          "oklch(0.5 0.12 85)",
+          "oklch(0.65 0.15 85)",
+          "oklch(0.78 0.17 85)",
+          "oklch(0.9 0.19 85)",
+          "oklch(0.94 0.12 85)",
+          "oklch(0.97 0.06 85)"
+        ]
+      },
+      "region-middle-east": {
+        "role": "secondary",
+        "displayName": "Desert Ember",
+        "canonical": "oklch(0.75 0.19 35)",
+        "tonalRamp": [
+          "oklch(0.2 0.05 35)",
+          "oklch(0.32 0.09 35)",
+          "oklch(0.45 0.13 35)",
+          "oklch(0.55 0.16 35)",
+          "oklch(0.65 0.18 35)",
+          "oklch(0.75 0.19 35)",
+          "oklch(0.85 0.14 35)",
+          "oklch(0.93 0.07 35)"
+        ]
+      },
+      "region-europe": {
+        "role": "secondary",
+        "displayName": "Alpine Cobalt",
+        "canonical": "oklch(0.7 0.15 250)",
+        "tonalRamp": [
+          "oklch(0.2 0.05 250)",
+          "oklch(0.32 0.08 250)",
+          "oklch(0.44 0.11 250)",
+          "oklch(0.55 0.13 250)",
+          "oklch(0.62 0.14 250)",
+          "oklch(0.7 0.15 250)",
+          "oklch(0.8 0.1 250)",
+          "oklch(0.9 0.05 250)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Poster Display",
+        "purpose": "EN brand, heroes, section headings, place names. Uppercase condensed Big Shoulders."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "EN section headings and region names at poster scale."
+      },
+      "title": {
+        "displayName": "UI / Prose Title",
+        "purpose": "Bricolage for prose h3 and UI titles; card story titles use Display mixed case."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Nunito article prose, max 68ch."
+      },
+      "label": {
+        "displayName": "Stamp / Micro",
+        "purpose": "JetBrains Mono uppercase metadata on photos and chrome."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "0 12px 30px -12px oklch(0 0 0 / 0.4)",
+        "purpose": "Dropdown panels and elevated menus only."
+      },
+      {
+        "name": "deep",
+        "value": "0 30px 80px -30px oklch(0 0 0 / 0.6)",
+        "purpose": "Rare structural depth; never default cards."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-cinema",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Primary cinematic ease-out for hovers, lifts, and media reveals."
+      },
+      {
+        "name": "ease-cinema-fast",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Faster fades and reduced-motion fallbacks."
+      },
+      {
+        "name": "ease-cinema-slow",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Astro view-transition root crossfade."
+      },
+      {
+        "name": "duration-ladder",
+        "value": "micro 200 / ui 280 / chrome 400 / load 600 / media 700 / enter-fade 800 / enter 900",
+        "purpose": "Shared timing scale; never invent per-component ms values."
+      },
+      {
+        "name": "photo-scale",
+        "value": "1.04 via --motion-photo-scale",
+        "purpose": "Unified photo breathe on .motion-hover-media (cover shell)."
+      },
+      {
+        "name": "cinema-rise",
+        "value": "cinema-rise var(--duration-enter) var(--ease-cinema) both",
+        "purpose": "Hero title entrance; pair with .motion-stagger on summary."
+      },
+      {
+        "name": "motion-reveal",
+        "value": "view-timeline cinema-reveal (content) / cinema-reveal-media (cards)",
+        "purpose": "Scroll-driven enter; behind @supports (animation-timeline: view())."
+      },
+      {
+        "name": "motion-parallax",
+        "value": "±8% translate + scale 1.08 on hero image layer",
+        "purpose": "One parallax layer per page; off under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Accent Link",
+      "kind": "button",
+      "refersTo": "link-accent",
+      "description": "Nav and footer wayfinding with ember underline sweep.",
+      "html": "<a class=\"ds-link-accent\" href=\"#\">Explore</a>",
+      "css": ".ds-link-accent { position: relative; display: inline-block; font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.9 0.014 75); text-decoration: none; padding-bottom: 3px; transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent::after { content: \"\"; position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: oklch(0.92 0.14 98); transform: scaleX(0); transform-origin: left; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent:hover { color: oklch(0.96 0.012 75); } .ds-link-accent:hover::after { transform: scaleX(1); } .ds-link-accent:focus-visible { outline: 2px solid oklch(0.92 0.14 98); outline-offset: 3px; }"
+    },
+    {
+      "name": "Passport Stamp",
+      "kind": "chip",
+      "refersTo": "stamp",
+      "description": "Uppercase mono metadata for kickers and photo labels.",
+      "html": "<span class=\"ds-stamp\">Spotlight · Europe</span>",
+      "css": ".ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+    },
+    {
+      "name": "Filter Pill Active",
+      "kind": "chip",
+      "refersTo": "filter-pill",
+      "description": "Journal type filter selected state.",
+      "html": "<button class=\"ds-filter-pill\" type=\"button\">Stories</button>",
+      "css": ".ds-filter-pill { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.2 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.4 0.016 55); border-radius: 9999px; padding: 6px 12px; cursor: pointer; } .ds-filter-pill:hover { border-color: oklch(0.5 0.02 55); } .ds-filter-pill:focus-visible { outline: 2px solid oklch(0.92 0.14 98); outline-offset: 3px; }"
+    },
+    {
+      "name": "Region Jump",
+      "kind": "chip",
+      "refersTo": "region-jump",
+      "description": "Drenched explore jump chip in chapter color.",
+      "html": "<a class=\"ds-region-jump\" href=\"#\">South America</a>",
+      "css": ".ds-region-jump { display: inline-flex; align-items: center; font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; padding: 8px 14px; text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-region-jump:hover { opacity: 0.9; } .ds-region-jump:focus-visible { outline: 2px solid oklch(0.92 0.14 98); outline-offset: 3px; }"
+    },
+    {
+      "name": "Poster Wordmark",
+      "kind": "nav",
+      "refersTo": "display",
+      "description": "Condensed uppercase brand mark for EN nav and heroes.",
+      "html": "<a class=\"ds-wordmark\" href=\"/\">House Moldovan</a>",
+      "css": ".ds-wordmark { font-family: \"Big Shoulders Display Variable\", \"Big Shoulders Display\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; color: oklch(0.96 0.012 75); text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-wordmark:hover { opacity: 0.7; } .ds-wordmark:focus-visible { outline: 2px solid oklch(0.92 0.14 98); outline-offset: 3px; }"
+    },
+    {
+      "name": "Drenched Region Tile",
+      "kind": "card",
+      "refersTo": "surface-card",
+      "description": "Home chapter tile with watermark number and poster place name.",
+      "html": "<a class=\"ds-region-tile\" href=\"#\"><span class=\"ds-region-tile__n\" aria-hidden=\"true\">01</span><p class=\"ds-stamp\">Chapter 01</p><h3 class=\"ds-region-tile__name\">South America</h3><p class=\"ds-region-tile__tag\">Andean ridges, jungle rivers, sun-drenched coasts.</p><span class=\"ds-stamp\">Explore →</span></a>",
+      "css": ".ds-region-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 16rem; padding: 1.25rem; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; text-decoration: none; overflow: hidden; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-region-tile:hover { transform: translateY(-1rem); } } .ds-region-tile__n { position: absolute; top: -0.35rem; right: -0.1rem; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 5.5rem; line-height: 1; opacity: 0.14; } .ds-region-tile__name { position: relative; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; } .ds-region-tile__tag { position: relative; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.95rem; line-height: 1.35; max-width: 24ch; opacity: 0.9; } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }"
+    },
+    {
+      "name": "Photo Card",
+      "kind": "card",
+      "refersTo": "surface-card",
+      "description": "Signature film-frame article card; shell scales 1.04 on pointer hover.",
+      "html": "<a class=\"ds-photo-card\" href=\"#\"><span class=\"ds-photo-card__shell\"><span class=\"ds-photo-card__img\" role=\"img\" aria-label=\"Mountain trail\"></span></span><div class=\"ds-photo-card__copy\"><span class=\"ds-photo-card__tick\"></span><p class=\"ds-stamp\">Story · South America</p><h3 class=\"ds-photo-card__title\">Salkantay trek to Machu Picchu</h3><p class=\"ds-stamp\">Peru</p></div></a>",
+      "css": ".ds-photo-card { position: relative; display: block; aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; text-decoration: none; color: oklch(0.98 0.008 75); } .ds-photo-card__shell { position: absolute; inset: 0; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-photo-card:hover .ds-photo-card__shell { transform: scale(1.04); } } .ds-photo-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, oklch(0.35 0.04 220), oklch(0.22 0.03 55) 55%, oklch(0.15 0.02 55)), oklch(0.28 0.04 150); } .ds-photo-card__img::after { content: \"\"; position: absolute; inset: 0; background: linear-gradient(to top, oklch(0.08 0.02 55 / 0.94) 0%, oklch(0.1 0.02 55 / 0.35) 55%, transparent 100%); } .ds-photo-card__copy { position: absolute; inset-inline: 0; bottom: 0; z-index: 1; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.15rem; } .ds-photo-card__tick { width: 3rem; height: 3px; background: oklch(0.75 0.175 155); } .ds-photo-card__title { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 0.96; letter-spacing: -0.03em; text-transform: none; } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; } .ds-photo-card:focus-visible { outline: 2px solid oklch(0.92 0.14 98); outline-offset: 3px; }"
+    },
+    {
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "surface-card",
+      "description": "Flat panel for non-photo containers.",
+      "html": "<div class=\"ds-surface-card\"><p class=\"ds-stamp\">Meta</p><p class=\"ds-surface-card__body\">Field notes from four regions.</p></div>",
+      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 8px; padding: 1.5rem; } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Kodachrome Expedition",
+    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them. Brand and region names arrive as luggage-tag signals; story titles stay readable in mixed case.\n\nThe English journal (`/`) uses a **full palette** strategy: four saturated regional chapter hues plus a global Film Sun accent for links, focus, and wayfinding. Region tiles and explore jumps can go **drenched** (solid regional fills). Article surfaces stay film-dark and photographic. The Romanian hiking portal (`/ro`) shares infrastructure but keeps Source Serif 4 display and a softer editorial voice; do not merge their visual identities.\n\nMotion is **choreographed but respectful**: a named role system in `app.css` (`motion-reveal`, `motion-reveal-media`, `motion-parallax`, `motion-hover-*`, enter/stagger utilities) with a duration ladder (`--duration-micro` 200ms through `--duration-enter` 900ms) and shared distances (`--motion-photo-scale` 1.04, lifts, reveal offsets). Scroll timelines sit behind `@supports (animation-timeline: view())`. Easing is cinematic (exponential ease-out), never bounce or elastic. `prefers-reduced-motion` is role-based: kill ambient travel (parallax, reveal slide, hover lift/scale); keep short opacity for image load and chrome. Spacing uses a three-tier rhythm (tight / standard / chapter) via tokens; prefer `.section`, `.section-y*`, and `--grid-gap` over ad hoc margins.\n\nThis system explicitly rejects generic AI travel-blog templates, frosted-glass chrome as default, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead.",
+    "keyCharacteristics": [
+      "Film-night warm-neutral canvas tuned so photography pops on phone or laptop",
+      "Photography-first heroes with light top veils and deep bottom scrims (not heavy flat overlays)",
+      "Condensed Big Shoulders Display (uppercase for brand, sections, place names) + Bricolage UI/prose headings + Nunito body",
+      "Passport-stamp micro labels (`.stamp` / `.micro`) in JetBrains Mono",
+      "Region-as-chapter color system with watermark chapter numbers on home tiles",
+      "Sharp film-frame corners (2px) on EN photo cards; tonal layering over heavy shadows",
+      "Asymmetric rhythm grids, not uniform card templates",
+      "Role-based cinema motion (tokenized durations/distances; pointer-only photo hover)",
+      "WCAG 2.1 AA target: visible focus rings, informative image alt text, keyboard-accessible controls"
+    ],
+    "rules": [
+      {
+        "name": "The No Pure Black Rule",
+        "body": "Never use `#000` or `#fff`. Neutrals carry a warm film hue (chroma ~0.012–0.016, hue ~55–75). Photo overlays use tinted darks at partial opacity, not flat hex black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chapter Color Rule",
+        "body": "Regional color owns region explore surfaces, drenched home tiles, and card accent washes. Film Sun owns wayfinding on neutral UI. Do not collapse regions into the global accent, and never assign a chapter hue as `--color-accent`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Photography Floor Rule",
+        "body": "On card and hero surfaces, text sits on gradient scrims (deep bottom, lighter top), never on raw photo pixels without a read layer. Prefer bright photos; keep hero overlay light (`--hero-overlay` ~0.22 on EN).",
+        "section": "colors"
+      },
+      {
+        "name": "The Poster Owns Place Names Rule",
+        "body": "Uppercase condensed display is reserved for the homepage brand title and region chapter names (`.page-title--poster`, `.region-name`). Section headings, countries, and story / spotlight / itinerary titles stay mixed case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Display Owns the Fold Rule",
+        "body": "One display-scale headline per viewport fold. Do not stack multiple poster-scale headings without a photo or section break between them.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stamp Is Metadata Rule",
+        "body": "Uppercase mono stamps carry type, region, dates, and wayfinding. Never use stamp style for sentences or body copy.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Page Rule",
+        "body": "Article prose and explore lists sit flat on the film surface. Shadow appears only when a panel detaches (dropdown, mobile menu).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Transform-Only Motion Rule",
+        "body": "Parallax, hover scale, and reveals use `transform` and `opacity`. Never animate width, height, or layout properties. Honor `prefers-reduced-motion`.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Role-Based Motion Rule",
+        "body": "Use the named classes and tokens; do not invent per-component durations or scales. Content scroll = `.motion-reveal`; cards/photos = `.motion-reveal-media`; hero image = `.motion-parallax`; photo breathe = `.motion-hover-media` on the cover shell; bordered card lift = `.motion-hover-lift`; drenched tile lift = `.motion-hover-lift-strong`. Hover motion only under `@media (hover: hover) and (pointer: fine)`. Put hover scale on the shell, not the `.cover-image`.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let photography occupy the hero: full-bleed images with gradient read layers, not colored placeholder blocks.",
+      "Do use Big Shoulders uppercase only for the homepage brand title and region names; keep section headings, countries, and story titles mixed case.",
+      "Do assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep Film Sun for global wayfinding on neutral UI. Never reuse a chapter hue as the global accent.",
+      "Do use OKLCH tokens from `app.css`; tint every neutral toward warm film hue ~55–75.",
+      "Do honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.",
+      "Do use motion tokens and role classes from `app.css`; put photo hover on the cover shell, not the fading img.",
+      "Do cap prose at 68ch; use stamp/micro style only for metadata.",
+      "Do write descriptive alt text on informative travel photography."
+    ],
+    "donts": [
+      "Don't use generic AI travel-blog templates: identical card grids, frosted-glass nav as default chrome, stock-placeholder heroes, interchangeable Fraunces-and-gradient aesthetics.",
+      "Don't bring back soft Fraunces editorial display on the English journal; that voice was retired for Kodachrome Expedition.",
+      "Don't use side-stripe borders (`border-left` / `border-right` > 1px) on cards, TOC items, or callouts. Use spacing, weight, short accent ticks, or full borders instead.",
+      "Don't treat the English journal and Romanian hiking portal as one visual product.",
+      "Don't use brochure tourism patterns: superlatives, \"hidden gem\" filler layouts, author-less destination marketing.",
+      "Don't add influencer patterns: engagement metric heroes, modal newsletter popups, engagement bait blocks.",
+      "Don't do magazine cosplay without photography: oversized display type and drop caps where images should lead.",
+      "Don't force uppercase on long story titles; poster case is for place and section signals.",
+      "Don't use `#000`, `#fff`, gradient text (`background-clip: text`), bounce/elastic easing, or layout-property animation.",
+      "Don't invent ad hoc hover scales or durations (no `scale-[1.03]` / `duration-500` one-offs); use `--motion-photo-scale` and the duration ladder.",
+      "Don't wrap chrome (e.g. MetaBar) in scroll reveals; reserve `.motion-reveal*` for content and media that earn attention.",
+      "Don't nest cards. One surface level per grouping."
+    ]
+  }
+}

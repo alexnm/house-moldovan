@@ -1,0 +1,179 @@
+---
+import type { GetStaticPaths } from "astro";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import CountryCard from "~/components/home/CountryCard.astro";
+import RegionHero from "~/components/home/RegionHero.astro";
+import ItineraryHighlight from "~/components/home/ItineraryHighlight.astro";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import { en } from "~/i18n/en";
+import { getAllRegions, getRegion } from "~/lib/regions";
+import {
+  getAllPlaces,
+  getEnFeed,
+  getPlace,
+  countriesForRegion,
+  articlesForRegion,
+  primaryCountryFromArticle,
+  regionByPlaceIdMap,
+  type AnyEnArticle,
+} from "~/lib/content";
+import { articleHref, articleKicker } from "~/lib/articles";
+import { countryLine, placeShortName } from "~/lib/articlePlaces";
+import { placeThumbnailForCountry } from "~/lib/placeCover";
+
+export const getStaticPaths = (async () => {
+  const regions = await getAllRegions();
+  return regions.map((region) => ({ params: { slug: region.id } }));
+}) satisfies GetStaticPaths;
+
+const regionEntry = await getRegion(Astro.params.slug!);
+if (!regionEntry) {
+  return Astro.redirect("/explore");
+}
+
+const [places, feed] = await Promise.all([getAllPlaces(), getEnFeed()]);
+const regionMap = regionByPlaceIdMap(places);
+const placeById = new Map(places.map((p) => [p.id, p] as const));
+
+const countries = countriesForRegion(places, regionEntry.id);
+const articles = articlesForRegion(feed, regionEntry.id, regionMap);
+
+const multiCountryItineraries = articles
+  .filter(
+    (a): a is AnyEnArticle & { kind: "itinerary" } =>
+      a.kind === "itinerary" && a.data.country.length > 1,
+  )
+  .map((a) => ({
+    id: a.id,
+    title: a.data.title,
+    hero: a.data.hero,
+    days: a.data.days.length,
+    countries: a.data.country
+      .map((ref) => placeById.get(ref.id))
+      .filter((p): p is (typeof places)[number] => Boolean(p))
+      .map((p) => ({ name: p.data.name, flag: p.data.flag })),
+  }));
+
+const countryCards = countries.map((country) => ({
+  country,
+  thumbnail: placeThumbnailForCountry(country, feed),
+}));
+
+const { name, tagline, intro, accent, order, images } = regionEntry.data;
+
+// Every note tied to this region, so the region hub links directly down to all
+// stories, spotlights and single-country itineraries (cross-border itineraries
+// already appear in "Routes across borders" above).
+const shownItineraryIds = new Set(multiCountryItineraries.map((i) => i.id));
+const regionNotes = articles.filter((a) => !shownItineraryIds.has(a.id));
+const enrichedNotes = await Promise.all(
+  regionNotes.map(async (a) => {
+    const primary = await getPlace(primaryCountryFromArticle(a));
+    const resolved = (
+      await Promise.all(a.data.country.map((ref) => getPlace(ref)))
+    ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
+    return {
+      a,
+      href: articleHref(a),
+      kicker: articleKicker(a),
+      countryMeta: countryLine(resolved),
+      accent: primary?.data.accent ?? accent,
+    };
+  }),
+);
+---
+
+<BaseLayout title={`${name} · ${en.siteName}`} description={intro}>
+  <RegionHero
+    name={name}
+    tagline={tagline}
+    order={order}
+    accent={accent}
+    images={images}
+  />
+
+  <section class="section section-y">
+    <p
+      class="max-w-[58ch] font-body text-lg leading-relaxed text-pretty text-ink"
+    >
+      {intro}
+    </p>
+  </section>
+
+  {
+    multiCountryItineraries.length > 0 && (
+      <section class="section section-y">
+        <header class="section-header">
+          <h2 class="display section-heading">{en.region.routesHeading}</h2>
+        </header>
+        <ul class="grid grid-cols-1 gap-[var(--grid-gap)] sm:grid-cols-2">
+          {multiCountryItineraries.map((itinerary) => (
+            <ItineraryHighlight
+              href={`/itineraries/${itinerary.id}`}
+              title={itinerary.title}
+              hero={itinerary.hero}
+              days={itinerary.days}
+              countries={itinerary.countries}
+              accent={accent}
+            />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section section-y">
+    <header
+      class="section-header flex flex-wrap items-end justify-between gap-4"
+    >
+      <h2 class="display section-heading">{en.region.countriesHeading}</h2>
+    </header>
+    <ul class="grid-countries">
+      {
+        countryCards.map(({ country, thumbnail }) => (
+          <CountryCard
+            href={`/explore/${country.id}`}
+            name={placeShortName(country)}
+            flag={country.data.flag}
+            tagline={country.data.tagline}
+            image={thumbnail}
+            imageAlt={`Scenes from ${country.data.name}`}
+            accent={accent}
+          />
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    enrichedNotes.length > 0 && (
+      <section class="section section-y">
+        <header class="section-header">
+          <h2 class="display section-heading">
+            {en.region.storiesHeading(name)}
+          </h2>
+        </header>
+        <ul class="grid-cards">
+          {enrichedNotes.map((item) => (
+            <li>
+              <ArticleCard
+                href={item.href}
+                title={item.a.data.title}
+                kicker={item.kicker}
+                meta={item.countryMeta}
+                image={item.a.data.hero}
+                imageAlt={item.a.data.title}
+                size="md"
+                aspectClass="aspect-[4/5]"
+                accent={item.accent}
+                regionLabel={name}
+                transitionName={`hero-${item.a.id}`}
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

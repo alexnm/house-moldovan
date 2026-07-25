@@ -1,0 +1,78 @@
+---
+import { THEME_COLORS, THEME_STORAGE_KEY } from "~/lib/theme";
+---
+
+<script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY, themeColors: THEME_COLORS }}>
+  (function () {
+    function resolveTheme() {
+      try {
+        var stored = localStorage.getItem(storageKey);
+        if (stored === "light" || stored === "dark") return stored;
+      } catch (_) {}
+
+      return window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark";
+    }
+
+    function syncMeta(theme) {
+      var themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) themeColor.setAttribute("content", themeColors[theme]);
+
+      var colorScheme = document.querySelector('meta[name="color-scheme"]');
+      if (colorScheme) colorScheme.setAttribute("content", theme);
+    }
+
+    function syncToggles(theme) {
+      document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
+        var next = theme === "dark" ? "light" : "dark";
+        button.setAttribute(
+          "aria-label",
+          button.getAttribute("data-label-" + next) ?? next,
+        );
+      });
+    }
+
+    function applyTheme(theme, persist) {
+      document.documentElement.dataset.theme = theme;
+      syncMeta(theme);
+      syncToggles(theme);
+
+      if (persist) {
+        try {
+          localStorage.setItem(storageKey, theme);
+        } catch (_) {}
+      }
+    }
+
+    window.__setTheme = function (theme) {
+      applyTheme(theme, true);
+    };
+
+    window.__toggleTheme = function () {
+      var current = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+      applyTheme(current === "dark" ? "light" : "dark", true);
+    };
+
+    applyTheme(resolveTheme(), false);
+
+    document.addEventListener("DOMContentLoaded", function () {
+      syncToggles(
+        document.documentElement.dataset.theme === "light" ? "light" : "dark",
+      );
+    });
+
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest("[data-theme-toggle]")) return;
+      window.__toggleTheme();
+    });
+
+    document.addEventListener("astro:page-load", function () {
+      syncToggles(
+        document.documentElement.dataset.theme === "light" ? "light" : "dark",
+      );
+    });
+  })();
+</script>
