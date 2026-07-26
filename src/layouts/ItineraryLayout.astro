@@ -14,10 +14,7 @@ import {
   uniqueRegionLinks,
 } from "~/lib/articlePlaces";
 import { getAllRegions, regionMapById } from "~/lib/regions";
-import {
-  heroRouteFromItineraryDays,
-  itineraryRssDescription,
-} from "~/lib/itinerary";
+import { heroRouteFromItineraryDays } from "~/lib/itinerary";
 import { getReadNextArticles } from "~/lib/readNext";
 import ReadNext from "~/components/article/ReadNext.astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
@@ -50,7 +47,7 @@ const countryLabel =
   resolved.length > 1 ? en.article.countries : en.article.country;
 const dayCount = data.days.length;
 const placeNames = heroRouteFromItineraryDays(data.days);
-const pageDescription = itineraryRssDescription(data);
+const pageDescription = data.summary;
 
 const dayRows = await Promise.all(
   data.days.map(async (d, i) => {
@@ -96,7 +93,7 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
       alt={data.title}
       kicker={en.article.itinerary}
       title={data.title}
-      meta={placeNames}
+      meta={data.summary}
       transitionName={`hero-${entry.id}`}
     />
 

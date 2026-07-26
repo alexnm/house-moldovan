@@ -1,5 +1,3 @@
-import type { CollectionEntry } from "astro:content";
-
 /** Ordered labels for the hero byline (each label once, in order of first appearance). */
 export function heroRouteFromItineraryDays(
   days: { locations: { label: string }[] }[],
@@ -16,11 +14,3 @@ export function heroRouteFromItineraryDays(
   return seq.join(" → ");
 }
 
-export function itineraryRssDescription(
-  data: CollectionEntry<"itineraries">["data"],
-): string {
-  return [...data.highlights, ...data.travelTips]
-    .join(" · ")
-    .trim()
-    .slice(0, 500);
-}

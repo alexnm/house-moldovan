@@ -15,6 +15,9 @@ export const SEASONS_RO = ["primavara", "vara", "toamna", "iarna"] as const;
 export const DIFFICULTIES_RO = ["usor", "mediu", "dificil", "tehnic"] as const;
 export const HIKE_SHAPES = ["dus-intors", "circuit", "traversare"] as const;
 
+/** One-line hook for cards, heroes, and RSS (stories, spotlights, itineraries). */
+export const articleSummary = z.string().min(1).max(200);
+
 const regions = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/regions" }),
   schema: ({ image }) =>
@@ -65,7 +68,7 @@ const stories = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      summary: z.string().max(200),
+      summary: articleSummary,
       country: z.array(reference("places")).min(1),
       published: z.coerce.date(),
       hero: image(),
@@ -82,7 +85,7 @@ const spotlights = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      summary: z.string().max(120).optional(),
+      summary: articleSummary,
       country: z.array(reference("places")).min(1),
       published: z.coerce.date(),
       hero: image(),
@@ -117,6 +120,7 @@ const itineraries = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      summary: articleSummary,
       highlights: z.array(z.string()).min(1),
       travelTips: z.array(z.string()).min(1),
       days: z.array(itineraryDay).min(1),

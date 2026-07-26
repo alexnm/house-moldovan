@@ -1,7 +1,5 @@
 import { en } from "~/i18n/en";
 import type { AnyEnArticle } from "~/lib/content";
-import { itineraryRssDescription } from "~/lib/itinerary";
-
 export type ArticleKind = "itinerary" | "story" | "spotlight";
 
 export function articleHref(a: AnyEnArticle): string {
@@ -38,12 +36,5 @@ export function articleOgPath(a: AnyEnArticle): string {
 }
 
 export function articleRssDescription(a: AnyEnArticle): string {
-  switch (a.kind) {
-    case "itinerary":
-      return itineraryRssDescription(a.data);
-    case "story":
-      return a.data.summary;
-    case "spotlight":
-      return a.data.summary ?? a.data.photos[0]?.caption ?? "";
-  }
+  return a.data.summary;
 }

@@ -24,8 +24,6 @@ export const en = {
   },
   journal: {
     title: "Journal",
-    /** SEO <title> for the hub; the full feed of every note. */
-    metaTitle: "Travel Journal — Stories, Spotlights & Itineraries",
     metaDescription:
       "The complete House Moldovan travel journal: every story, photo spotlight and multi-day itinerary from our trips across South America, Asia, the Middle East and Europe.",
     intro: "Latest journal notes",
@@ -36,21 +34,20 @@ export const en = {
     pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
   },
   storiesIndex: {
-    metaTitle: "Travel Stories & Destination Guides",
+    metaTitle: "Travel stories & travel guides",
     intro: "Dedicated travel guides about a place we visited",
   },
   spotlightsIndex: {
-    metaTitle: "Photo Spotlights from Around the World",
+    metaTitle: "Photo spotlights from around the world",
     intro: "Photo highlights capturing a place or an experience",
   },
   itinerariesIndex: {
-    metaTitle: "Multi-Day Travel Itineraries",
+    metaTitle: "Multi-day travel itineraries",
     intro: "Multi-day trips across different locations",
   },
   explore: {
-    title: "Explore",
-    intro: "Explore the world",
-    sub: "Start from a region, open a country, and read the notes tied to it.",
+    title: "Explore the world",
+    sub: "Start from a region, find a country, and read the journal notes related to it.",
     regionsNav: "Jump to region",
     viewRegion: (name: string) => `Explore ${name}`,
   },

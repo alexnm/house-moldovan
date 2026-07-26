@@ -34,7 +34,7 @@ const regionsById = regionMapById(await getAllRegions());
 const accent = regionAccentForPlaces(resolved, regionsById);
 const countryLabel =
   resolved.length > 1 ? en.article.countries : en.article.country;
-const heroMeta = data.summary ?? data.photos[0]?.caption;
+const heroMeta = data.summary;
 const items = [
   { label: countryLabel, value: countryLinks(resolved) },
   { label: en.region.kicker, value: uniqueRegionLinks(resolved, regionsById) },
@@ -47,7 +47,7 @@ const items = [
 
 const readNext = await getReadNextArticles({ ...entry, kind: "spotlight" });
 const ogImage = articleOgPath({ ...entry, kind: "spotlight" });
-const description = data.summary ?? data.photos[0]?.caption ?? data.title;
+const description = data.summary;
 ---
 
 <BaseLayout

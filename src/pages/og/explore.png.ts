@@ -10,7 +10,7 @@ export const GET: APIRoute = async () => {
   const background = await loadOgBackground(exploreHero);
 
   const png = await renderOg({
-    title: en.explore.intro,
+    title: en.explore.title,
     accent: accentHex("cobalt"),
     background,
   });

@@ -11,7 +11,10 @@ const feed = await getEnFeed();
 const recent = getHomeRecentFeed(feed);
 ---
 
-<BaseLayout title={en.siteName} description={en.description}>
+<BaseLayout
+  title={`${en.siteName} · ${en.home.kicker}`}
+  description={en.description}
+>
   <section class="relative isolate overflow-clip">
     <div
       class="relative aspect-[16/9] max-h-dvh min-h-svh w-full overflow-clip"
@@ -55,7 +58,9 @@ const recent = getHomeRecentFeed(feed);
   <RegionStrip />
 
   <section class="section section-y-tight">
-    <header class="section-header flex flex-wrap items-baseline justify-between gap-4">
+    <header
+      class="section-header flex flex-wrap items-baseline justify-between gap-4"
+    >
       <h2 class="display section-heading">{en.home.recentHeading}</h2>
       <a
         href="/journal"
