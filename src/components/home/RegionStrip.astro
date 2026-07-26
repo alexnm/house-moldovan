@@ -25,7 +25,7 @@ const regions = await getAllRegions();
           <li class="motion-reveal-media">
             <a
               href={`/explore/region/${r.id}`}
-              class="accent-scope accent-drenched region-tile motion-hover-lift-strong group relative flex aspect-4/3 flex-col justify-between overflow-clip rounded-sm p-5 sm:aspect-4/5 md:p-6"
+              class="accent-scope accent-drenched region-tile motion-hover-lift-strong group relative flex aspect-square flex-col justify-between overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
               data-accent={r.data.accent}
             >
               {cover && (
@@ -93,7 +93,7 @@ const regions = await getAllRegions();
     inset-inline: 0;
     bottom: 0;
     z-index: 1;
-    height: 50%;
+    height: 51%; /* avoid rounding issues */
     pointer-events: none;
     background: linear-gradient(
       to top,

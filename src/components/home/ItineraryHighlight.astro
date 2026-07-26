@@ -22,7 +22,7 @@ const countryLine = countries.map((c) => `${c.flag} ${c.name}`).join(" · ");
 <li class="motion-reveal-media">
   <a
     href={href}
-    class="itinerary-card group relative flex aspect-[8/5] flex-col overflow-clip rounded text-white sm:aspect-[4/5] md:aspect-[6/5] xl:aspect-[8/5]"
+    class="itinerary-card group relative flex aspect-square flex-col overflow-clip rounded text-white md:aspect-[6/5] xl:aspect-[8/5]"
     style={accent ? cardAccentStyle(accent) : undefined}
   >
     <CoverImage

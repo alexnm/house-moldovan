@@ -5,8 +5,9 @@ intro: Our home continent is also our most visited region. From the rugged peaks
 accent: cobalt
 order: 2
 images:
+  - ../../assets/belgium/ghent-2.JPG
   - ../../assets/italy/dolomites-sella.JPG
   - ../../assets/spain/sevilla-cover.JPG
-  - ../../assets/belgium/ghent-2.JPG
+
   - ../../assets/germany/neuschwanstein.jpg
 ---

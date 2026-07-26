@@ -24,7 +24,7 @@ const onPhoto = image != null;
   <a
     href={href}
     class:list={[
-      "country-card group relative flex aspect-4/3 flex-col overflow-clip rounded-sm sm:aspect-4/5",
+      "country-card group relative flex aspect-square flex-col overflow-clip rounded-sm md:aspect-4/5",
       onPhoto ? "text-white" : "bg-surface-2 text-ink",
     ]}
     style={accent ? cardAccentStyle(accent) : undefined}

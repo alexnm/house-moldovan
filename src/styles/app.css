@@ -91,7 +91,7 @@
   --max-width-prose: var(--container-prose);
 
   /* Spacing scale (DESIGN.md) */
-  --space-canvas-x: 1rem;
+  --space-canvas-x: 1.125rem;
   --space-canvas-x-md: 1.5rem;
   --space-tight: 0.75rem;
   --space-group: 1rem;
@@ -882,12 +882,13 @@
   /* Content enter-on-scroll (prose, sections). Alias: .reveal */
   .motion-reveal,
   .reveal {
-    animation: cinema-reveal linear both;
+    animation: cinema-reveal var(--duration-enter) linear both;
   }
 
   /* Media enter-on-scroll (cards, photo grids). Explicit class only. */
   .motion-reveal-media {
-    animation: cinema-reveal-media var(--ease-cinema) both;
+    animation: cinema-reveal-media var(--duration-enter) var(--ease-cinema)
+      both;
   }
 
   /* Hero image depth. Alias: .parallax */
@@ -896,22 +897,29 @@
     animation: cinema-parallax linear both;
   }
 
+  /* Scroll-driven enter only on fine-pointer desktops; touch browsers often
+     fail to advance view timelines, leaving media stuck at opacity 0. */
   @supports (animation-timeline: view()) {
-    .motion-reveal,
-    .reveal {
-      animation-timeline: view();
-      animation-range: entry 0% cover 18%;
-    }
+    @media (hover: hover) and (pointer: fine) {
+      .motion-reveal,
+      .reveal {
+        animation-duration: auto;
+        animation-timeline: view();
+        animation-range: entry 0% cover 18%;
+      }
 
-    .motion-reveal-media {
-      animation-timeline: view();
-      animation-range: entry 20% cover 50%;
-    }
+      .motion-reveal-media {
+        animation-duration: auto;
+        animation-timeline: view();
+        animation-range: entry 20% cover 50%;
+      }
 
-    .motion-parallax,
-    .parallax {
-      animation-timeline: view();
-      animation-range: cover;
+      .motion-parallax,
+      .parallax {
+        animation-duration: auto;
+        animation-timeline: view();
+        animation-range: cover;
+      }
     }
   }
 

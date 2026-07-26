@@ -22,8 +22,8 @@ const cells = buildRhythmCells(photos);
             "spotlight-photo motion-reveal-media relative min-h-0 overflow-clip rounded",
             span === 2 && "lg:col-span-2",
             span === 2
-              ? "aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[min(36rem,50vh)]"
-              : "aspect-[4/5]",
+              ? "aspect-square md:aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[min(36rem,50vh)]"
+              : "aspect-square md:aspect-[4/5]",
           ]}
         >
           <CoverImage

@@ -59,8 +59,8 @@ const cells = buildRhythmCells(enriched);
           size={span === 2 ? "lg" : "md"}
           aspectClass={
             span === 2
-              ? "aspect-[4/3] md:aspect-auto md:h-full md:min-h-(--rhythm-single-h)"
-              : "aspect-[4/3] md:aspect-[4/5]"
+              ? "aspect-square md:aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[min(36rem,50vh)]"
+              : "aspect-square md:aspect-[4/5]"
           }
           accent={item.accent}
           regionLabel={item.regionLabel}
@@ -71,21 +71,3 @@ const cells = buildRhythmCells(enriched);
   }
 </div>
 
-<style>
-  .rhythm-grid {
-    --rhythm-col: 100%;
-    --rhythm-single-h: calc(var(--rhythm-col) * 5 / 4);
-  }
-
-  @media (width >= 768px) {
-    .rhythm-grid {
-      --rhythm-col: calc((100% - var(--grid-gap)) / 2);
-    }
-  }
-
-  @media (width >= 1024px) {
-    .rhythm-grid {
-      --rhythm-col: calc((100% - 2 * var(--grid-gap)) / 3);
-    }
-  }
-</style>

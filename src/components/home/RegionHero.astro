@@ -114,12 +114,16 @@ const slots = [
     top: var(--y);
     width: var(--w);
     max-width: 600px;
-    aspect-ratio: 5 / 4;
+    aspect-ratio: 1 / 1;
     border-radius: 2px;
     transform: rotate(var(--r));
     box-shadow:
       0 4px 14px oklch(0 0 0 / 0.14),
       0 22px 48px -14px oklch(0 0 0 / 0.38);
+
+    @media (width >= 768px) {
+      aspect-ratio: 5 / 4;
+    }
   }
 
   /* Shorter mobile hero: pull the top pair down toward the lower two */

@@ -27,4 +27,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ vars.CF_PROJECT_NAME || 'travel-blog' }}
+          command: pages deploy dist --project-name=${{ vars.CF_PROJECT_NAME || 'house-moldovan' }}
