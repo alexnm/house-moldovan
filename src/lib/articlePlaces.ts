@@ -13,7 +13,7 @@ export function placeShortName(place: CollectionEntry<"places">): string {
 }
 
 export function countryLine(countries: CollectionEntry<"places">[]): string {
-  return countries.map((p) => `${p.data.flag} ${p.data.name}`).join(" ");
+  return countries.map((p) => `${p.data.flag} ${p.data.name}`).join(" · ");
 }
 
 export function countryLinks(
