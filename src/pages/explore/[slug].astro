@@ -22,6 +22,7 @@ import { articleHref, articleKicker } from "~/lib/articles";
 import { countryLine } from "~/lib/articlePlaces";
 import type { Accent } from "~/lib/accent";
 import { requirePlaceCoverFromFrontmatter } from "~/lib/placeCover";
+import { placeOgPath } from "~/lib/ogPaths";
 
 export const getStaticPaths = (async () => {
   const places = await getAllPlaces();
@@ -72,6 +73,7 @@ const enriched = await Promise.all(
 <BaseLayout
   title={`${country.data.name} · ${en.siteName}`}
   description={country.data.tagline}
+  ogImage={placeOgPath(country.id)}
 >
   <Hero
     image={cover}

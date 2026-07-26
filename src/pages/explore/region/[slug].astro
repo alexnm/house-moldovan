@@ -21,6 +21,7 @@ import {
 import { articleHref, articleKicker } from "~/lib/articles";
 import { countryLine, placeShortName } from "~/lib/articlePlaces";
 import { placeThumbnailForCountry } from "~/lib/placeCover";
+import { regionOgPath } from "~/lib/ogPaths";
 
 export const getStaticPaths = (async () => {
   const regions = await getAllRegions();
@@ -84,7 +85,11 @@ const enrichedNotes = await Promise.all(
 );
 ---
 
-<BaseLayout title={`${name} · ${en.siteName}`} description={intro}>
+<BaseLayout
+  title={`${name} · ${en.siteName}`}
+  description={intro}
+  ogImage={regionOgPath(regionEntry.id)}
+>
   <RegionHero
     name={name}
     tagline={tagline}
