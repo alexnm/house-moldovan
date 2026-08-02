@@ -3,6 +3,55 @@ export interface RhythmCell<T> {
   span: 1 | 2;
 }
 
+const LG_COLUMNS = 3;
+
+type SpanCell = Pick<RhythmCell<unknown>, "span">;
+
+function rhythmRows(cells: SpanCell[]): SpanCell[][] {
+  const rows: SpanCell[][] = [];
+  let row: SpanCell[] = [];
+  let col = 0;
+
+  for (const cell of cells) {
+    if (col + cell.span > LG_COLUMNS) {
+      if (row.length) rows.push(row);
+      row = [];
+      col = 0;
+    }
+    row.push(cell);
+    col += cell.span;
+    if (col >= LG_COLUMNS) {
+      rows.push(row);
+      row = [];
+      col = 0;
+    }
+  }
+
+  if (row.length) rows.push(row);
+  return rows;
+}
+
+/** Whether a wide cell (span 2) sits on a 3-col row with a single (span 1). */
+export function wideSharesRowWithSingle(
+  cells: SpanCell[],
+  index: number,
+): boolean {
+  if (cells[index]?.span !== 2) return false;
+
+  let cursor = 0;
+  for (const row of rhythmRows(cells)) {
+    const rowStart = cursor;
+    const rowEnd = cursor + row.length - 1;
+    cursor += row.length;
+
+    if (index < rowStart || index > rowEnd) continue;
+
+    return row.some((c) => c.span === 1) && row.some((c) => c.span === 2);
+  }
+
+  return false;
+}
+
 /** First item double-width, then cycle 5 singles / double / 3 singles / double … */
 export function buildRhythmCells<T>(list: T[]): RhythmCell<T>[] {
   const out: RhythmCell<T>[] = [];

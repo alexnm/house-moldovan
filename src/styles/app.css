@@ -386,7 +386,7 @@
     font-size: 0.68rem;
     letter-spacing: var(--tracking-microcaps);
     text-transform: uppercase;
-    line-height: 1.25;
+    line-height: 1.5;
     text-wrap: balance;
     background: oklch(0.22 0.016 55 / 0.42);
     color: oklch(0.98 0.008 75);
@@ -887,8 +887,7 @@
 
   /* Media enter-on-scroll (cards, photo grids). Explicit class only. */
   .motion-reveal-media {
-    animation: cinema-reveal-media var(--duration-enter) var(--ease-cinema)
-      both;
+    animation: cinema-reveal-media var(--duration-enter) var(--ease-cinema) both;
   }
 
   /* Hero image depth. Alias: .parallax */
@@ -1126,7 +1125,7 @@
      spotlight / itinerary headlines stay readable (Poster Owns Place Names). */
   html[lang="en"] .page-title {
     font-size: clamp(3.15rem, 6vw + 0.75rem, 6.5rem);
-    line-height: 0.9;
+    line-height: 1.04;
     letter-spacing: -0.04em;
     text-transform: none;
   }

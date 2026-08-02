@@ -7,7 +7,7 @@ import { countryLine } from "~/lib/articlePlaces";
 import type { Accent } from "~/lib/accent";
 import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
 import { articleHref, articleKicker } from "~/lib/articles";
-import { buildRhythmCells } from "~/lib/rhythmGrid";
+import { buildRhythmCells, wideSharesRowWithSingle } from "~/lib/rhythmGrid";
 
 export interface Props {
   articles: AnyEnArticle[];
@@ -47,27 +47,57 @@ const cells = buildRhythmCells(enriched);
   class="rhythm-grid grid grid-cols-1 items-stretch gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3"
 >
   {
-    cells.map(({ item, span }) => (
-      <div class:list={["min-h-0", span === 2 && "lg:col-span-2"]}>
-        <ArticleCard
-          href={articleHref(item.a)}
-          title={item.a.data.title}
-          kicker={articleKicker(item.a)}
-          meta={item.countryMeta}
-          image={item.a.data.hero}
-          imageAlt={item.a.data.title}
-          size={span === 2 ? "lg" : "md"}
-          aspectClass={
-            span === 2
-              ? "aspect-square md:aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[min(36rem,50vh)]"
-              : "aspect-square md:aspect-[4/5]"
-          }
-          accent={item.accent}
-          regionLabel={item.regionLabel}
-          transitionName={`hero-${item.a.id}`}
-        />
-      </div>
-    ))
+    cells.map(({ item, span }, index) => {
+      const pairedWide =
+        span === 2 && wideSharesRowWithSingle(cells, index);
+
+      return (
+        <div
+          class:list={[
+            "min-h-0 overflow-clip",
+            span === 2 && "lg:col-span-2",
+            pairedWide && "rhythm-cell--wide-paired",
+            span === 2 && !pairedWide && "rhythm-cell--wide-solo lg:aspect-video",
+          ]}
+        >
+          <ArticleCard
+            href={articleHref(item.a)}
+            title={item.a.data.title}
+            kicker={articleKicker(item.a)}
+            meta={item.countryMeta}
+            image={item.a.data.hero}
+            imageAlt={item.a.data.title}
+            size={span === 2 ? "lg" : "md"}
+            aspectClass={
+              span === 2
+                ? "aspect-square lg:aspect-auto lg:h-full lg:min-h-0"
+                : "aspect-square lg:aspect-[4/5]"
+            }
+            accent={item.accent}
+            regionLabel={item.regionLabel}
+            transitionName={`hero-${item.a.id}`}
+          />
+        </div>
+      );
+    })
   }
 </div>
 
+<style>
+  .rhythm-grid {
+    container-type: inline-size;
+  }
+
+  @media (min-width: 1024px) {
+    /* Match single-column 4/5 height: col = (grid − 2 gaps) / 3 */
+    .rhythm-grid > .rhythm-cell--wide-paired {
+      height: calc((100cqw - 2 * var(--grid-gap)) / 3 * 5 / 4);
+    }
+
+    .rhythm-grid > [class*="rhythm-cell--wide"] .article-card,
+    .rhythm-grid > [class*="rhythm-cell--wide"] figure {
+      height: 100%;
+      min-height: 0;
+    }
+  }
+</style>

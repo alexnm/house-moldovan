@@ -13,16 +13,16 @@ const { sections } = Astro.props;
   class="md:sticky md:top-24 md:self-start"
   aria-label={en.article.onThisPage}
 >
-  <p class="micro mb-3 text-ink-faint">
+  <p class="micro mb-3 text-accent">
     {en.article.onThisPage}
   </p>
   <nav>
-    <ol class="space-y-3 ">
+    <ol class="space-y-3">
       {
         sections.map((section) => (
           <li class="pl-0.5">
             <a
-              class="line-clamp-3 min-w-0 break-words text-left text-sm font-medium leading-snug text-ink transition-colors duration-ui ease-cinema hover:text-accent-ink"
+              class="duration-ui line-clamp-3 min-w-0 text-left leading-snug font-medium break-words text-ink transition-colors ease-cinema hover:text-accent-ink"
               href={`#${section.slug}`}
             >
               {section.text}
@@ -32,7 +32,7 @@ const { sections } = Astro.props;
                 {section.subsections.map((sub) => (
                   <li>
                     <a
-                      class="line-clamp-2 min-w-0 break-words text-left text-sm leading-snug text-ink-dim transition-colors duration-ui ease-cinema hover:text-accent-ink"
+                      class="duration-ui line-clamp-2 min-w-0 text-left leading-snug break-words text-ink-dim transition-colors ease-cinema hover:text-accent-ink"
                       href={`#${sub.slug}`}
                     >
                       {sub.text}
