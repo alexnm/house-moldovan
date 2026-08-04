@@ -2,7 +2,10 @@ import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { sitemapLastmod, sitemapDraftPaths } from "./scripts/sitemap-lastmod.mjs";
+import {
+  sitemapLastmod,
+  sitemapDraftPaths,
+} from "./scripts/sitemap-lastmod.mjs";
 
 const SITE = "https://housemoldovan.com";
 const LASTMOD = sitemapLastmod();

@@ -55,7 +55,6 @@ const trails = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/trails" }),
   schema: z.object({
     name: z.string(),
-    accent: z.string().optional(),
     crest: z.string().optional(),
     summary: z.string().optional(),
     /** Relative to the trail file, e.g. `../../assets/romania/{slug}/cover.jpg`. */
@@ -139,6 +138,7 @@ const hikes = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      summary: articleSummary,
       published: z.coerce.date(),
       range: reference("trails"),
       trailhead: z.object({

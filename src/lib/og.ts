@@ -35,7 +35,7 @@ const loadFonts = async (
 }> => {
   const display =
     variant === "ro"
-      ? "@fontsource/source-serif-4/files/source-serif-4-latin-400-normal.woff2"
+      ? "@fontsource/oswald/files/oswald-latin-ext-600-normal.woff2"
       : "@fontsource/big-shoulders-display/files/big-shoulders-display-latin-700-normal.woff2";
 
   const [d, s, ss, m] = await Promise.all([
@@ -150,10 +150,10 @@ const roLogoNode = (logoSrc: string) => ({
         type: "div",
         props: {
           style: {
-            fontFamily: "Source Serif 4",
+            fontFamily: "Oswald",
             fontSize: 16,
-            fontWeight: 400,
-            letterSpacing: "-0.02em",
+            fontWeight: 600,
+            letterSpacing: "0.02em",
             lineHeight: 1.1,
           },
           children: ro.siteName,
@@ -182,7 +182,8 @@ export const renderOg = async (input: OgInput): Promise<Uint8Array> => {
   const variant = input.variant ?? "en";
   const fonts = await loadFonts(variant);
   const displayFamily =
-    variant === "ro" ? "Source Serif 4" : "Big Shoulders Display";
+    variant === "ro" ? "Oswald" : "Big Shoulders Display";
+  const displayWeight = variant === "ro" ? 600 : 700;
   const hasPhoto = Boolean(input.background);
   const onAccent = input.onAccent ?? false;
   const onPhoto = hasPhoto && !onAccent;
@@ -206,7 +207,9 @@ export const renderOg = async (input: OgInput): Promise<Uint8Array> => {
           position: "relative",
         },
         children: [
-          ...(input.background ? [photoLayer(input.background)] : [
+          ...(input.background
+            ? [photoLayer(input.background)]
+            : [
                 {
                   type: "div",
                   props: {
@@ -285,10 +288,24 @@ export const renderOg = async (input: OgInput): Promise<Uint8Array> => {
                     style: {
                       display: "flex",
                       fontFamily: displayFamily,
-                      fontSize: variant === "ro" ? 68 : 76,
-                      fontWeight: variant === "ro" ? 400 : 700,
-                      lineHeight: variant === "ro" ? 1.04 : onAccent ? 0.92 : 1,
-                      letterSpacing: onAccent ? "-0.04em" : "-0.02em",
+                      fontSize: variant === "ro" ? 72 : 76,
+                      fontWeight: displayWeight,
+                      lineHeight:
+                        variant === "ro"
+                          ? onAccent
+                            ? 0.98
+                            : 1.04
+                          : onAccent
+                            ? 0.92
+                            : 1,
+                      letterSpacing:
+                        variant === "ro"
+                          ? onAccent
+                            ? "0.04em"
+                            : "0.01em"
+                          : onAccent
+                            ? "-0.04em"
+                            : "-0.02em",
                       textTransform: onAccent ? "uppercase" : "none",
                       maxWidth: 980,
                       color: ink,
@@ -315,7 +332,7 @@ export const renderOg = async (input: OgInput): Promise<Uint8Array> => {
           name: displayFamily,
           data: fonts.display,
           style: "normal",
-          weight: variant === "ro" ? 400 : 700,
+          weight: displayWeight,
         },
         { name: "Inter", data: fonts.sans, style: "normal", weight: 400 },
         {

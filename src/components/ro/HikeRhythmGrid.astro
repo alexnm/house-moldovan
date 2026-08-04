@@ -1,0 +1,79 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import { ro } from "~/i18n/ro";
+import { accentForDifficulty, isTehnic } from "~/lib/difficulty";
+import { buildRhythmCells, wideSharesRowWithSingle } from "~/lib/rhythmGrid";
+
+export interface Props {
+  hikes: CollectionEntry<"hikes">[];
+  rangeNames?: ReadonlyMap<string, string>;
+  /** When all hikes share one range (e.g. range detail page). */
+  rangeLabel?: string;
+}
+
+const { hikes, rangeNames = new Map(), rangeLabel } = Astro.props;
+const cells = buildRhythmCells(hikes);
+---
+
+<div
+  class="rhythm-grid grid grid-cols-1 items-stretch gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3"
+>
+  {
+    cells.map(({ item: h, span }, index) => {
+      const pairedWide = span === 2 && wideSharesRowWithSingle(cells, index);
+      const label =
+        rangeLabel ?? rangeNames.get(h.data.range.id) ?? h.data.range.id;
+
+      return (
+        <div
+          class:list={[
+            "min-h-0 overflow-clip",
+            span === 2 && "lg:col-span-2",
+            pairedWide && "rhythm-cell--wide-paired",
+            span === 2 &&
+              !pairedWide &&
+              "rhythm-cell--wide-solo lg:aspect-video",
+          ]}
+        >
+          <ArticleCard
+            href={`/ro/${h.id}`}
+            title={h.data.title}
+            kicker={`${ro.difficulty[h.data.difficulty]} · ${ro.units.duration(h.data.duration)}`}
+            meta={`${ro.units.distance(h.data.distance)} · +${ro.units.elevation(h.data.elevationGain)}`}
+            image={h.data.hero}
+            imageAlt={h.data.title}
+            size={span === 2 ? "lg" : "md"}
+            aspectClass={
+              span === 2
+                ? "aspect-square lg:aspect-auto lg:h-full lg:min-h-0"
+                : "aspect-square lg:aspect-[4/5]"
+            }
+            accent={accentForDifficulty(h.data.difficulty)}
+            tehnic={isTehnic(h.data.difficulty)}
+            regionLabel={label}
+            transitionName={`hike-${h.id}`}
+          />
+        </div>
+      );
+    })
+  }
+</div>
+
+<style>
+  .rhythm-grid {
+    container-type: inline-size;
+  }
+
+  @media (min-width: 1024px) {
+    .rhythm-grid > .rhythm-cell--wide-paired {
+      height: calc((100cqw - 2 * var(--grid-gap)) / 3 * 5 / 4);
+    }
+
+    .rhythm-grid > [class*="rhythm-cell--wide"] .article-card,
+    .rhythm-grid > [class*="rhythm-cell--wide"] figure {
+      height: 100%;
+      min-height: 0;
+    }
+  }
+</style>

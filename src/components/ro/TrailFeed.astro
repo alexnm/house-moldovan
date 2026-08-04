@@ -1,0 +1,228 @@
+---
+import type { CollectionEntry } from "astro:content";
+import HikeCard from "~/components/ro/HikeCard.astro";
+import { ro } from "~/i18n/ro";
+import { parseGpx } from "~/lib/gpx";
+
+export interface Props {
+  hikes: CollectionEntry<"hikes">[];
+  rangeNames: ReadonlyMap<string, string>;
+}
+
+const { hikes, rangeNames } = Astro.props;
+
+const cards = await Promise.all(
+  hikes.map(async (h) => {
+    let profile;
+    try {
+      const track = parseGpx(h.data.gpx);
+      profile = track.profile;
+    } catch {
+      profile = undefined;
+    }
+    return { hike: h, profile };
+  }),
+);
+---
+
+<section class="pad-canvas mx-auto max-w-canvas" data-trail-feed>
+  <div
+    class="mb-8 flex flex-wrap gap-2"
+    role="group"
+    aria-label="Filtre trasee"
+    data-trail-filters
+  >
+    <fieldset class="contents">
+      <legend class="sr-only">{ro.feed.filterRange}</legend>
+      <button
+        type="button"
+        class="filter-pill-ro is-active"
+        data-filter="range"
+        data-value=""
+        aria-pressed="true">{ro.feed.filterRange}: toate</button
+      >
+      {
+        [...new Set(hikes.map((h) => h.data.range.id))].map((id) => (
+          <button
+            type="button"
+            class="filter-pill-ro"
+            data-filter="range"
+            data-value={id}
+            aria-pressed="false"
+          >
+            {rangeNames.get(id) ?? id}
+          </button>
+        ))
+      }
+    </fieldset>
+  </div>
+
+  <div
+    class="mb-6 flex flex-wrap gap-2"
+    role="group"
+    aria-label="Filtre dificultate"
+  >
+    <button
+      type="button"
+      class="filter-pill-ro is-active"
+      data-filter="difficulty"
+      data-value=""
+      aria-pressed="true">{ro.feed.filterDifficulty}: toate</button
+    >
+    {
+      (["usor", "mediu", "dificil", "tehnic"] as const).map((d) => (
+        <button
+          type="button"
+          class="filter-pill-ro"
+          data-filter="difficulty"
+          data-value={d}
+          aria-pressed="false"
+        >
+          {ro.difficulty[d]}
+        </button>
+      ))
+    }
+  </div>
+
+  <div
+    class="mb-6 flex flex-wrap gap-2"
+    role="group"
+    aria-label="Filtre anotimp"
+  >
+    <button
+      type="button"
+      class="filter-pill-ro is-active"
+      data-filter="season"
+      data-value=""
+      aria-pressed="true">{ro.feed.filterSeason}: toate</button
+    >
+    {
+      (["primavara", "vara", "toamna", "iarna"] as const).map((s) => (
+        <button
+          type="button"
+          class="filter-pill-ro"
+          data-filter="season"
+          data-value={s}
+          aria-pressed="false"
+        >
+          {ro.season[s]}
+        </button>
+      ))
+    }
+  </div>
+
+  <div
+    class="mb-10 flex flex-wrap gap-2"
+    role="group"
+    aria-label="Filtre formă"
+  >
+    <button
+      type="button"
+      class="filter-pill-ro is-active"
+      data-filter="shape"
+      data-value=""
+      aria-pressed="true">{ro.feed.filterShape}: toate</button
+    >
+    {
+      (["dus-intors", "circuit", "traversare"] as const).map((s) => (
+        <button
+          type="button"
+          class="filter-pill-ro"
+          data-filter="shape"
+          data-value={s}
+          aria-pressed="false"
+        >
+          {ro.shape[s]}
+        </button>
+      ))
+    }
+  </div>
+
+  <p class="micro mb-6 hidden text-ink-faint" data-trail-empty>
+    {ro.feed.empty}
+  </p>
+
+  <ul
+    class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+    data-trail-grid
+  >
+    {
+      cards.map(({ hike: h, profile }) => (
+        <HikeCard
+          href={`/ro/${h.id}`}
+          title={h.data.title}
+          rangeName={rangeNames.get(h.data.range.id) ?? h.data.range.id}
+          distance={h.data.distance}
+          elevationGain={h.data.elevationGain}
+          duration={h.data.duration}
+          difficulty={h.data.difficulty}
+          waymark={h.data.waymark}
+          image={h.data.hero}
+          imageAlt={h.data.title}
+          profile={profile}
+          transitionName={`hike-${h.id}`}
+          hikeId={h.id}
+          filterRange={h.data.range.id}
+          filterDifficulty={h.data.difficulty}
+          filterSeason={h.data.season.join(",")}
+          filterShape={h.data.shape}
+        />
+      ))
+    }
+  </ul>
+</section>
+
+<script define:vars={{ emptyMsg: ro.feed.empty }}>
+  (function () {
+    const root = document.querySelector("[data-trail-feed]");
+    if (!root) return;
+
+    const state = { range: "", difficulty: "", season: "", shape: "" };
+    const items = root.querySelectorAll("[data-hike-id]");
+    const emptyEl = root.querySelector("[data-trail-empty]");
+
+    function applyFilters() {
+      let visible = 0;
+      items.forEach((el) => {
+        const range = el.getAttribute("data-range") ?? "";
+        const difficulty = el.getAttribute("data-difficulty") ?? "";
+        const seasons = (el.getAttribute("data-season") ?? "").split(",");
+        const shape = el.getAttribute("data-shape") ?? "";
+
+        const match =
+          (!state.range || range === state.range) &&
+          (!state.difficulty || difficulty === state.difficulty) &&
+          (!state.season || seasons.includes(state.season)) &&
+          (!state.shape || shape === state.shape);
+
+        el.hidden = !match;
+        if (match) visible++;
+      });
+
+      if (emptyEl) {
+        emptyEl.classList.toggle("hidden", visible > 0);
+        emptyEl.textContent = emptyMsg;
+      }
+    }
+
+    root.querySelectorAll(".filter-pill-ro").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        const value = btn.getAttribute("data-value") ?? "";
+        if (!filter) return;
+
+        state[filter] = value;
+
+        root
+          .querySelectorAll(`.filter-pill-ro[data-filter="${filter}"]`)
+          .forEach((sibling) => {
+            const active = sibling === btn;
+            sibling.classList.toggle("is-active", active);
+            sibling.setAttribute("aria-pressed", active ? "true" : "false");
+          });
+
+        applyFilters();
+      });
+    });
+  })();
+</script>

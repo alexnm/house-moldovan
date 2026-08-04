@@ -27,9 +27,7 @@ export const requirePlaceCoverFromFrontmatter = (
 ): ImageMetadata => {
   const { cover } = place.data;
   if (!cover) {
-    throw new Error(
-      `Place "${place.id}" is missing \`cover\` in frontmatter`,
-    );
+    throw new Error(`Place "${place.id}" is missing \`cover\` in frontmatter`);
   }
   const image = placeCoverFromFrontmatterPath(cover);
   if (!image) {
@@ -47,20 +45,18 @@ const imagesInPlaceFolder = (placeId: string) => {
   return [...assetByKey.keys()].filter((k) => k.startsWith(prefix));
 };
 
-const defaultCoverFromAssets = (
-  placeId: string,
-): ImageMetadata | undefined => {
+const defaultCoverFromAssets = (placeId: string): ImageMetadata | undefined => {
   const inFolder = imagesInPlaceFolder(placeId);
 
   const cover = inFolder.find((k) => /\/cover\.(jpg|jpeg|png|JPG)$/i.test(k));
   if (cover) return assetByKey.get(cover);
 
-  const namedCover = inFolder.find((k) => /-cover\.(jpg|jpeg|png|JPG)$/i.test(k));
+  const namedCover = inFolder.find((k) =>
+    /-cover\.(jpg|jpeg|png|JPG)$/i.test(k),
+  );
   if (namedCover) return assetByKey.get(namedCover);
 
-  const first = inFolder
-    .filter((k) => !thumbPattern.test(k))
-    .sort()[0];
+  const first = inFolder.filter((k) => !thumbPattern.test(k)).sort()[0];
   if (first) return assetByKey.get(first);
 
   return undefined;

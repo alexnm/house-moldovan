@@ -1,12 +1,11 @@
 ---
 import type { GetStaticPaths } from "astro";
-import CoverImage from "~/components/media/CoverImage.astro";
 import RoLayout from "~/layouts/RoLayout.astro";
-import ArticleCard from "~/components/home/ArticleCard.astro";
+import Hero from "~/components/article/Hero.astro";
+import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
 import { ro } from "~/i18n/ro";
 import { getAllRanges, getHikes } from "~/lib/content";
 import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
-import { accentForRange, inkForRange } from "~/lib/ranges";
 
 export const getStaticPaths = (async () => {
   const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
@@ -25,102 +24,40 @@ interface Props {
 }
 
 const { range, hikes } = Astro.props as Props;
-const accent = accentForRange(range.id, range.data.accent);
-const ink = inkForRange(range.id);
 const cover = trailCoverFromFrontmatterPath(range.data.cover);
-const onPhoto = cover != null;
+const countLabel = ro.range.countOf(hikes.length);
+const heroMeta = [range.data.summary, countLabel].filter(Boolean).join(" · ");
 ---
 
 <RoLayout
   title={`${range.data.name} · ${ro.siteName}`}
   description={range.data.summary ?? ro.range.intro(range.data.name)}
 >
-  <section
-    class="relative mx-auto overflow-clip"
-    style={`--accent:${accent};--color-accent:${accent}`}
-  >
-    <div
-      class="relative overflow-hidden pt-32 pb-14 md:pt-40 md:pb-20"
-      class:list={[onPhoto && "text-white"]}
-      style={onPhoto ? undefined : `background:${accent};color:${ink}`}
-    >
-      {
-        cover && (
-          <div class="pointer-events-none absolute inset-0 z-0">
-            <CoverImage
-              src={cover}
-              alt={`Peisaj din ${range.data.name}`}
-              layout="full-width"
-              widths={[640, 960, 1280, 1920]}
-              sizes="100vw"
-              priority
-              placeholder="blur"
-              format="avif"
-              quality={82}
-              wrapperClass="h-full w-full"
-              class="h-full w-full object-cover"
-            />
-            <div class="absolute inset-0 bg-[linear-gradient(90deg,rgb(0_0_0/0.52)_0%,rgb(0_0_0/0.22)_42%,transparent_72%)]" />
-          </div>
-        )
-      }
-      <div
-        class="relative z-10 mx-auto max-w-canvas pad-canvas"
-        class:list={[onPhoto && "[text-shadow:0_1px_2px_rgb(0_0_0/0.45)]"]}
-      >
-        <p
-          class="micro"
-          class:list={[!onPhoto && "opacity-70"]}
-          style={!onPhoto ? `color:${ink}` : "opacity:0.85"}
-        >
-          {ro.nav.munti}
-        </p>
-        <h1
-          class="display mt-3 text-[clamp(2.6rem,5vw+1rem,6rem)] leading-[0.96] text-balance"
-          style="font-family: var(--font-display-ro)"
-        >
-          {range.data.name}
-        </h1>
-        {
-          range.data.summary && (
-            <p
-              class="mt-4 max-w-[60ch] text-lg text-balance"
-              class:list={[!onPhoto && "opacity-90"]}
-              style={!onPhoto ? `color:${ink}` : "opacity:0.95"}
-            >
-              {range.data.summary}
-            </p>
-          )
-        }
-        <p
-          class="micro mt-6"
-          class:list={[!onPhoto && "opacity-70"]}
-          style={!onPhoto ? `color:${ink}` : "opacity:0.85"}
-        >
-          {ro.range.countOf(hikes.length)}
-        </p>
-      </div>
-    </div>
-  </section>
+  {
+    cover ? (
+      <Hero
+        image={cover}
+        alt={`Peisaj din ${range.data.name}`}
+        kicker={ro.nav.munti}
+        kickerHref="/ro/munti"
+        title={range.data.name}
+        meta={heroMeta}
+        transitionName={`range-${range.id}`}
+      />
+    ) : (
+      <section class="pad-canvas mx-auto max-w-canvas pt-32 pb-14 md:pt-40 md:pb-20">
+        <p class="micro text-ink-faint">{ro.nav.munti}</p>
+        <h1 class="display page-title mt-3 text-balance">{range.data.name}</h1>
+        {heroMeta && (
+          <p class="mt-4 max-w-[60ch] text-lg leading-snug text-pretty text-ink-dim">
+            {heroMeta}
+          </p>
+        )}
+      </section>
+    )
+  }
 
-  <section
-    class="mx-auto my-16 grid max-w-canvas grid-cols-1 gap-4 pad-canvas md:grid-cols-2 lg:grid-cols-3"
-  >
-    {
-      hikes.map((h) => (
-        <ArticleCard
-          href={`/ro/${h.id}`}
-          title={h.data.title}
-          kicker={`${ro.difficulty[h.data.difficulty]} · ${ro.units.distance(h.data.distance)}`}
-          meta={`+${ro.units.elevation(h.data.elevationGain)} · ${ro.units.duration(h.data.duration)}`}
-          image={h.data.hero}
-          imageAlt={h.data.title}
-          size="md"
-          accent={accent}
-          regionLabel={range.data.name}
-          transitionName={`hike-${h.id}`}
-        />
-      ))
-    }
+  <section class="pad-canvas mx-auto my-16 max-w-canvas">
+    <HikeRhythmGrid hikes={hikes} rangeLabel={range.data.name} />
   </section>
 </RoLayout>

@@ -16,18 +16,13 @@ export interface Props {
   publishedDistanceKm: number;
 }
 
-const {
-  profile,
-  minElevation,
-  maxElevation,
-  distanceKm,
-  publishedDistanceKm,
-} = Astro.props;
+const { profile, minElevation, maxElevation, distanceKm, publishedDistanceKm } =
+  Astro.props;
 const svg = renderProfileSvg(profile, distanceKm);
 ---
 
 <figure
-  class="motion-reveal elevation-profile-figure section section-y-tight"
+  class="motion-reveal elevation-profile-figure"
   data-elevation-profile
 >
   <figcaption class="mb-3 flex items-baseline justify-between">

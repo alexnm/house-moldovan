@@ -1,7 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import { renderOg } from "~/lib/og";
-import { accentHexForRange } from "~/lib/ranges";
+import { accentHexForDifficulty } from "~/lib/difficulty";
 import { loadOgBackground } from "~/lib/ogBackground";
 import { ogPngResponse } from "~/lib/ogResponse";
 
@@ -17,7 +17,7 @@ export const GET: APIRoute = async ({ props }) => {
   const { entry } = props as {
     entry: Awaited<ReturnType<typeof getCollection<"hikes">>>[number];
   };
-  const accent = accentHexForRange(entry.data.range.id);
+  const accent = accentHexForDifficulty(entry.data.difficulty);
   const background = await loadOgBackground(entry.data.hero);
 
   const png = await renderOg({

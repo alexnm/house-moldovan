@@ -35,9 +35,9 @@ importers:
       '@fontsource-variable/nunito':
         specifier: 5.2.7
         version: 5.2.7
-      '@fontsource-variable/source-serif-4':
-        specifier: 5.2.9
-        version: 5.2.9
+      '@fontsource-variable/oswald':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/big-shoulders-display':
         specifier: ^5.3.0
         version: 5.3.0
@@ -53,9 +53,9 @@ importers:
       '@fontsource/jetbrains-mono':
         specifier: 5.2.8
         version: 5.2.8
-      '@fontsource/source-serif-4':
-        specifier: 5.2.9
-        version: 5.2.9
+      '@fontsource/oswald':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@resvg/resvg-js':
         specifier: 2.6.2
         version: 2.6.2
@@ -648,8 +648,8 @@ packages:
   '@fontsource-variable/nunito@5.2.7':
     resolution: {integrity: sha512-2N8QhatkyKgSUbAGZO2FYLioxA32+RyI1EplVLawbpkGjUeui9Qg9VMrpkCaik1ydjFjfLV+kzQ0cGEsMrMenQ==}
 
-  '@fontsource-variable/source-serif-4@5.2.9':
-    resolution: {integrity: sha512-PPcxjLFk/fS0WHg79pDM2YNvz61kC+oYZ5cWZZyCS0DHpJncmuYOuiZAsvj4tDxlWPBEvxxcRLQQNmSaRbPkqw==}
+  '@fontsource-variable/oswald@5.3.0':
+    resolution: {integrity: sha512-sSZzcTeaQGNyZbTVlS4tNNHElK38UktFLqKd6NQDLFCBV27320rQC3kXSZVytYm1PPjKmPxqVaGwqj7LEKUWQw==}
 
   '@fontsource/big-shoulders-display@5.3.0':
     resolution: {integrity: sha512-d4+Tcsq/WfoKeqWfB6wFdeNDsSYYnilJbSNNpf5w53MlWrGHAc9YvkAjC6id6PgFDiGaFKsXfP0RFAQtpt0bog==}
@@ -666,8 +666,8 @@ packages:
   '@fontsource/jetbrains-mono@5.2.8':
     resolution: {integrity: sha512-6w8/SG4kqvIMu7xd7wt6x3idn1Qux3p9N62s6G3rfldOUYHpWcc2FKrqf+Vo44jRvqWj2oAtTHrZXEP23oSKwQ==}
 
-  '@fontsource/source-serif-4@5.2.9':
-    resolution: {integrity: sha512-er/Pym9emsEVJNf947umJ4kXarXfsiN6CN7kTYinefKRaHLwiquiiHOZvKvxWgkV8JMCf3pV3g0NcsPFpVCH9w==}
+  '@fontsource/oswald@5.3.0':
+    resolution: {integrity: sha512-16r2aHActe0pH+9FLdk/74/YxXM7HpGak05kAzx3RvSToiJwGvyhv6GvckPz+YuZmvL1nxWbEop2jAXRcXYPRg==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3819,7 +3819,7 @@ snapshots:
 
   '@fontsource-variable/nunito@5.2.7': {}
 
-  '@fontsource-variable/source-serif-4@5.2.9': {}
+  '@fontsource-variable/oswald@5.3.0': {}
 
   '@fontsource/big-shoulders-display@5.3.0': {}
 
@@ -3831,7 +3831,7 @@ snapshots:
 
   '@fontsource/jetbrains-mono@5.2.8': {}
 
-  '@fontsource/source-serif-4@5.2.9': {}
+  '@fontsource/oswald@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

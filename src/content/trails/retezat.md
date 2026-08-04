@@ -1,5 +1,5 @@
 ---
 name: Retezat
 cover: ../../assets/romania/retezat/cover.jpg
-summary: Granit, lacuri tăcute, capre negre. Cel mai vechi parc național din România.
+summary: Taramul lacurilor glaciare și al caprelor negre. Cel mai vechi parc național din România.
 ---

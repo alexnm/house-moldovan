@@ -124,9 +124,7 @@ const imageClasses = ["cover-image", imageClass].filter(Boolean).join(" ");
       });
 
     root
-      .querySelectorAll<HTMLImageElement>(
-        "img.cover-image:not([data-loaded])",
-      )
+      .querySelectorAll<HTMLImageElement>("img.cover-image:not([data-loaded])")
       .forEach((img) => {
         if (img.closest(".cover-image-shell")) return;
         const mark = () => {

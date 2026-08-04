@@ -48,8 +48,7 @@ const cells = buildRhythmCells(enriched);
 >
   {
     cells.map(({ item, span }, index) => {
-      const pairedWide =
-        span === 2 && wideSharesRowWithSingle(cells, index);
+      const pairedWide = span === 2 && wideSharesRowWithSingle(cells, index);
 
       return (
         <div
@@ -57,7 +56,9 @@ const cells = buildRhythmCells(enriched);
             "min-h-0 overflow-clip",
             span === 2 && "lg:col-span-2",
             pairedWide && "rhythm-cell--wide-paired",
-            span === 2 && !pairedWide && "rhythm-cell--wide-solo lg:aspect-video",
+            span === 2 &&
+              !pairedWide &&
+              "rhythm-cell--wide-solo lg:aspect-video",
           ]}
         >
           <ArticleCard

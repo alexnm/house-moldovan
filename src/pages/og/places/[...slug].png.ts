@@ -20,8 +20,7 @@ export const GET: APIRoute = async ({ props }) => {
     place: Awaited<ReturnType<typeof getCollection<"places">>>[number];
   };
   const region = await getRegion(place.data.region);
-  const accentName: Accent =
-    place.data.accent ?? region?.data.accent ?? "jade";
+  const accentName: Accent = place.data.accent ?? region?.data.accent ?? "jade";
   const cover = requirePlaceCoverFromFrontmatter(place);
   const background = await loadOgBackground(cover);
 

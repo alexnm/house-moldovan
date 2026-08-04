@@ -1,9 +1,12 @@
 import type { ImageMetadata } from "astro";
 
-/** Eager map from `src/lib` — keys like `../assets/romania/fagaras/cover.png`. */
-const modules = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/romania/**/cover.{jpg,jpeg,png}",
+const assetModules = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/romania/**/*.{jpg,jpeg,jpe,png,JPG}",
   { eager: true },
+);
+
+const assetByKey = new Map(
+  Object.entries(assetModules).map(([key, mod]) => [key, mod.default] as const),
 );
 
 const trailRelativeToAssets = /^\.\.\/\.\.\/assets\//;
@@ -17,5 +20,5 @@ export const trailCoverFromFrontmatterPath = (
 ): ImageMetadata | undefined => {
   if (!cover) return;
   const key = cover.replace(trailRelativeToAssets, "../assets/");
-  return modules[key]?.default;
+  return assetByKey.get(key);
 };

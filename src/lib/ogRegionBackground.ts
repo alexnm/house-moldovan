@@ -128,7 +128,9 @@ export const loadOgRegionBackground = async (
     .toBuffer();
 
   const frameLayers = await Promise.all(
-    photos.map((img, i) => collageFrameLayer(ogImagePath(img), COLLAGE_SLOTS[i]!)),
+    photos.map((img, i) =>
+      collageFrameLayer(ogImagePath(img), COLLAGE_SLOTS[i]!),
+    ),
   );
 
   const jpeg = await sharp(base)

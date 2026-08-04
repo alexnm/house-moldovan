@@ -4,27 +4,75 @@ interface Props {
   size?: "nav" | "footer";
   /** When false, render a non-link (footer masthead) */
   link?: boolean;
+  /** Logo destination (default `/`) */
+  href?: string;
+  /** Optional mark image path (e.g. RO crest SVG) */
+  mark?: string;
+  /** Single-line wordmark label (overrides House/Moldovan split) */
+  label?: string;
   class?: string;
 }
 
-const { size = "nav", link = true, class: className } = Astro.props;
+const {
+  size = "nav",
+  link = true,
+  href = "/",
+  mark,
+  label,
+  class: className,
+} = Astro.props;
 
 const classes = [
   "site-logo",
   size === "nav" && "nav-link",
   size === "footer" && "site-logo--footer",
+  mark && "flex items-center gap-2.5",
   className,
 ];
 ---
 
 {
   link ? (
-    <a href="/" class:list={["link-accent", ...classes]}>
-      <span class="site-logo__soft">House</span><span class="site-logo__strong">Moldovan</span>
+    <a href={href} class:list={["link-accent", ...classes]}>
+      {mark && (
+        <img
+          src={mark}
+          alt=""
+          width={28}
+          height={28}
+          class="size-7 shrink-0"
+          decoding="async"
+        />
+      )}
+      {label ? (
+        <span>{label}</span>
+      ) : (
+        <>
+          <span class="site-logo__soft">House</span>
+          <span class="site-logo__strong">Moldovan</span>
+        </>
+      )}
     </a>
   ) : (
     <p class:list={classes}>
-      <span class="site-logo__soft">House</span><span class="site-logo__strong">Moldovan</span>
+      {mark && (
+        <img
+          src={mark}
+          alt=""
+          width={28}
+          height={28}
+          class="size-7 shrink-0"
+          decoding="async"
+        />
+      )}
+      {label ? (
+        <span>{label}</span>
+      ) : (
+        <>
+          <span class="site-logo__soft">House</span>
+          <span class="site-logo__strong">Moldovan</span>
+        </>
+      )}
     </p>
   )
 }

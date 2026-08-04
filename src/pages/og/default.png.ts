@@ -12,7 +12,7 @@ export const GET: APIRoute = async () => {
   const png = await renderOg({
     kicker: en.home.kicker,
     title: "House Moldovan",
-    accent: accentHex("jade"),
+    accent: accentHex("saffron"),
     background,
     showLogo: false,
   });

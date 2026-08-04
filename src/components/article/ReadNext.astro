@@ -46,7 +46,10 @@ const enriched: Enriched[] = await Promise.all(
 ---
 
 <section class="section" aria-labelledby="read-next-heading">
-  <h2 id="read-next-heading" class="display subsection-heading mb-(--space-header) text-ink">
+  <h2
+    id="read-next-heading"
+    class="display subsection-heading mb-(--space-header) text-ink"
+  >
     {en.article.nextRead}
   </h2>
   <div class:list={[enriched.length > 1 ? "grid-cards" : "mx-auto max-w-2xl"]}>

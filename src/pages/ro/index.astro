@@ -1,22 +1,16 @@
 ---
 import CoverImage from "~/components/media/CoverImage.astro";
 import RoLayout from "~/layouts/RoLayout.astro";
-import ArticleCard from "~/components/home/ArticleCard.astro";
+import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
 import RangeCard from "~/components/home/RangeCard.astro";
 import { ro } from "~/i18n/ro";
-import {
-  getHikes,
-  getAllRanges,
-  getRange,
-  rangeNameByTrailId,
-} from "~/lib/content";
+import { getHikes, getAllRanges, rangeNameByTrailId } from "~/lib/content";
 import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
-import { accentForRange } from "~/lib/ranges";
 
 const [hikes, ranges] = await Promise.all([getHikes(), getAllRanges()]);
 const rangeNames = rangeNameByTrailId(ranges);
 const featured = hikes.find((h) => h.data.featured) ?? hikes[0];
-const recent = hikes.filter((h) => h !== featured).slice(0, 6);
+const recent = hikes.filter((h) => h !== featured).slice(0, 7);
 
 const countByRange = new Map<string, number>();
 for (const h of hikes) {
@@ -31,25 +25,12 @@ const rangeTiles = ranges
   .sort(
     (a, b) => (countByRange.get(b.id) ?? 0) - (countByRange.get(a.id) ?? 0),
   );
-
-let featuredAccent: string | undefined;
-let featuredRangeName = "";
-if (featured) {
-  const range = await getRange(featured.data.range);
-  if (range) {
-    featuredAccent = accentForRange(range.id, range.data.accent);
-    featuredRangeName = range.data.name;
-  }
-}
 ---
 
 <RoLayout title={ro.siteName} description={ro.description}>
   {
     featured && (
-      <section
-        class="relative isolate overflow-clip"
-        style={featuredAccent ? `--accent: ${featuredAccent}` : undefined}
-      >
+      <section class="relative isolate overflow-clip">
         <a href={`/ro/${featured.id}`} class="block">
           <div
             class="relative aspect-[16/9] max-h-dvh min-h-svh w-full overflow-clip"
@@ -70,16 +51,17 @@ if (featured) {
                 class="h-full w-full object-cover"
               />
             </div>
-            <div class="hero-overlay" aria-hidden="true"></div>
+            <div class="hero-overlay" aria-hidden="true" />
             <div class="pad-canvas hero-bottom absolute inset-x-0 bottom-0 z-10 mx-auto max-w-canvas">
-              <h1
-                class="display max-w-[18ch] animate-cinema-rise text-[clamp(2.4rem,5vw+1rem,6rem)] leading-[0.96] text-balance hero-on-photo drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)]"
-                style="font-family: var(--font-display-ro)"
-              >
+              <p class="stamp-badge animate-cinema-fade">
+                {ro.difficulty[featured.data.difficulty]} ·{" "}
+                {ro.units.duration(featured.data.duration)}
+              </p>
+              <h1 class="display page-title hero-on-photo mt-4 max-w-[18ch] animate-cinema-rise text-balance drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)]">
                 {featured.data.title}
               </h1>
-              <p class="hero-on-photo-dim hero-summary animate-cinema-fade motion-stagger mt-6 md:mt-8">
-                {ro.home.featuredKicker} · {featuredRangeName}
+              <p class="hero-on-photo-dim hero-summary motion-stagger mt-6 animate-cinema-fade md:mt-8">
+                {featured.data.summary}
               </p>
             </div>
           </div>
@@ -88,19 +70,13 @@ if (featured) {
     )
   }
 
-  <section class="mx-auto my-24 max-w-canvas pad-canvas">
+  <section class="pad-canvas mx-auto my-24 max-w-canvas">
     <header class="mb-10 flex items-baseline justify-between">
-      <h2
-        class="display text-3xl md:text-4xl"
-        style="font-family: var(--font-display-ro)"
-      >
-        {ro.home.rangesHeading}
-      </h2>
+      <h2 class="display section-heading">{ro.home.rangesHeading}</h2>
     </header>
     <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {
-        rangeTiles.map((r) => {
-          const accent = accentForRange(r.id, r.data.accent);
+        rangeTiles.map((r, i) => {
           const cover = trailCoverFromFrontmatterPath(r.data.cover);
           return (
             <RangeCard
@@ -108,10 +84,10 @@ if (featured) {
               title={r.data.name}
               summary={r.data.summary}
               countLabel={ro.range.countOf(countByRange.get(r.id) ?? 0)}
-              accent={accent}
               image={cover}
               imageAlt={`Peisaj din ${r.data.name}`}
               as="h3"
+              index={i + 1}
             />
           );
         })
@@ -119,37 +95,13 @@ if (featured) {
     </ul>
   </section>
 
-  <section class="mx-auto my-24 max-w-canvas pad-canvas">
+  <section class="pad-canvas mx-auto my-24 max-w-canvas">
     <header class="mb-10 flex items-baseline justify-between">
-      <h2
-        class="display text-3xl md:text-4xl"
-        style="font-family: var(--font-display-ro)"
-      >
-        {ro.home.recentHeading}
-      </h2>
+      <h2 class="display section-heading">{ro.home.recentHeading}</h2>
       <a href="/ro/trasee" class="link-more link-accent link-accent--dim">
         {ro.home.seeAll} →
       </a>
     </header>
-    <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {
-        recent.map((h) => (
-          <li>
-            <ArticleCard
-              href={`/ro/${h.id}`}
-              title={h.data.title}
-              kicker={`${ro.shape[h.data.shape]} · ${ro.units.distance(h.data.distance)}`}
-              meta={ro.units.duration(h.data.duration)}
-              image={h.data.hero}
-              imageAlt={h.data.title}
-              size="md"
-              accent={accentForRange(h.data.range.id)}
-              regionLabel={rangeNames.get(h.data.range.id) ?? h.data.range.id}
-              transitionName={`hike-${h.id}`}
-            />
-          </li>
-        ))
-      }
-    </ul>
+    <HikeRhythmGrid hikes={recent} rangeNames={rangeNames} />
   </section>
 </RoLayout>

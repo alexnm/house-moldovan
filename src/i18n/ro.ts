@@ -22,12 +22,15 @@ export const ro = {
   },
   feed: {
     title: "Toate traseele",
-    intro: "Explorează traseele din munții României.",
+    intro: "Caută traseul potrivit",
     filterRange: "Masiv",
     filterDifficulty: "Dificultate",
     filterSeason: "Anotimp",
     filterShape: "Formă",
     empty: "Niciun traseu nu corespunde filtrului.",
+  },
+  munti: {
+    title: "Explorează masivele muntoase",
   },
   range: {
     countOf: (n: number) =>
@@ -58,17 +61,15 @@ export const ro = {
     elevationLoss: "Coborâre",
     summit: "Cota maximă",
     duration: "Durată estimată",
-    waymark: "Marcaj",
+    waymark: "Marcaje",
     season: "Anotimp recomandat",
-    difficulty: "Dificultate",
-    shape: "Formă traseu",
+    difficulty: "Nivel dificultate",
+    shape: "Tip traseu",
     trailhead: "Punct de plecare",
-    trailheadAccess: "Acces",
     profile: "Profil de elevație",
     mapCaption: "Traseu pe hartă",
     gpxDownload: "Descarcă GPX",
     backToFeed: "Înapoi la trasee",
-    inRange: (name: string) => `Mai mult din ${name}`,
     nextRead: "Următorul traseu",
   },
   about: {
@@ -88,8 +89,8 @@ export const ro = {
       const fmt = (h: number): string => {
         const hours = Math.floor(h);
         const minutes = Math.round((h - hours) * 60);
-        if (minutes === 0) return `${hours} h`;
-        return `${hours} h ${String(minutes).padStart(2, "0")}\u00B4`;
+        if (minutes === 0) return `${hours}h`;
+        return `${hours}h ${String(minutes).padStart(2, "0")}\u00B4`;
       };
       return a === b ? fmt(a) : `${fmt(a)} – ${fmt(b)}`;
     },

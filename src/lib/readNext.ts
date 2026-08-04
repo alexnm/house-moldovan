@@ -5,7 +5,8 @@ import { getAllPlaces, getEnFeed } from "~/lib/content";
 
 function stableIndex(seed: string, modulo: number): number {
   let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
+  for (let i = 0; i < seed.length; i++)
+    h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
   return Math.abs(h) % modulo;
 }
 

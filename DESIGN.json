@@ -262,11 +262,11 @@
   ],
   "narrative": {
     "northStar": "Kodachrome Expedition",
-    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them. Brand and region names arrive as luggage-tag signals; story titles stay readable in mixed case.\n\nThe English journal (`/`) uses a **full palette** strategy: four saturated regional chapter hues plus a global Film Sun accent for links, focus, and wayfinding. Region tiles and explore jumps can go **drenched** (solid regional fills). Article surfaces stay film-dark and photographic. The Romanian hiking portal (`/ro`) shares infrastructure but keeps Source Serif 4 display and a softer editorial voice; do not merge their visual identities.\n\nMotion is **choreographed but respectful**: a named role system in `app.css` (`motion-reveal`, `motion-reveal-media`, `motion-parallax`, `motion-hover-*`, enter/stagger utilities) with a duration ladder (`--duration-micro` 200ms through `--duration-enter` 900ms) and shared distances (`--motion-photo-scale` 1.04, lifts, reveal offsets). Scroll timelines sit behind `@supports (animation-timeline: view())`. Easing is cinematic (exponential ease-out), never bounce or elastic. `prefers-reduced-motion` is role-based: kill ambient travel (parallax, reveal slide, hover lift/scale); keep short opacity for image load and chrome. Spacing uses a three-tier rhythm (tight / standard / chapter) via tokens; prefer `.section`, `.section-y*`, and `--grid-gap` over ad hoc margins.\n\nThis system explicitly rejects generic AI travel-blog templates, frosted-glass chrome as default, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead.",
+    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them. Brand and region names arrive as luggage-tag signals; story titles stay readable in mixed case.\n\nThe English journal (`/`) and Romanian hiking portal (`/ro`) share one unified foundation for body, nav, and theme. EN keeps Big Shoulders Display; RO uses Oswald for display titles. EN uses regional chapter colors on explore surfaces; RO uses difficulty-driven accents on hike cards. See DESIGN-RO.md for RO deltas.\n\nMotion is **choreographed but respectful**: a named role system in `app.css` (`motion-reveal`, `motion-reveal-media`, `motion-parallax`, `motion-hover-*`, enter/stagger utilities) with a duration ladder (`--duration-micro` 200ms through `--duration-enter` 900ms) and shared distances (`--motion-photo-scale` 1.04, lifts, reveal offsets). Scroll timelines sit behind `@supports (animation-timeline: view())`. Easing is cinematic (exponential ease-out), never bounce or elastic. `prefers-reduced-motion` is role-based: kill ambient travel (parallax, reveal slide, hover lift/scale); keep short opacity for image load and chrome. Spacing uses a three-tier rhythm (tight / standard / chapter) via tokens; prefer `.section`, `.section-y*`, and `--grid-gap` over ad hoc margins.\n\nThis system explicitly rejects generic AI travel-blog templates, frosted-glass chrome as default, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead.",
     "keyCharacteristics": [
       "Film-night warm-neutral canvas tuned so photography pops on phone or laptop",
       "Photography-first heroes with light top veils and deep bottom scrims (not heavy flat overlays)",
-      "Condensed Big Shoulders Display (uppercase for brand, sections, place names) + Bricolage UI/prose headings + Nunito body",
+      "Condensed Big Shoulders Display (uppercase for brand, sections, place names) + Bricolage UI/prose headings + Nunito body; Oswald display on /ro only",
       "Passport-stamp micro labels (`.stamp` / `.micro`) in JetBrains Mono",
       "Region-as-chapter color system with watermark chapter numbers on home tiles",
       "Sharp film-frame corners (2px) on EN photo cards; tonal layering over heavy shadows",
@@ -292,7 +292,7 @@
       },
       {
         "name": "The Poster Owns Place Names Rule",
-        "body": "Uppercase condensed display is reserved for the homepage brand title and region chapter names (`.page-title--poster`, `.region-name`). Section headings, countries, and story / spotlight / itinerary titles stay mixed case.",
+        "body": "Uppercase condensed display is reserved for the homepage brand title and region chapter names (`.region-name`). Section headings, countries, and story / spotlight / itinerary titles stay mixed case.",
         "section": "typography"
       },
       {
@@ -323,7 +323,7 @@
     ],
     "dos": [
       "Do let photography occupy the hero: full-bleed images with gradient read layers, not colored placeholder blocks.",
-      "Do use Big Shoulders uppercase only for the homepage brand title and region names; keep section headings, countries, and story titles mixed case.",
+      "Do use Big Shoulders Display uppercase only for the homepage brand title and region names; keep section headings, countries, and story titles mixed case.",
       "Do assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep Film Sun for global wayfinding on neutral UI. Never reuse a chapter hue as the global accent.",
       "Do use OKLCH tokens from `app.css`; tint every neutral toward warm film hue ~55–75.",
       "Do honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.",

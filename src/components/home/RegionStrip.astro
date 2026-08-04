@@ -25,7 +25,7 @@ const regions = await getAllRegions();
           <li class="motion-reveal-media">
             <a
               href={`/explore/region/${r.id}`}
-              class="accent-scope accent-drenched region-tile motion-hover-lift-strong group relative flex aspect-square flex-col justify-between overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
+              class="accent-scope accent-drenched region-tile motion-hover-lift-strong group relative flex aspect-square flex-col gap-16 overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
               data-accent={r.data.accent}
             >
               {cover && (
@@ -43,7 +43,6 @@ const regions = await getAllRegions();
                       class="h-full w-full object-cover"
                     />
                   </div>
-                  <div class="region-tile__veil" aria-hidden="true" />
                 </>
               )}
               <span
@@ -85,35 +84,11 @@ const regions = await getAllRegions();
     inset-inline: 0;
     bottom: 0;
     z-index: 0;
-    height: 50%;
+    height: 56%;
     /* Fade the photo out so the tile background shows through — avoids a hard
        color seam on iOS where gradient overlays fail to match accent-drenched. */
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 28%, transparent 90%);
-    mask-image: linear-gradient(to top, black 0%, black 28%, transparent 90%);
-  }
-
-  .region-tile__veil {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    z-index: 1;
-    height: 50%;
-    pointer-events: none;
-    /* Solid accent + alpha mask: Safari interpolates color-mix(..., transparent)
-       in gradients differently than desktop, which caused the visible band. */
-    background: var(--accent-base);
-    -webkit-mask-image: linear-gradient(
-      to top,
-      rgb(0 0 0 / 0.42) 0%,
-      rgb(0 0 0 / 0.78) 42%,
-      transparent 90%
-    );
-    mask-image: linear-gradient(
-      to top,
-      rgb(0 0 0 / 0.42) 0%,
-      rgb(0 0 0 / 0.78) 42%,
-      transparent 90%
-    );
+    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%);
+    mask-image: linear-gradient(to top, black 0%, transparent 80%);
   }
 
   .region-tile__photo :global(.cover-image-shell),

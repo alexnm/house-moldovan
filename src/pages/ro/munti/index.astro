@@ -4,7 +4,6 @@ import RangeCard from "~/components/home/RangeCard.astro";
 import { ro } from "~/i18n/ro";
 import { getAllRanges, getHikes } from "~/lib/content";
 import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
-import { accentForRange } from "~/lib/ranges";
 
 const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
 const counts = new Map<string, number>();
@@ -20,22 +19,18 @@ const list = ranges
   title={`${ro.nav.munti} · ${ro.siteName}`}
   description="Toate masivele cu trasee descrise."
 >
-  <section class="mx-auto max-w-canvas pad-canvas pt-32">
+  <section class="pad-canvas mx-auto max-w-canvas pt-32">
     <p class="micro text-ink-faint">{ro.nav.munti}</p>
-    <h1
-      class="display mt-3 text-[clamp(2rem,3vw+1rem,4.2rem)] leading-[1.02] text-balance"
-      style="font-family: var(--font-display-ro)"
-    >
-      Traseele împărțite pe grupe de munți.
+    <h1 class="display page-title mt-3 text-balance">
+      {ro.munti.title}
     </h1>
   </section>
 
   <ul
-    class="mx-auto my-16 grid max-w-canvas grid-cols-1 gap-4 pad-canvas md:grid-cols-2 lg:grid-cols-3"
+    class="pad-canvas mx-auto my-16 grid max-w-canvas grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
   >
     {
-      list.map((r) => {
-        const accent = accentForRange(r.id, r.data.accent);
+      list.map((r, i) => {
         const cover = trailCoverFromFrontmatterPath(r.data.cover);
         return (
           <RangeCard
@@ -43,10 +38,10 @@ const list = ranges
             title={r.data.name}
             summary={r.data.summary}
             countLabel={ro.range.countOf(counts.get(r.id) ?? 0)}
-            accent={accent}
             image={cover}
             imageAlt={`Peisaj din ${r.data.name}`}
             as="h2"
+            index={i + 1}
           />
         );
       })

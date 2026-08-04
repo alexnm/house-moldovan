@@ -13,4 +13,3 @@ export function heroRouteFromItineraryDays(
   }
   return seq.join(" → ");
 }
-

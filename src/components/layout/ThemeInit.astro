@@ -2,7 +2,10 @@
 import { THEME_COLORS, THEME_STORAGE_KEY } from "~/lib/theme";
 ---
 
-<script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY, themeColors: THEME_COLORS }}>
+<script
+  is:inline
+  define:vars={{ storageKey: THEME_STORAGE_KEY, themeColors: THEME_COLORS }}
+>
   (function () {
     function resolveTheme() {
       try {
@@ -24,13 +27,15 @@ import { THEME_COLORS, THEME_STORAGE_KEY } from "~/lib/theme";
     }
 
     function syncToggles(theme) {
-      document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
-        var next = theme === "dark" ? "light" : "dark";
-        button.setAttribute(
-          "aria-label",
-          button.getAttribute("data-label-" + next) ?? next,
-        );
-      });
+      document
+        .querySelectorAll("[data-theme-toggle]")
+        .forEach(function (button) {
+          var next = theme === "dark" ? "light" : "dark";
+          button.setAttribute(
+            "aria-label",
+            button.getAttribute("data-label-" + next) ?? next,
+          );
+        });
     }
 
     function applyTheme(theme, persist) {
@@ -50,7 +55,8 @@ import { THEME_COLORS, THEME_STORAGE_KEY } from "~/lib/theme";
     };
 
     window.__toggleTheme = function () {
-      var current = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+      var current =
+        document.documentElement.dataset.theme === "light" ? "light" : "dark";
       applyTheme(current === "dark" ? "light" : "dark", true);
     };
 

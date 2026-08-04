@@ -8,11 +8,11 @@ export interface Props {
   summary?: string;
   /** Pre-rendered label (e.g. `ro.range.countOf(n)`). */
   countLabel: string;
-  /** Full range accent (OKLCH etc.) — border + highlights only. */
-  accent: string;
   image?: ImageMetadata;
   imageAlt?: string;
   as?: "h2" | "h3";
+  /** Zero-padded index for watermark (01, 02, …). */
+  index?: number;
 }
 
 const {
@@ -20,95 +20,116 @@ const {
   title,
   summary,
   countLabel,
-  accent,
   image,
   imageAlt,
   as = "h2",
+  index,
 } = Astro.props;
 
 const alt = imageAlt ?? `Peisaj din ${title}`;
-
-const titleClass =
-  "display text-xl leading-[1.05] text-balance md:text-2xl text-ink";
+const titleClass = "display region-name range-card__title text-balance";
 ---
 
 <li class="motion-reveal-media">
   <a
     href={href}
-    class="range-card motion-hover-lift group flex aspect-[5/4] flex-col overflow-clip rounded border border-line bg-surface-2 hover:shadow-lift"
-    style={`--range-accent:${accent}`}
+    class="range-card accent-scope accent-drenched group relative grid aspect-square overflow-clip rounded-sm p-5 md:p-6"
   >
-    <div
-      class="relative h-1/2 min-h-0 w-full shrink-0 overflow-hidden bg-surface-3"
-    >
+    {
+      image && (
+        <>
+          <div class="range-card__photo" aria-hidden="true">
+            <CoverImage
+              src={image}
+              alt={alt}
+              widths={[320, 480, 640]}
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              format="avif"
+              quality={70}
+              placeholder="shell"
+              wrapperClass="motion-hover-media h-full w-full"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </>
+      )
+    }
+    {
+      index != null && (
+        <span
+          class="range-card__watermark display pointer-events-none absolute -top-3 -right-1 z-10 leading-none select-none"
+          aria-hidden="true"
+        >
+          {String(index).padStart(2, "0")}
+        </span>
+      )
+    }
+    <p class="stamp relative z-10 self-start opacity-70">{countLabel}</p>
+    <div class="relative z-10 self-start">
       {
-        image ? (
-          <CoverImage
-            src={image}
-            alt={alt}
-            widths={[480, 720, 960, 1200]}
-            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            format="avif"
-            quality={82}
-            wrapperClass="motion-hover-media h-full w-full"
-            class="h-full w-full object-cover"
-          />
+        as === "h3" ? (
+          <h3 class={titleClass}>{title}</h3>
         ) : (
-          <div
-            class="h-full w-full bg-gradient-to-br from-surface-3 to-line/30"
-            aria-hidden="true"
-          />
+          <h2 class={titleClass}>{title}</h2>
+        )
+      }
+      {
+        summary && (
+          <p class="mt-4 max-w-[36ch] font-sans text-base leading-snug text-pretty opacity-90">
+            {summary}
+          </p>
         )
       }
     </div>
-
-    <div class="flex min-h-0 flex-1 flex-col bg-surface-2">
-      <div
-        class="h-1 w-full shrink-0"
-        style={`background:${accent}`}
-        aria-hidden="true"
-      >
-      </div>
-
-      <div
-        class="range-card__body relative flex min-h-0 flex-1 flex-col p-6 md:p-7"
-      >
-        <div class="relative min-w-0">
-          {
-            as === "h3" ? (
-              <h3
-                class={titleClass}
-                style="font-family: var(--font-display-ro)"
-              >
-                {title}
-              </h3>
-            ) : (
-              <h2
-                class={titleClass}
-                style="font-family: var(--font-display-ro)"
-              >
-                {title}
-              </h2>
-            )
-          }
-          {
-            summary && (
-              <p class="mt-3 max-w-[40ch] text-[0.95rem] leading-snug text-pretty text-ink-dim">
-                {summary}
-              </p>
-            )
-          }
-        </div>
-        <div class="mt-auto flex items-center justify-between gap-3 pt-2">
-          <span class="micro text-ink-dim">{countLabel}</span>
-          <span
-            class="motion-hover-chevron text-lg text-ink-dim"
-            aria-hidden="true"
-          >
-            →
-          </span>
-        </div>
-      </div>
-    </div>
   </a>
 </li>
+
+<style>
+  .range-card {
+    --accent-base: var(--color-range-sky);
+    --motion-photo-scale: 1.07;
+  }
+
+  .range-card {
+    grid-template-rows: 10% 1fr;
+  }
+
+  .range-card__title {
+    font-size: clamp(2.4rem, 3.5vw, 3.25rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+
+  .range-card__watermark {
+    font-size: clamp(6rem, 14vw, 9rem);
+    opacity: 0.14;
+  }
+
+  .range-card__photo {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 0;
+    height: 70%;
+    overflow: clip;
+    -webkit-mask-image: linear-gradient(
+      to top,
+      black 0%,
+      black 60%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to top, black 0%, black 60%, transparent 100%);
+  }
+
+  .range-card__photo :global(.cover-image-shell),
+  .range-card__photo :global(.cover-image-shell > *) {
+    height: 100%;
+    width: 100%;
+  }
+
+  .range-card__photo :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>

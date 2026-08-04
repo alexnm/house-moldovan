@@ -1,0 +1,53 @@
+---
+import WaymarkBadge from "~/components/hike/WaymarkBadge.astro";
+import { ro } from "~/i18n/ro";
+import type { WaymarkCode } from "~/lib/waymarks";
+
+export interface Props {
+  href: string;
+  title: string;
+  rangeName: string;
+  distance: number;
+  elevationGain: number;
+  duration: readonly [number, number];
+  difficulty: keyof typeof ro.difficulty;
+  waymark: readonly WaymarkCode[];
+}
+
+const {
+  href,
+  title,
+  rangeName,
+  distance,
+  elevationGain,
+  duration,
+  difficulty,
+  waymark,
+} = Astro.props;
+---
+
+<li>
+  <a href={href} class="trail-list-item group" data-difficulty={difficulty}>
+    <div class="min-w-0">
+      <p class="micro text-ink-faint">
+        {rangeName} ·{" "}
+        <span class="trail-accent">{ro.difficulty[difficulty]}</span>
+      </p>
+      <h3 class="display mt-1 text-lg leading-snug text-balance md:text-xl">
+        {title}
+      </h3>
+    </div>
+    <div class="flex flex-wrap items-center justify-end gap-3 text-right">
+      <WaymarkBadge marks={waymark} size={14} />
+      <span class="ro-stat text-base text-ink"
+        >{ro.units.distance(distance)}</span
+      >
+      <span class="ro-stat trail-accent text-base">
+        +{ro.units.elevation(elevationGain)}
+      </span>
+      <span class="ro-stat text-base text-ink-dim">
+        {ro.units.duration(duration)}
+      </span>
+    </div>
+  </a>
+</li>

@@ -16,7 +16,6 @@ export interface Props {
    * Uppercase luggage-tag display for brand / place / short section labels.
    * Leave false for story, spotlight, and itinerary titles (mixed case).
    */
-  posterTitle?: boolean;
   meta?: string;
   metaClass?: string;
   transitionName?: string;
@@ -30,7 +29,6 @@ const {
   kickerHref,
   title,
   titleFlag,
-  posterTitle = false,
   meta,
   metaClass,
   transitionName,
@@ -88,7 +86,6 @@ const kickerClass = "stamp-badge";
       <h1
         class:list={[
           "display page-title hero-on-photo animate-cinema-rise drop-shadow-[0_2px_24px_oklch(0.1_0.02_55/0.55)]",
-          posterTitle && "page-title--poster",
           titleFlag && "flex flex-wrap items-baseline gap-x-3",
         ]}
       >

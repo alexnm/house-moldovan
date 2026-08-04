@@ -16,10 +16,7 @@ const articles: AnyEnArticle[] = raw.map((e) => ({
   title={`${en.storiesIndex.metaTitle} · ${en.siteName}`}
   description={en.storiesIndex.intro}
 >
-  <JournalIndexHeader
-    title={en.nav.stories}
-    summary={en.storiesIndex.intro}
-  />
+  <JournalIndexHeader title={en.nav.stories} summary={en.storiesIndex.intro} />
   {
     articles.length > 0 ? (
       <section class="section section-y-tight">

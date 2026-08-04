@@ -1,5 +1,6 @@
 ---
 import { ro } from "~/i18n/ro";
+import SiteLogo from "~/components/layout/SiteLogo.astro";
 
 const path = Astro.url.pathname;
 const isActive = (href: string): boolean =>
@@ -13,37 +14,23 @@ const links = [
 ---
 
 <nav
-  class="site-nav fixed inset-x-0 top-0 z-40 py-4"
+  class="site-nav fixed inset-x-0 top-0 z-40 pt-5 pb-4"
   data-site-nav
   aria-label="Navigare"
 >
   <div
-    class="pad-canvas mx-auto flex max-w-canvas items-center justify-between gap-4 md:gap-6"
+    class="pad-canvas mx-auto flex max-w-canvas items-center justify-between gap-4 sm:gap-6"
   >
-    <a
-      href="/ro"
-      class="display duration-ui flex items-center gap-2.5 text-xl tracking-tight text-ink transition-opacity ease-cinema hover:opacity-70"
-      style="font-family: var(--font-display-ro)"
-    >
-      <img
-        src="/logo-pe-creasta.svg"
-        alt=""
-        width="28"
-        height="28"
-        class="size-7 shrink-0"
-        decoding="async"
-      />
-      {ro.siteName}
-    </a>
+    <SiteLogo href="/ro" mark="/logo-pe-creasta.svg" label={ro.siteName} />
 
-    <ul class="hidden items-center gap-7 md:flex">
+    <ul class="hidden items-center gap-7 leading-[1.2] sm:flex">
       {
         links.map((l) => (
           <li>
             <a
               href={l.href}
               class:list={[
-                "micro link-accent",
+                "nav-link link-accent",
                 isActive(l.href) && "is-active",
               ]}
             >
@@ -52,37 +39,30 @@ const links = [
           </li>
         ))
       }
-      <li>
-        <a href="/" class="micro link-accent" target="_blank">
-          {ro.nav.en} →
-        </a>
-      </li>
     </ul>
 
-    <details class="relative flex items-center md:hidden">
+    <details class="relative flex items-center sm:hidden">
       <summary
-        class="micro list-none rounded-full border border-line px-3 py-1.5 text-ink-nav [&::-webkit-details-marker]:hidden"
+        class="nav-link link-accent list-none [&::-webkit-details-marker]:hidden"
+        aria-label="Meniu"
       >
         Meniu
       </summary>
-      <ul
-        class="absolute right-0 mt-3 flex w-56 flex-col gap-3 rounded-lg border border-line bg-surface-2 p-4 shadow-lift"
+      <div
+        class="nav-mobile-panel absolute right-0 mt-3 w-64 rounded-lg border border-line bg-surface-2 px-5 py-5 shadow-lift"
       >
-        {
-          links.map((l) => (
-            <li>
-              <a href={l.href} class="micro link-accent block">
-                {l.label}
-              </a>
-            </li>
-          ))
-        }
-        <li>
-          <a href="/" class="micro link-accent block">
-            {ro.nav.en} →
-          </a>
-        </li>
-      </ul>
+        <ul class="flex flex-col gap-5">
+          {
+            links.map((l) => (
+              <li>
+                <a href={l.href} class="nav-link link-accent block">
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </details>
   </div>
 </nav>

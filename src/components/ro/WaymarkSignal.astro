@@ -1,0 +1,19 @@
+---
+import WaymarkBadge from "~/components/hike/WaymarkBadge.astro";
+import { WAYMARK_LABEL_RO, type WaymarkCode } from "~/lib/waymarks";
+
+export interface Props {
+  marks: readonly WaymarkCode[];
+  size?: number;
+  showLabels?: boolean;
+}
+
+const { marks, size = 20, showLabels = true } = Astro.props;
+const primary = marks[0];
+const label = primary ? WAYMARK_LABEL_RO[primary] : "";
+---
+
+<div class="waymark-signal">
+  <WaymarkBadge marks={marks} size={size} />
+  {showLabels && label && <span class="micro text-ink">{label}</span>}
+</div>

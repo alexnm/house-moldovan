@@ -19,6 +19,8 @@ export interface Props {
   accent?: Accent;
   /** Line above title: continent (EN journal) or masiv name (RO hike cards). */
   regionLabel?: string;
+  /** Tehnic difficulty — doubled accent tick */
+  tehnic?: boolean;
   transitionName?: string;
 }
 
@@ -33,6 +35,7 @@ const {
   aspectClass,
   accent,
   regionLabel,
+  tehnic = false,
   transitionName,
 } = Astro.props;
 
@@ -46,7 +49,10 @@ const titleSize = "text-2xl md:text-2xl lg:text-[1.75rem]";
 
 <a
   href={href}
-  class="article-card group motion-reveal-media block h-full"
+  class:list={[
+    "article-card group motion-reveal-media block h-full",
+    tehnic && "article-card--tehnic",
+  ]}
   style={accent ? cardAccentStyle(accent) : undefined}
 >
   <figure class:list={["relative overflow-clip rounded-sm", aspect]}>
@@ -83,7 +89,7 @@ const titleSize = "text-2xl md:text-2xl lg:text-[1.75rem]";
       class="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end px-4 pt-20 pb-4 md:px-5 md:pb-5"
     >
       <div
-        class="h-1 w-12 opacity-100"
+        class="article-card__tick h-1 w-12 opacity-100"
         style="background: var(--card-accent, var(--color-accent))"
         aria-hidden="true"
       >
