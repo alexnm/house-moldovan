@@ -102,7 +102,6 @@
   --space-section: clamp(3.5rem, 5vw + 1.75rem, 5.5rem);
   --space-section-lg: clamp(4.5rem, 6vw + 2.25rem, 7.5rem);
   --space-section-tight: clamp(2.25rem, 3vw + 1.25rem, 2.75rem);
-  --space-nav-clear: 8rem;
   --space-hero-bottom: clamp(3rem, 6vw + 1rem, 6rem);
   --grid-gap: var(--space-group);
 
@@ -347,9 +346,10 @@
     inset: 0;
     background: linear-gradient(
       to top,
-      oklch(0.1 0.02 55 / 0.92) 0%,
+      oklch(0.13 0.014 55) 0%,
       oklch(0.1 0.02 55 / 0.45) 38%,
-      oklch(0.12 0.015 55 / var(--hero-overlay)) 70%,
+      transparent 50%,
+      transparent 75%,
       oklch(0.12 0.015 55 / 0.35) 100%
     );
   }
@@ -413,10 +413,6 @@
     opacity: 0.88;
   }
 
-  .nav-clear {
-    padding-top: var(--space-nav-clear);
-  }
-
   .site-nav {
     position: fixed;
     background-color: transparent;
@@ -441,6 +437,26 @@
 
   .site-nav.is-solid::before {
     opacity: 1;
+  }
+
+  /* Minimal hero nav: hide wayfinding until the bar goes solid */
+  body:has(main [data-nav-minimal])
+    .site-nav:not(.is-solid)
+    .pad-canvas
+    > a.site-logo,
+  body:has(main [data-nav-minimal]) .site-nav:not(.is-solid) .pad-canvas > ul,
+  body:has(main [data-nav-minimal])
+    .site-nav:not(.is-solid)
+    .pad-canvas
+    > details {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > a.site-logo,
+  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > ul,
+  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > details {
+    transition: opacity var(--duration-chrome) var(--ease-cinema);
   }
 
   body:not(:has(main [data-nav-hero])) .site-nav {

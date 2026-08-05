@@ -21,7 +21,7 @@ export const ro = {
     seasonHeading: "După anotimp",
   },
   feed: {
-    title: "Toate traseele",
+    title: "Explorează traseele",
     intro: "Caută traseul potrivit",
     filterRange: "Masiv",
     filterDifficulty: "Dificultate",
@@ -56,9 +56,7 @@ export const ro = {
   },
   hike: {
     distance: "Distanță",
-    elevation: "Diferență de nivel",
-    elevationGain: "Urcare",
-    elevationLoss: "Coborâre",
+    elevationGain: "Diferență de nivel",
     summit: "Cota maximă",
     duration: "Durată estimată",
     waymark: "Marcaje",

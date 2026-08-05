@@ -30,7 +30,7 @@ const list = ranges
     class="pad-canvas mx-auto my-16 grid max-w-canvas grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
   >
     {
-      list.map((r, i) => {
+      list.map((r) => {
         const cover = trailCoverFromFrontmatterPath(r.data.cover);
         return (
           <RangeCard
@@ -41,7 +41,6 @@ const list = ranges
             image={cover}
             imageAlt={`Peisaj din ${r.data.name}`}
             as="h2"
-            index={i + 1}
           />
         );
       })

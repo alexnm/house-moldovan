@@ -7,20 +7,18 @@ export interface Props {
   distance: number;
   shape: "dus-intors" | "circuit" | "traversare";
   elevationGain: number;
-  elevationLoss?: number;
   summit?: number;
   duration: readonly [number, number];
   difficulty: "usor" | "mediu" | "dificil" | "tehnic";
   waymark: readonly WaymarkCode[];
   season: ReadonlyArray<"primavara" | "vara" | "toamna" | "iarna">;
-  trailhead: { name: string; access?: string };
+  trailhead: { name: string; url?: string };
 }
 
 const {
   distance,
   shape,
   elevationGain,
-  elevationLoss,
   summit,
   duration,
   difficulty,
@@ -31,34 +29,22 @@ const {
 
 const seasonLabel = season.map((s) => ro.season[s]).join(", ");
 
-const trailheadValue = trailhead.access
-  ? `${trailhead.name} · ${trailhead.access}`
-  : trailhead.name;
-
 const primary = [
   { label: ro.hike.difficulty, value: ro.difficulty[difficulty] },
   { label: ro.hike.duration, value: ro.units.duration(duration) },
-  {
-    label: ro.hike.elevationGain,
-    value: `+${ro.units.elevation(elevationGain)}`,
-  },
+
+  { label: ro.hike.shape, value: ro.shape[shape] },
 ];
 
 const secondary = [
   { label: ro.hike.distance, value: ro.units.distance(distance) },
-  { label: ro.hike.trailhead, value: trailheadValue },
+  {
+    label: ro.hike.elevationGain,
+    value: `+${ro.units.elevation(elevationGain)}`,
+  },
   ...(summit
     ? [{ label: ro.hike.summit, value: ro.units.elevation(summit) }]
     : []),
-  ...(elevationLoss !== undefined && elevationLoss !== elevationGain
-    ? [
-        {
-          label: ro.hike.elevationLoss,
-          value: `-${ro.units.elevation(elevationLoss)}`,
-        },
-      ]
-    : []),
-  { label: ro.hike.shape, value: ro.shape[shape] },
   { label: ro.hike.season, value: seasonLabel },
 ];
 ---
@@ -84,6 +70,26 @@ const secondary = [
         </div>
       ))
     }
+    <div>
+      <dt class="micro text-ink-dim">{ro.hike.trailhead}</dt>
+      <dd class="mt-0.5 font-mono text-base text-ink">
+        {
+          trailhead.url ? (
+            <a
+              href={trailhead.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-accent"
+            >
+              {trailhead.name}
+            </a>
+          ) : (
+            trailhead.name
+          )
+        }
+      </dd>
+    </div>
+
     <div>
       <dt class="micro text-ink-dim">{ro.hike.waymark}</dt>
       <dd class="mt-1.5"><WaymarkBadge marks={waymark} /></dd>

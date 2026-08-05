@@ -1,0 +1,110 @@
+---
+import type { ImageMetadata } from "astro";
+import CoverImage from "~/components/media/CoverImage.astro";
+
+export interface Props {
+  href: string;
+  title: string;
+  countLabel: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  priority?: boolean;
+}
+
+const {
+  href,
+  title,
+  countLabel,
+  image,
+  imageAlt,
+  priority = false,
+} = Astro.props;
+const alt = imageAlt ?? `Peisaj din ${title}`;
+---
+
+<li class="atlas-vertical h-full min-h-0">
+  <a
+    href={href}
+    class="atlas-vertical__card accent-scope accent-drenched group relative block h-full w-full overflow-clip"
+  >
+    <div
+      class="relative z-10 flex h-32 flex-col justify-center px-3 pt-8 pb-8 text-center md:px-4 md:pt-32 md:pb-5"
+    >
+      <h2 class="display region-name atlas-vertical__title text-balance">
+        {title}
+      </h2>
+      <p class="stamp atlas-vertical__count mt-2">{countLabel}</p>
+    </div>
+
+    {
+      image && (
+        <div class="atlas-vertical__photo" aria-hidden="true">
+          <CoverImage
+            src={image}
+            alt={alt}
+            widths={[640, 960, 1280, 1600, 1920, 2560]}
+            sizes="(min-width: 1024px) 960px, (min-width: 640px) 720px, 100vw"
+            format="avif"
+            quality={84}
+            priority={priority}
+            placeholder={priority ? "blur" : "shell"}
+            wrapperClass="motion-hover-media h-full w-full"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      )
+    }
+  </a>
+</li>
+
+<style>
+  .atlas-vertical__card {
+    --accent-base: oklch(0.48 0.11 250);
+    --accent-ink: oklch(0.96 0.012 75);
+    --motion-photo-scale: 1.07;
+  }
+
+  .atlas-vertical__title {
+    font-size: clamp(1rem, 2.2vw, 2.1rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+
+  @media (min-width: 1024px) {
+    .atlas-vertical__title {
+      font-size: clamp(1.65rem, 3vw, 2.85rem);
+    }
+  }
+
+  .atlas-vertical__count {
+    opacity: 0.82;
+  }
+
+  .atlas-vertical__photo {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 0;
+    height: 80%;
+    overflow: clip;
+    -webkit-mask-image: linear-gradient(
+      to top,
+      black 0%,
+      black 65%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to top, black 0%, black 65%, transparent 100%);
+  }
+
+  .atlas-vertical__photo :global(.cover-image-shell),
+  .atlas-vertical__photo :global(.cover-image-shell > *) {
+    height: 100%;
+    width: 100%;
+  }
+
+  .atlas-vertical__photo :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>

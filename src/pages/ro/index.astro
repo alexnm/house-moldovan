@@ -1,107 +1,20 @@
 ---
-import CoverImage from "~/components/media/CoverImage.astro";
-import RoLayout from "~/layouts/RoLayout.astro";
+import AtlasHero from "~/components/ro/AtlasHero.astro";
 import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
-import RangeCard from "~/components/home/RangeCard.astro";
+import RoLayout from "~/layouts/RoLayout.astro";
 import { ro } from "~/i18n/ro";
-import { getHikes, getAllRanges, rangeNameByTrailId } from "~/lib/content";
-import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
+import { loadRoAtlasHomeData } from "~/lib/roHome";
 
-const [hikes, ranges] = await Promise.all([getHikes(), getAllRanges()]);
-const rangeNames = rangeNameByTrailId(ranges);
-const featured = hikes.find((h) => h.data.featured) ?? hikes[0];
-const recent = hikes.filter((h) => h !== featured).slice(0, 7);
-
-const countByRange = new Map<string, number>();
-for (const h of hikes) {
-  countByRange.set(
-    h.data.range.id,
-    (countByRange.get(h.data.range.id) ?? 0) + 1,
-  );
-}
-
-const rangeTiles = ranges
-  .filter((r) => countByRange.has(r.id))
-  .sort(
-    (a, b) => (countByRange.get(b.id) ?? 0) - (countByRange.get(a.id) ?? 0),
-  );
+const { hikes, rangeNames, rangeTiles } = await loadRoAtlasHomeData();
 ---
 
 <RoLayout title={ro.siteName} description={ro.description}>
-  {
-    featured && (
-      <section class="relative isolate overflow-clip">
-        <a href={`/ro/${featured.id}`} class="block">
-          <div
-            class="relative aspect-[16/9] max-h-dvh min-h-svh w-full overflow-clip"
-            data-nav-hero
-          >
-            <div class="motion-parallax absolute inset-0 -top-[8%] -bottom-[8%]">
-              <CoverImage
-                src={featured.data.hero}
-                alt={featured.data.title}
-                widths={[1080, 1440, 1920, 2560]}
-                sizes="100vw"
-                priority
-                placeholder="blur"
-                format="avif"
-                quality={84}
-                wrapperClass="h-full w-full"
-                transitionName={`hike-${featured.id}`}
-                class="h-full w-full object-cover"
-              />
-            </div>
-            <div class="hero-overlay" aria-hidden="true" />
-            <div class="pad-canvas hero-bottom absolute inset-x-0 bottom-0 z-10 mx-auto max-w-canvas">
-              <p class="stamp-badge animate-cinema-fade">
-                {ro.difficulty[featured.data.difficulty]} ·{" "}
-                {ro.units.duration(featured.data.duration)}
-              </p>
-              <h1 class="display page-title hero-on-photo mt-4 max-w-[18ch] animate-cinema-rise text-balance drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)]">
-                {featured.data.title}
-              </h1>
-              <p class="hero-on-photo-dim hero-summary motion-stagger mt-6 animate-cinema-fade md:mt-8">
-                {featured.data.summary}
-              </p>
-            </div>
-          </div>
-        </a>
-      </section>
-    )
-  }
+  <AtlasHero rangeTiles={rangeTiles} />
 
-  <section class="pad-canvas mx-auto my-24 max-w-canvas">
-    <header class="mb-10 flex items-baseline justify-between">
-      <h2 class="display section-heading">{ro.home.rangesHeading}</h2>
+  <section id="trasee" class="pad-canvas mx-auto max-w-canvas py-16 md:py-24">
+    <header class="mb-10">
+      <h2 class="display section-heading">{ro.feed.title}</h2>
     </header>
-    <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {
-        rangeTiles.map((r, i) => {
-          const cover = trailCoverFromFrontmatterPath(r.data.cover);
-          return (
-            <RangeCard
-              href={`/ro/munti/${r.id}`}
-              title={r.data.name}
-              summary={r.data.summary}
-              countLabel={ro.range.countOf(countByRange.get(r.id) ?? 0)}
-              image={cover}
-              imageAlt={`Peisaj din ${r.data.name}`}
-              as="h3"
-              index={i + 1}
-            />
-          );
-        })
-      }
-    </ul>
-  </section>
-
-  <section class="pad-canvas mx-auto my-24 max-w-canvas">
-    <header class="mb-10 flex items-baseline justify-between">
-      <h2 class="display section-heading">{ro.home.recentHeading}</h2>
-      <a href="/ro/trasee" class="link-more link-accent link-accent--dim">
-        {ro.home.seeAll} →
-      </a>
-    </header>
-    <HikeRhythmGrid hikes={recent} rangeNames={rangeNames} />
+    <HikeRhythmGrid hikes={hikes} rangeNames={rangeNames} />
   </section>
 </RoLayout>

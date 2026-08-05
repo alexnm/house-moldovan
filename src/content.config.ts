@@ -59,6 +59,8 @@ const trails = defineCollection({
     summary: z.string().optional(),
     /** Relative to the trail file, e.g. `../../assets/romania/{slug}/cover.jpg`. */
     cover: z.string().optional(),
+    /** Tall crop for the home atlas wall. Same path form as `cover`. */
+    atlas: z.string().optional(),
   }),
 });
 
@@ -143,7 +145,7 @@ const hikes = defineCollection({
       range: reference("trails"),
       trailhead: z.object({
         name: z.string(),
-        access: z.string().optional(),
+        url: z.string().url().optional(),
       }),
       distance: z.number().positive(),
       shape: z.enum(HIKE_SHAPES),
