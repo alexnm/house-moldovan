@@ -9,16 +9,16 @@ const assetByKey = new Map(
   Object.entries(assetModules).map(([key, mod]) => [key, mod.default] as const),
 );
 
-const trailRelativeToAssets = /^\.\.\/\.\.\/assets\//;
+const rangeRelativeToAssets = /^\.\.\/\.\.\/assets\//;
 
 /**
- * Turn a trail frontmatter path (relative to `src/content/trails/*.md`, e.g.
+ * Turn a range frontmatter path (relative to `src/content/ranges/*.md`, e.g.
  * `../../assets/romania/fagaras/cover.png`) into metadata for `astro:assets` `Image`.
  */
-export const trailCoverFromFrontmatterPath = (
+export const rangeCoverFromFrontmatterPath = (
   cover: string | undefined,
 ): ImageMetadata | undefined => {
   if (!cover) return;
-  const key = cover.replace(trailRelativeToAssets, "../assets/");
+  const key = cover.replace(rangeRelativeToAssets, "../assets/");
   return assetByKey.get(key);
 };

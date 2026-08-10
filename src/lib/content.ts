@@ -110,10 +110,10 @@ export const getPlace = async (
 };
 
 export const getRange = async (
-  ref: { collection: "trails"; id: string } | string,
-): Promise<CollectionEntry<"trails"> | undefined> => {
+  ref: { collection: "ranges"; id: string } | string,
+): Promise<CollectionEntry<"ranges"> | undefined> => {
   if (typeof ref === "string") {
-    return await getEntry("trails", ref);
+    return await getEntry("ranges", ref);
   }
   return await getEntry(ref);
 };
@@ -121,8 +121,29 @@ export const getRange = async (
 export const getAllPlaces = async (): Promise<CollectionEntry<"places">[]> =>
   await getCollection("places");
 
-export const getAllRanges = async (): Promise<CollectionEntry<"trails">[]> =>
-  await getCollection("trails");
+export const RANGE_ORDER = [
+  "apuseni",
+  "rodnei",
+  "fagaras",
+  "retezat",
+  "parang",
+  "piatra-craiului",
+] as const;
+
+const rangeOrderIndex = (id: string): number => {
+  const i = RANGE_ORDER.indexOf(id as (typeof RANGE_ORDER)[number]);
+  return i === -1 ? RANGE_ORDER.length : i;
+};
+
+export const compareRangesByOrder = (
+  a: CollectionEntry<"ranges">,
+  b: CollectionEntry<"ranges">,
+): number => rangeOrderIndex(a.id) - rangeOrderIndex(b.id);
+
+export const getAllRanges = async (): Promise<CollectionEntry<"ranges">[]> => {
+  const all = await getCollection("ranges");
+  return all.sort(compareRangesByOrder);
+};
 
 export const regionByPlaceIdMap = (
   places: CollectionEntry<"places">[],
@@ -155,8 +176,8 @@ export const articlesForRegion = (
 ): AnyEnArticle[] =>
   feed.filter((a) => articleMatchesRegion(a, region, regionByPlaceId));
 
-/** Masiv display name by `trails` id (for hike cards, meta). */
-export const rangeNameByTrailId = (
-  ranges: CollectionEntry<"trails">[],
+/** Masiv display name by range id (for hike cards, meta). */
+export const rangeNameById = (
+  ranges: CollectionEntry<"ranges">[],
 ): ReadonlyMap<string, string> =>
   new Map(ranges.map((r) => [r.id, r.data.name] as const));

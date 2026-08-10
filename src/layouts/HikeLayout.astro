@@ -42,6 +42,7 @@ const readNext = await getReadNextHikes(entry);
       image={data.hero}
       alt={data.title}
       kicker={range.data.name}
+      kickerHref={`/ro/munti/${range.id}`}
       title={data.title}
       meta={data.summary}
       transitionName={`hike-${entry.id}`}
@@ -82,26 +83,22 @@ const readNext = await getReadNextHikes(entry);
       {
         hasMapPanel && (
           <div class="min-w-0 space-y-8">
-            {
-              gpxTrack && (
-                <div class="accent-scope" data-accent="terracotta">
-                  <HikeMap line={gpxTrack.line} gpxHref={gpxHref} />
-                </div>
-              )
-            }
-            {
-              showElevationProfile && (
-                <div class="accent-scope" data-accent="saffron">
-                  <ElevationProfile
-                    profile={track.profile}
-                    minElevation={track.minElevation}
-                    maxElevation={track.maxElevation}
-                    distanceKm={track.distanceKm}
-                    publishedDistanceKm={data.distance}
-                  />
-                </div>
-              )
-            }
+            {gpxTrack && (
+              <div class="accent-scope" data-accent="terracotta">
+                <HikeMap line={gpxTrack.line} gpxHref={gpxHref} />
+              </div>
+            )}
+            {showElevationProfile && (
+              <div class="accent-scope" data-accent="saffron">
+                <ElevationProfile
+                  profile={track.profile}
+                  minElevation={track.minElevation}
+                  maxElevation={track.maxElevation}
+                  distanceKm={track.distanceKm}
+                  publishedDistanceKm={data.distance}
+                />
+              </div>
+            )}
           </div>
         )
       }
@@ -120,11 +117,5 @@ const readNext = await getReadNextHikes(entry);
         </div>
       )
     }
-
-    <nav class="section mt-4 mb-24 max-w-prose">
-      <a href="/ro/trasee" class="link-more link-accent link-accent--dim">
-        ← {ro.hike.backToFeed}
-      </a>
-    </nav>
   </article>
 </RoLayout>

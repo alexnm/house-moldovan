@@ -2,11 +2,11 @@
 import RoLayout from "~/layouts/RoLayout.astro";
 import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
 import { ro } from "~/i18n/ro";
-import { getAllRanges, getHikes, rangeNameByTrailId } from "~/lib/content";
+import { getAllRanges, getHikes, rangeNameById } from "~/lib/content";
 
 const hikes = await getHikes();
 const ranges = await getAllRanges();
-const rangeNames = rangeNameByTrailId(ranges);
+const rangeNames = rangeNameById(ranges);
 ---
 
 <RoLayout

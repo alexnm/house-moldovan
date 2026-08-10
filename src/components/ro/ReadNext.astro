@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import { ro } from "~/i18n/ro";
-import { getAllRanges, rangeNameByTrailId } from "~/lib/content";
+import { getAllRanges, rangeNameById } from "~/lib/content";
 import { accentForDifficulty, isTehnic } from "~/lib/difficulty";
 
 export interface Props {
@@ -10,7 +10,7 @@ export interface Props {
 }
 
 const { hikes } = Astro.props;
-const rangeNames = rangeNameByTrailId(await getAllRanges());
+const rangeNames = rangeNameById(await getAllRanges());
 ---
 
 <section class="section" aria-labelledby="read-next-heading">

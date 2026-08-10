@@ -51,13 +51,13 @@ const places = defineCollection({
   }),
 });
 
-const trails = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/trails" }),
+const ranges = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/ranges" }),
   schema: z.object({
     name: z.string(),
     crest: z.string().optional(),
     summary: z.string().optional(),
-    /** Relative to the trail file, e.g. `../../assets/romania/{slug}/cover.jpg`. */
+    /** Relative to the range file, e.g. `../../assets/romania/{slug}/cover.jpg`. */
     cover: z.string().optional(),
     /** Tall crop for the home atlas wall. Same path form as `cover`. */
     atlas: z.string().optional(),
@@ -142,7 +142,7 @@ const hikes = defineCollection({
       title: z.string(),
       summary: articleSummary,
       published: z.coerce.date(),
-      range: reference("trails"),
+      range: reference("ranges"),
       trailhead: z.object({
         name: z.string(),
         url: z.string().url().optional(),
@@ -166,7 +166,7 @@ const hikes = defineCollection({
 export const collections = {
   regions,
   places,
-  trails,
+  ranges,
   stories,
   spotlights,
   itineraries,

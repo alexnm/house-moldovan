@@ -20,7 +20,7 @@ pnpm preview
 Authoring lives under `src/content/`:
 
 - `places/*.md` — destinations referenced by EN articles (region, flag).
-- `trails/*.md` — Romanian mountain ranges referenced by hikes (name, optional accent, summary).
+- `ranges/*.md` — Romanian mountain ranges referenced by hikes (name, optional accent, summary).
 - `stories/*.mdx` — long-form place guides (prose, destination type, optional gallery).
 - `spotlights/*.mdx` — photo-led place showcases (short intro + `photos[]` with caption, tagline).
 - `itineraries/*.mdx` — multi-day EN itineraries with a day index.

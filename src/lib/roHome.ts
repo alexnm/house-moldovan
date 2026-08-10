@@ -1,9 +1,9 @@
 import type { CollectionEntry } from "astro:content";
-import { getAllRanges, getHikes, rangeNameByTrailId } from "~/lib/content";
-import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
+import { getAllRanges, getHikes, rangeNameById } from "~/lib/content";
+import { rangeCoverFromFrontmatterPath } from "~/lib/rangeCoverImport";
 
 export type RoAtlasRangeTile = {
-  range: CollectionEntry<"trails">;
+  range: CollectionEntry<"ranges">;
   cover: import("astro").ImageMetadata | undefined;
   /** Tall crop for the atlas wall; falls back to `cover`. */
   atlas: import("astro").ImageMetadata | undefined;
@@ -12,7 +12,7 @@ export type RoAtlasRangeTile = {
 
 export async function loadRoAtlasHomeData() {
   const [hikes, ranges] = await Promise.all([getHikes(), getAllRanges()]);
-  const rangeNames = rangeNameByTrailId(ranges);
+  const rangeNames = rangeNameById(ranges);
 
   const countByRange = new Map<string, number>();
   for (const h of hikes) {
@@ -24,15 +24,12 @@ export async function loadRoAtlasHomeData() {
 
   const rangeTiles: RoAtlasRangeTile[] = ranges
     .filter((r) => countByRange.has(r.id))
-    .sort(
-      (a, b) => (countByRange.get(b.id) ?? 0) - (countByRange.get(a.id) ?? 0),
-    )
     .map((range) => {
-      const cover = trailCoverFromFrontmatterPath(range.data.cover);
+      const cover = rangeCoverFromFrontmatterPath(range.data.cover);
       return {
         range,
         cover,
-        atlas: trailCoverFromFrontmatterPath(range.data.atlas) ?? cover,
+        atlas: rangeCoverFromFrontmatterPath(range.data.atlas) ?? cover,
         count: countByRange.get(range.id) ?? 0,
       };
     });

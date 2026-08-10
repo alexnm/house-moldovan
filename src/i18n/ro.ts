@@ -36,6 +36,7 @@ export const ro = {
     countOf: (n: number) =>
       n === 1 ? "1 traseu" : n < 20 ? `${n} trasee` : `${n} de trasee`,
     intro: (name: string) => `Toate traseele descrise în masivul ${name}.`,
+    traseeHeading: (name: string) => `Trasee din ${name}`,
   },
   difficulty: {
     usor: "Ușor",

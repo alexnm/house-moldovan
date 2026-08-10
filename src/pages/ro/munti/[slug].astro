@@ -1,11 +1,12 @@
 ---
+import { render } from "astro:content";
 import type { GetStaticPaths } from "astro";
 import RoLayout from "~/layouts/RoLayout.astro";
 import Hero from "~/components/article/Hero.astro";
 import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
 import { ro } from "~/i18n/ro";
 import { getAllRanges, getHikes } from "~/lib/content";
-import { trailCoverFromFrontmatterPath } from "~/lib/trailCoverImport";
+import { rangeCoverFromFrontmatterPath } from "~/lib/rangeCoverImport";
 
 export const getStaticPaths = (async () => {
   const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
@@ -24,9 +25,10 @@ interface Props {
 }
 
 const { range, hikes } = Astro.props as Props;
-const cover = trailCoverFromFrontmatterPath(range.data.cover);
-const countLabel = ro.range.countOf(hikes.length);
-const heroMeta = [range.data.summary, countLabel].filter(Boolean).join(" · ");
+const { Content } = await render(range);
+const cover = rangeCoverFromFrontmatterPath(range.data.cover);
+const heroMeta = range.data.summary;
+const hasBody = (range.body ?? "").trim().length > 0;
 ---
 
 <RoLayout
@@ -57,7 +59,22 @@ const heroMeta = [range.data.summary, countLabel].filter(Boolean).join(" · ");
     )
   }
 
+  {
+    hasBody && (
+      <section class="pad-canvas mx-auto max-w-canvas my-16">
+        <div class="prose-body">
+          <Content />
+        </div>
+      </section>
+    )
+  }
+
   <section class="pad-canvas mx-auto my-16 max-w-canvas">
+    <header class="mb-10">
+      <h2 class="display section-heading">
+        {ro.range.traseeHeading(range.data.name)}
+      </h2>
+    </header>
     <HikeRhythmGrid hikes={hikes} rangeLabel={range.data.name} />
   </section>
 </RoLayout>
