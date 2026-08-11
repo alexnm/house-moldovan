@@ -1,0 +1,143 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { ImageMetadata, ImageOutputFormat } from "astro";
+
+export interface Props {
+  src: ImageMetadata;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+  format?: ImageOutputFormat;
+  quality?: number | "low" | "mid" | "high" | "max";
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
+  priority?: boolean;
+  layout?: "constrained" | "fixed" | "full-width" | "none";
+  /** `shell` = surface fill; `blur` = LQIP for heroes; `false` = fade-in only */
+  placeholder?: "blur" | "shell" | false;
+  class?: string;
+  wrapperClass?: string;
+  transitionName?: string;
+}
+
+const {
+  src,
+  alt,
+  widths,
+  sizes,
+  format = "avif",
+  quality,
+  loading,
+  fetchpriority,
+  priority,
+  layout,
+  placeholder = "shell",
+  class: imageClass,
+  wrapperClass,
+  transitionName,
+} = Astro.props;
+
+const lqip =
+  placeholder === "blur"
+    ? await getImage({ src, width: 32, quality: 20, format: "webp" })
+    : null;
+
+const shell = placeholder !== false;
+const layoutProps = layout !== undefined ? { layout } : {};
+const imageClasses = ["cover-image", imageClass].filter(Boolean).join(" ");
+---
+
+{
+  shell ? (
+    <div
+      class:list={[
+        "cover-image-shell",
+        placeholder === "shell" && "bg-surface-2",
+        wrapperClass,
+      ]}
+      transition:name={transitionName}
+    >
+      {lqip && (
+        <div
+          class="cover-image-lqip"
+          style={`background-image:url(${lqip.src})`}
+          aria-hidden="true"
+        />
+      )}
+      <Image
+        {...layoutProps}
+        src={src}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        format={format}
+        quality={quality}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        priority={priority}
+        class={imageClasses}
+        onload="this.closest('.cover-image-shell')?.setAttribute('data-loaded','')"
+      />
+    </div>
+  ) : (
+    <Image
+      {...layoutProps}
+      src={src}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      format={format}
+      quality={quality}
+      loading={loading}
+      fetchpriority={fetchpriority}
+      priority={priority}
+      class={imageClasses}
+      onload="this.dataset.loaded=''"
+    />
+  )
+}
+
+<style is:global>
+  /* Unlayered: beat Astro's inline `[data-astro-image]{height:auto}` */
+  .cover-image-shell > img[data-astro-image] {
+    position: absolute;
+    inset: 0;
+    height: 100% !important;
+    width: 100% !important;
+    max-width: none;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  function initCoverImages(root: ParentNode = document) {
+    root
+      .querySelectorAll<HTMLElement>(".cover-image-shell:not([data-loaded])")
+      .forEach((shell) => {
+        const img = shell.querySelector<HTMLImageElement>(".cover-image");
+        if (!img) return;
+        const mark = () => {
+          shell.dataset.loaded = "";
+        };
+        if (img.complete && img.naturalWidth > 0) mark();
+        else img.addEventListener("load", mark, { once: true });
+      });
+
+    root
+      .querySelectorAll<HTMLImageElement>("img.cover-image:not([data-loaded])")
+      .forEach((img) => {
+        if (img.closest(".cover-image-shell")) return;
+        const mark = () => {
+          img.dataset.loaded = "";
+        };
+        if (img.complete && img.naturalWidth > 0) mark();
+        else img.addEventListener("load", mark, { once: true });
+      });
+  }
+
+  initCoverImages();
+  document.addEventListener("astro:page-load", () => initCoverImages());
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => initCoverImages());
+  }
+</script>

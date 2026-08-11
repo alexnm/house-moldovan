@@ -1,0 +1,29 @@
+---
+import Hero from "@shared/components/article/Hero.astro";
+import RoLayout from "~/layouts/RoLayout.astro";
+import { ro } from "~/i18n/ro";
+import heroImage from "~/assets/romania/parang/creasta.jpg";
+
+Astro.response.status = 404;
+---
+
+<RoLayout
+  title={`${ro.notFound.metaTitle} · ${ro.siteName}`}
+  description={ro.notFound.metaDescription}
+>
+  <Hero
+    image={heroImage}
+    alt="Creasta Parângului, versanți deschiși fără nicio potecă marcată"
+    title={ro.notFound.heroTitle}
+    meta={ro.notFound.heroSummary}
+    transitionName="hero-404"
+  >
+    <p
+      slot="kicker"
+      class="m-0 flex animate-cinema-fade flex-wrap items-center gap-2"
+    >
+      <a href="/" class="stamp-badge">{ro.notFound.homeCta}</a>
+      <a href="/trasee" class="stamp-badge">{ro.home.seeAll}</a>
+    </p>
+  </Hero>
+</RoLayout>

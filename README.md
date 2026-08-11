@@ -1,43 +1,40 @@
-# Travel blog
+# House Moldovan monorepo
 
-A static, content-driven travel blog: Astro 6 + Tailwind v4, photo-led and lush.
+Two static sites in one pnpm workspace:
 
-- **Main site (English)** at `/` — four regions: South America, Asia, Middle East, Europe. Three article types: stories, spotlights and itineraries.
-- **Romanian micro-site** at `/ro/*` — a separate hiking site (Pe creastă) with its own schema (`hike`), Carpathian palette, and Romanian copy.
+| App | Domain (placeholder) | Package |
+|-----|----------------------|---------|
+| **House Moldovan** (EN travel journal) | `housemoldovan.com` | `apps/en` |
+| **Pe creastă** (RO hiking) | `pecreasta.ro` | `apps/ro` |
+
+Shared layout primitives, OG renderer, GPX utilities, and accent tokens live in `packages/shared`.
 
 ## Quick start
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:4321
-pnpm check        # astro check + eslint + prettier --check
-pnpm build        # static output to ./dist
-pnpm preview
+pnpm dev:en          # http://localhost:4321
+pnpm dev:ro          # http://localhost:4322
+pnpm check           # typecheck + lint + format
+pnpm build:all       # both dist/ folders
 ```
+
+Per-app commands: `pnpm build:en`, `pnpm build:ro`, `pnpm deploy:en`, `pnpm deploy:ro`.
 
 ## Content
 
-Authoring lives under `src/content/`:
-
-- `places/*.md` — destinations referenced by EN articles (region, flag).
-- `ranges/*.md` — Romanian mountain ranges referenced by hikes (name, optional accent, summary).
-- `stories/*.mdx` — long-form place guides (prose, destination type, optional gallery).
-- `spotlights/*.mdx` — photo-led place showcases (short intro + `photos[]` with caption, tagline).
-- `itineraries/*.mdx` — multi-day EN itineraries with a day index.
-- `hikes/*.mdx` — Romanian hikes with `range`, GPX path, distance, elevation, difficulty, waymark.
-
-Hero images are `image()`-validated; story gallery and spotlight `photos[]` use the same `image()` helper.
-
-GPX tracks live in `public/gpx/`. They are parsed at build time for distance, elevation change, and the SVG elevation profile.
-
-## Design tokens
-
-All in `src/styles/app.css` under `@theme`. Region/range accents are exposed both as semantic tokens (`--color-region-asia`, `--color-range-fagaras`, …) and as a per-page `--accent` set by layouts.
+- **EN** (`apps/en/src/content/`): `places`, `regions`, `stories`, `spotlights`, `itineraries`
+- **RO** (`apps/ro/src/content/`): `ranges`, `hikes` — GPX in `apps/ro/public/gpx/`
 
 ## Deploy
 
-`pnpm build` produces a fully static `dist/`. The bundled GitHub Actions workflow deploys to Cloudflare Pages with `wrangler pages deploy`. Vercel and Netlify will accept the same `dist/` without changes.
+Each app builds to its own `dist/` and deploys to a separate Cloudflare Pages project:
+
+- EN → `house-moldovan` (`apps/en/dist`)
+- RO → `pe-creasta` (`apps/ro/dist`)
+
+Set `ASTRO_SITE` at build time to override the placeholder RO domain (`https://pecreasta.ro`). See `.github/workflows/deploy.yml` for a dual-job CI template.
 
 ## Pinned versions
 
-See `package.json`. Notable: Astro 6.1.9, Tailwind 4.2.4 via `@tailwindcss/vite`, TypeScript 5.9.
+See workspace `package.json` files. Notable: Astro 6.1.9, Tailwind 4.2.4, TypeScript 5.9.

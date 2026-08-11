@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-11T12:32:12.000Z",
+  "title": "Design System: Pe creastă",
+  "extensions": {
+    "colorMeta": {
+      "accent-saffron": {
+        "role": "primary",
+        "displayName": "Saffron",
+        "canonical": "oklch(0.88 0.2 86)"
+      },
+      "difficulty-usor": {
+        "role": "secondary",
+        "displayName": "Jade (ușor)",
+        "canonical": "oklch(0.75 0.175 155)"
+      },
+      "difficulty-mediu": {
+        "role": "secondary",
+        "displayName": "Saffron (mediu)",
+        "canonical": "oklch(0.9 0.19 85)"
+      },
+      "difficulty-dificil": {
+        "role": "secondary",
+        "displayName": "Terracotta (dificil/tehnic)",
+        "canonical": "oklch(0.75 0.19 35)"
+      },
+      "range-sky": {
+        "role": "secondary",
+        "displayName": "Range Sky",
+        "canonical": "oklch(0.7 0.14 250)"
+      },
+      "surface-film": {
+        "role": "neutral",
+        "displayName": "Film Surface",
+        "canonical": "oklch(0.13 0.014 55)"
+      },
+      "ink-warm": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(0.96 0.012 75)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Trail Sign Display",
+        "purpose": "Oswald for massif and hike titles; trail-sign register."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Oswald section headings at poster scale."
+      },
+      "title": {
+        "displayName": "UI / Prose Title",
+        "purpose": "Bricolage for prose headings and UI titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Nunito field notes, max 68ch."
+      },
+      "label": {
+        "displayName": "Stamp / Micro",
+        "purpose": "JetBrains Mono uppercase metadata and hike kickers."
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Hike Card Kicker",
+      "kind": "chip",
+      "refersTo": "hike-kicker",
+      "description": "Uniform {difficulty} · {duration} stamp on hike cards.",
+      "html": "<span class=\"ds-stamp\">Mediu · 6h – 8h</span>",
+      "css": ".ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+    },
+    {
+      "name": "Range Tile",
+      "kind": "card",
+      "refersTo": "range-tile",
+      "description": "Cobalt drenched massif card for atlas and /munti.",
+      "html": "<a class=\"ds-range\" href=\"#\"><h3>Făgăraș</h3><p>12 trasee</p></a>",
+      "css": ".ds-range { display: block; aspect-ratio: 1; padding: 1.25rem; background: oklch(0.7 0.14 250); color: oklch(0.96 0.012 75); border-radius: 4px; text-decoration: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Marcaj pe hârtie",
+    "overview": "Pe creastă (working name) is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; stats close it. Massif → trail is the chapter model; difficulty color is a compare signal on hike cards. Sister site: House Moldovan.",
+    "keyCharacteristics": [
+      "Oswald trail-sign display",
+      "Massif atlas wayfinding with cobalt range tiles",
+      "Difficulty compare accents with text kickers",
+      "First-class GPX, map, elevation, waymarks",
+      "Shared film neutrals with EN; separate identity"
+    ],
+    "dos": [
+      "Do lead with massif atlas wayfinding.",
+      "Do keep stats scannable on cards and hike pages.",
+      "Do pair difficulty color with Romanian text labels.",
+      "Do treat GPX, map, elevation, and marcaje as core product.",
+      "Do keep waymark colors data-bound only."
+    ],
+    "donts": [
+      "Don't build AllTrails-style dashboards.",
+      "Don't ship impersonal trail boilerplate or brochure copy.",
+      "Don't organize the site as difficulty chapters.",
+      "Don't use Big Shoulders Display on this site.",
+      "Don't reuse waymark colors as chrome accents.",
+      "Don't treat this site and House Moldovan as one visual product."
+    ]
+  }
+}

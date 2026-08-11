@@ -1,0 +1,82 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import RegionStrip from "~/components/home/RegionStrip.astro";
+import RhythmGrid from "~/components/home/RhythmGrid.astro";
+import { en } from "~/i18n/en";
+import { getEnFeed, getHomeRecentFeed } from "~/lib/content";
+import heroImage from "~/assets/peru/salkantay-cover.jpg";
+
+const feed = await getEnFeed();
+const recent = getHomeRecentFeed(feed);
+---
+
+<BaseLayout
+  title={`${en.siteName} · ${en.home.kicker}`}
+  description={en.description}
+>
+  <section class="relative isolate overflow-clip">
+    <div
+      class="relative aspect-[16/9] max-h-dvh min-h-svh w-full overflow-clip"
+      data-nav-hero
+    >
+      <div class="motion-parallax absolute inset-0 -top-[8%] -bottom-[8%]">
+        <CoverImage
+          src={heroImage}
+          alt="Salkantay trek in the Peruvian Andes"
+          widths={[1080, 1440, 1920, 2560]}
+          sizes="100vw"
+          priority
+          placeholder="blur"
+          format="avif"
+          quality={84}
+          wrapperClass="h-full w-full"
+          class="h-full w-full object-cover"
+        />
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div
+        class="pad-canvas hero-bottom absolute inset-x-0 bottom-0 z-10 mx-auto flex max-w-canvas flex-col items-start gap-4 md:gap-5"
+      >
+        <p class="stamp-badge stamp-badge--accent animate-cinema-fade">
+          {en.home.kicker}
+        </p>
+        <h1
+          class="display page-title hero-on-photo max-w-[14ch] animate-cinema-rise drop-shadow-[0_2px_24px_oklch(0.1_0.02_55/0.55)]"
+        >
+          {en.siteName}
+        </h1>
+        <p
+          class="hero-on-photo-dim hero-summary motion-stagger animate-cinema-fade text-balance"
+        >
+          {en.description}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <RegionStrip />
+
+  <section class="section section-y-tight">
+    <header
+      class="section-header flex flex-wrap items-baseline justify-between gap-4"
+    >
+      <h2 class="display section-heading">{en.home.recentHeading}</h2>
+      <a
+        href="/journal"
+        class="link-more link-accent link-accent--dim hidden shrink-0 sm:inline"
+      >
+        {en.home.seeAll} →
+      </a>
+    </header>
+
+    <RhythmGrid articles={recent} />
+
+    <a
+      href="/journal"
+      class="link-more link-accent link-accent--dim mt-(--space-block) inline-block sm:hidden"
+    >
+      {en.home.seeAll} →
+    </a>
+  </section>
+</BaseLayout>

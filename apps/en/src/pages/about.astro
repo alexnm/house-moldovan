@@ -1,0 +1,225 @@
+---
+import Hero from "@shared/components/article/Hero.astro";
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import { en } from "~/i18n/en";
+import heroImage from "~/assets/about/hero.JPG";
+import coverImage from "~/assets/about/cover.jpg";
+import melaImage from "~/assets/about/mela.JPG";
+import alexImage from "~/assets/about/alex.jpg";
+
+const notes = [
+  en.about.notes.stories,
+  en.about.notes.itineraries,
+  en.about.notes.spotlights,
+] as const;
+---
+
+<BaseLayout
+  title={`${en.about.title} · ${en.siteName}`}
+  description={en.description}
+>
+  <Hero
+    image={heroImage}
+    alt="Our shadows projected on a rock during sunset on Tenerife island"
+    kicker={en.about.kicker}
+    title={en.about.heroTitle}
+    meta={en.about.heroSummary}
+    transitionName="hero-about"
+  />
+
+  <section class="section section-y-lg motion-reveal">
+    <div class="prose-body max-w-prose">
+      <p>{en.about.introP1}</p>
+      <p>
+        {en.about.introP2.start}
+        <a href="/explore">{en.about.introP2.exploreLink}</a>
+        {en.about.introP2.mid}
+        <a href="/journal">{en.about.introP2.journalLink}</a>
+        {en.about.introP2.end}
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-y-lg" aria-labelledby="about-notes-heading">
+    <header class="section-header">
+      <p class="stamp text-ink-dim">{en.about.notesKicker}</p>
+      <h2 id="about-notes-heading" class="display section-heading mt-2">
+        {en.about.notesHeading}
+      </h2>
+    </header>
+
+    <ol class="about-notes">
+      {
+        notes.map((note, index) => (
+          <li class="about-note motion-reveal">
+            <span class="stamp text-ink-faint" aria-hidden="true">
+              0{index + 1}
+            </span>
+            <div class="about-note__body">
+              <span class="about-note__tick" aria-hidden="true" />
+              <h3 class="display subsection-heading">{note.title}</h3>
+              <p class="mt-3 max-w-prose leading-relaxed text-ink-dim">
+                {note.description}
+              </p>
+              <a
+                href={note.href}
+                class="link-more link-accent link-accent--dim mt-5 inline-block"
+              >
+                {note.cta} →
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section section-y-lg" aria-labelledby="about-authors-heading">
+    <header class="section-header motion-reveal max-w-prose">
+      <p class="stamp text-ink-dim">{en.about.authorsKicker}</p>
+      <h2 id="about-authors-heading" class="display section-heading mt-2">
+        {en.about.authorsHeading}
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed">{en.about.authorsIntro}</p>
+    </header>
+
+    <div class="about-portraits">
+      <figure class="about-portrait motion-reveal-media">
+        <div class="about-portrait__shell group motion-hover-media">
+          <CoverImage
+            src={melaImage}
+            alt={en.about.melaAlt}
+            widths={[480, 640, 960, 1200]}
+            sizes="(min-width: 768px) 33vw, 88vw"
+            format="avif"
+            quality={82}
+            loading="lazy"
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover"
+          />
+          <span
+            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
+            >Mela</span
+          >
+        </div>
+      </figure>
+
+      <figure class="about-portrait motion-reveal-media">
+        <div class="about-portrait__shell group motion-hover-media">
+          <CoverImage
+            src={alexImage}
+            alt={en.about.alexAlt}
+            widths={[480, 640, 960, 1200]}
+            sizes="(min-width: 768px) 33vw, 88vw"
+            format="avif"
+            quality={82}
+            loading="lazy"
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover"
+          />
+          <span
+            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
+            >Alex & Edi</span
+          >
+        </div>
+      </figure>
+
+      <figure class="about-portrait-wide motion-reveal-media">
+        <div
+          class="about-portrait-wide__shell group motion-hover-media"
+          style={`aspect-ratio: ${coverImage.width} / ${coverImage.height}`}
+        >
+          <CoverImage
+            src={coverImage}
+            alt={en.about.melaAlexAlt}
+            widths={[960, 1280, 1600, 1920]}
+            sizes="(min-width: 1536px) 56rem, (min-width: 768px) 66vw, 100vw"
+            format="avif"
+            quality={82}
+            loading="lazy"
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover"
+          />
+          <span
+            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
+            >The whole family</span
+          >
+        </div>
+      </figure>
+    </div>
+
+    <!-- <p class="prose-body motion-reveal mt-12 max-w-prose">
+      {en.about.sisterSite}{" "}
+      <a href="/ro">{en.about.sisterSiteLabel}</a>.
+    </p> -->
+  </section>
+</BaseLayout>
+
+<style>
+  .about-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about-note {
+    display: grid;
+    gap: 1rem;
+    padding-block: clamp(1.75rem, 3vw, 2.25rem);
+    border-top: 1px solid var(--color-line);
+
+    @media (width >= 640px) {
+      grid-template-columns: 3.5rem 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .about-note__tick {
+    display: block;
+    width: 3rem;
+    height: 3px;
+    margin-bottom: 0.85rem;
+    background: var(--color-accent);
+    border-radius: 1px;
+  }
+
+  .about-portraits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gap);
+    width: 100%;
+    max-width: 100%;
+    margin-top: clamp(2rem, 4vw, 3rem);
+
+    @media (width >= 640px) {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      max-width: 66.666667%;
+    }
+  }
+
+  .about-portrait__shell {
+    position: relative;
+    overflow: clip;
+    border-radius: 2px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .about-portrait-wide {
+    @media (width >= 640px) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .about-portrait-wide__shell {
+    position: relative;
+    overflow: clip;
+    border-radius: 2px;
+  }
+</style>

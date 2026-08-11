@@ -1,0 +1,11 @@
+---
+type Props = {
+  type: "tip" | "warning";
+};
+
+const { type } = Astro.props;
+---
+
+<div class:list={["info", type]}>
+  <span><slot /></span>
+</div>

@@ -1,0 +1,68 @@
+<script>
+  let abortController: AbortController | null = null;
+
+  function initSiteNavScroll() {
+    abortController?.abort();
+    abortController = new AbortController();
+    const { signal } = abortController;
+
+    const nav = document.querySelector<HTMLElement>("[data-site-nav]");
+    const hero = document.querySelector<HTMLElement>("[data-nav-hero]");
+    if (!nav) return;
+
+    const minimal = Boolean(
+      document.querySelector<HTMLElement>("[data-nav-minimal]"),
+    );
+    const hideables = minimal
+      ? nav.querySelectorAll<HTMLElement>(
+          ":scope > .pad-canvas > a.site-logo, :scope > .pad-canvas > ul, :scope > .pad-canvas > details",
+        )
+      : null;
+
+    const setMinimalHidden = (hidden: boolean) => {
+      if (!hideables) return;
+      hideables.forEach((el) => {
+        if (hidden) el.setAttribute("inert", "");
+        else el.removeAttribute("inert");
+      });
+    };
+
+    if (!hero) {
+      nav.classList.add("is-solid");
+      setMinimalHidden(false);
+      return;
+    }
+
+    let threshold = 50;
+    let ticking = false;
+
+    const apply = () => {
+      const solid = window.scrollY >= threshold;
+      nav.classList.toggle("is-solid", solid);
+      setMinimalHidden(minimal && !solid);
+    };
+
+    const refresh = () => {
+      threshold = 50;
+      apply();
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        apply();
+        ticking = false;
+      });
+    };
+
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true, signal });
+    window.addEventListener("resize", refresh, { passive: true, signal });
+
+    new ResizeObserver(refresh).observe(hero);
+  }
+
+  initSiteNavScroll();
+  document.addEventListener("astro:page-load", initSiteNavScroll);
+</script>

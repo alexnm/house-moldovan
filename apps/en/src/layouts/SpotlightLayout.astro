@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import Hero from "@shared/components/article/Hero.astro";
+import Prose from "@shared/components/article/Prose.astro";
+import MetaBar from "~/components/article/MetaBar.astro";
+import SpotlightPhotoGrid from "~/components/article/SpotlightPhotoGrid.astro";
+import { en } from "~/i18n/en";
+import { getPlace } from "~/lib/content";
+import { articleOgPath } from "~/lib/articles";
+import {
+  countryLinks,
+  regionAccentForPlaces,
+  uniqueRegionLinks,
+} from "~/lib/articlePlaces";
+import { getAllRegions, regionMapById } from "~/lib/regions";
+import { getReadNextArticles } from "~/lib/readNext";
+import ReadNext from "~/components/article/ReadNext.astro";
+
+export interface Props {
+  entry: CollectionEntry<"spotlights">;
+  hasIntro: boolean;
+}
+
+const { entry, hasIntro } = Astro.props;
+const { data } = entry;
+
+const places = await Promise.all(data.country.map((ref) => getPlace(ref)));
+const resolved = places.filter((p): p is NonNullable<typeof p> => Boolean(p));
+if (resolved.length === 0)
+  throw new Error(`No countries found for spotlight ${entry.id}`);
+
+const regionsById = regionMapById(await getAllRegions());
+const accent = regionAccentForPlaces(resolved, regionsById);
+const countryLabel =
+  resolved.length > 1 ? en.article.countries : en.article.country;
+const heroMeta = data.summary;
+const items = [
+  { label: countryLabel, value: countryLinks(resolved) },
+  { label: en.region.kicker, value: uniqueRegionLinks(resolved, regionsById) },
+  {
+    label: en.article.type,
+    value: en.article.storyType[data.type],
+  },
+  { label: en.article.months, value: data.months },
+];
+
+const readNext = await getReadNextArticles({ ...entry, kind: "spotlight" });
+const ogImage = articleOgPath({ ...entry, kind: "spotlight" });
+const description = data.summary;
+---
+
+<BaseLayout
+  title={`${data.title} · ${en.siteName}`}
+  description={description}
+  type="article"
+  ogImage={ogImage}
+  noindex={data.draft}
+>
+  <article class="accent-scope" data-accent={accent}>
+    <Hero
+      image={data.hero}
+      alt={data.title}
+      kicker={en.article.spotlight}
+      title={data.title}
+      meta={heroMeta}
+      accent={accent}
+      transitionName={`hero-${entry.id}`}
+    />
+
+    <MetaBar items={items} />
+
+    {
+      hasIntro && (
+        <div class="motion-reveal section mt-12 @md:mt-16">
+          <Prose class="mx-0!">
+            <slot />
+          </Prose>
+        </div>
+      )
+    }
+
+    <SpotlightPhotoGrid
+      photos={data.photos.map((p) => ({
+        image: p.image,
+        caption: p.caption,
+        tagline: p.tagline,
+      }))}
+    />
+
+    {
+      readNext.length > 0 && (
+        <div class="motion-reveal section-divider">
+          <ReadNext articles={readNext} />
+        </div>
+      )
+    }
+
+    <nav class="section mt-4 mb-24">
+      <a href="/journal" class="link-more link-accent link-accent--dim">
+        ← {en.article.backToJournal}
+      </a>
+    </nav>
+  </article>
+</BaseLayout>

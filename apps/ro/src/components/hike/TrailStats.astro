@@ -1,0 +1,98 @@
+---
+import { ro } from "~/i18n/ro";
+import type { WaymarkCode } from "~/lib/waymarks";
+import WaymarkBadge from "./WaymarkBadge.astro";
+
+export interface Props {
+  distance: number;
+  shape: "dus-intors" | "circuit" | "traversare";
+  elevationGain: number;
+  summit?: number;
+  duration: readonly [number, number];
+  difficulty: "usor" | "mediu" | "dificil" | "tehnic";
+  waymark: readonly WaymarkCode[];
+  season: ReadonlyArray<"primavara" | "vara" | "toamna" | "iarna">;
+  trailhead: { name: string; url?: string };
+}
+
+const {
+  distance,
+  shape,
+  elevationGain,
+  summit,
+  duration,
+  difficulty,
+  waymark,
+  season,
+  trailhead,
+} = Astro.props;
+
+const seasonLabel = season.map((s) => ro.season[s]).join(", ");
+
+const primary = [
+  { label: ro.hike.difficulty, value: ro.difficulty[difficulty] },
+  { label: ro.hike.duration, value: ro.units.duration(duration) },
+
+  { label: ro.hike.shape, value: ro.shape[shape] },
+];
+
+const secondary = [
+  { label: ro.hike.distance, value: ro.units.distance(distance) },
+  {
+    label: ro.hike.elevationGain,
+    value: `+${ro.units.elevation(elevationGain)}`,
+  },
+  ...(summit
+    ? [{ label: ro.hike.summit, value: ro.units.elevation(summit) }]
+    : []),
+  { label: ro.hike.season, value: seasonLabel },
+];
+---
+
+<aside class="motion-reveal" aria-label={ro.hike.stats}>
+  <dl class="space-y-4">
+    {
+      primary.map((s) => (
+        <div>
+          <dt class="micro text-ink-dim">{s.label}</dt>
+          <dd class="mt-0.5 font-mono text-base text-ink">{s.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <dl class="mt-8 space-y-4 border-t border-line pt-8">
+    {
+      secondary.map((s) => (
+        <div>
+          <dt class="micro text-ink-dim">{s.label}</dt>
+          <dd class="mt-0.5 font-mono text-base text-ink">{s.value}</dd>
+        </div>
+      ))
+    }
+    <div>
+      <dt class="micro text-ink-dim">{ro.hike.trailhead}</dt>
+      <dd class="mt-0.5 font-mono text-base text-ink">
+        {
+          trailhead.url ? (
+            <a
+              href={trailhead.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-accent"
+            >
+              {trailhead.name}
+            </a>
+          ) : (
+            trailhead.name
+          )
+        }
+      </dd>
+    </div>
+
+    <div>
+      <dt class="micro text-ink-dim">{ro.hike.waymark}</dt>
+      <dd class="mt-1.5"><WaymarkBadge marks={waymark} /></dd>
+    </div>
+  </dl>
+</aside>

@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import { ro } from "~/i18n/ro";
+import { getAllRanges, rangeNameById } from "~/lib/content";
+import { accentForDifficulty, isTehnic } from "~/lib/difficulty";
+
+export interface Props {
+  hikes: CollectionEntry<"hikes">[];
+}
+
+const { hikes } = Astro.props;
+const rangeNames = rangeNameById(await getAllRanges());
+---
+
+<section class="section" aria-labelledby="read-next-heading">
+  <h2
+    id="read-next-heading"
+    class="display subsection-heading mb-(--space-header) text-ink"
+  >
+    {ro.hike.nextRead}
+  </h2>
+  <div class:list={[hikes.length > 1 ? "grid-cards" : "mx-auto max-w-2xl"]}>
+    {
+      hikes.map((h) => {
+        const rangeLabel =
+          rangeNames.get(h.data.range.id) ?? h.data.range.id;
+
+        return (
+          <ArticleCard
+            href={`/${h.id}`}
+            title={h.data.title}
+            kicker={`${ro.difficulty[h.data.difficulty]} · ${ro.units.duration(h.data.duration)}`}
+            meta={`${ro.units.distance(h.data.distance)} · +${ro.units.elevation(h.data.elevationGain)}`}
+            image={h.data.hero}
+            imageAlt={h.data.title}
+            size="md"
+            accent={accentForDifficulty(h.data.difficulty)}
+            tehnic={isTehnic(h.data.difficulty)}
+            regionLabel={rangeLabel}
+            transitionName={`hike-${h.id}`}
+          />
+        );
+      })
+    }
+  </div>
+</section>

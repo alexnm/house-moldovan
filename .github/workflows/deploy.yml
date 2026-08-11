@@ -6,7 +6,7 @@
 #   workflow_dispatch:
 
 # jobs:
-#   deploy:
+#   deploy-en:
 #     runs-on: ubuntu-latest
 #     permissions:
 #       contents: read
@@ -19,12 +19,35 @@
 #           node-version: 22
 #           cache: pnpm
 #       - run: pnpm install --frozen-lockfile
-#       - run: pnpm build
+#       - run: pnpm build:en
 #         env:
-#           ASTRO_SITE: ${{ vars.ASTRO_SITE }}
-#       - name: Deploy
+#           ASTRO_SITE: https://housemoldovan.com
+#       - name: Deploy EN
 #         uses: cloudflare/wrangler-action@v3
 #         with:
 #           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 #           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-#           command: pages deploy dist --project-name=${{ vars.CF_PROJECT_NAME || 'house-moldovan' }}
+#           command: pages deploy apps/en/dist --project-name=house-moldovan
+
+#   deploy-ro:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       deployments: write
+#     steps:
+#       - uses: actions/checkout@v5
+#       - uses: pnpm/action-setup@v4
+#       - uses: actions/setup-node@v5
+#         with:
+#           node-version: 22
+#           cache: pnpm
+#       - run: pnpm install --frozen-lockfile
+#       - run: pnpm build:ro
+#         env:
+#           ASTRO_SITE: https://pecreasta.ro
+#       - name: Deploy RO
+#         uses: cloudflare/wrangler-action@v3
+#         with:
+#           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+#           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+#           command: pages deploy apps/ro/dist --project-name=pe-creasta
