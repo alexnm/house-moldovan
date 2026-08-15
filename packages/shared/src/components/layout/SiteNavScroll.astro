@@ -15,7 +15,7 @@
     );
     const hideables = minimal
       ? nav.querySelectorAll<HTMLElement>(
-          ":scope > .pad-canvas > a.site-logo, :scope > .pad-canvas > ul, :scope > .pad-canvas > details",
+          ":scope > .pad-canvas > :is(a.site-logo, .site-logo-group), :scope > .pad-canvas > ul, :scope > .pad-canvas > details",
         )
       : null;
 

@@ -1,16 +1,27 @@
 ---
 import { ro } from "~/i18n/ro";
+import CrestMark from "~/components/layout/CrestMark.astro";
 import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 
 const path = Astro.url.pathname;
-const isActive = (href: string): boolean =>
-  href === "/" ? path === "/" : path.startsWith(href);
 
-const links = [
+type NavLink = {
+  href: string;
+  label: string;
+  /** Extra path prefixes that count as this link's section. */
+  match?: string[];
+};
+
+const links: NavLink[] = [
   { href: "/trasee", label: ro.nav.trasee },
-  { href: "/munti", label: ro.nav.munti },
-  { href: "/despre", label: ro.nav.despre },
+  // Massif pages live under `/munti`, but the map is where they are listed.
+  { href: "/harta", label: ro.nav.harta, match: ["/harta", "/munti"] },
 ];
+
+const isActive = (link: NavLink): boolean =>
+  (link.match ?? [link.href]).some((prefix) =>
+    prefix === "/" ? path === "/" : path.startsWith(prefix),
+  );
 ---
 
 <nav
@@ -21,18 +32,17 @@ const links = [
   <div
     class="pad-canvas mx-auto flex max-w-canvas items-center justify-between gap-4 sm:gap-6"
   >
-    <SiteLogo href="/" mark="/logo-pe-creasta.svg" label={ro.siteName} />
+    <SiteLogo href="/" label={ro.siteName}>
+      <CrestMark slot="mark" />
+    </SiteLogo>
 
-    <ul class="hidden items-center gap-7 leading-[1.2] sm:flex">
+    <ul class="flex items-center gap-5 leading-[1.2] sm:gap-7">
       {
         links.map((l) => (
           <li>
             <a
               href={l.href}
-              class:list={[
-                "nav-link link-accent",
-                isActive(l.href) && "is-active",
-              ]}
+              class:list={["nav-link link-accent", isActive(l) && "is-active"]}
             >
               {l.label}
             </a>
@@ -40,29 +50,5 @@ const links = [
         ))
       }
     </ul>
-
-    <details class="relative flex items-center sm:hidden">
-      <summary
-        class="nav-link link-accent list-none [&::-webkit-details-marker]:hidden"
-        aria-label="Meniu"
-      >
-        Meniu
-      </summary>
-      <div
-        class="nav-mobile-panel absolute right-0 mt-3 w-64 rounded-lg border border-line bg-surface-3 px-5 py-5 shadow-lift"
-      >
-        <ul class="flex flex-col gap-5">
-          {
-            links.map((l) => (
-              <li>
-                <a href={l.href} class="nav-link link-accent block">
-                  {l.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </details>
   </div>
 </nav>

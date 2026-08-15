@@ -1,12 +1,29 @@
 ---
 import RoLayout from "~/layouts/RoLayout.astro";
-import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
+import ArticleCard from "~/components/home/ArticleCard.astro";
 import { ro } from "~/i18n/ro";
 import { getAllRanges, getHikes, rangeNameById } from "~/lib/content";
+import { accentForDifficulty, isTehnic } from "~/lib/difficulty";
+import type { HikeDifficulty } from "~/lib/difficulty";
 
 const hikes = await getHikes();
 const ranges = await getAllRanges();
 const rangeNames = rangeNameById(ranges);
+
+const DIFFICULTY_ORDER = [
+  "usor",
+  "mediu",
+  "dificil",
+  "tehnic",
+] as const satisfies readonly HikeDifficulty[];
+
+/** Only options that would actually show a card. */
+const rangeOptions = ranges.filter((r) =>
+  hikes.some((h) => h.data.range.id === r.id),
+);
+const difficultyOptions = DIFFICULTY_ORDER.filter((d) =>
+  hikes.some((h) => h.data.difficulty === d),
+);
 ---
 
 <RoLayout
@@ -20,7 +37,148 @@ const rangeNames = rangeNameById(ranges);
     </h1>
   </section>
 
-  <section class="pad-canvas mx-auto my-16 max-w-canvas">
-    <HikeRhythmGrid hikes={hikes} rangeNames={rangeNames} />
+  <section class="pad-canvas mx-auto my-12 max-w-canvas" data-hike-feed>
+    <div
+      class="mb-10 flex flex-wrap gap-4 sm:gap-6"
+      role="group"
+      aria-label={ro.feed.filtersLabel}
+    >
+      <label class="trail-filter">
+        <span class="micro text-ink-faint">{ro.feed.filterRange}</span>
+        <select class="trail-filter__select" data-filter="range">
+          <option value="">{ro.feed.filterAll}</option>
+          {rangeOptions.map((r) => <option value={r.id}>{r.data.name}</option>)}
+        </select>
+      </label>
+
+      <label class="trail-filter">
+        <span class="micro text-ink-faint">{ro.feed.filterDifficulty}</span>
+        <select class="trail-filter__select" data-filter="difficulty">
+          <option value="">{ro.feed.filterAll}</option>
+          {
+            difficultyOptions.map((d) => (
+              <option value={d}>{ro.difficulty[d]}</option>
+            ))
+          }
+        </select>
+      </label>
+    </div>
+
+    <p class="micro mb-6 hidden text-ink-faint" data-hike-empty>
+      {ro.feed.empty}
+    </p>
+
+    <!-- Uniform small cards so filtering never leaves a half-row hole. -->
+    <div
+      class="grid grid-cols-1 items-stretch gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3"
+    >
+      {
+        hikes.map((h) => (
+          <div
+            class="min-h-0 overflow-clip"
+            data-range={h.data.range.id}
+            data-difficulty={h.data.difficulty}
+          >
+            <ArticleCard
+              href={`/${h.id}`}
+              title={h.data.title}
+              kicker={`${ro.difficulty[h.data.difficulty]} · ${ro.units.duration(h.data.duration)}`}
+              meta={`${ro.units.distance(h.data.distance)} · +${ro.units.elevation(h.data.elevationGain)}`}
+              image={h.data.hero}
+              imageAlt={h.data.title}
+              size="md"
+              aspectClass="aspect-square lg:aspect-[4/5]"
+              accent={accentForDifficulty(h.data.difficulty)}
+              tehnic={isTehnic(h.data.difficulty)}
+              regionLabel={rangeNames.get(h.data.range.id) ?? h.data.range.id}
+              transitionName={`hike-${h.id}`}
+            />
+          </div>
+        ))
+      }
+    </div>
   </section>
 </RoLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-hike-feed]");
+  if (root) {
+    const cells = root.querySelectorAll<HTMLElement>("[data-range]");
+    const empty = root.querySelector<HTMLElement>("[data-hike-empty]");
+    const selects = root.querySelectorAll<HTMLSelectElement>(
+      "select[data-filter]",
+    );
+
+    const apply = (): void => {
+      const range =
+        root.querySelector<HTMLSelectElement>('select[data-filter="range"]')
+          ?.value ?? "";
+      const difficulty =
+        root.querySelector<HTMLSelectElement>(
+          'select[data-filter="difficulty"]',
+        )?.value ?? "";
+
+      let visible = 0;
+      for (const cell of cells) {
+        const match =
+          (!range || cell.dataset.range === range) &&
+          (!difficulty || cell.dataset.difficulty === difficulty);
+        cell.hidden = !match;
+        if (match) visible++;
+      }
+
+      empty?.classList.toggle("hidden", visible > 0);
+    };
+
+    for (const select of selects) {
+      select.addEventListener("change", apply);
+    }
+  }
+</script>
+
+<style>
+  .trail-filter {
+    display: flex;
+    min-width: min(100%, 14rem);
+    flex: 1 1 12rem;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .trail-filter__select {
+    appearance: none;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    border-radius: 2px;
+    color: var(--color-ink);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    padding: 0.7rem 2.25rem 0.7rem 0.85rem;
+    transition:
+      border-color var(--duration-micro) var(--ease-cinema-fast),
+      background-color var(--duration-micro) var(--ease-cinema-fast);
+  }
+
+  .trail-filter__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23998f82' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: right 0.85rem center;
+    background-repeat: no-repeat;
+  }
+
+  :global(html[data-theme="light"]) .trail-filter__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236b6358' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .trail-filter__select:hover {
+    border-color: var(--color-line-strong);
+  }
+
+  .trail-filter__select:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+</style>

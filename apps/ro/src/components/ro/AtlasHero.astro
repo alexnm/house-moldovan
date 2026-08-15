@@ -1,4 +1,5 @@
 ---
+import CrestMark from "~/components/layout/CrestMark.astro";
 import AtlasVerticalCard from "~/components/ro/AtlasVerticalCard.astro";
 import { ro } from "~/i18n/ro";
 import type { RoAtlasRangeTile } from "~/lib/roHome";
@@ -42,18 +43,13 @@ const { rangeTiles, hikesAnchor = "trasee" } = Astro.props;
       class="pad-canvas pointer-events-none relative mx-auto max-w-canvas pb-8 text-center md:pb-10"
     >
       <div
-        class="atlas-wall__emblem pointer-events-none mb-4 flex justify-center 2xl:mb-8"
+        class="atlas-wall__emblem pointer-events-none mb-6 flex justify-center 2xl:mb-8"
         aria-hidden="true"
       >
         <div class="atlas-wall__emblem-disc pointer-events-none">
-          <img
-            src="/logo-pe-creasta.svg"
-            alt=""
-            width={180}
-            height={180}
-            class="atlas-wall__emblem-mark pointer-events-none"
-            decoding="async"
-          />
+          <span class="atlas-wall__emblem-mark pointer-events-none">
+            <CrestMark />
+          </span>
         </div>
       </div>
       <h1
@@ -65,7 +61,7 @@ const { rangeTiles, hikesAnchor = "trasee" } = Astro.props;
         href={`#${hikesAnchor}`}
         class="link-accent micro pointer-events-auto mt-8 inline-block opacity-90 2xl:mt-16"
       >
-        {ro.home.seeAll} →
+        {ro.home.exploreAll} →
       </a>
     </div>
   </div>
@@ -90,8 +86,10 @@ const { rangeTiles, hikesAnchor = "trasee" } = Astro.props;
   }
 
   .atlas-wall__emblem-mark {
+    display: block;
     width: clamp(2.75rem, 1.5rem + 3.25vw, 7rem);
     height: auto;
+    color: var(--color-ink);
   }
 
   .atlas-wall__footer-scrim {

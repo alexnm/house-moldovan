@@ -1,15 +1,19 @@
 ---
 import "leaflet/dist/leaflet.css";
 import { ro } from "~/i18n/ro";
+import type { HikeDifficulty } from "~/lib/difficulty";
+import { difficultyColor } from "~/lib/mapStyles";
 
 export interface Props {
   /** GeoJSON vertex order: [lng, lat]. */
   line: [number, number][];
   /** Public URL to the GPX file (e.g. `/trasee/foo.gpx`). */
   gpxHref: string;
+  /** Colours the route, as on the massif and country maps. */
+  difficulty: HikeDifficulty;
 }
 
-const { line, gpxHref } = Astro.props;
+const { line, gpxHref, difficulty } = Astro.props;
 ---
 
 <figure class="motion-reveal" aria-label={ro.hike.mapCaption}>
@@ -22,22 +26,127 @@ const { line, gpxHref } = Astro.props;
     </a>
   </figcaption>
   <div
-    class="hike-route-map isolate z-0 h-[min(22rem,55vh)] w-full overflow-hidden rounded-lg border border-line bg-surface-2 [&_.leaflet-container]:h-full [&_.leaflet-container]:font-sans [&_.leaflet-container]:text-[11px]"
+    class="hike-route-map isolate z-0 h-[min(22rem,55vh)] w-full overflow-hidden rounded-lg border border-line"
     data-line={JSON.stringify(line)}
+    data-ink={difficultyColor(difficulty)}
   >
   </div>
 </figure>
 
+<style>
+  /* Leaflet adds .leaflet-container to this element itself. */
+  .hike-route-map {
+    background: var(--color-surface-2);
+    font-family: var(--font-body);
+    font-size: 11px;
+  }
+
+  .hike-route-map :global(.leaflet-control-attribution) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    color: var(--color-ink-faint);
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .hike-route-map :global(.leaflet-control-attribution a) {
+    color: var(--color-ink-dim);
+  }
+
+  .hike-route-map :global(.leaflet-bar) {
+    border: 1px solid var(--color-line);
+    box-shadow: none;
+  }
+
+  .hike-route-map :global(.leaflet-bar a) {
+    background: var(--color-surface-2);
+    color: var(--color-ink-dim);
+    border-bottom-color: var(--color-line);
+  }
+
+  .hike-route-map :global(.leaflet-bar a:hover) {
+    background: var(--color-surface-3);
+    color: var(--color-ink);
+  }
+
+  .hike-route-map :global(.leaflet-control-scale-line) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink-dim);
+  }
+</style>
+
 <script>
   import L from "leaflet";
+  import {
+    HIKE_PROFILE_SCRUB_EVENT,
+    type HikeProfileScrubDetail,
+  } from "~/lib/hikeScrub";
+  import { MAP_TILES } from "~/lib/mapStyles";
 
-  function accentStroke(el: HTMLElement): string {
-    const scope = el.closest(".accent-scope");
-    const source = scope ?? document.documentElement;
-    return (
-      getComputedStyle(source).getPropertyValue("--color-accent").trim() ||
-      "#d9875c"
-    );
+  function readColor(el: HTMLElement, token: string, fallback: string): string {
+    const scope = el.closest(".accent-scope") ?? document.documentElement;
+    return getComputedStyle(scope).getPropertyValue(token).trim() || fallback;
+  }
+
+  interface MapInstance {
+    el: HTMLElement;
+    casing: L.Polyline;
+    route: L.Polyline;
+    pin: L.CircleMarker;
+  }
+
+  const instances: MapInstance[] = [];
+
+  /**
+   * The difficulty colour the massif and country maps draw this trail in,
+   * resolved at build time so one hike reads the same on every map.
+   */
+  function routeColor(el: HTMLElement): string {
+    return el.dataset.ink || "#a8482c";
+  }
+
+  /** Halo behind the route and pin — paper, like the tiles it sits on. */
+  function paperColor(el: HTMLElement): string {
+    return readColor(el, "--color-map-paper", "#f7f6ef");
+  }
+
+  function paintPin(instance: MapInstance, visible: boolean): void {
+    const { el, pin } = instance;
+    pin.setStyle({
+      color: paperColor(el),
+      fillColor: routeColor(el),
+      opacity: visible ? 1 : 0,
+      fillOpacity: visible ? 1 : 0,
+    });
+  }
+
+  /** Route, casing and pin re-read their tokens when the theme flips. */
+  function paintTheme(instance: MapInstance): void {
+    const { el } = instance;
+
+    instance.casing.setStyle({
+      color: paperColor(el),
+    });
+    instance.route.setStyle({
+      color: routeColor(el),
+    });
+
+    const visible =
+      (instance.pin.options.opacity ?? 0) > 0 ||
+      (instance.pin.options.fillOpacity ?? 0) > 0;
+    paintPin(instance, visible);
+  }
+
+  function scrubPin(detail: HikeProfileScrubDetail): void {
+    for (const instance of instances) {
+      if (!detail.active) {
+        paintPin(instance, false);
+        continue;
+      }
+      instance.pin.setLatLng([detail.lat, detail.lng]);
+      paintPin(instance, true);
+      instance.pin.bringToFront();
+    }
   }
 
   function initHikeMaps(root: ParentNode = document): void {
@@ -60,23 +169,49 @@ const { line, gpxHref } = Astro.props;
           const map = L.map(el, {
             scrollWheelZoom: false,
             attributionControl: true,
+            maxZoom: MAP_TILES.maxZoom,
           });
 
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          L.tileLayer(MAP_TILES.url, {
+            attribution: MAP_TILES.attribution,
+            maxZoom: MAP_TILES.maxZoom,
           }).addTo(map);
 
-          const poly = L.polyline(latlngs, {
-            color: accentStroke(el),
-            weight: 4,
+          L.control.scale({ imperial: false, maxWidth: 120 }).addTo(map);
+
+          // Casing under the route keeps it readable over contour lines. Paper
+          // barely differs from the tiles, so it needs near-full opacity.
+          // Weights match the massif map at full zoom, so a trail looks the
+          // same whether it is alone or among the others.
+          const casing = L.polyline(latlngs, {
+            weight: 6.5,
+            opacity: 0.85,
+            lineJoin: "round",
+            lineCap: "round",
+          }).addTo(map);
+
+          const route = L.polyline(latlngs, {
+            weight: 3.5,
             opacity: 0.92,
             lineJoin: "round",
+            lineCap: "round",
           }).addTo(map);
+
+          const pin = L.circleMarker(latlngs[0]!, {
+            radius: 5.5,
+            weight: 2.5,
+            opacity: 0,
+            fillOpacity: 0,
+            interactive: false,
+          }).addTo(map);
+
+          const instance: MapInstance = { el, casing, route, pin };
+          instances.push(instance);
+          paintTheme(instance);
 
           const fit = (): void => {
             map.invalidateSize();
-            map.fitBounds(poly.getBounds().pad(0.1));
+            map.fitBounds(route.getBounds().pad(0.1));
           };
 
           requestAnimationFrame(fit);
@@ -102,6 +237,19 @@ const { line, gpxHref } = Astro.props;
         }
       });
   }
+
+  new MutationObserver(() => {
+    instances.forEach(paintTheme);
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  document.addEventListener(HIKE_PROFILE_SCRUB_EVENT, ((
+    event: CustomEvent<HikeProfileScrubDetail>,
+  ) => {
+    scrubPin(event.detail);
+  }) as EventListener);
 
   initHikeMaps();
   document.addEventListener("astro:page-load", () => initHikeMaps());

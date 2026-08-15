@@ -6,8 +6,6 @@ interface Props {
   link?: boolean;
   /** Logo destination (default `/`) */
   href?: string;
-  /** Optional mark image path (e.g. RO crest SVG) */
-  mark?: string;
   /** Single-line wordmark label (overrides House/Moldovan split) */
   label?: string;
   class?: string;
@@ -17,10 +15,12 @@ const {
   size = "nav",
   link = true,
   href = "/",
-  mark,
   label,
   class: className,
 } = Astro.props;
+
+/** Inline mark (e.g. RO crest) passed as `<Mark slot="mark" />` */
+const mark = Astro.slots.has("mark");
 
 const classes = [
   "site-logo",
@@ -29,50 +29,65 @@ const classes = [
   mark && "flex items-center gap-2.5",
   className,
 ];
+
+/** Two spans when the name splits into soft and strong halves, else one. */
+const wordmark = label
+  ? [{ text: label, class: undefined }]
+  : [
+      { text: "House", class: "site-logo__soft" },
+      { text: "Moldovan", class: "site-logo__strong" },
+    ];
+
+/** A linked mark sits beside the wordmark, not inside it. */
+const grouped = link && mark;
 ---
 
 {
-  link ? (
+  grouped && (
+    /* The mark rides in front of the link rather than inside it, so the
+       underline sweep tracks the wordmark and the crest stays out of the hit
+       area. */
+    <span class:list={["site-logo-group flex items-center gap-2.5", className]}>
+      <span class="block w-7 shrink-0">
+        <slot name="mark" />
+      </span>
+      <a
+        href={href}
+        class:list={[
+          "link-accent site-logo",
+          size === "nav" && "nav-link",
+          size === "footer" && "site-logo--footer",
+        ]}
+      >
+        {wordmark.map((part) => (
+          <span class={part.class}>{part.text}</span>
+        ))}
+      </a>
+    </span>
+  )
+}
+
+{
+  link && !grouped && (
     <a href={href} class:list={["link-accent", ...classes]}>
-      {mark && (
-        <img
-          src={mark}
-          alt=""
-          width={28}
-          height={28}
-          class="size-7 shrink-0"
-          decoding="async"
-        />
-      )}
-      {label ? (
-        <span>{label}</span>
-      ) : (
-        <>
-          <span class="site-logo__soft">House</span>
-          <span class="site-logo__strong">Moldovan</span>
-        </>
-      )}
+      {wordmark.map((part) => (
+        <span class={part.class}>{part.text}</span>
+      ))}
     </a>
-  ) : (
+  )
+}
+
+{
+  !link && (
     <p class:list={classes}>
       {mark && (
-        <img
-          src={mark}
-          alt=""
-          width={28}
-          height={28}
-          class="size-7 shrink-0"
-          decoding="async"
-        />
+        <span class="block w-7 shrink-0">
+          <slot name="mark" />
+        </span>
       )}
-      {label ? (
-        <span>{label}</span>
-      ) : (
-        <>
-          <span class="site-logo__soft">House</span>
-          <span class="site-logo__strong">Moldovan</span>
-        </>
-      )}
+      {wordmark.map((part) => (
+        <span class={part.class}>{part.text}</span>
+      ))}
     </p>
   )
 }

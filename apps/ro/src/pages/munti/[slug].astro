@@ -3,10 +3,13 @@ import { render } from "astro:content";
 import type { GetStaticPaths } from "astro";
 import RoLayout from "~/layouts/RoLayout.astro";
 import Hero from "@shared/components/article/Hero.astro";
+import TrailsMap from "~/components/map/TrailsMap.astro";
+import WaymarkBadge from "~/components/hike/WaymarkBadge.astro";
 import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
 import { ro } from "~/i18n/ro";
 import { getAllRanges, getHikes } from "~/lib/content";
 import { rangeCoverFromFrontmatterPath } from "~/lib/rangeCoverImport";
+import { buildTrailFeatures } from "~/lib/trailMapData";
 
 export const getStaticPaths = (async () => {
   const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
@@ -29,6 +32,16 @@ const { Content } = await render(range);
 const cover = rangeCoverFromFrontmatterPath(range.data.cover);
 const heroMeta = range.data.summary;
 const hasBody = (range.body ?? "").trim().length > 0;
+const trails = await buildTrailFeatures(
+  hikes,
+  new Map([[range.id, range.data.name]]),
+);
+
+const summits = hikes
+  .map((h) => h.data.summit)
+  .filter((s): s is number => typeof s === "number");
+const highest = summits.length > 0 ? Math.max(...summits) : null;
+const totalKm = hikes.reduce((sum, h) => sum + h.data.distance, 0);
 ---
 
 <RoLayout
@@ -40,16 +53,13 @@ const hasBody = (range.body ?? "").trim().length > 0;
       <Hero
         image={cover}
         alt={`Peisaj din ${range.data.name}`}
-        kicker={ro.nav.munti}
-        kickerHref="/munti"
         title={range.data.name}
         meta={heroMeta}
         transitionName={`range-${range.id}`}
       />
     ) : (
       <section class="pad-canvas mx-auto max-w-canvas pt-32 pb-14 md:pt-40 md:pb-20">
-        <p class="micro text-ink-faint">{ro.nav.munti}</p>
-        <h1 class="display page-title mt-3 text-balance">{range.data.name}</h1>
+        <h1 class="display page-title text-balance">{range.data.name}</h1>
         {heroMeta && (
           <p class="mt-4 max-w-[60ch] text-lg leading-snug text-pretty text-ink-dim">
             {heroMeta}
@@ -59,15 +69,80 @@ const hasBody = (range.body ?? "").trim().length > 0;
     )
   }
 
-  {
-    hasBody && (
-      <section class="pad-canvas mx-auto max-w-canvas my-16">
-        <div class="prose-body">
-          <Content />
-        </div>
-      </section>
-    )
-  }
+  <section class="pad-canvas mx-auto my-16 max-w-canvas">
+    <div class="grid items-start gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+      <div>
+        <dl
+          class="mb-8 flex flex-wrap gap-x-8 gap-y-4 border-b border-line pb-6"
+        >
+          <div>
+            <dt class="micro text-ink-faint">{ro.nav.trasee}</dt>
+            <dd class="ro-stat mt-1 text-lg text-ink">{hikes.length}</dd>
+          </div>
+          <div>
+            <dt class="micro text-ink-faint">{ro.hike.distance} totală</dt>
+            <dd class="ro-stat mt-1 text-lg text-ink">
+              {ro.units.distance(totalKm)}
+            </dd>
+          </div>
+          {
+            highest && (
+              <div>
+                <dt class="micro text-ink-faint">{ro.hike.summit}</dt>
+                <dd class="ro-stat mt-1 text-lg text-ink">
+                  {ro.units.elevation(highest)}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+
+        {
+          hasBody && (
+            <div class="prose-body">
+              <Content />
+            </div>
+          )
+        }
+
+        <ul
+          class:list={[hasBody && "mt-10"]}
+          role="list"
+          aria-label={ro.range.traseeHeading(range.data.name)}
+        >
+          {
+            trails.map((trail) => (
+              <li
+                class="border-line not-last:border-b"
+                data-trail-link={trail.id}
+              >
+                <button
+                  type="button"
+                  class="group flex w-full items-center justify-between gap-4 py-2.5 text-left"
+                  data-trail-focus={trail.id}
+                  aria-pressed="false"
+                >
+                  <span class="flex min-w-0 items-center gap-2">
+                    <span class="link-accent min-w-0 max-w-full">
+                      <span class="block truncate">{trail.title}</span>
+                    </span>
+                    <WaymarkBadge marks={trail.waymark} size={14} />
+                  </span>
+                  <span class="ro-stat shrink-0 text-sm text-ink-faint group-aria-pressed:text-ink">
+                    {trail.distance} · {trail.difficultyLabel}
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="lg:sticky lg:top-24">
+        <TrailsMap trails={trails} heightClass="h-[min(88vh,56rem)]" />
+      </div>
+    </div>
+  </section>
 
   <section class="pad-canvas mx-auto my-16 max-w-canvas">
     <header class="mb-10">

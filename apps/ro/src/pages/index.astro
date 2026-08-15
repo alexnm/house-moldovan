@@ -1,20 +1,227 @@
 ---
 import AtlasHero from "~/components/ro/AtlasHero.astro";
 import HikeRhythmGrid from "~/components/ro/HikeRhythmGrid.astro";
+import TrailsMap from "~/components/map/TrailsMap.astro";
+import WaymarkBadge from "~/components/hike/WaymarkBadge.astro";
 import RoLayout from "~/layouts/RoLayout.astro";
 import { ro } from "~/i18n/ro";
 import { loadRoAtlasHomeData } from "~/lib/roHome";
+import { buildTrailFeatures } from "~/lib/trailMapData";
 
 const { hikes, rangeNames, rangeTiles } = await loadRoAtlasHomeData();
+
+const trails = await buildTrailFeatures(hikes, rangeNames);
+
+/** Massif order follows the atlas; inside one, routes read alphabetically. The
+    counts come from the drawn tracks, so the list never promises a line the map
+    has no GPX for. */
+const groups = rangeTiles
+  .map(({ range }) => ({
+    range,
+    trails: trails
+      .filter((t) => t.rangeId === range.id)
+      .sort((a, b) => a.title.localeCompare(b.title, "ro")),
+  }))
+  .filter((group) => group.trails.length > 0);
 ---
 
 <RoLayout title={ro.siteName} description={ro.description}>
   <AtlasHero rangeTiles={rangeTiles} />
 
-  <section id="trasee" class="pad-canvas mx-auto max-w-canvas py-16 md:py-24">
+  <section class="pad-canvas mx-auto max-w-canvas py-16 md:py-24">
     <header class="mb-10">
-      <h2 class="display section-heading">{ro.feed.title}</h2>
+      <p class="micro text-ink-faint">{ro.home.aboutKicker}</p>
+      <h2 class="display section-heading mt-3 text-balance">
+        {ro.home.aboutHeading}
+      </h2>
     </header>
-    <HikeRhythmGrid hikes={hikes} rangeNames={rangeNames} />
+
+    <div class="grid items-start gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+      <div>
+        <p class="text-lg leading-snug text-pretty text-ink-dim">
+          Iubim munții României și vrem să împărtășim cu tine experiența
+          noastră. Suntem <strong>Mela</strong> și <strong>Alex</strong> și împreună
+          străbatem tara în lung și lat în căutarea traseelor de drumeție pe creste
+          și văi montane. Din 2024 parcurgem aceste trasee împreună cu <strong
+            >👶 Edi</strong
+          >.
+        </p>
+        <p class="mt-6 text-lg leading-snug text-pretty text-ink-dim">
+          <strong>{ro.siteName}</strong> este proiectul prin care vrem să promovăm
+          cele mai frumoase drumeții din România. Aici găsești toate traseele pe care
+          le-am parcurs în ultimii ani, împărțite pe zone geografice și însoțite de
+          toate detaliile necesare pentru parcurgerea lor.
+        </p>
+        <p class="mt-6 text-lg leading-snug text-pretty text-ink-dim">
+          Despre călătorile noastre în lume scriem pe <a
+            href="https://housemoldovan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-accent">housemoldovan.com</a
+          >, blogul nostru în limba engleză.
+        </p>
+
+        <!-- Two levels in one place: the massifs, then the routes of the one
+             the map is holding. -->
+        <div class="mt-10 border-t border-line pt-6">
+          <div data-range-index>
+            <p class="micro text-ink-faint">{ro.home.rangesListHint}</p>
+            <ul class="mt-3" role="list" aria-label={ro.home.rangesListLabel}>
+              {
+                groups.map(({ range, trails: rangeTrails }) => (
+                  <li class="border-line not-last:border-b">
+                    <button
+                      type="button"
+                      class="group flex w-full items-baseline justify-between gap-4 py-2.5 text-left"
+                      data-trail-range={range.id}
+                      aria-pressed="false"
+                    >
+                      <span class="link-accent">{range.data.name}</span>
+                      <span class="ro-stat shrink-0 text-sm text-ink-faint group-aria-pressed:text-ink">
+                        {ro.range.countOf(rangeTrails.length)}
+                      </span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          {
+            groups.map(({ range, trails: rangeTrails }) => (
+              <div
+                data-range-panel={range.id}
+                role="group"
+                aria-label={range.data.name}
+                tabindex="-1"
+                hidden
+              >
+                <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+                  <p class="micro text-ink-faint">
+                    <a href={`/munti/${range.id}`} class="link-accent">
+                      <span class="text-ink">{range.data.name}</span>
+                      {" · "}
+                      {ro.range.countOf(rangeTrails.length)}
+                    </a>
+                  </p>
+                  {/* One way out, labelled for the level it leads back to. */}
+                  <button
+                    type="button"
+                    class="link-accent link-accent--dim micro"
+                    data-trail-back
+                  >
+                    <span aria-hidden="true">←</span>{" "}
+                    <span data-step-to="ranges">{ro.home.allRanges}</span>
+                    <span data-step-to="range" hidden>
+                      {ro.home.backToRange}
+                    </span>
+                  </button>
+                </div>
+
+                <ul
+                  class="mt-3"
+                  role="list"
+                  aria-label={ro.range.traseeHeading(range.data.name)}
+                >
+                  {rangeTrails.map((trail) => (
+                    <li
+                      class="border-line not-last:border-b"
+                      data-trail-link={trail.id}
+                    >
+                      <button
+                        type="button"
+                        class="group flex w-full items-center justify-between gap-4 py-2.5 text-left"
+                        data-trail-focus={trail.id}
+                        aria-pressed="false"
+                      >
+                        <span class="flex min-w-0 items-center gap-2">
+                          <span class="link-accent max-w-full min-w-0">
+                            <span class="block truncate">{trail.title}</span>
+                          </span>
+                          <WaymarkBadge marks={trail.waymark} size={14} />
+                        </span>
+                        <span class="ro-stat shrink-0 text-sm text-ink-faint group-aria-pressed:text-ink">
+                          {trail.distance} · {trail.difficultyLabel}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="lg:sticky lg:top-24">
+        <TrailsMap trails={trails} heightClass="h-[min(88vh,56rem)]" />
+      </div>
+    </div>
+  </section>
+
+  <section id="trasee" class="pad-canvas mx-auto max-w-canvas py-16 md:py-24">
+    <header
+      class="mb-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3"
+    >
+      <h2 class="display section-heading">{ro.feed.title}</h2>
+      <a
+        href="/trasee"
+        class="link-more link-accent link-accent--dim hidden shrink-0 sm:inline"
+      >
+        {ro.home.seeAll} →
+      </a>
+    </header>
+    <HikeRhythmGrid hikes={hikes.slice(0, 7)} rangeNames={rangeNames} />
+    <a
+      href="/trasee"
+      class="link-more link-accent link-accent--dim mt-10 inline-block sm:hidden"
+    >
+      {ro.home.seeAll} →
+    </a>
   </section>
 </RoLayout>
+
+<script>
+  import { TRAIL_FOCUS_EVENT } from "~/lib/trailFocus";
+
+  // The map owns what is focused, so the list follows it rather than tracking
+  // its own state: a pick made on the map opens the same panel a row would.
+  document.addEventListener(TRAIL_FOCUS_EVENT, (e) => {
+    const { rangeId, trailId } = e.detail;
+    const held = document.activeElement;
+
+    const index = document.querySelector<HTMLElement>("[data-range-index]");
+    const panels = [
+      ...document.querySelectorAll<HTMLElement>("[data-range-panel]"),
+    ];
+    /** The level the reader is standing on, empty when the map was pressed. */
+    const from = [index, ...panels].find((el) => el?.contains(held)) ?? null;
+
+    const opened = panels.find((p) => p.dataset.rangePanel === rangeId) ?? null;
+    if (index) index.hidden = opened !== null;
+    for (const panel of panels) panel.hidden = panel !== opened;
+
+    // The way out leads one level up: back to the massif while one of its
+    // routes is picked, otherwise back to the massif list.
+    const level = trailId === null ? "ranges" : "range";
+    for (const step of document.querySelectorAll<HTMLElement>(
+      "[data-step-to]",
+    )) {
+      step.hidden = step.dataset.stepTo !== level;
+    }
+
+    // A pressed control that just hid itself would drop the caret at the top of
+    // the document, so whatever took its place picks the focus up.
+    const landing = (): HTMLElement | null | undefined => {
+      if (from === null) return null;
+      if (from === index) return opened;
+      if (from.hidden) {
+        const id = from.dataset.rangePanel;
+        return index?.querySelector<HTMLElement>(`[data-trail-range="${id}"]`);
+      }
+      return null;
+    };
+
+    landing()?.focus({ preventScroll: true });
+  });
+</script>

@@ -1,5 +1,5 @@
 ---
-name: Pe creastă
+name: Pe creste
 description: Romanian Carpathian hiking journal — kitchen-table route decisions with Oswald trail-sign type, massif atlas, and difficulty compare signals.
 colors:
   accent-saffron: "oklch(0.88 0.2 86)"
@@ -91,13 +91,13 @@ components:
     padding: "1.25rem"
 ---
 
-# Design System: Pe creastă
+# Design System: Pe creste
 
 ## 1. Overview
 
 **Creative North Star: "Marcaj pe hârtie"**
 
-_Pe creastă_ (working name; final name pending) is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; difficulty, duration, distance, and gain close it. Density is field-guide-editorial: scannable stats and honest notes, never AllTrails dashboard chrome.
+_Pe creste_ is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; difficulty, duration, distance, and gain close it. Density is field-guide-editorial: scannable stats and honest notes, never AllTrails dashboard chrome.
 
 This document covers `pecreasta.ro` (`apps/ro`). Tokens and shell patterns are shared with House Moldovan (`apps/en`), but **identity is separate**: Oswald trail-sign display, massif atlas wayfinding, difficulty as a compare signal on hike cards. Sister site: `housemoldovan.com`.
 
@@ -113,7 +113,7 @@ This system rejects AllTrails-style dashboards, impersonal trail boilerplate, br
 - Difficulty compare accents on hike cards (jade / saffron / terracotta); text kickers always accompany color
 - Uniform hike card kicker: `{difficulty} · {duration}`; meta `{distance} · +{gain}`
 - First-class GPX map, elevation profile, and waymark badges (data colors only)
-- Crest wordmark via shared `SiteLogo` + `/logo-pe-creasta.svg`
+- Crest wordmark via shared `SiteLogo` + inline `CrestMark` (crest / summit dot take `currentColor`, so they follow the theme; `/logo-pe-creasta.svg` stays for favicon and OG)
 - WCAG 2.1 AA target; Romanian a11y labels on waymarks
 
 ## 2. Colors
@@ -196,8 +196,8 @@ Tonal layering and photo contrast over shadow stacks (same vocabulary as EN: lif
 
 - Fixed top bar; transparent over heroes, solid when scrolled. Crest + wordmark via `SiteLogo`.
 - No border and no blur: the solid state fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer. EN shares this shell verbatim.
-- Primary links: Trasee, Munți, Despre. No EN link in nav (EN lives in footer / despre).
-- Same underline / mobile `details` patterns as the shared shell.
+- Primary links: Trasee, Harta. Always inline — no mobile menu. No EN link in nav (EN lives in the footer).
+- Same underline patterns as the shared shell.
 
 ### Range cards / Atlas
 
@@ -229,7 +229,7 @@ Tonal layering and photo contrast over shadow stacks (same vocabulary as EN: lif
 
 ### Sister site
 
-- Footer and despre link to `https://housemoldovan.com`.
+- Footer links to `https://housemoldovan.com`.
 - EN→RO promo remains optional/commented on the sister app.
 
 ## 6. Do's and Don'ts

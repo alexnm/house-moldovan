@@ -1,0 +1,23 @@
+---
+import RoLayout from "~/layouts/RoLayout.astro";
+import TrailsMap from "~/components/map/TrailsMap.astro";
+import { ro } from "~/i18n/ro";
+import { getAllRanges, getHikes, rangeNameById } from "~/lib/content";
+import { buildTrailFeatures } from "~/lib/trailMapData";
+
+const [ranges, hikes] = await Promise.all([getAllRanges(), getHikes()]);
+const trails = await buildTrailFeatures(hikes, rangeNameById(ranges));
+---
+
+<RoLayout
+  title={`${ro.harta.title} · ${ro.siteName}`}
+  description={ro.harta.intro}
+  bodyClass="overflow-hidden"
+  footer={false}
+>
+  <!-- No `data-nav-hero`: the bar keeps its solid panel over the tiles. -->
+  <div class="h-svh">
+    <h1 class="sr-only">{ro.harta.title}</h1>
+    <TrailsMap trails={trails} heightClass="h-full" fullBleed />
+  </div>
+</RoLayout>

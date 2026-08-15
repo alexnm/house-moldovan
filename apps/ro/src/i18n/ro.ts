@@ -2,15 +2,14 @@ export const ro = {
   locale: "ro" as const,
   htmlLang: "ro",
   intlLocale: "ro-RO",
-  siteName: "Pe creastă",
+  siteName: "Pe creste",
   tagline: "Drumeții în munții României",
   description:
-    "Trasee, ture și note de pe creste: profil de elevație, refugii și marcaje. În limba română.",
+    "O selecție de trasee în munții României însoțite de toate detaliile tehnice necesare pentru parcurgerea lor.",
   nav: {
     home: "Acasă",
     trasee: "Trasee",
-    munti: "Munți",
-    despre: "Despre",
+    harta: "Harta",
     en: "English journal",
   },
   home: {
@@ -18,19 +17,29 @@ export const ro = {
     rangesHeading: "Explorează masivele muntoase",
     recentHeading: "Ultimele trasee",
     seeAll: "Toate traseele",
-    seasonHeading: "După anotimp",
+    exploreAll: "Explorează traseele",
+    aboutKicker: "Despre noi",
+    aboutHeading: "HouseMoldovan la munte",
+    rangesListLabel: "Masive pe hartă",
+    rangesListHint: "Explorează zonele geografice",
+    // The two levels the way out leads back to, one per step.
+    allRanges: "Toate masivele",
+    backToRange: "Înapoi la masiv",
   },
   feed: {
-    title: "Explorează traseele",
-    intro: "Caută traseul potrivit",
-    filterRange: "Masiv",
+    title: "Cele mai noi trasee",
+    intro: "Caută un traseu",
+    filterRange: "Zonă",
     filterDifficulty: "Dificultate",
     filterSeason: "Anotimp",
     filterShape: "Formă",
+    filterAll: "Toate",
+    filtersLabel: "Filtre trasee",
     empty: "Niciun traseu nu corespunde filtrului.",
   },
-  munti: {
-    title: "Explorează masivele muntoase",
+  harta: {
+    title: "Harta traseelor",
+    intro: "Toate traseele din munții României, pe o singură hartă.",
   },
   range: {
     countOf: (n: number) =>
@@ -58,13 +67,14 @@ export const ro = {
   hike: {
     distance: "Distanță",
     elevationGain: "Diferență de nivel",
-    summit: "Cota maximă",
+    summit: "Altitudine maximă",
     duration: "Durată estimată",
     waymark: "Marcaje",
     season: "Anotimp recomandat",
     difficulty: "Nivel dificultate",
     shape: "Tip traseu",
     trailhead: "Punct de plecare",
+    range: "Masiv",
     stats: "Detalii traseu",
     profile: "Profil de elevație",
     profileKeyboard:
@@ -74,13 +84,10 @@ export const ro = {
     backToFeed: "Înapoi la trasee",
     nextRead: "Următorul traseu",
   },
-  about: {
-    title: "Despre",
-  },
   notFound: {
     metaTitle: "Pagina nu există",
     metaDescription:
-      "Pagina asta nu e pe harta noastră. Întoarce-te la Pe creastă și alege un traseu sau un masiv.",
+      "Pagina asta nu e pe harta noastră. Întoarce-te la Pe creste și alege un traseu sau un masiv.",
     heroTitle: "Ai ieșit de pe traseu",
     heroSummary:
       "Poate fi un link vechi sau o adresă scrisă greșit. Folosește meniul de navigare pentru a ajunge la pagina principală.",
@@ -117,16 +124,16 @@ export const ro = {
       d.toLocaleDateString("ro-RO", { month: "short", year: "numeric" }),
   },
   rss: {
-    title: "Pe creastă",
-    description: "Trasee și ture din munții României.",
+    title: "Pe creste",
+    description: "Drumeții în munții României",
   },
   footer: {
     rights: "Fotografiile și textul aparțin autorului.",
     themeLight: "Mod luminos",
     themeDark: "Mod întunecat",
     rssLabel: "Abonare RSS",
-    enCta: "English travel journal",
-    enKicker: "Site sister în engleză",
+    enCta: "housemoldovan.com",
+    enKicker: "Vizitați blogul nostru de călătorie în limba engleză",
   },
 } as const;
 

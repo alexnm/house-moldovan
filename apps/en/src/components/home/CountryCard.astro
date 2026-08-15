@@ -86,9 +86,11 @@ const onPhoto = image != null;
     object-fit: cover;
   }
   .country-card__tint {
+    /* Darkened accent, not an accent/scrim mix — see ArticleCard: mixing
+       toward the warm scrim rotates the hue away from the region color. */
     background: linear-gradient(
       to top,
-      color-mix(in oklch, var(--card-accent) 38%, var(--color-photo-scrim)) 0%,
+      color-mix(in oklch, var(--card-accent) 38%, black) 0%,
       transparent 58%
     );
     opacity: 0.55;

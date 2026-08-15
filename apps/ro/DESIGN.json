@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-08-11T12:32:12.000Z",
-  "title": "Design System: Pe creastă",
+  "title": "Design System: Pe creste",
   "extensions": {
     "colorMeta": {
       "accent-saffron": {
@@ -83,7 +83,7 @@
   ],
   "narrative": {
     "northStar": "Marcaj pe hârtie",
-    "overview": "Pe creastă (working name) is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; stats close it. Massif → trail is the chapter model; difficulty color is a compare signal on hike cards. Sister site: House Moldovan.",
+    "overview": "Pe creste is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; stats close it. Massif → trail is the chapter model; difficulty color is a compare signal on hike cards. Sister site: House Moldovan.",
     "keyCharacteristics": [
       "Oswald trail-sign display",
       "Massif atlas wayfinding with cobalt range tiles",

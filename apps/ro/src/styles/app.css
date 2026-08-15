@@ -57,6 +57,12 @@
   --color-saffron-ink: oklch(0.88 0.18 85);
   --color-terracotta-ink: oklch(0.74 0.18 35);
   --color-cobalt-ink: oklch(0.68 0.14 250);
+  /* Terracotta for light backgrounds, theme-independent: light-mode ink, and the
+     hike route, which is drawn on the map's light paper in both themes. */
+  --color-terracotta-deep: oklch(0.5 0.16 35);
+  /* Casing under the hike route: a shade above the recoloured tile paper, so it
+     reads as a halo in both themes. */
+  --color-map-paper: oklch(0.97 0.007 95);
 
   --color-range-fagaras: oklch(0.58 0.04 250);
   --color-range-retezat: oklch(0.7 0.07 210);
@@ -294,7 +300,7 @@
     --color-accent-ink: oklch(0.5 0.2 86);
     --color-jade-ink: oklch(0.46 0.15 155);
     --color-saffron-ink: oklch(0.53 0.16 85);
-    --color-terracotta-ink: oklch(0.5 0.16 35);
+    --color-terracotta-ink: var(--color-terracotta-deep);
     --color-cobalt-ink: oklch(0.46 0.13 250);
     --hero-overlay: 0.28;
   }
@@ -478,25 +484,25 @@
     opacity: 1;
   }
 
-  /* Minimal hero nav: hide wayfinding until the bar goes solid */
+  /* Minimal hero nav: hide wayfinding until the bar goes solid.
+     The wordmark is a link inside `.site-logo-group`, so the crest travels
+     with it rather than lingering on its own. */
   body:has(main [data-nav-minimal])
     .site-nav:not(.is-solid)
     .pad-canvas
-    > a.site-logo,
-  body:has(main [data-nav-minimal]) .site-nav:not(.is-solid) .pad-canvas > ul,
-  body:has(main [data-nav-minimal])
-    .site-nav:not(.is-solid)
-    .pad-canvas
-    > details {
+    > :is(a.site-logo, .site-logo-group),
+  body:has(main [data-nav-minimal]) .site-nav:not(.is-solid) .pad-canvas > ul {
     opacity: 0;
     pointer-events: none;
     /* Keep invisible chrome out of tab order when JS has not set inert yet */
     visibility: hidden;
   }
 
-  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > a.site-logo,
-  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > ul,
-  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > details {
+  body:has(main [data-nav-minimal])
+    .site-nav
+    .pad-canvas
+    > :is(a.site-logo, .site-logo-group),
+  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > ul {
     transition:
       opacity var(--duration-chrome) var(--ease-cinema),
       visibility var(--duration-chrome) var(--ease-cinema);
@@ -506,16 +512,15 @@
     opacity: 1;
   }
 
-  /* Hero nav contrast — top bar only (not dropdown / mobile panel contents).
+  /* Hero nav contrast — top bar only.
      Same color at rest, :hover, and .is-active; underline sweep is the only feedback. */
   body:has(main [data-nav-hero]:not([data-nav-hero-accent]))
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
-      .pad-canvas > ul > li > a.link-accent.is-active,
-      .pad-canvas > details > summary
+      .pad-canvas > ul > li > a.link-accent.is-active
     ) {
     color: oklch(0.98 0.005 80 / 0.92);
   }
@@ -524,11 +529,10 @@
   body:has(main [data-nav-hero-accent][data-accent="jade"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
-      .pad-canvas > ul > li > a.link-accent.is-active,
-      .pad-canvas > details > summary
+      .pad-canvas > ul > li > a.link-accent.is-active
     ) {
     color: color-mix(in oklch, var(--color-jade) 22%, black);
   }
@@ -536,11 +540,10 @@
   body:has(main [data-nav-hero-accent][data-accent="saffron"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
-      .pad-canvas > ul > li > a.link-accent.is-active,
-      .pad-canvas > details > summary
+      .pad-canvas > ul > li > a.link-accent.is-active
     ) {
     color: color-mix(in oklch, var(--color-saffron) 22%, black);
   }
@@ -548,11 +551,10 @@
   body:has(main [data-nav-hero-accent][data-accent="terracotta"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
-      .pad-canvas > ul > li > a.link-accent.is-active,
-      .pad-canvas > details > summary
+      .pad-canvas > ul > li > a.link-accent.is-active
     ) {
     color: color-mix(in oklch, var(--color-terracotta) 22%, black);
   }
@@ -560,11 +562,10 @@
   body:has(main [data-nav-hero-accent][data-accent="cobalt"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
-      .pad-canvas > ul > li > a.link-accent.is-active,
-      .pad-canvas > details > summary
+      .pad-canvas > ul > li > a.link-accent.is-active
     ) {
     color: color-mix(in oklch, var(--color-cobalt) 22%, black);
   }
@@ -1148,28 +1149,29 @@
     transform: scaleX(1);
   }
 
+  /* Map list rows: the whole control lights the name, not just its label. */
+  :is([data-trail-range], [data-trail-focus]):is(:hover, [aria-pressed="true"])
+    .link-accent {
+    color: var(--color-ink);
+  }
+
+  :is([data-trail-range], [data-trail-focus]):is(:hover, [aria-pressed="true"])
+    .link-accent::after {
+    transform: scaleX(1);
+  }
+
   .link-accent--dim {
     color: var(--color-ink-dim);
   }
 
   .nav-dropdown__panel .link-accent,
-  .nav-submenu .link-accent,
-  .nav-mobile-panel .link-accent {
+  .nav-submenu .link-accent {
     padding-bottom: 0;
   }
 
   .nav-dropdown__panel .link-accent::after,
-  .nav-submenu .link-accent::after,
-  .nav-mobile-panel .link-accent::after {
+  .nav-submenu .link-accent::after {
     content: none;
-  }
-
-  .nav-mobile-panel .nav-link {
-    font-size: 1.125rem;
-  }
-
-  .nav-mobile-panel .nav-link--sub {
-    font-size: 1rem;
   }
 
   /* Display-scale page titles. Mixed case by default so long story /

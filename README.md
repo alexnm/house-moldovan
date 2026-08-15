@@ -2,10 +2,10 @@
 
 Two static sites in one pnpm workspace:
 
-| App | Domain (placeholder) | Package |
-|-----|----------------------|---------|
-| **House Moldovan** (EN travel journal) | `housemoldovan.com` | `apps/en` |
-| **Pe creastă** (RO hiking) | `pecreasta.ro` | `apps/ro` |
+| App                                    | Domain (placeholder) | Package   |
+| -------------------------------------- | -------------------- | --------- |
+| **House Moldovan** (EN travel journal) | `housemoldovan.com`  | `apps/en` |
+| **Pe creastă** (RO hiking)             | `pecreasta.ro`       | `apps/ro` |
 
 Shared layout primitives, OG renderer, GPX utilities, and accent tokens live in `packages/shared`.
 

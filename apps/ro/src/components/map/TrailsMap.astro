@@ -1,0 +1,879 @@
+---
+import "leaflet/dist/leaflet.css";
+import {
+  TRAIL_MAP_LABELS,
+  TRAIL_THUMB_SIZE,
+  type TrailFeature,
+  type TrailLegendEntry,
+} from "~/lib/trailMapData";
+
+export interface Props {
+  trails: TrailFeature[];
+  /** Colour key for the difficulty ladder. Omit to drop the legend. */
+  legend?: TrailLegendEntry[];
+  legendLabel?: string;
+  legendHint?: string;
+  /** Height utility for the map frame. */
+  heightClass?: string;
+  /** Edge-to-edge: no card framing, and controls clear the fixed site nav. */
+  fullBleed?: boolean;
+}
+
+const {
+  trails,
+  legend,
+  legendLabel = "Legendă",
+  legendHint,
+  heightClass = "h-[min(78vh,52rem)]",
+  fullBleed = false,
+} = Astro.props;
+
+const payload = {
+  trails,
+  labels: TRAIL_MAP_LABELS,
+  thumbSize: TRAIL_THUMB_SIZE,
+};
+---
+
+<!-- Column flow so a `heightClass` of `flex-1` can hand the frame whatever the
+     legend leaves over, on pages that give the shell a height of its own. -->
+<div
+  class:list={[
+    "trail-map-shell flex h-full flex-col",
+    fullBleed && "trail-map-shell--bleed",
+  ]}
+  data-trail-map
+>
+  <div
+    class:list={[
+      "trail-map isolate z-0 w-full overflow-hidden",
+      !fullBleed && "rounded-lg border border-line",
+      heightClass,
+    ]}
+    role="presentation"
+  >
+  </div>
+
+  {
+    legend && legend.length > 0 && (
+      <aside class="mt-5" aria-label={legendLabel}>
+        <p class="micro text-ink-faint">
+          {trails.length} trasee pe hartă
+          {legendHint && ` · ${legendHint}`}
+        </p>
+        <ul class="mt-3 flex flex-wrap gap-2" role="list">
+          {legend.map((entry) => (
+            <li class="trail-legend__item">
+              <span
+                class="trail-legend__swatch"
+                data-swatch={entry.id}
+                aria-hidden="true"
+              />
+              <span>{entry.name}</span>
+              <span class="trail-legend__n text-ink-faint">{entry.count}</span>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )
+  }
+
+  <script
+    type="application/json"
+    data-trail-payload
+    is:inline
+    set:html={JSON.stringify(payload)}
+  />
+</div>
+
+<style>
+  .trail-map {
+    /* Paper rather than canvas: hairline gaps between scaled tiles show this
+       through, and a dark seam grid over the basemap is worse than none. */
+    background: var(--color-map-paper);
+    font-family: var(--font-body);
+    font-size: 11px;
+  }
+
+  /* Under a full-bleed map the site nav floats over the tiles, so the zoom
+     buttons start below the bar instead of behind the wordmark. */
+  :global(.trail-map-shell--bleed .leaflet-top) {
+    top: 4.75rem;
+  }
+
+  .trail-map :global(.leaflet-control-attribution) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    color: var(--color-ink-faint);
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .trail-map :global(.leaflet-control-attribution a) {
+    color: var(--color-ink-dim);
+  }
+
+  .trail-map :global(.leaflet-bar) {
+    border: 1px solid var(--color-line);
+    box-shadow: none;
+  }
+
+  .trail-map :global(.leaflet-bar a) {
+    background: var(--color-surface-2);
+    color: var(--color-ink-dim);
+    border-bottom-color: var(--color-line);
+  }
+
+  .trail-map :global(.leaflet-bar a:hover) {
+    background: var(--color-surface-3);
+    color: var(--color-ink);
+  }
+
+  .trail-map :global(.leaflet-control-scale-line) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink-dim);
+  }
+
+  /* Trailhead badge: Leaflet places the icon's top-left at the anchor, so the
+     badge itself is nudged back by half its size to sit on the start point. */
+  .trail-map :global(.leaflet-div-icon) {
+    background: transparent;
+    border: 0;
+  }
+
+  .trail-map :global(.trail-pin) {
+    width: 0;
+    height: 0;
+  }
+
+  .trail-map :global(.trail-pin__badge) {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    /* Fixed screen size: the badge is UI, not terrain, so it holds at every
+       zoom the way a map app's markers do. */
+    width: 22px;
+    height: 22px;
+    /* Centred by offset rather than a translate, which leaves `scale` free to
+       grow the badge around its own middle instead of dragging it off the
+       trailhead. */
+    left: -11px;
+    top: -11px;
+    border-radius: 999px;
+    border: 2px solid var(--color-map-paper);
+    background: var(--pin-color, var(--color-terracotta-deep));
+    color: var(--color-map-paper);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.28);
+    transition: scale var(--duration-micro) var(--ease-cinema-fast);
+  }
+
+  .trail-map :global(.trail-pin__badge svg) {
+    width: 62%;
+    height: 62%;
+  }
+
+  .trail-map :global(.trail-pin.is-hover .trail-pin__badge),
+  .trail-map :global(.trail-pin:hover .trail-pin__badge),
+  .trail-map :global(.trail-pin:focus-visible .trail-pin__badge) {
+    scale: 1.18;
+  }
+
+  .trail-map :global(.trail-pin.is-muted .trail-pin__badge) {
+    opacity: 0.3;
+  }
+
+  .trail-map :global(.trail-pin:focus-visible) {
+    outline: none;
+  }
+
+  /* The ring reads on paper in both themes, unlike the canvas ink tokens. */
+  .trail-map :global(.trail-pin:focus-visible .trail-pin__badge) {
+    box-shadow: 0 0 0 2px oklch(0 0 0 / 0.6);
+  }
+
+  .trail-map :global(.leaflet-popup-content-wrapper) {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .trail-map :global(.leaflet-popup-tip) {
+    background: var(--color-surface-2);
+  }
+
+  .trail-map :global(.leaflet-popup-content) {
+    margin: 0;
+    font-family: var(--font-body);
+    line-height: 1.35;
+  }
+
+  /* `a` tag included to outrank Leaflet's own close-button rule. */
+  .trail-map :global(a.leaflet-popup-close-button) {
+    /* Sits over the hero crop, so it needs its own backing. */
+    background: color-mix(in oklch, var(--color-surface-2) 72%, transparent);
+    color: var(--color-ink-dim);
+    font-family: var(--font-body);
+    font-size: 14px;
+    border-bottom-left-radius: 0.4rem;
+  }
+
+  .trail-map :global(a.leaflet-popup-close-button:hover) {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+  }
+
+  .trail-map :global(.trail-pop__link) {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .trail-map :global(.trail-pop__media) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: var(--color-surface-3);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .trail-map :global(.trail-pop__body) {
+    padding: 0.6rem 0.8rem 0.7rem;
+  }
+
+  .trail-map :global(.trail-pop__kicker) {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .trail-map :global(.trail-pop__difficulty) {
+    color: var(--trail-accent, var(--color-ink-dim));
+  }
+
+  .trail-map :global(.trail-pop__title) {
+    margin-top: 0.15rem;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  .trail-map :global(.trail-pop__link:hover .trail-pop__title) {
+    color: var(--trail-accent, var(--color-ink));
+  }
+
+  .trail-map :global(.trail-pop__stats) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 1rem;
+    margin: 0.4rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-dim);
+  }
+
+  .trail-map :global(.trail-pop__stats dd) {
+    margin: 0;
+  }
+
+  .trail-map :global(.trail-pop__gain) {
+    color: var(--trail-accent, var(--color-ink));
+  }
+
+  .trail-map :global(.trail-pop__foot) {
+    margin: 0.35rem 0 0;
+    font-size: 10px;
+    color: var(--color-ink-faint);
+  }
+
+  .trail-legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-surface-2);
+    color: var(--color-ink-dim);
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .trail-legend__swatch {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--swatch, var(--color-terracotta-deep));
+    box-shadow: 0 0 0 1.5px var(--color-map-paper);
+  }
+
+  .trail-legend__n {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<script>
+  import L from "leaflet";
+  import { MAP_TILES, difficultyColor } from "~/lib/mapStyles";
+  import { TRAIL_FOCUS_EVENT, type TrailFocusDetail } from "~/lib/trailFocus";
+  import type { TrailFeature } from "~/lib/trailMapData";
+
+  type Payload = {
+    trails: TrailFeature[];
+    labels: {
+      distance: string;
+      gain: string;
+      duration: string;
+      summit: string;
+    };
+    thumbSize: { width: number; height: number };
+  };
+
+  /** Lines thin out as more of the country fits on screen. */
+  const WEIGHT_FADE = { start: 8, end: 12.5 } as const;
+
+  // The casing shrinks at overview instead of the route, so overlapping tracks
+  // don't merge into one blob.
+  const ROUTE_WEIGHT = { overview: 3, detail: 3.5 } as const;
+  const CASING_WEIGHT = { overview: 4.75, detail: 6.5 } as const;
+  const HOVER_WEIGHT_BOOST = 1.5;
+
+  /** White edge on either side of a picked or hovered route. */
+  const RAISED_EDGE = 1;
+
+  /** Tracks outside the focused range: still on the map, no longer competing. */
+  const RANGE_MUTE = { route: 0.16, casing: 0.1 } as const;
+
+  /** Other routes while a hike card is open — readable, but clearly secondary. */
+  const POPUP_DIM = { route: 0.3, casing: 0.2 } as const;
+
+  const FULL_OPACITY = { route: 1, casing: 0.85 } as const;
+
+  /**
+   * Framing for a route picked from a list. The ceiling sits well below the
+   * tightest fit, so a short route reads against its ridges and valleys instead
+   * of filling the frame on its own. The headroom for the card, which opens
+   * above the trailhead, follows the map height — a fixed one would swallow a
+   * short frame and push the route away.
+   */
+  const FOCUS_FRAME = {
+    headroom: { share: 0.25, max: 200 },
+    padEdge: 28,
+    maxZoom: 13,
+  } as const;
+
+  /** Material `directions_walk`, drawn on a 24×24 grid. */
+  const WALK_GLYPH =
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg>';
+
+  const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
+
+  /** 0 at or below `start`, 1 at or above `end`. */
+  function ramp(z: number, { start, end }: { start: number; end: number }) {
+    return Math.min(1, Math.max(0, (z - start) / (end - start)));
+  }
+
+  function paperColor(): string {
+    return (
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-map-paper")
+        .trim() || "#f7f6ef"
+    );
+  }
+
+  function escapeHtml(s: string): string {
+    return s
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  const stat = (label: string, value: string, cls = ""): string =>
+    `<div><dt class="sr-only">${escapeHtml(label)}</dt><dd${cls ? ` class="${cls}"` : ""}>${escapeHtml(value)}</dd></div>`;
+
+  function popupHtml(t: TrailFeature, p: Payload): string {
+    const foot = t.summit
+      ? `${t.shape} · ${p.labels.summit.toLowerCase()} ${t.summit}`
+      : t.shape;
+
+    return `<article class="trail-pop" style="--trail-accent: ${escapeHtml(t.accentVar)}">
+  <a class="trail-pop__link" href="${escapeHtml(t.href)}">
+    <img class="trail-pop__media" src="${escapeHtml(t.thumb)}" width="${p.thumbSize.width}" height="${p.thumbSize.height}" alt="" loading="lazy" decoding="async" />
+    <div class="trail-pop__body">
+      <p class="trail-pop__kicker">${escapeHtml(t.rangeName)} · <span class="trail-pop__difficulty">${escapeHtml(t.difficultyLabel)}</span></p>
+      <h3 class="trail-pop__title">${escapeHtml(t.title)}</h3>
+      <dl class="trail-pop__stats">
+        ${stat(p.labels.distance, t.distance)}
+        ${stat(p.labels.gain, t.gain, "trail-pop__gain")}
+        ${stat(p.labels.duration, t.duration)}
+      </dl>
+      <p class="trail-pop__foot">${escapeHtml(foot)}</p>
+    </div>
+  </a>
+</article>`;
+  }
+
+  function initTrailMaps(root: ParentNode = document): void {
+    root
+      .querySelectorAll<HTMLElement>("[data-trail-map]:not([data-mounted])")
+      .forEach((shell) => {
+        const payloadEl = shell.querySelector<HTMLScriptElement>(
+          "[data-trail-payload]",
+        );
+        const mapEl = shell.querySelector<HTMLElement>(".trail-map");
+        if (!payloadEl?.textContent || !mapEl) return;
+
+        shell.dataset.mounted = "1";
+
+        const payload = JSON.parse(payloadEl.textContent) as Payload;
+
+        shell
+          .querySelectorAll<HTMLElement>("[data-swatch]")
+          .forEach((swatch) => {
+            const id = swatch.dataset.swatch;
+            if (!id) return;
+            swatch.style.setProperty("--swatch", difficultyColor(id));
+          });
+
+        const map = L.map(mapEl, {
+          scrollWheelZoom: true,
+          attributionControl: true,
+          maxZoom: MAP_TILES.maxZoom,
+        });
+
+        L.tileLayer(MAP_TILES.url, {
+          attribution: MAP_TILES.attribution,
+          maxZoom: MAP_TILES.maxZoom,
+          crossOrigin: true,
+        }).addTo(map);
+
+        L.control.scale({ imperial: false, maxWidth: 120 }).addTo(map);
+
+        type LayerPair = {
+          trail: TrailFeature;
+          casing: L.Polyline;
+          route: L.Polyline;
+          /** Clickable badge at the trailhead. */
+          pin: L.Marker;
+        };
+
+        const layers: LayerPair[] = [];
+        const paper = paperColor();
+        let didInitialFit = false;
+        let routeWeight: number = ROUTE_WEIGHT.detail;
+        let casingWeight: number = CASING_WEIGHT.detail;
+        let hoveredTrail: string | null = null;
+
+        // Set while a list elsewhere on the page holds the map to one massif or
+        // one route; every other track stays drawn, but recedes. A focused route
+        // keeps its massif set too, so dismissing its card leaves the reader in
+        // the massif rather than back at the whole country.
+        let focusedRange: string | null = null;
+        let focusedTrail: string | null = null;
+
+        /** A picked route reads like a hovered one: thicker, over a white edge. */
+        const isRaised = (layer: LayerPair): boolean =>
+          layer.trail.id === focusedTrail || layer.trail.id === hoveredTrail;
+
+        // Pointing at a track lifts it out of the crowd whether or not it
+        // belongs to the massif in frame, so its pin comes back up with it.
+        const isMuted = (layer: LayerPair): boolean => {
+          if (isRaised(layer)) return false;
+          if (focusedTrail !== null) return true;
+          return focusedRange !== null && layer.trail.rangeId !== focusedRange;
+        };
+
+        const routeOpacity = (layer: LayerPair): number => {
+          if (!isMuted(layer)) return FULL_OPACITY.route;
+          return focusedTrail !== null ? POPUP_DIM.route : RANGE_MUTE.route;
+        };
+
+        const casingOpacity = (layer: LayerPair): number => {
+          if (isRaised(layer)) return 1;
+          if (!isMuted(layer)) return FULL_OPACITY.casing;
+          return focusedTrail !== null ? POPUP_DIM.casing : RANGE_MUTE.casing;
+        };
+
+        const routeWeightOf = (layer: LayerPair): number =>
+          isRaised(layer) ? routeWeight + HOVER_WEIGHT_BOOST : routeWeight;
+
+        const casingWeightOf = (layer: LayerPair): number =>
+          isRaised(layer)
+            ? routeWeightOf(layer) + 2 * RAISED_EDGE
+            : casingWeight;
+
+        /** Re-draws every track from the current focus and pointer state. */
+        const paintTracks = (): void => {
+          for (const layer of layers) {
+            layer.route.setStyle({
+              weight: routeWeightOf(layer),
+              opacity: routeOpacity(layer),
+            });
+            layer.casing.setStyle({
+              weight: casingWeightOf(layer),
+              opacity: casingOpacity(layer),
+            });
+            layer.pin
+              .getElement()
+              ?.classList.toggle("is-muted", isMuted(layer));
+          }
+        };
+
+        // Which pair currently sits on top. Restacking moves the line's node,
+        // which cancels a click that started on it, so it happens once per
+        // route rather than on every pointer event over the same one.
+        let raisedId: string | null = null;
+
+        /** Lifts the edge with the route, so both clear the tracks they cross. */
+        const raiseToFront = (layer: LayerPair): void => {
+          if (raisedId === layer.trail.id) return;
+          raisedId = layer.trail.id;
+          layer.casing.bringToFront();
+          layer.route.bringToFront();
+        };
+
+        const popupOptions: L.PopupOptions = {
+          minWidth: 232,
+          maxWidth: 232,
+          autoPanPadding: [24, 24],
+        };
+
+        for (const trail of payload.trails) {
+          const latlngs: L.LatLngExpression[] = trail.line.map(([lng, lat]) => [
+            lat,
+            lng,
+          ]);
+
+          const casing = L.polyline(latlngs, {
+            weight: CASING_WEIGHT.detail,
+            opacity: FULL_OPACITY.casing,
+            color: paper,
+            lineJoin: "round",
+            lineCap: "round",
+            interactive: false,
+          }).addTo(map);
+
+          const color = difficultyColor(trail.difficulty);
+
+          const route = L.polyline(latlngs, {
+            weight: ROUTE_WEIGHT.detail,
+            opacity: FULL_OPACITY.route,
+            color,
+            lineJoin: "round",
+            lineCap: "round",
+          }).addTo(map);
+
+          route.bindPopup(popupHtml(trail, payload), popupOptions);
+
+          const start = latlngs[0]!;
+          const pin = L.marker(start, {
+            title: trail.title,
+            alt: trail.title,
+            keyboard: true,
+            // Zero-size icon box: the badge centres itself on the anchor in
+            // CSS, which keeps Leaflet out of the hover-scale maths.
+            icon: L.divIcon({
+              className: "trail-pin",
+              html: `<span class="trail-pin__badge" style="--pin-color: ${color}">${WALK_GLYPH}</span>`,
+              iconSize: [0, 0],
+              iconAnchor: [0, 0],
+              popupAnchor: [0, -14],
+            }),
+          }).addTo(map);
+
+          pin.bindPopup(popupHtml(trail, payload), popupOptions);
+
+          const layer: LayerPair = { trail, casing, route, pin };
+
+          const hover = (on: boolean): void => {
+            hoveredTrail = on ? trail.id : null;
+            paintTracks();
+            if (on) raiseToFront(layer);
+            pin.getElement()?.classList.toggle("is-hover", on);
+          };
+
+          route.on("mouseover", () => hover(true));
+          route.on("mouseout", () => hover(false));
+          pin.on("mouseover", () => hover(true));
+          pin.on("mouseout", () => hover(false));
+
+          layers.push(layer);
+        }
+
+        /** Line weight follows the zoom level. */
+        const paintZoom = (): void => {
+          const weightT = ramp(map.getZoom(), WEIGHT_FADE);
+          routeWeight = lerp(
+            ROUTE_WEIGHT.overview,
+            ROUTE_WEIGHT.detail,
+            weightT,
+          );
+          casingWeight = lerp(
+            CASING_WEIGHT.overview,
+            CASING_WEIGHT.detail,
+            weightT,
+          );
+          paintTracks();
+        };
+
+        const boundsOf = (group: LayerPair[]): L.LatLngBounds => {
+          const bounds = L.latLngBounds([]);
+          for (const layer of group) bounds.extend(layer.route.getBounds());
+          return bounds;
+        };
+
+        /** Frames every route; panning and zooming is the reader's from then on. */
+        const fitToTrails = (): void => {
+          const bounds = boundsOf(layers);
+          if (bounds.isValid()) map.fitBounds(bounds.pad(0.08));
+        };
+
+        const byRange = new Map<string, LayerPair[]>();
+        for (const layer of layers) {
+          const group = byRange.get(layer.trail.rangeId);
+          if (group) group.push(layer);
+          else byRange.set(layer.trail.rangeId, [layer]);
+        }
+
+        // Lets a trail list elsewhere on the page point at its line.
+        const byId = new Map(layers.map((l) => [l.trail.id, l] as const));
+
+        const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+        /** Applies the current focus to the tracks and to any list driving it. */
+        const paintFocus = (): void => {
+          paintTracks();
+
+          const picked = focusedTrail ? byId.get(focusedTrail) : undefined;
+          if (picked) raiseToFront(picked);
+
+          for (const el of document.querySelectorAll<HTMLElement>(
+            "[data-trail-range]",
+          )) {
+            el.setAttribute(
+              "aria-pressed",
+              String(el.dataset.trailRange === focusedRange),
+            );
+          }
+          for (const el of document.querySelectorAll<HTMLElement>(
+            "[data-trail-focus]",
+          )) {
+            el.setAttribute(
+              "aria-pressed",
+              String(el.dataset.trailFocus === focusedTrail),
+            );
+          }
+
+          // Lists that do more than press a row — drilling into a massif, or
+          // showing a way back out — follow the map from here.
+          document.dispatchEvent(
+            new CustomEvent<TrailFocusDetail>(TRAIL_FOCUS_EVENT, {
+              detail: { rangeId: focusedRange, trailId: focusedTrail },
+            }),
+          );
+        };
+
+        // A card waiting on a flight that a later pick cut short would open over
+        // whatever the reader moved on to, so each pick drops the one before it.
+        let awaitedCard: (() => void) | null = null;
+
+        const dropAwaitedCard = (): void => {
+          if (!awaitedCard) return;
+          map.off("moveend", awaitedCard);
+          awaitedCard = null;
+        };
+
+        /** Holds the map to one massif, or frames everything again on `null`. */
+        const focusRange = (rangeId: string | null): void => {
+          dropAwaitedCard();
+          const group = rangeId ? byRange.get(rangeId) : undefined;
+          focusedRange = group ? rangeId : null;
+          focusedTrail = null;
+          map.closePopup();
+          paintFocus();
+
+          const bounds = boundsOf(group ?? layers);
+          if (bounds.isValid()) {
+            map.flyToBounds(bounds.pad(0.08), {
+              animate: !still.matches,
+              duration: 0.7,
+            });
+          }
+        };
+
+        /** Frames one route and opens its card, the way clicking its pin would. */
+        const focusTrail = (id: string): void => {
+          const layer = byId.get(id);
+          if (!layer) return;
+
+          dropAwaitedCard();
+
+          focusedTrail = id;
+          focusedRange = layer.trail.rangeId;
+          paintFocus();
+
+          const bounds = layer.route.getBounds();
+          if (!bounds.isValid()) return;
+
+          // Stacked layouts put the list above the map, where neither the frame
+          // nor the card would be visible.
+          const box = mapEl.getBoundingClientRect();
+          if (box.bottom < 80 || box.top > window.innerHeight - 120) {
+            mapEl.scrollIntoView({
+              behavior: still.matches ? "auto" : "smooth",
+              block: "center",
+            });
+          }
+
+          const headroom = Math.min(
+            FOCUS_FRAME.headroom.max,
+            Math.round(mapEl.clientHeight * FOCUS_FRAME.headroom.share),
+          );
+          // A view already at rest fires no `moveend`, so the card waits for
+          // the flight only when there is one to wait for.
+          let flying = false;
+          const noteFlight = (): void => {
+            flying = true;
+          };
+
+          map.on("movestart", noteFlight);
+          map.flyToBounds(bounds, {
+            animate: !still.matches,
+            duration: 0.7,
+            paddingTopLeft: [FOCUS_FRAME.padEdge, headroom],
+            paddingBottomRight: [FOCUS_FRAME.padEdge, FOCUS_FRAME.padEdge],
+            maxZoom: FOCUS_FRAME.maxZoom,
+          });
+          map.off("movestart", noteFlight);
+
+          if (!flying) {
+            layer.pin.openPopup();
+            return;
+          }
+
+          awaitedCard = (): void => {
+            awaitedCard = null;
+            layer.pin.openPopup();
+          };
+          map.once("moveend", awaitedCard);
+        };
+
+        /**
+         * One step out: a route hands the map back to its massif, a massif back
+         * to the whole country.
+         */
+        const focusOut = (): void => {
+          focusRange(focusedTrail !== null ? focusedRange : null);
+        };
+
+        // Reopening the card is the list row's job, so a dismissed card drops
+        // the route but leaves its massif in frame. Opening from a pin or line
+        // dims every other track to half, then restores them on close.
+        map.on("popupopen", (e) => {
+          const layer = layers.find(
+            (l) =>
+              e.popup === l.pin.getPopup() || e.popup === l.route.getPopup(),
+          );
+          if (!layer) return;
+          focusedTrail = layer.trail.id;
+          focusedRange = layer.trail.rangeId;
+          paintFocus();
+        });
+
+        map.on("popupclose", (e) => {
+          if (focusedTrail === null) return;
+          const layer = byId.get(focusedTrail);
+          if (!layer) return;
+          if (
+            e.popup !== layer.pin.getPopup() &&
+            e.popup !== layer.route.getPopup()
+          )
+            return;
+          focusedTrail = null;
+          paintFocus();
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!(e.target instanceof Element)) return;
+
+          if (e.target.closest("[data-trail-back]")) {
+            focusOut();
+            return;
+          }
+
+          const trailId =
+            e.target.closest<HTMLElement>("[data-trail-focus]")?.dataset
+              .trailFocus;
+          if (trailId) {
+            focusTrail(trailId);
+            return;
+          }
+
+          const rangeId =
+            e.target.closest<HTMLElement>("[data-trail-range]")?.dataset
+              .trailRange;
+          if (!rangeId) return;
+
+          // Pressing the massif already in frame releases it; pressing it while
+          // one of its routes is picked drops the route instead.
+          const sole = rangeId === focusedRange && focusedTrail === null;
+          focusRange(sole ? null : rangeId);
+        });
+
+        const highlight = (id: string, on: boolean): void => {
+          const layer = byId.get(id);
+          if (!layer) return;
+          hoveredTrail = on ? id : null;
+          paintTracks();
+          if (on) raiseToFront(layer);
+          layer.pin.getElement()?.classList.toggle("is-hover", on);
+        };
+
+        const linkedId = (target: EventTarget | null): string | undefined =>
+          target instanceof Element
+            ? target.closest<HTMLElement>("[data-trail-link]")?.dataset
+                .trailLink
+            : undefined;
+
+        for (const [event, on] of [
+          ["pointerover", true],
+          ["pointerout", false],
+          ["focusin", true],
+          ["focusout", false],
+        ] as const) {
+          document.addEventListener(event, (e) => {
+            const id = linkedId(e.target);
+            if (id) highlight(id, on);
+          });
+        }
+
+        const fit = (): void => {
+          map.invalidateSize();
+          if (!didInitialFit) {
+            didInitialFit = true;
+            fitToTrails();
+          }
+          paintZoom();
+        };
+
+        map.on("zoomend", paintZoom);
+
+        requestAnimationFrame(fit);
+        setTimeout(fit, 200);
+      });
+  }
+
+  initTrailMaps();
+  document.addEventListener("astro:page-load", () => initTrailMaps());
+</script>

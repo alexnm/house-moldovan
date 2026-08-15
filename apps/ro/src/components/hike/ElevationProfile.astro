@@ -5,6 +5,7 @@ import {
   renderProfileSvg,
   type ElevationPoint,
 } from "@shared/lib/gpx";
+import { HIKE_PROFILE_SCRUB_EVENT } from "~/lib/hikeScrub";
 
 export interface Props {
   profile: ElevationPoint[];
@@ -26,11 +27,10 @@ const svg = renderProfileSvg(profile, distanceKm, {
 });
 ---
 
-<figure
-  class="motion-reveal elevation-profile-figure"
-  data-elevation-profile
->
-  <figcaption class="mb-3 flex items-baseline justify-between">
+<figure class="motion-reveal elevation-profile-figure" data-elevation-profile>
+  <figcaption
+    class="mb-3 flex flex-col items-baseline justify-between sm:flex-row"
+  >
     <span class="micro text-ink-faint">{ro.hike.profile}</span>
     <span class="micro text-ink-dim">
       {ro.units.elevation(minElevation)} – {ro.units.elevation(maxElevation)} ·
@@ -45,21 +45,33 @@ const svg = renderProfileSvg(profile, distanceKm, {
   />
 </figure>
 
+<style>
+  /* The ink accents are darkened for the light canvas, so thin the area wash
+     to keep the ridge line the dominant mark. */
+  :global(html[data-theme="light"])
+    .elevation-profile-figure
+    :global(.elev-area) {
+    fill-opacity: 0.12;
+  }
+</style>
+
 <script
   define:vars={{
     profile,
     distanceKm,
     elevLayout: ELEVATION_PROFILE_LAYOUT,
     liveId,
+    scrubEvent: HIKE_PROFILE_SCRUB_EVENT,
   }}
 >
   (function () {
     if (!Array.isArray(profile) || profile.length < 2) return;
 
     function interpolate(ps, d) {
-      if (d <= ps[0].d) return { d, h: ps[0].h };
+      if (d <= ps[0].d)
+        return { d, h: ps[0].h, lng: ps[0].lng, lat: ps[0].lat };
       const last = ps[ps.length - 1];
-      if (d >= last.d) return { d, h: last.h };
+      if (d >= last.d) return { d, h: last.h, lng: last.lng, lat: last.lat };
       let lo = 0;
       let hi = ps.length - 1;
       while (hi - lo > 1) {
@@ -70,7 +82,16 @@ const svg = renderProfileSvg(profile, distanceKm, {
       const a = ps[lo];
       const b = ps[hi];
       const t = (d - a.d) / (b.d - a.d || 1);
-      return { d, h: a.h + t * (b.h - a.h) };
+      return {
+        d,
+        h: a.h + t * (b.h - a.h),
+        lng: a.lng + t * (b.lng - a.lng),
+        lat: a.lat + t * (b.lat - a.lat),
+      };
+    }
+
+    function emitScrub(detail) {
+      document.dispatchEvent(new CustomEvent(scrubEvent, { detail }));
     }
 
     function fmtElev(m) {
@@ -135,12 +156,13 @@ const svg = renderProfileSvg(profile, distanceKm, {
         if (pointerActive) return;
         if (document.activeElement === hit) return;
         group.setAttribute("opacity", "0");
+        emitScrub({ active: false });
       }
 
       function showAtDistance(d, announce) {
         const clamped = Math.min(xMax, Math.max(xMin, d));
         cursorD = clamped;
-        const { h } = interpolate(profile, clamped);
+        const { h, lng, lat } = interpolate(profile, clamped);
         const px = sx(clamped);
         const py = sy(h);
         const elevText = fmtElev(h);
@@ -174,6 +196,7 @@ const svg = renderProfileSvg(profile, distanceKm, {
         if (announce && live) live.textContent = valueText;
 
         group.setAttribute("opacity", "1");
+        emitScrub({ active: true, d: clamped, lng, lat });
       }
 
       function showAtPointer(clientX, clientY) {
@@ -200,9 +223,13 @@ const svg = renderProfileSvg(profile, distanceKm, {
       hit.addEventListener("focus", () => {
         showAtDistance(cursorD, true);
       });
-      hit.addEventListener("blur", hide);
+      hit.addEventListener("blur", () => {
+        pointerActive = false;
+        group.setAttribute("opacity", "0");
+        emitScrub({ active: false });
+      });
       hit.addEventListener("keydown", (e) => {
-        let next = cursorD;
+        let next;
         if (e.key === "ArrowRight" || e.key === "ArrowUp") {
           next = cursorD + step;
         } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {

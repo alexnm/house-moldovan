@@ -4,6 +4,7 @@ import type { WaymarkCode } from "~/lib/waymarks";
 import WaymarkBadge from "./WaymarkBadge.astro";
 
 export interface Props {
+  range: { name: string; href: string };
   distance: number;
   shape: "dus-intors" | "circuit" | "traversare";
   elevationGain: number;
@@ -16,6 +17,7 @@ export interface Props {
 }
 
 const {
+  range,
   distance,
   shape,
   elevationGain,
@@ -51,6 +53,12 @@ const secondary = [
 
 <aside class="motion-reveal" aria-label={ro.hike.stats}>
   <dl class="space-y-4">
+    <div>
+      <dt class="micro text-ink-dim">{ro.hike.range}</dt>
+      <dd class="mt-0.5 font-mono text-base text-ink">
+        <a href={range.href} class="link-accent">{range.name}</a>
+      </dd>
+    </div>
     {
       primary.map((s) => (
         <div>

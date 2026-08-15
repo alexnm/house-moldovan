@@ -1,6 +1,7 @@
 ---
 import { ro } from "~/i18n/ro";
 import { SISTER_SITE_URL } from "~/lib/site";
+import CrestMark from "~/components/layout/CrestMark.astro";
 import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 import ThemeToggle from "@shared/components/layout/ThemeToggle.astro";
 
@@ -8,23 +9,18 @@ const year = new Date().getFullYear();
 
 const navLinks = [
   { href: "/trasee", label: ro.nav.trasee },
-  { href: "/munti", label: ro.nav.munti },
-  { href: "/despre", label: ro.nav.despre },
+  { href: "/harta", label: ro.nav.harta },
 ];
 ---
 
 <footer class="mt-32 bg-surface-2">
   <div
-    class="pad-canvas mx-auto grid max-w-canvas grid-cols-2 gap-x-8 gap-y-10 py-16 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-12"
+    class="pad-canvas mx-auto grid max-w-canvas grid-cols-1 gap-y-10 py-16 md:grid-cols-[2fr_1fr_1fr] md:gap-12"
   >
-    <div class="col-span-2 md:col-span-1">
-      <SiteLogo
-        size="footer"
-        link={false}
-        href="/"
-        mark="/logo-pe-creasta.svg"
-        label={ro.siteName}
-      />
+    <div>
+      <SiteLogo size="footer" link={false} href="/" label={ro.siteName}>
+        <CrestMark slot="mark" />
+      </SiteLogo>
       <p class="mt-3 max-w-md text-ink-dim">{ro.description}</p>
       <p class="micro mt-8 text-ink-faint">
         © {year}. {ro.footer.rights}
@@ -46,11 +42,6 @@ const navLinks = [
             </li>
           ))
         }
-      </ul>
-    </div>
-
-    <div>
-      <ul class="space-y-2 text-ink-dim">
         <li>
           <a href="/rss.xml" class="link-accent link-accent--dim">
             {ro.footer.rssLabel}

@@ -29,7 +29,14 @@ const totalDistanceKm = (path: LngLat[]): number => {
   return sum;
 };
 
-export type ElevationPoint = { d: number; h: number };
+/** Sample along the track: distance (km), elevation (m), and position. */
+export type ElevationPoint = {
+  d: number;
+  h: number;
+  /** GeoJSON order. Used to place a map pin while scrubbing the profile. */
+  lng: number;
+  lat: number;
+};
 
 export interface ParsedTrack {
   distanceKm: number;
@@ -201,6 +208,15 @@ export const parseGpx = (gpxRelPath: string, root = "public"): ParsedTrack => {
   let cumulative = 0;
   const profile: ElevationPoint[] = [];
   const step = Math.max(1, Math.floor(coords.length / 200));
+  const pointAt = (i: number, d: number): ElevationPoint => {
+    const c = coords[i]!;
+    return {
+      d,
+      h: smoothed[i] ?? 0,
+      lng: Number(c[0].toFixed(5)),
+      lat: Number(c[1].toFixed(5)),
+    };
+  };
   for (let i = 0; i < coords.length; i += step) {
     if (i > 0) {
       const segPath: LngLat[] = [];
@@ -210,12 +226,12 @@ export const parseGpx = (gpxRelPath: string, root = "public"): ParsedTrack => {
       }
       cumulative += totalDistanceKm(segPath);
     }
-    profile.push({ d: cumulative, h: smoothed[i] ?? 0 });
+    profile.push(pointAt(i, cumulative));
   }
   if (profile.length > 0) {
     const last = profile[profile.length - 1]!;
     if (last.d < distanceKm)
-      profile.push({ d: distanceKm, h: smoothed[smoothed.length - 1] ?? 0 });
+      profile.push(pointAt(coords.length - 1, distanceKm));
   }
 
   return {
@@ -351,8 +367,8 @@ export const renderProfileSvg = (
   const hitRect = `<rect class="elev-hit" x="${innerL.toFixed(1)}" y="${innerT.toFixed(1)}" width="${innerW.toFixed(1)}" height="${innerH.toFixed(1)}" fill="transparent" cursor="crosshair" tabindex="0" role="slider" aria-orientation="horizontal" aria-label="${ariaLabel}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext=""${describedBy} focusable="true" />`;
 
   const hoverGroup = `<g class="elev-hover-group" opacity="0" pointer-events="none">
-<line class="elev-vline" x1="0" y1="${innerT.toFixed(1)}" x2="0" y2="${innerB.toFixed(1)}" stroke="var(--color-accent)" stroke-width="1.25" stroke-dasharray="4 3" />
-<circle class="elev-dot" r="4" fill="var(--color-surface-2)" stroke="var(--color-accent)" stroke-width="1.75" />
+<line class="elev-vline" x1="0" y1="${innerT.toFixed(1)}" x2="0" y2="${innerB.toFixed(1)}" stroke="var(--color-accent-ink)" stroke-width="1.25" stroke-dasharray="4 3" />
+<circle class="elev-dot" r="4" fill="var(--color-surface-2)" stroke="var(--color-accent-ink)" stroke-width="1.75" />
 <text class="elev-readout" fill="var(--color-ink)" font-size="12" font-weight="600" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
 <text class="elev-readout-dist" fill="var(--color-ink-dim)" font-size="10" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
 </g>`;
@@ -362,8 +378,8 @@ export const renderProfileSvg = (
     gridLines,
     yLabels,
     xLabels,
-    `<path d="${areaPath}" fill="var(--color-accent)" fill-opacity="0.18" pointer-events="none" />`,
-    `<path d="${linePath}" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" pointer-events="none" />`,
+    `<path class="elev-area" d="${areaPath}" fill="var(--color-accent-ink)" fill-opacity="0.18" pointer-events="none" />`,
+    `<path class="elev-line" d="${linePath}" fill="none" stroke="var(--color-accent-ink)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" pointer-events="none" />`,
     hoverGroup,
     hitRect,
     `</svg>`,

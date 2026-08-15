@@ -14,9 +14,19 @@ export interface Props {
   type?: "website" | "article";
   bodyClass?: string;
   noindex?: boolean;
+  /** Full-bleed pages that own the whole viewport drop the footer. */
+  footer?: boolean;
 }
 
-const { title, description, ogImage, type, bodyClass, noindex } = Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  type,
+  bodyClass,
+  noindex,
+  footer = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -44,6 +54,6 @@ const { title, description, ogImage, type, bodyClass, noindex } = Astro.props;
     <main id="main">
       <slot />
     </main>
-    <FooterRo />
+    {footer && <FooterRo />}
   </body>
 </html>
