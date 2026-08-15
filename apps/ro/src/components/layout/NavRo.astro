@@ -5,6 +5,13 @@ import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 
 const path = Astro.url.pathname;
 
+export interface Props {
+  /** Viewport-fit pages stack the bar above their content instead of over it. */
+  inFlow?: boolean;
+}
+
+const { inFlow = false } = Astro.props;
+
 type NavLink = {
   href: string;
   label: string;
@@ -25,7 +32,10 @@ const isActive = (link: NavLink): boolean =>
 ---
 
 <nav
-  class="site-nav fixed inset-x-0 top-0 z-40 pt-5 pb-4"
+  class:list={[
+    "site-nav z-40 pt-5 pb-4",
+    inFlow ? "relative" : "fixed inset-x-0 top-0",
+  ]}
   data-site-nav
   aria-label="Navigare"
 >

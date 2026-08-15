@@ -15,7 +15,7 @@ export interface Props {
   legendHint?: string;
   /** Height utility for the map frame. */
   heightClass?: string;
-  /** Edge-to-edge: no card framing, and controls clear the fixed site nav. */
+  /** Edge-to-edge: no card framing. */
   fullBleed?: boolean;
 }
 
@@ -37,13 +37,7 @@ const payload = {
 
 <!-- Column flow so a `heightClass` of `flex-1` can hand the frame whatever the
      legend leaves over, on pages that give the shell a height of its own. -->
-<div
-  class:list={[
-    "trail-map-shell flex h-full flex-col",
-    fullBleed && "trail-map-shell--bleed",
-  ]}
-  data-trail-map
->
+<div class="trail-map-shell flex h-full min-h-0 flex-col" data-trail-map>
   <div
     class:list={[
       "trail-map isolate z-0 w-full overflow-hidden",
@@ -110,12 +104,6 @@ const payload = {
     --color-terracotta-ink: var(--color-terracotta);
     --color-cobalt-ink: var(--color-cobalt);
     color-scheme: dark;
-  }
-
-  /* Under a full-bleed map the site nav floats over the tiles, so the zoom
-     buttons start below the bar instead of behind the wordmark. */
-  :global(.trail-map-shell--bleed .leaflet-top) {
-    top: 4.75rem;
   }
 
   .trail-map :global(.leaflet-control-attribution) {

@@ -126,7 +126,9 @@ const totalKm = hikes.reduce((sum, h) => sum + h.data.distance, 0);
                     <span class="link-accent max-w-full min-w-0">
                       <span class="block truncate">{trail.title}</span>
                     </span>
-                    <WaymarkBadge marks={trail.waymark} size={14} />
+                    <span class="hidden pt-0.5 sm:block">
+                      <WaymarkBadge marks={trail.waymark} size={14} />
+                    </span>
                   </span>
                   <span class="ro-stat shrink-0 text-sm text-ink-faint group-aria-pressed:text-ink">
                     {trail.distance} · {trail.difficultyLabel}

@@ -197,6 +197,7 @@ Tonal layering and photo contrast over shadow stacks (same vocabulary as EN: lif
 - Fixed top bar; transparent over heroes, solid when scrolled. Crest + wordmark via `SiteLogo`.
 - No border and no blur: the solid state fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer. EN shares this shell verbatim.
 - Primary links: Trasee, Harta. Always inline — no mobile menu. No EN link in nav (EN lives in the footer).
+- Viewport-fit pages (`/harta`) put the bar in flow instead: `RoLayout` takes `fitViewport`, bar plus content sum to one viewport, and nothing scrolls. Nothing renders under the bar, so full-bleed content needs no clearance offset.
 - Same underline patterns as the shared shell.
 
 ### Range cards / Atlas

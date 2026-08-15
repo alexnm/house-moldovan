@@ -16,6 +16,11 @@ export interface Props {
   noindex?: boolean;
   /** Full-bleed pages that own the whole viewport drop the footer. */
   footer?: boolean;
+  /**
+   * Nav plus content add up to one viewport and nothing scrolls. The bar joins
+   * the flow, so the content below it starts where the bar ends.
+   */
+  fitViewport?: boolean;
 }
 
 const {
@@ -26,6 +31,7 @@ const {
   bodyClass,
   noindex,
   footer = true,
+  fitViewport = false,
 } = Astro.props;
 ---
 
@@ -42,14 +48,20 @@ const {
       noindex={noindex}
     />
   </head>
-  <body class:list={["min-h-screen antialiased", bodyClass]}>
+  <body
+    class:list={[
+      "antialiased",
+      fitViewport ? "viewport-shell" : "min-h-screen",
+      bodyClass,
+    ]}
+  >
     <a
       href="#main"
       class="sr-only z-50 focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:rounded focus:bg-surface-2 focus:px-3 focus:py-2"
     >
       Sari la conținut
     </a>
-    <NavRo />
+    <NavRo inFlow={fitViewport} />
     <SiteNavScroll />
     <main id="main">
       <slot />

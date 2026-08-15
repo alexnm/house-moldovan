@@ -12,12 +12,10 @@ const trails = await buildTrailFeatures(hikes, rangeNameById(ranges));
 <RoLayout
   title={`${ro.harta.title} · ${ro.siteName}`}
   description={ro.harta.intro}
-  bodyClass="overflow-hidden"
   footer={false}
+  fitViewport
 >
-  <!-- No `data-nav-hero`: the bar keeps its solid panel over the tiles. -->
-  <div class="h-svh">
-    <h1 class="sr-only">{ro.harta.title}</h1>
-    <TrailsMap trails={trails} heightClass="h-full" fullBleed />
-  </div>
+  <!-- No `data-nav-hero`: the bar keeps its solid panel above the tiles. -->
+  <h1 class="sr-only">{ro.harta.title}</h1>
+  <TrailsMap trails={trails} heightClass="flex-1" fullBleed />
 </RoLayout>

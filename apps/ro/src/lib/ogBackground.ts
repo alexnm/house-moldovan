@@ -6,17 +6,17 @@ import type { ImageMetadata } from "astro";
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
 
-/** Matches `.hero-overlay` in app.css (dark theme, `--hero-overlay: 0.28`). */
-const HERO_OVERLAY_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}">
+/** Ink cover across the whole frame: the crest and wordmark sit centred, so a
+    bottom-edge hero scrim would leave them on bare photo. */
+const SCRIM_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}">
   <defs>
-    <linearGradient id="hero" x1="0" y1="${OG_HEIGHT}" x2="0" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="rgb(10,8,6)" stop-opacity="0.97"/>
-      <stop offset="30%" stop-color="rgb(12,10,8)" stop-opacity="0.78"/>
-      <stop offset="55%" stop-color="rgb(14,12,10)" stop-opacity="0.38"/>
-      <stop offset="100%" stop-color="rgb(18,16,14)" stop-opacity="0.16"/>
+    <linearGradient id="scrim" x1="0" y1="${OG_HEIGHT}" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgb(10,8,6)" stop-opacity="0.72"/>
+      <stop offset="50%" stop-color="rgb(12,10,8)" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="rgb(14,12,10)" stop-opacity="0.62"/>
     </linearGradient>
   </defs>
-  <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="url(#hero)"/>
+  <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="url(#scrim)"/>
 </svg>`;
 
 type ImageWithPath = ImageMetadata & { fsPath?: string };
@@ -48,7 +48,7 @@ export const loadOgBackground = async (
   const input = await readFile(ogImagePath(image));
   const jpeg = await sharp(input)
     .resize(OG_WIDTH, OG_HEIGHT, { fit: "cover", position: "center" })
-    .composite([{ input: Buffer.from(HERO_OVERLAY_SVG), blend: "over" }])
+    .composite([{ input: Buffer.from(SCRIM_SVG), blend: "over" }])
     .jpeg({ quality: 82, mozjpeg: true })
     .toBuffer();
   return `data:image/jpeg;base64,${jpeg.toString("base64")}`;

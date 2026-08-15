@@ -1,5 +1,4 @@
 import type { Accent } from "@shared/lib/accent";
-import { accentHex } from "@shared/lib/accent";
 
 /** Hike difficulty from content schema. */
 export type HikeDifficulty = "usor" | "mediu" | "dificil" | "tehnic";
@@ -14,8 +13,5 @@ export const DIFFICULTY_ACCENT: Record<HikeDifficulty, Accent> = {
 
 export const accentForDifficulty = (d: HikeDifficulty): Accent =>
   DIFFICULTY_ACCENT[d];
-
-export const accentHexForDifficulty = (d: HikeDifficulty): string =>
-  accentHex(DIFFICULTY_ACCENT[d]);
 
 export const isTehnic = (d: HikeDifficulty): boolean => d === "tehnic";

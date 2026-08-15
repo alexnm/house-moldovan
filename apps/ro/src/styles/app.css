@@ -484,6 +484,27 @@
     opacity: 1;
   }
 
+  /* Viewport-fit pages (the map): the bar is in flow, so the content below it
+     starts where it ends rather than sliding underneath. `svh` keeps the sum at
+     one viewport while mobile browser chrome collapses. */
+  .viewport-shell {
+    display: flex;
+    height: 100svh;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .viewport-shell > .site-nav {
+    flex: none;
+  }
+
+  .viewport-shell > main {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+
   /* Minimal hero nav: hide wayfinding until the bar goes solid.
      The wordmark is a link inside `.site-logo-group`, so the crest travels
      with it rather than lingering on its own. */
