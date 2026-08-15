@@ -31,7 +31,7 @@ Per-app commands: `pnpm build:en`, `pnpm build:ro`, `pnpm deploy:en`, `pnpm depl
 Each app builds to its own `dist/` and deploys to a separate Cloudflare Pages project:
 
 - EN → `house-moldovan` (`apps/en/dist`)
-- RO → `pe-creasta` (`apps/ro/dist`)
+- RO → `pe-creaste` (`apps/ro/dist`)
 
 Set `ASTRO_SITE` at build time to override the placeholder RO domain (`https://pecreasta.ro`). See `.github/workflows/deploy.yml` for a dual-job CI template.
 
