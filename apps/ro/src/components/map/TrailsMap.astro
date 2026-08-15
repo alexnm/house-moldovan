@@ -87,12 +87,29 @@ const payload = {
 </div>
 
 <style>
+  /* Every panel the map floats over its own tiles — controls, attribution,
+     popups — keeps the dark film palette. The basemap is light paper in both
+     themes, so light-theme ink would wash out on top of it. */
   .trail-map {
     /* Paper rather than canvas: hairline gaps between scaled tiles show this
        through, and a dark seam grid over the basemap is worse than none. */
     background: var(--color-map-paper);
     font-family: var(--font-body);
     font-size: 11px;
+
+    --color-ink: oklch(0.96 0.012 75);
+    --color-ink-dim: oklch(0.8 0.012 75);
+    --color-ink-faint: oklch(0.7 0.014 75);
+    --color-surface-2: oklch(0.18 0.016 55);
+    --color-surface-3: oklch(0.22 0.016 55);
+    --color-line: oklch(0.28 0.014 55);
+    --color-line-strong: oklch(0.4 0.016 55);
+    --color-accent-ink: oklch(0.9 0.13 98);
+    --color-jade-ink: var(--color-jade);
+    --color-saffron-ink: var(--color-saffron);
+    --color-terracotta-ink: var(--color-terracotta);
+    --color-cobalt-ink: var(--color-cobalt);
+    color-scheme: dark;
   }
 
   /* Under a full-bleed map the site nav floats over the tiles, so the zoom
@@ -215,7 +232,7 @@ const payload = {
   /* `a` tag included to outrank Leaflet's own close-button rule. */
   .trail-map :global(a.leaflet-popup-close-button) {
     /* Sits over the hero crop, so it needs its own backing. */
-    background: color-mix(in oklch, var(--color-surface-2) 72%, transparent);
+    background: var(--color-surface-2);
     color: var(--color-ink-dim);
     font-family: var(--font-body);
     font-size: 14px;
@@ -223,7 +240,6 @@ const payload = {
   }
 
   .trail-map :global(a.leaflet-popup-close-button:hover) {
-    background: var(--color-surface-2);
     color: var(--color-ink);
   }
 
@@ -251,7 +267,7 @@ const payload = {
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-ink);
   }
 
   .trail-map :global(.trail-pop__difficulty) {
@@ -293,7 +309,7 @@ const payload = {
   .trail-map :global(.trail-pop__foot) {
     margin: 0.35rem 0 0;
     font-size: 10px;
-    color: var(--color-ink-faint);
+    color: var(--color-ink-dim);
   }
 
   .trail-legend__item {

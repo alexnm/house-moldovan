@@ -1184,7 +1184,7 @@
   }
 
   .section-heading {
-    font-size: clamp(2.35rem, 1.4rem + 2.2vw, 3.25rem);
+    font-size: clamp(2.1rem, 1.4rem + 2.2vw, 3.25rem);
     text-transform: none;
   }
 
