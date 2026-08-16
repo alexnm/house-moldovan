@@ -1,6 +1,6 @@
 ---
 import type { WaymarkCode } from "~/lib/waymarks";
-import { parseWaymarkCode, waymarksAriaLabel } from "~/lib/waymarks";
+import { parseWaymarkCode, waymarksFullLabel } from "~/lib/waymarks";
 
 export interface Props {
   marks: readonly WaymarkCode[];
@@ -9,12 +9,11 @@ export interface Props {
 
 const { marks, size = 18 } = Astro.props;
 const px = size;
-const ariaIntro = marks.length === 1 ? "Marcaj" : "Marcaje";
 ---
 
 <span
   class="inline-flex flex-wrap items-center gap-1.5"
-  aria-label={`${ariaIntro}: ${waymarksAriaLabel(marks)}`}
+  aria-label={waymarksFullLabel(marks)}
 >
   {
     marks.map((code) => {

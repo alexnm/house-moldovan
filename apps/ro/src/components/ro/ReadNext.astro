@@ -38,6 +38,7 @@ const rangeNames = rangeNameById(await getAllRanges());
             accent={accentForDifficulty(h.data.difficulty)}
             tehnic={isTehnic(h.data.difficulty)}
             regionLabel={rangeLabel}
+            waymark={h.data.waymark}
             transitionName={`hike-${h.id}`}
           />
         );

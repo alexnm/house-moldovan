@@ -1,7 +1,9 @@
 ---
 import { ro } from "~/i18n/ro";
 import {
+  ELEVATION_LABEL_PX,
   ELEVATION_PROFILE_LAYOUT,
+  ELEVATION_PROFILE_LAYOUT_COMPACT,
   renderProfileSvg,
   type ElevationPoint,
 } from "@shared/lib/gpx";
@@ -21,10 +23,17 @@ const { profile, minElevation, maxElevation, distanceKm, publishedDistanceKm } =
   Astro.props;
 const keyboardHintId = "elev-profile-keyboard-hint";
 const liveId = "elev-profile-live";
-const svg = renderProfileSvg(profile, distanceKm, {
-  ariaLabel: ro.hike.profile,
-  describedById: keyboardHintId,
-});
+
+/** One chart per breakpoint: a phone-sized viewBox keeps the axis labels at
+    12px, which a single wide viewBox cannot do without skewing them. */
+const layouts = [ELEVATION_PROFILE_LAYOUT_COMPACT, ELEVATION_PROFILE_LAYOUT];
+const charts = layouts.map((layout) =>
+  renderProfileSvg(profile, distanceKm, {
+    layout,
+    ariaLabel: ro.hike.profile,
+    describedById: keyboardHintId,
+  }),
+);
 ---
 
 <figure class="motion-reveal elevation-profile-figure" data-elevation-profile>
@@ -39,10 +48,10 @@ const svg = renderProfileSvg(profile, distanceKm, {
   </figcaption>
   <p id={keyboardHintId} class="sr-only">{ro.hike.profileKeyboard}</p>
   <p id={liveId} class="sr-only" aria-live="polite"></p>
-  <div
-    class="overflow-clip rounded border border-line bg-surface-2"
-    set:html={svg}
-  />
+  <div class="overflow-clip rounded border border-line bg-surface-2">
+    <div class="sm:hidden" set:html={charts[0]} />
+    <div class="hidden sm:block" set:html={charts[1]} />
+  </div>
 </figure>
 
 <style>
@@ -53,13 +62,21 @@ const svg = renderProfileSvg(profile, distanceKm, {
     :global(.elev-area) {
     fill-opacity: 0.12;
   }
+
+  /* Height follows the viewBox, so both charts scale uniformly. */
+  .elevation-profile-figure :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
 </style>
 
 <script
   define:vars={{
     profile,
     distanceKm,
-    elevLayout: ELEVATION_PROFILE_LAYOUT,
+    elevLayouts: layouts,
+    labelPx: ELEVATION_LABEL_PX,
     liveId,
     scrubEvent: HIKE_PROFILE_SCRUB_EVENT,
   }}
@@ -103,17 +120,14 @@ const svg = renderProfileSvg(profile, distanceKm, {
         : `${km.toLocaleString("ro-RO", { maximumFractionDigits: 1 })} km`;
     }
 
-    document.querySelectorAll("[data-elevation-profile]").forEach((wrap) => {
-      const svg = wrap.querySelector("svg");
-      const hit = svg?.querySelector(".elev-hit");
-      const group = svg?.querySelector(".elev-hover-group");
-      const vline = svg?.querySelector(".elev-vline");
-      const dot = svg?.querySelector(".elev-dot");
-      const label = svg?.querySelector(".elev-readout");
-      const distLabel = svg?.querySelector(".elev-readout-dist");
-      const live = wrap.querySelector(`#${liveId}`);
-      if (!svg || !hit || !group || !vline || !dot || !label || !distLabel)
-        return;
+    function initChart(svg, elevLayout, live) {
+      const hit = svg.querySelector(".elev-hit");
+      const group = svg.querySelector(".elev-hover-group");
+      const vline = svg.querySelector(".elev-vline");
+      const dot = svg.querySelector(".elev-dot");
+      const label = svg.querySelector(".elev-readout");
+      const distLabel = svg.querySelector(".elev-readout-dist");
+      if (!hit || !group || !vline || !dot || !label || !distLabel) return;
 
       const W = elevLayout.width;
       const ml = elevLayout.marginLeft;
@@ -137,8 +151,27 @@ const svg = renderProfileSvg(profile, distanceKm, {
       const sx = (d) => innerL + ((d - xMin) / xR) * (innerR - innerL);
       const sy = (h) => innerB - ((h - yMin) / yR) * (innerB - innerT);
 
-      const labelY = innerT + 14;
-      const distY = innerT + 28;
+      // Labels are sized in user units, so the size that renders at labelPx
+      // depends on how far the viewBox is being scaled right now.
+      let fs = elevLayout.fontSize;
+      const measureLabel = () => {
+        const w = svg.getBoundingClientRect().width;
+        if (!w) return;
+        fs = Math.min(labelPx / (w / elevLayout.width), elevLayout.maxFontSize);
+        svg.style.setProperty("--elev-label", `${fs.toFixed(2)}px`);
+      };
+      measureLabel();
+      // Observe the wrapper, not the SVG: resize callbacks do not fire for SVG
+      // elements in every browser.
+      const box = svg.parentElement;
+      if (typeof ResizeObserver === "function" && box) {
+        const observer = new ResizeObserver(measureLabel);
+        observer.observe(box);
+      } else {
+        window.addEventListener("resize", measureLabel);
+      }
+
+      const labelY = innerT + 6;
       const step = Math.max(xR / 40, 0.05);
       let cursorD = xMin;
       let pointerActive = false;
@@ -179,7 +212,7 @@ const svg = renderProfileSvg(profile, distanceKm, {
         label.textContent = elevText;
         distLabel.textContent = distText;
 
-        const nearRight = px > innerR - 72;
+        const nearRight = px > innerR - fs * 5;
         const anchor = nearRight ? "end" : "start";
         const dx = nearRight ? -6 : 6;
         label.setAttribute("x", String(px));
@@ -187,7 +220,7 @@ const svg = renderProfileSvg(profile, distanceKm, {
         label.setAttribute("text-anchor", anchor);
         label.setAttribute("dx", String(dx));
         distLabel.setAttribute("x", String(px));
-        distLabel.setAttribute("y", String(distY));
+        distLabel.setAttribute("y", String(labelY + fs + 4));
         distLabel.setAttribute("text-anchor", anchor);
         distLabel.setAttribute("dx", String(dx));
 
@@ -243,6 +276,13 @@ const svg = renderProfileSvg(profile, distanceKm, {
         }
         e.preventDefault();
         showAtDistance(next, true);
+      });
+    }
+
+    document.querySelectorAll("[data-elevation-profile]").forEach((wrap) => {
+      const live = wrap.querySelector(`#${liveId}`);
+      wrap.querySelectorAll("svg").forEach((svg, i) => {
+        initChart(svg, elevLayouts[i] ?? elevLayouts[0], live);
       });
     });
   })();

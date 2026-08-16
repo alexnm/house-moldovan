@@ -59,3 +59,9 @@ export function parseWaymarkCode(code: string): {
 export function waymarksAriaLabel(codes: readonly WaymarkCode[]): string {
   return codes.map((c) => WAYMARK_LABEL_RO[c]).join(", ");
 }
+
+/** Full label for a badge row, e.g. `Marcaje: Triunghi albastru, Bandă roșie`. */
+export function waymarksFullLabel(codes: readonly WaymarkCode[]): string {
+  const intro = codes.length === 1 ? "Marcaj" : "Marcaje";
+  return `${intro}: ${waymarksAriaLabel(codes)}`;
+}

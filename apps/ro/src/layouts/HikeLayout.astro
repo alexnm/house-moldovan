@@ -6,6 +6,7 @@ import Prose from "@shared/components/article/Prose.astro";
 import TrailStats from "~/components/hike/TrailStats.astro";
 import ElevationProfile from "~/components/hike/ElevationProfile.astro";
 import HikeMap from "~/components/hike/HikeMap.astro";
+import WaymarkBadge from "~/components/hike/WaymarkBadge.astro";
 import ReadNext from "~/components/ro/ReadNext.astro";
 import { ro } from "~/i18n/ro";
 import { getRange } from "~/lib/content";
@@ -45,12 +46,14 @@ const readNext = await getReadNextHikes(entry);
       title={data.title}
       meta={data.summary}
       transitionName={`hike-${entry.id}`}
-    />
+    >
+      <WaymarkBadge slot="kicker" marks={data.waymark} size={20} />
+    </Hero>
 
     <section
       class:list={[
         "section section-y-tight",
-        hasMapPanel && "grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-12",
+        hasMapPanel && "grid gap-10 md:grid-cols-[14rem_1fr] md:gap-12",
       ]}
     >
       <div class="space-y-8">

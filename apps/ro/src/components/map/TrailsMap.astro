@@ -24,7 +24,9 @@ const {
   legend,
   legendLabel = "Legendă",
   legendHint,
-  heightClass = "h-[min(78vh,52rem)]",
+  // Stacked under the trail list, the frame stays well short of the viewport so
+  // there is page left to grab: a full-height map swallows every scroll gesture.
+  heightClass = "h-[60svh] max-h-[34rem] lg:max-h-none lg:h-[min(88vh,56rem)]",
   fullBleed = false,
 } = Astro.props;
 
@@ -251,11 +253,41 @@ const payload = {
     padding: 0.6rem 0.8rem 0.7rem;
   }
 
+  .trail-map :global(.trail-pop__kicker-row) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
   .trail-map :global(.trail-pop__kicker) {
+    margin: 0.5em 0;
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-ink);
+  }
+
+  .trail-map :global(.trail-pop__marks) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  /* Paper backing, as on hike cards: waymark hues are drawn for white signs. */
+  .trail-map :global(.trail-pop__mark) {
+    width: 14px;
+    height: 14px;
+    border: 1px solid oklch(0 0 0 / 0.15);
+    border-radius: 2px;
+    background: #f5f3ec;
+  }
+
+  .trail-map :global(.trail-pop__mark svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .trail-map :global(.trail-pop__difficulty) {
@@ -294,12 +326,6 @@ const payload = {
     color: var(--trail-accent, var(--color-ink));
   }
 
-  .trail-map :global(.trail-pop__foot) {
-    margin: 0.35rem 0 0;
-    font-size: 10px;
-    color: var(--color-ink-dim);
-  }
-
   .trail-legend__item {
     display: inline-flex;
     align-items: center;
@@ -331,6 +357,7 @@ const payload = {
   import { MAP_TILES, difficultyColor } from "~/lib/mapStyles";
   import { TRAIL_FOCUS_EVENT, type TrailFocusDetail } from "~/lib/trailFocus";
   import type { TrailFeature } from "~/lib/trailMapData";
+  import { parseWaymarkCode } from "~/lib/waymarks";
 
   type Payload = {
     trails: TrailFeature[];
@@ -338,7 +365,6 @@ const payload = {
       distance: string;
       gain: string;
       duration: string;
-      summit: string;
     };
     thumbSize: { width: number; height: number };
   };
@@ -406,23 +432,44 @@ const payload = {
   const stat = (label: string, value: string, cls = ""): string =>
     `<div><dt class="sr-only">${escapeHtml(label)}</dt><dd${cls ? ` class="${cls}"` : ""}>${escapeHtml(value)}</dd></div>`;
 
-  function popupHtml(t: TrailFeature, p: Payload): string {
-    const foot = t.summit
-      ? `${t.shape} · ${p.labels.summit.toLowerCase()} ${t.summit}`
-      : t.shape;
+  /** Same geometry as `WaymarkBadge.astro`, on its 18×18 grid. */
+  const MARK_GLYPH = {
+    line: '<rect x="7" y="2" width="4" height="14" />',
+    dot: '<circle cx="9" cy="9" r="4.5" />',
+    triangle: '<polygon points="9,3 16,15 2,15" />',
+    cross:
+      '<rect x="2" y="7" width="14" height="4" /><rect x="7" y="2" width="4" height="14" />',
+  } as const;
 
+  function waymarksHtml(t: TrailFeature): string {
+    const badges = t.waymark
+      .map((code) => {
+        const parsed = parseWaymarkCode(code);
+        if (!parsed) return "";
+        return `<span class="trail-pop__mark"><svg viewBox="0 0 18 18" fill="${parsed.color}">${MARK_GLYPH[parsed.shape]}</svg></span>`;
+      })
+      .join("");
+
+    if (!badges) return "";
+
+    return `<span class="trail-pop__marks" role="img" aria-label="${escapeHtml(t.waymarkLabel)}">${badges}</span>`;
+  }
+
+  function popupHtml(t: TrailFeature, p: Payload): string {
     return `<article class="trail-pop" style="--trail-accent: ${escapeHtml(t.accentVar)}">
   <a class="trail-pop__link" href="${escapeHtml(t.href)}">
     <img class="trail-pop__media" src="${escapeHtml(t.thumb)}" width="${p.thumbSize.width}" height="${p.thumbSize.height}" alt="" loading="lazy" decoding="async" />
     <div class="trail-pop__body">
-      <p class="trail-pop__kicker">${escapeHtml(t.rangeName)} · <span class="trail-pop__difficulty">${escapeHtml(t.difficultyLabel)}</span></p>
+      <div class="trail-pop__kicker-row">
+        <p class="trail-pop__kicker">${escapeHtml(t.rangeName)} · <span class="trail-pop__difficulty">${escapeHtml(t.difficultyLabel)}</span></p>
+        ${waymarksHtml(t)}
+      </div>
       <h3 class="trail-pop__title">${escapeHtml(t.title)}</h3>
       <dl class="trail-pop__stats">
         ${stat(p.labels.distance, t.distance)}
         ${stat(p.labels.gain, t.gain, "trail-pop__gain")}
         ${stat(p.labels.duration, t.duration)}
       </dl>
-      <p class="trail-pop__foot">${escapeHtml(foot)}</p>
     </div>
   </a>
 </article>`;

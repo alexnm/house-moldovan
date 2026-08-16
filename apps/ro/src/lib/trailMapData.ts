@@ -4,7 +4,7 @@ import { accentInkVar } from "@shared/lib/accent";
 import { getGpxTrack } from "@shared/lib/gpx";
 import { ro } from "~/i18n/ro";
 import { accentForDifficulty, type HikeDifficulty } from "~/lib/difficulty";
-import type { WaymarkCode } from "~/lib/waymarks";
+import { waymarksFullLabel, type WaymarkCode } from "~/lib/waymarks";
 
 /** Overview maps draw many tracks at once, so each needs far fewer vertices. */
 const MAX_POINTS = 120;
@@ -17,7 +17,6 @@ export const TRAIL_MAP_LABELS = {
   distance: ro.hike.distance,
   gain: ro.hike.elevationGain,
   duration: ro.hike.duration,
-  summit: ro.hike.summit,
 } as const;
 
 export type TrailFeature = {
@@ -29,14 +28,14 @@ export type TrailFeature = {
   difficulty: HikeDifficulty;
   difficultyLabel: string;
   waymark: readonly WaymarkCode[];
+  /** Screen-reader name for the whole badge row. */
+  waymarkLabel: string;
   /** `var(--color-*-ink)` for the difficulty, so popups stay theme-aware. */
   accentVar: string;
   /** Pre-formatted, so the client script carries no i18n. */
   distance: string;
   gain: string;
   duration: string;
-  shape: string;
-  summit: string | null;
   /** Build-time optimized hero crop, fetched when a popup opens. */
   thumb: string;
   /** GeoJSON vertex order: [lng, lat]. */
@@ -101,12 +100,11 @@ export async function buildTrailFeatures(
       difficulty: data.difficulty,
       difficultyLabel: ro.difficulty[data.difficulty],
       waymark: data.waymark,
+      waymarkLabel: waymarksFullLabel(data.waymark),
       accentVar: accentInkVar(accentForDifficulty(data.difficulty)),
       distance: ro.units.distance(data.distance),
       gain: `+${ro.units.elevation(data.elevationGain)}`,
       duration: ro.units.duration(data.duration),
-      shape: ro.shape[data.shape],
-      summit: data.summit ? ro.units.elevation(data.summit) : null,
       thumb: thumb.src,
       line: track.line,
     });

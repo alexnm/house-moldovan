@@ -209,7 +209,7 @@ Tonal layering and photo contrast over shadow stacks (same vocabulary as EN: lif
 ### Hike cards
 
 - Photo card with difficulty accent tick (doubled for `tehnic`).
-- Kicker: `{difficulty} · {duration}`. Meta: `{distance} · +{gain}`.
+- Kicker: `{difficulty} · {duration}`. Meta row: waymark badges left, then `{distance} · +{gain}`.
 - Live grids use `ArticleCard` / `HikeRhythmGrid`; optional prototypes in `apps/ro/src/components/ro/` (`HikeCard`, `TrailListItem`, `TrailFeed`, `RangeSheet`, `WaymarkSignal`) for future `/trasee` filters.
 
 ### Hike page

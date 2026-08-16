@@ -52,6 +52,7 @@ const cells = buildRhythmCells(hikes);
             accent={accentForDifficulty(h.data.difficulty)}
             tehnic={isTehnic(h.data.difficulty)}
             regionLabel={label}
+            waymark={h.data.waymark}
             transitionName={`hike-${h.id}`}
           />
         </div>

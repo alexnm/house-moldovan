@@ -244,15 +244,53 @@ export const parseGpx = (gpxRelPath: string, root = "public"): ParsedTrack => {
   };
 };
 
+export interface ElevationProfileLayout {
+  width: number;
+  height: number;
+  marginLeft: number;
+  marginRight: number;
+  marginTop: number;
+  marginBottom: number;
+  /**
+   * Label size in user units, used until the client script measures the real
+   * scale and overrides it through `--elev-label`.
+   */
+  fontSize: number;
+  /** Largest label the margins can hold without clipping, in user units. */
+  maxFontSize: number;
+}
+
+/** Axis labels aim for this on-screen size at any chart width. */
+export const ELEVATION_LABEL_PX = 12;
+
 /** Layout for hike elevation SVG + client hover script (keep in sync with ElevationProfile script). */
 export const ELEVATION_PROFILE_LAYOUT = {
   width: 800,
   height: 220,
-  marginLeft: 68,
-  marginRight: 28,
+  marginLeft: 94,
+  marginRight: 32,
   marginTop: 12,
-  marginBottom: 34,
-} as const;
+  marginBottom: 42,
+  fontSize: 12,
+  maxFontSize: 19,
+} as const satisfies ElevationProfileLayout;
+
+/**
+ * Phone variant. A viewBox near a phone's own width keeps the chart close to a
+ * 1:1 scale; the ratio is squarer than the wide layout so a narrow frame comes
+ * out slightly taller instead of collapsing into a strip.
+ */
+export const ELEVATION_PROFILE_LAYOUT_COMPACT = {
+  width: 360,
+  height: 190,
+  marginLeft: 72,
+  /** Half of the last x label, which is centred on the final tick. */
+  marginRight: 30,
+  marginTop: 12,
+  marginBottom: 38,
+  fontSize: 13,
+  maxFontSize: 14.5,
+} as const satisfies ElevationProfileLayout;
 
 const fmtAxisElev = (m: number): string =>
   `${Math.round(m).toLocaleString("ro-RO")} m`;
@@ -296,7 +334,7 @@ const escapeXmlAttr = (value: string): string =>
     .replaceAll(">", "&gt;");
 
 export type RenderProfileSvgOptions = {
-  layout?: typeof ELEVATION_PROFILE_LAYOUT;
+  layout?: ElevationProfileLayout;
   /** Accessible name for the interactive chart (localized by the caller). */
   ariaLabel?: string;
   /** Optional id of an element that describes keyboard use. */
@@ -314,8 +352,15 @@ export const renderProfileSvg = (
   const describedBy = options.describedById
     ? ` aria-describedby="${escapeXmlAttr(options.describedById)}"`
     : "";
-  const { width, height, marginLeft, marginRight, marginTop, marginBottom } =
-    layout;
+  const {
+    width,
+    height,
+    marginLeft,
+    marginRight,
+    marginTop,
+    marginBottom,
+    fontSize,
+  } = layout;
   const xs = profile.map((p) => p.d);
   const ys = profile.map((p) => p.h);
   const xMin = Math.min(...xs);
@@ -335,6 +380,10 @@ export const renderProfileSvg = (
   const sx = (x: number): number => innerL + ((x - xMin) / xR) * innerW;
   const sy = (y: number): number => innerB - ((y - yMin) / yR) * innerH;
 
+  // Font size in user units, so the client can trade it for the measured scale
+  // and land every label on ELEVATION_LABEL_PX.
+  const labelStyle = `font-size:var(--elev-label,${fontSize}px)`;
+
   const linePoints = profile.map(
     (p) => `${sx(p.d).toFixed(1)},${sy(p.h).toFixed(1)}`,
   );
@@ -352,7 +401,7 @@ export const renderProfileSvg = (
   const yLabels = yTicks
     .map((yt) => {
       const y = sy(yt);
-      return `<text x="${(innerL - 10).toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" dominant-baseline="middle" fill="var(--color-ink-faint)" font-size="11" font-family="var(--font-mono)" pointer-events="none">${fmtAxisElev(yt)}</text>`;
+      return `<text x="${(innerL - 10).toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" dominant-baseline="middle" fill="var(--color-ink-faint)" style="${labelStyle}" font-family="var(--font-mono)" pointer-events="none">${fmtAxisElev(yt)}</text>`;
     })
     .join("");
 
@@ -360,7 +409,7 @@ export const renderProfileSvg = (
   const xLabels = xTicks
     .map((xt) => {
       const x = sx(xt);
-      return `<text x="${x.toFixed(1)}" y="${(height - 10).toFixed(1)}" text-anchor="middle" fill="var(--color-ink-faint)" font-size="11" font-family="var(--font-mono)" pointer-events="none">${fmtAxisDist(xt)}</text>`;
+      return `<text x="${x.toFixed(1)}" y="${(height - marginBottom + fontSize + 8).toFixed(1)}" text-anchor="middle" fill="var(--color-ink-faint)" style="${labelStyle}" font-family="var(--font-mono)" pointer-events="none">${fmtAxisDist(xt)}</text>`;
     })
     .join("");
 
@@ -369,12 +418,13 @@ export const renderProfileSvg = (
   const hoverGroup = `<g class="elev-hover-group" opacity="0" pointer-events="none">
 <line class="elev-vline" x1="0" y1="${innerT.toFixed(1)}" x2="0" y2="${innerB.toFixed(1)}" stroke="var(--color-accent-ink)" stroke-width="1.25" stroke-dasharray="4 3" />
 <circle class="elev-dot" r="4" fill="var(--color-surface-2)" stroke="var(--color-accent-ink)" stroke-width="1.75" />
-<text class="elev-readout" fill="var(--color-ink)" font-size="12" font-weight="600" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
-<text class="elev-readout-dist" fill="var(--color-ink-dim)" font-size="10" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
+<text class="elev-readout" fill="var(--color-ink)" style="${labelStyle}" font-weight="600" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
+<text class="elev-readout-dist" fill="var(--color-ink-dim)" style="${labelStyle}" font-family="var(--font-mono)" dominant-baseline="hanging"></text>
 </g>`;
 
   return [
-    `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">`,
+    // Uniform scaling: `none` would stretch x and y apart and skew the labels.
+    `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`,
     gridLines,
     yLabels,
     xLabels,
