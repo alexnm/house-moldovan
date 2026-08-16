@@ -99,7 +99,7 @@ components:
 
 _Pe creste_ is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; difficulty, duration, distance, and gain close it. Density is field-guide-editorial: scannable stats and honest notes, never AllTrails dashboard chrome.
 
-This document covers `pecreasta.ro` (`apps/ro`). Tokens and shell patterns are shared with House Moldovan (`apps/en`), but **identity is separate**: Oswald trail-sign display, massif atlas wayfinding, difficulty as a compare signal on hike cards. Sister site: `housemoldovan.com`.
+This document covers `precreste.ro` (`apps/ro`). Tokens and shell patterns are shared with House Moldovan (`apps/en`), but **identity is separate**: Oswald trail-sign display, massif atlas wayfinding, difficulty as a compare signal on hike cards. Sister site: `housemoldovan.com`.
 
 Motion reuses the same role system and duration ladder as the EN journal (`apps/ro/src/styles/app.css`). Easing stays cinematic (exponential ease-out). Honor `prefers-reduced-motion`. Parallax on the featured hero is acceptable.
 

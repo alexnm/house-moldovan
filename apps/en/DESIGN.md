@@ -234,7 +234,7 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 - **Hover / Active:** Saffron underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
 - **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-lg`.
 - **Dropdown (desktop):** `surface-2` panel; region names in regional accent color.
-- **Sister site:** RO promo in nav/footer/about is optional and currently commented out; when enabled, absolute URL to `pecreasta.ro` (working name _Pe creastă_).
+- **Sister site:** RO promo in nav/footer/about is optional and currently commented out; when enabled, absolute URL to `precreste.ro` (working name _Pe creastă_).
 
 ### Links (`.link-accent`)
 

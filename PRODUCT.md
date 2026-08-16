@@ -11,7 +11,7 @@ This workspace contains **two separate brand surfaces**. Impeccable context live
 | App | Domain | Context |
 |-----|--------|---------|
 | House Moldovan (EN travel journal) | `housemoldovan.com` | `apps/en/PRODUCT.md` + `apps/en/DESIGN.md` |
-| Pe creastă (RO hiking, **working name**) | `pecreasta.ro` | `apps/ro/PRODUCT.md` + `apps/ro/DESIGN.md` |
+| Pe creastă (RO hiking, **working name**) | `precreste.ro` | `apps/ro/PRODUCT.md` + `apps/ro/DESIGN.md` |
 
 Shared layout primitives and tokens live in `packages/shared` and duplicated `app.css` copies; each app's DESIGN.md documents how that foundation is used.
 
