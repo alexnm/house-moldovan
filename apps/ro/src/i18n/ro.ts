@@ -3,7 +3,7 @@ export const ro = {
   htmlLang: "ro",
   intlLocale: "ro-RO",
   siteName: "Pe creste",
-  tagline: "Drumeții în munții României",
+  tagline: "Idei de drumeții în munții României",
   description:
     "O selecție de trasee în munții României însoțite de toate detaliile tehnice necesare pentru parcurgerea lor.",
   nav: {
@@ -131,6 +131,8 @@ export const ro = {
     rights: "Fotografiile și textul aparțin autorului.",
     themeLight: "Mod luminos",
     themeDark: "Mod întunecat",
+    instagramLabel: "Instagram",
+    instagramUrl: "https://www.instagram.com/housemoldovan/",
     rssLabel: "Abonare RSS",
     enCta: "housemoldovan.com",
     enKicker: "Vizitați blogul nostru de călătorie în limba engleză",

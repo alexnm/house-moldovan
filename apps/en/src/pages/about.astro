@@ -4,9 +4,16 @@ import CoverImage from "@shared/components/media/CoverImage.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import { en } from "~/i18n/en";
 import heroImage from "~/assets/about/hero.JPG";
+import alexMelaImage from "~/assets/about/alex-mela.JPG";
 import coverImage from "~/assets/about/cover.jpg";
 import melaImage from "~/assets/about/mela.JPG";
 import alexImage from "~/assets/about/alex.jpg";
+import alexIguazuImage from "~/assets/about/alex-iguazu.jpg";
+import alexUzbekistanImage from "~/assets/about/alex-uzbekistan.jpg";
+import melaPeruImage from "~/assets/about/mela-peru.JPG";
+import melaEdiImage from "~/assets/about/mela-edi.JPG";
+import peCreastaOg from "~/assets/about/pe-creasta-og.png";
+import { SISTER_SITE_URL } from "~/lib/site";
 
 const notes = [
   en.about.notes.stories,
@@ -28,138 +35,299 @@ const notes = [
     transitionName="hero-about"
   />
 
-  <section class="section section-y-lg motion-reveal">
-    <div class="prose-body max-w-prose">
-      <p>{en.about.introP1}</p>
-      <p>
-        {en.about.introP2.start}
-        <a href="/explore">{en.about.introP2.exploreLink}</a>
-        {en.about.introP2.mid}
-        <a href="/journal">{en.about.introP2.journalLink}</a>
-        {en.about.introP2.end}
-      </p>
-    </div>
-  </section>
+  <section class="section section-y-lg about-split">
+    <div class="about-copy">
+      <div class="prose-body motion-reveal max-w-prose">
+        <p>
+          Hi there, fellow travelers! We are Mela and Alex, the two people
+          behind House Moldovan. We are based in Romania and we've been
+          travelling together since 2012.
+        </p>
+        <p>
+          We visited over 40 countries and are eager to share our experiences
+          with you. 👶 Edi is our little travel companion and he's been part of
+          our travels since 2024.
+        </p>
+        <p>
+          We started this site to keep our travel writing and photography in one
+          place: honest impressions from the trips we took, organized so you can
+          <a href="/explore">browse by region</a> or follow along in
+          <a href="/journal">the journal</a>.
+        </p>
+      </div>
 
-  <section class="section section-y-lg" aria-labelledby="about-notes-heading">
-    <header class="section-header">
-      <p class="stamp text-ink-dim">{en.about.notesKicker}</p>
-      <h2 id="about-notes-heading" class="display section-heading mt-2">
-        {en.about.notesHeading}
-      </h2>
-    </header>
+      <div class="about-notes-block" aria-labelledby="about-notes-heading">
+        <header class="section-header">
+          <p class="stamp text-ink-dim">{en.about.notesKicker}</p>
+          <h2 id="about-notes-heading" class="display section-heading mt-2">
+            {en.about.notesHeading}
+          </h2>
+        </header>
 
-    <ol class="about-notes">
-      {
-        notes.map((note, index) => (
-          <li class="about-note motion-reveal">
-            <span class="stamp text-ink-faint" aria-hidden="true">
-              0{index + 1}
-            </span>
-            <div class="about-note__body">
-              <span class="about-note__tick" aria-hidden="true" />
-              <h3 class="display subsection-heading">{note.title}</h3>
-              <p class="mt-3 max-w-prose leading-relaxed text-ink-dim">
-                {note.description}
-              </p>
-              <a
-                href={note.href}
-                class="link-more link-accent link-accent--dim mt-5 inline-block"
-              >
-                {note.cta} →
-              </a>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+        <ol class="about-notes">
+          {
+            notes.map((note, index) => (
+              <li class="about-note motion-reveal">
+                <span class="stamp text-ink-faint" aria-hidden="true">
+                  0{index + 1}
+                </span>
+                <div class="about-note__body">
+                  <span class="about-note__tick" aria-hidden="true" />
+                  <h3 class="display subsection-heading">{note.title}</h3>
+                  <p class="mt-3 max-w-prose leading-relaxed text-ink-dim">
+                    {note.description}
+                  </p>
+                  <a
+                    href={note.href}
+                    class="link-more link-accent link-accent--dim mt-5 inline-block"
+                  >
+                    {note.cta} →
+                  </a>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
 
-  <section class="section section-y-lg" aria-labelledby="about-authors-heading">
-    <header class="section-header motion-reveal max-w-prose">
-      <p class="stamp text-ink-dim">{en.about.authorsKicker}</p>
-      <h2 id="about-authors-heading" class="display section-heading mt-2">
-        {en.about.authorsHeading}
-      </h2>
-      <p class="mt-4 text-lg leading-relaxed">{en.about.authorsIntro}</p>
-    </header>
-
-    <div class="about-portraits">
-      <figure class="about-portrait motion-reveal-media">
-        <div class="about-portrait__shell group motion-hover-media">
-          <CoverImage
-            src={melaImage}
-            alt={en.about.melaAlt}
-            widths={[480, 640, 960, 1200]}
-            sizes="(min-width: 768px) 33vw, 88vw"
-            format="avif"
-            quality={82}
-            loading="lazy"
-            placeholder="blur"
-            wrapperClass="absolute inset-0"
-            class="h-full w-full object-cover"
-          />
-          <span
-            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
-            >Mela</span
-          >
-        </div>
-      </figure>
-
-      <figure class="about-portrait motion-reveal-media">
-        <div class="about-portrait__shell group motion-hover-media">
-          <CoverImage
-            src={alexImage}
-            alt={en.about.alexAlt}
-            widths={[480, 640, 960, 1200]}
-            sizes="(min-width: 768px) 33vw, 88vw"
-            format="avif"
-            quality={82}
-            loading="lazy"
-            placeholder="blur"
-            wrapperClass="absolute inset-0"
-            class="h-full w-full object-cover"
-          />
-          <span
-            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
-            >Alex & Edi</span
-          >
-        </div>
-      </figure>
-
-      <figure class="about-portrait-wide motion-reveal-media">
-        <div
-          class="about-portrait-wide__shell group motion-hover-media"
-          style={`aspect-ratio: ${coverImage.width} / ${coverImage.height}`}
+      <div class="motion-reveal max-w-prose">
+        <p class="stamp text-ink-dim">Sister website</p>
+        <h2 id="about-sister-heading" class="display section-heading mt-2">
+          Pe creaste
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed">
+          When we are not abroad, we hike the Romanian Carpathians. Our sister
+          site, written in Romanian, collects routes, elevation profiles, and
+          notes from those days on the ridge.
+        </p>
+        <a
+          href={SISTER_SITE_URL}
+          class="link-more link-accent link-accent--dim mt-5 inline-block"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <CoverImage
-            src={coverImage}
-            alt={en.about.melaAlexAlt}
-            widths={[960, 1280, 1600, 1920]}
-            sizes="(min-width: 1536px) 56rem, (min-width: 768px) 66vw, 100vw"
-            format="avif"
-            quality={82}
-            loading="lazy"
-            placeholder="blur"
-            wrapperClass="absolute inset-0"
-            class="h-full w-full object-cover"
-          />
-          <span
-            class="stamp-badge absolute top-3 left-3 z-10 md:top-4 md:left-4"
-            >The whole family</span
+          Visit pecreasta.ro →
+        </a>
+        <a
+          href={SISTER_SITE_URL}
+          class="about-sister-preview group motion-hover-media mt-6 block"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Pe creastă"
+        >
+          <div
+            class="about-sister-preview__shell"
+            style={`aspect-ratio: ${peCreastaOg.width} / ${peCreastaOg.height}`}
           >
-        </div>
-      </figure>
+            <CoverImage
+              src={peCreastaOg}
+              alt="Pe creastă — hiking journal for the Romanian Carpathians"
+              widths={[640, 960, 1200]}
+              sizes="(min-width: 1024px) 36vw, 88vw"
+              format="png"
+              quality={90}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </a>
+      </div>
     </div>
 
-    <!-- <p class="prose-body motion-reveal mt-12 max-w-prose">
-      {en.about.sisterSite}{" "}
-      <a href="/ro">{en.about.sisterSiteLabel}</a>.
-    </p> -->
+    <aside class="about-photos" aria-label="Portraits">
+      <div class="about-portraits">
+        <figure class="about-portrait about-portrait--wide motion-reveal-media">
+          <div
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            style={`aspect-ratio: ${alexMelaImage.width} / ${alexMelaImage.height}`}
+          >
+            <CoverImage
+              src={alexMelaImage}
+              alt="Alex and Mela on a hillside overlooking the coast"
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1024px) 36vw, 100vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10"
+              >🇪🇸 Tenerife</span
+            >
+          </div>
+        </figure>
+
+        <figure class="about-portrait motion-reveal-media">
+          <div class="about-portrait__shell group motion-hover-media">
+            <CoverImage
+              src={melaImage}
+              alt={en.about.melaAlt}
+              widths={[320, 480, 640, 960]}
+              sizes="(min-width: 1024px) 18vw, 44vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10">🇧🇪 Bruges</span
+            >
+          </div>
+        </figure>
+
+        <figure class="about-portrait motion-reveal-media">
+          <div class="about-portrait__shell group motion-hover-media">
+            <CoverImage
+              src={alexImage}
+              alt={en.about.alexAlt}
+              widths={[320, 480, 640, 960]}
+              sizes="(min-width: 1024px) 18vw, 44vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10"
+              >🇮🇹 Dolomites</span
+            >
+          </div>
+        </figure>
+
+        <figure class="about-portrait about-portrait--wide motion-reveal-media">
+          <div
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            style={`aspect-ratio: ${alexIguazuImage.width} / ${alexIguazuImage.height}`}
+          >
+            <CoverImage
+              src={alexIguazuImage}
+              alt="Alex with arms open facing Iguazu Falls"
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1024px) 36vw, 100vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10"
+              >🇧🇷 Iguazu Falls</span
+            >
+          </div>
+        </figure>
+
+        <figure class="about-portrait motion-reveal-media">
+          <div class="about-portrait__shell group motion-hover-media">
+            <CoverImage
+              src={alexUzbekistanImage}
+              alt="Alex standing in a blue-tiled alcove in Uzbekistan"
+              widths={[320, 480, 640, 960]}
+              sizes="(min-width: 1024px) 18vw, 44vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10"
+              >🇺🇿 Uzbekistan</span
+            >
+          </div>
+        </figure>
+
+        <figure class="about-portrait motion-reveal-media">
+          <div class="about-portrait__shell group motion-hover-media">
+            <CoverImage
+              src={melaPeruImage}
+              alt="Mela with alpacas in Peru"
+              widths={[320, 480, 640, 960]}
+              sizes="(min-width: 1024px) 18vw, 44vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10">🇵🇪 Peru</span>
+          </div>
+        </figure>
+
+        <figure class="about-portrait about-portrait--wide motion-reveal-media">
+          <div
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            style={`aspect-ratio: ${melaEdiImage.width} / ${melaEdiImage.height}`}
+          >
+            <CoverImage
+              src={melaEdiImage}
+              alt="Mela carrying Edi overlooking a coastal lagoon"
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1024px) 36vw, 100vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10">🇬🇷 Crete</span>
+          </div>
+        </figure>
+
+        <figure class="about-portrait about-portrait--wide motion-reveal-media">
+          <div
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            style={`aspect-ratio: ${coverImage.width} / ${coverImage.height}`}
+          >
+            <CoverImage
+              src={coverImage}
+              alt={en.about.melaAlexAlt}
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1024px) 36vw, 100vw"
+              format="avif"
+              quality={82}
+              loading="lazy"
+              placeholder="blur"
+              wrapperClass="absolute inset-0"
+              class="h-full w-full object-cover"
+            />
+            <span class="stamp-badge absolute top-2 left-2 z-10"
+              >🇷🇴 Romania</span
+            >
+          </div>
+        </figure>
+      </div>
+    </aside>
   </section>
 </BaseLayout>
 
 <style>
+  .about-split {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+
+    @media (width >= 1024px) {
+      grid-template-columns: 3fr 2fr;
+      gap: clamp(2rem, 4vw, 3.5rem);
+      align-items: start;
+    }
+  }
+
+  .about-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-section-lg);
+    min-width: 0;
+  }
+
   .about-notes {
     list-style: none;
     padding: 0;
@@ -189,19 +357,30 @@ const notes = [
     border-radius: 1px;
   }
 
+  .about-sister-preview__shell {
+    position: relative;
+    overflow: clip;
+    border-radius: 2px;
+  }
+
+  .about-photos {
+    min-width: 0;
+
+    @media (width >= 1024px) {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+
   .about-portraits {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--grid-gap);
-    width: 100%;
-    max-width: 100%;
-    margin-top: clamp(2rem, 4vw, 3rem);
+    align-items: start;
+  }
 
-    @media (width >= 640px) {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-      max-width: 66.666667%;
-    }
+  .about-portrait--wide {
+    grid-column: 1 / -1;
   }
 
   .about-portrait__shell {
@@ -211,15 +390,7 @@ const notes = [
     aspect-ratio: 4 / 5;
   }
 
-  .about-portrait-wide {
-    @media (width >= 640px) {
-      grid-column: 1 / -1;
-    }
-  }
-
-  .about-portrait-wide__shell {
-    position: relative;
-    overflow: clip;
-    border-radius: 2px;
+  .about-portrait__shell--wide {
+    aspect-ratio: auto;
   }
 </style>

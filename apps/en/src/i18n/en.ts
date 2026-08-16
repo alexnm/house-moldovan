@@ -72,16 +72,6 @@ export const en = {
     kicker: "About",
     heroTitle: "House Moldovan",
     heroSummary: "A few words about us and our travel journal",
-    introP1:
-      "Hi there, fellow travelers! We are Mela and Alex, the two people behind House Moldovan. We are based in Romania and we've been travelling together since 2012.",
-    introP2: {
-      start:
-        "We started this site to keep our travel writing and photography in one place: honest impressions from the trips we took, organized so you can ",
-      exploreLink: "browse by region",
-      mid: " or follow along in ",
-      journalLink: "the journal",
-      end: ".",
-    },
     notesKicker: "What's in the journal",
     notesHeading: "The journal",
     notes: {
@@ -106,16 +96,9 @@ export const en = {
         cta: "See itineraries",
       },
     },
-    authorsKicker: "Who writes",
-    authorsHeading: "Mela & Alex",
-    authorsIntro:
-      "We take all the photos and write all the content ourselves. Edi is our little travel companion and he's been part of our travels since 2024.",
     melaAlt: "Mela on a stone bridge in Bruges",
     alexAlt: "Alex carrying Edi on his shoulders in the Dolomites",
     melaAlexAlt: "The whole family walking on a path",
-    sisterSite:
-      "For hiking routes in the Romanian Carpathians, in Romanian, see our sister site",
-    sisterSiteLabel: "Pe creastă",
     exploreCta: "Start exploring",
     journalCta: "Read the journal",
   },
@@ -184,8 +167,8 @@ export const en = {
     instagramUrl: "https://www.instagram.com/housemoldovan/",
     subscribeLabel: "Subscribe",
     rssLabel: "Subscribe via RSS",
-    roCta: "Drumeții în România",
-    roKicker: "Romanian sister site",
+    roCta: "pecreasta.ro",
+    roKicker: "Visit our Romanian hiking journal",
   },
 } as const;
 

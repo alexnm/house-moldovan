@@ -1,5 +1,6 @@
 ---
 import { en } from "~/i18n/en";
+import { SISTER_SITE_URL } from "~/lib/site";
 import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 import ThemeToggle from "@shared/components/layout/ThemeToggle.astro";
 import { getAllRegions } from "~/lib/regions";
@@ -93,17 +94,15 @@ const journalLinks = [
         </li>
       </ul>
 
-      {
-        /* <a
-        href="/ro"
-        class="mt-10 block rounded-lg border border-line p-4 transition-colors duration-ui ease-cinema hover:border-line-strong"
+      <a
+        href={SISTER_SITE_URL}
+        class="duration-ui mt-4 block rounded-lg border border-line p-4 transition-colors ease-cinema hover:border-line-strong"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <p class="micro text-ink-faint">{en.footer.roKicker}</p>
-        <p class="display mt-1 text-lg">
-          {en.footer.roCta} →
-        </p>
-      </a> */
-      }
+        <p class="display mt-1 text-lg">{en.footer.roCta} →</p>
+      </a>
     </div>
   </div>
 </footer>
