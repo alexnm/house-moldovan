@@ -16,7 +16,7 @@ brand
 
 ## Product Purpose
 
-*Pe creste* is a personal Romanian hiking journal for routes in the Carpathians (`precreste.ro`). It organizes hikes by massif (Făgăraș, Retezat, Apuseni, Rodnei, Parâng, Piatra Craiului) with elevation profiles, GPX tracks, waymarks, and notes for the days when details matter.
+*Pe creste* is a personal Romanian hiking journal for routes in the Carpathians (`pecreste.ro`). It organizes hikes by massif (Făgăraș, Retezat, Apuseni, Rodnei, Parâng, Piatra Craiului) with elevation profiles, GPX tracks, waymarks, and notes for the days when details matter.
 
 Success looks like: a reader picks a hike with confidence from photos and stats, understands which massif it belongs to, and can take the GPX (and field notes) onto the trail. The site is static, fast, and decision-oriented; design should make comparison easy without becoming a dashboard.
 

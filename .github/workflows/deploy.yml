@@ -44,7 +44,7 @@
 #       - run: pnpm install --frozen-lockfile
 #       - run: pnpm build:ro
 #         env:
-#           ASTRO_SITE: https://precreste.ro
+#           ASTRO_SITE: https://pecreste.ro
 #       - name: Deploy RO
 #         uses: cloudflare/wrangler-action@v3
 #         with:

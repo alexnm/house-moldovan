@@ -9,7 +9,7 @@ import {
   sitemapDraftPaths,
 } from "../../scripts/sitemap-lastmod-ro.mjs";
 
-const SITE = process.env.ASTRO_SITE ?? "https://precreste.ro";
+const SITE = process.env.ASTRO_SITE ?? "https://pecreste.ro";
 const LASTMOD = sitemapLastmod();
 const DRAFT_PATHS = sitemapDraftPaths();
 const root = fileURLToPath(new URL(".", import.meta.url));

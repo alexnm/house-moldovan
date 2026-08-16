@@ -10,7 +10,7 @@ brand
 
 **Context:** evening reading on a phone or laptop, often with photos as important as the prose. They want honest field notes, not brochure copy. Some readers only want photo highlights (spotlights); others want day-by-day plans (itineraries) or narrative guides (stories).
 
-**Sister brand:** Romanian Carpathian hiking lives on a separate site (working name *Pe creastă*, domain `precreste.ro`). Same authors, different audience and product contract. Cross-promo from this journal is optional and currently commented out in nav/footer/about; when enabled, link to `https://precreste.ro`, never a `/ro` subpath.
+**Sister brand:** Romanian Carpathian hiking lives on a separate site (working name *Pe creastă*, domain `pecreste.ro`). Same authors, different audience and product contract. Cross-promo from this journal is optional and currently commented out in nav/footer/about; when enabled, link to `https://pecreste.ro`, never a `/ro` subpath.
 
 ## Product Purpose
 

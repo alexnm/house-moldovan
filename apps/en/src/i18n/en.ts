@@ -167,7 +167,7 @@ export const en = {
     instagramUrl: "https://www.instagram.com/housemoldovan/",
     subscribeLabel: "Subscribe",
     rssLabel: "Subscribe via RSS",
-    roCta: "precreste.ro",
+    roCta: "pecreste.ro",
     roKicker: "Visit our Romanian hiking journal",
   },
 } as const;

@@ -5,7 +5,7 @@ Two static sites in one pnpm workspace:
 | App                                    | Domain (placeholder) | Package   |
 | -------------------------------------- | -------------------- | --------- |
 | **House Moldovan** (EN travel journal) | `housemoldovan.com`  | `apps/en` |
-| **Pe creastă** (RO hiking)             | `precreste.ro`       | `apps/ro` |
+| **Pe creastă** (RO hiking)             | `pecreste.ro`       | `apps/ro` |
 
 Shared layout primitives, OG renderer, GPX utilities, and accent tokens live in `packages/shared`.
 
@@ -33,7 +33,7 @@ Each app builds to its own `dist/` and deploys to a separate Cloudflare Pages pr
 - EN → `house-moldovan` (`apps/en/dist`)
 - RO → `pe-creaste` (`apps/ro/dist`)
 
-Set `ASTRO_SITE` at build time to override the placeholder RO domain (`https://precreste.ro`). See `.github/workflows/deploy.yml` for a dual-job CI template.
+Set `ASTRO_SITE` at build time to override the placeholder RO domain (`https://pecreste.ro`). See `.github/workflows/deploy.yml` for a dual-job CI template.
 
 ## Pinned versions
 
