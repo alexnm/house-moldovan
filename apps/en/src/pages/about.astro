@@ -2,6 +2,7 @@
 import Hero from "@shared/components/article/Hero.astro";
 import CoverImage from "@shared/components/media/CoverImage.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import TypePictogram from "~/components/layout/marks/TypePictogram.astro";
 import { en } from "~/i18n/en";
 import heroImage from "~/assets/about/hero.JPG";
 import alexMelaImage from "~/assets/about/alex-mela.JPG";
@@ -16,9 +17,9 @@ import peCreastaOg from "~/assets/about/pe-creasta-og.png";
 import { SISTER_SITE_URL } from "~/lib/site";
 
 const notes = [
-  en.about.notes.stories,
-  en.about.notes.itineraries,
-  en.about.notes.spotlights,
+  { ...en.about.notes.stories, kind: "story" },
+  { ...en.about.notes.itineraries, kind: "itinerary" },
+  { ...en.about.notes.spotlights, kind: "spotlight" },
 ] as const;
 ---
 
@@ -66,10 +67,10 @@ const notes = [
 
         <ol class="about-notes">
           {
-            notes.map((note, index) => (
+            notes.map((note) => (
               <li class="about-note motion-reveal">
-                <span class="stamp text-ink-faint" aria-hidden="true">
-                  0{index + 1}
+                <span class="about-note__mark text-ink" aria-hidden="true">
+                  <TypePictogram kind={note.kind} />
                 </span>
                 <div class="about-note__body">
                   <span class="about-note__tick" aria-hidden="true" />
@@ -343,9 +344,20 @@ const notes = [
     border-top: 1px solid var(--color-line);
 
     @media (width >= 640px) {
-      grid-template-columns: 3.5rem 1fr;
+      /* Rail is sized by the pictogram, which needs ~7rem to stay legible. */
+      grid-template-columns: 7rem 1fr;
       gap: 2rem;
     }
+  }
+
+  .about-note__mark {
+    display: block;
+    align-self: start;
+    width: 7rem;
+    /* The drawings carry roughly a fifth of their height as empty space above
+       the artwork; pull most of it back so the top edge reads level with the
+       heading instead of floating below it. */
+    margin-top: -1.1rem;
   }
 
   .about-note__tick {

@@ -460,11 +460,13 @@
     opacity: 1;
   }
 
-  /* Minimal hero nav: hide wayfinding until the bar goes solid */
+  /* Minimal hero nav: hide wayfinding until the bar goes solid.
+     The wordmark is a link inside `.site-logo-group`, so the book travels with
+     it rather than lingering on its own. */
   body:has(main [data-nav-minimal])
     .site-nav:not(.is-solid)
     .pad-canvas
-    > a.site-logo,
+    > :is(a.site-logo, .site-logo-group),
   body:has(main [data-nav-minimal]) .site-nav:not(.is-solid) .pad-canvas > ul,
   body:has(main [data-nav-minimal])
     .site-nav:not(.is-solid)
@@ -476,7 +478,10 @@
     visibility: hidden;
   }
 
-  body:has(main [data-nav-minimal]) .site-nav .pad-canvas > a.site-logo,
+  body:has(main [data-nav-minimal])
+    .site-nav
+    .pad-canvas
+    > :is(a.site-logo, .site-logo-group),
   body:has(main [data-nav-minimal]) .site-nav .pad-canvas > ul,
   body:has(main [data-nav-minimal]) .site-nav .pad-canvas > details {
     transition:
@@ -493,7 +498,7 @@
   body:has(main [data-nav-hero]:not([data-nav-hero-accent]))
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active,
@@ -506,7 +511,7 @@
   body:has(main [data-nav-hero-accent][data-accent="jade"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active,
@@ -518,7 +523,7 @@
   body:has(main [data-nav-hero-accent][data-accent="saffron"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active,
@@ -530,7 +535,7 @@
   body:has(main [data-nav-hero-accent][data-accent="terracotta"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active,
@@ -542,7 +547,7 @@
   body:has(main [data-nav-hero-accent][data-accent="cobalt"])
     .site-nav:not(.is-solid)
     :is(
-      .pad-canvas > a.site-logo,
+      .pad-canvas :is(a.site-logo, .site-logo-group),
       .pad-canvas > ul > li > a.link-accent,
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active,
@@ -1176,6 +1181,17 @@
     line-height: 1.04;
     letter-spacing: -0.04em;
     text-transform: none;
+  }
+
+  /* Type pictogram set beside a .page-title. The drawings spend ~40% of their box
+     on breathing room, so the box has to run larger than the type for the ink to
+     read at the same height — this is .page-title's clamp × 1.37. The nudge drops
+     the ink onto the title's baseline: these titles have no descenders, so the
+     line box carries slack at the bottom that the mark would otherwise centre
+     itself into, leaving it floating. */
+  .page-title-mark {
+    width: clamp(4.32rem, 8.22vw + 1.03rem, 8.9rem);
+    transform: translateY(5.5%);
   }
 
   .section-heading {

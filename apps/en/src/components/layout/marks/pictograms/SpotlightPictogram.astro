@@ -1,0 +1,57 @@
+---
+/**
+ * Type pictogram — Spotlight: "the camera".
+ *
+ * A rangefinder front-on, drawn in line work. An earlier version fanned two
+ * prints behind the top plate to carry "a set of pictures", but at this size two
+ * blank rectangles poking up read as ears rather than photographs — so the
+ * richness went into the camera instead: top plate, shutter release, hot shoe,
+ * viewfinder and rangefinder windows, and a three-part lens.
+ *
+ * The plate outline is punched where the shutter and shoe meet it so they read
+ * as mounted on it rather than crossed by it. The pupil is the single solid
+ * accent, matching the graphite tip and the pin in the other two.
+ *
+ * Sized for ~64px and up; below that the lens rings close up.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const shoeId = `camera-pictogram-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<svg
+  class:list={["block h-auto w-full", className]}
+  viewBox="0 0 120 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <mask id={shoeId}>
+    <rect width="120" height="120" fill="white"></rect>
+    <circle cx="36" cy="28.5" r="3.5" fill="black"></circle>
+    <rect x="54" y="25" width="12" height="7" rx="1.2" fill="black"></rect>
+  </mask>
+
+  <g mask={`url(#${shoeId})`}>
+    <rect x="26" y="32" width="68" height="8" rx="2.5"></rect>
+    <rect x="16" y="40" width="88" height="52" rx="8"></rect>
+  </g>
+
+  <circle cx="36" cy="28.5" r="3.5" stroke-width="2.2"></circle>
+  <rect x="54" y="25" width="12" height="7" rx="1.2" stroke-width="2.2"></rect>
+
+  <circle cx="60" cy="66" r="22"></circle>
+  <circle cx="60" cy="66" r="15" stroke-width="2.2"></circle>
+  <circle cx="60" cy="66" r="5" fill="currentColor" stroke="none"></circle>
+
+  <rect x="23" y="46" width="10" height="8" rx="1.5" stroke-width="2.2"></rect>
+  <circle cx="91" cy="50" r="4" stroke-width="2.2"></circle>
+</svg>

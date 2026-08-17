@@ -174,7 +174,7 @@ export const en = {
     subscribeLabel: "Subscribe",
     rssLabel: "Subscribe via RSS",
     roCta: "pecreste.ro",
-    roKicker: "Visit our Romanian hiking journal",
+    roKicker: "Visit our sister website for hiking in Romania",
   },
 } as const;
 

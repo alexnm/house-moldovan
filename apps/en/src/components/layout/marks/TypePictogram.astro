@@ -1,0 +1,30 @@
+---
+/**
+ * Picks the line-art pictogram for an article kind.
+ *
+ * Drawn in `currentColor` and sized by the parent — see `.page-title-mark` for
+ * the journal index lockup. Meant for ~64px and up; below that the creases,
+ * ruled lines and lens rings close up.
+ */
+import type { ArticleKind } from "~/lib/articles";
+import StoryPictogram from "./pictograms/StoryPictogram.astro";
+import ItineraryPictogram from "./pictograms/ItineraryPictogram.astro";
+import SpotlightPictogram from "./pictograms/SpotlightPictogram.astro";
+
+interface Props {
+  kind: ArticleKind;
+  class?: string;
+}
+
+const { kind, class: className } = Astro.props;
+
+const PICTOGRAMS = {
+  story: StoryPictogram,
+  itinerary: ItineraryPictogram,
+  spotlight: SpotlightPictogram,
+} as const;
+
+const Pictogram = PICTOGRAMS[kind];
+---
+
+<Pictogram class={className} />

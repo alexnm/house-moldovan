@@ -1,0 +1,71 @@
+---
+/**
+ * Type pictogram — Itinerary: "the route across the map".
+ *
+ * Folded map in outline, the trail dotted across it, and one solid pin standing
+ * on the destination. Everything else is line work so the pin is the only mass
+ * in the drawing — that contrast is what makes the destination read as the point
+ * of the whole thing. A small origin ring at the other end turns a wandering
+ * curve into a journey with two ends.
+ *
+ * The compass needle and the slanted creases only pay off at this size. The
+ * needle started as a four-point star, which small reads as a sparkle rather
+ * than a compass.
+ *
+ * Sized for ~64px and up; below that the creases close up.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const id = crypto.randomUUID().slice(0, 8);
+const haloId = `route-pictogram-${id}`;
+const pinHoleId = `route-pictogram-pin-${id}`;
+
+const pin =
+  "M76 65.6C67.75 55.3 65 51 65 45a11 11 0 1 1 22 0c0 6.05-2.75 10.3-11 20.6Z";
+---
+
+<svg
+  class:list={["block h-auto w-full", className]}
+  viewBox="0 0 120 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <mask id={haloId}>
+    <rect width="120" height="120" fill="white"></rect>
+    <path d={pin} fill="black" stroke="black" stroke-width="8"></path>
+  </mask>
+  <mask id={pinHoleId}>
+    <rect width="120" height="120" fill="white"></rect>
+    <circle cx="76" cy="45" r="3.6" fill="black"></circle>
+  </mask>
+
+  <g mask={`url(#${haloId})`}>
+    <path d="M14 32 42 22 82 32 106 22V88L78 98 38 88 14 98Z"></path>
+
+    <g stroke-width="1.7" opacity="0.8">
+      <path d="M42 22 38 88"></path>
+      <path d="M82 32 78 98"></path>
+    </g>
+
+    <path d="M28 37 33 46 28 55 23 46Z" stroke-width="2.2"></path>
+    <path d="M28 37 33 46 23 46Z" fill="currentColor" stroke="none"></path>
+
+    <path
+      d="M26 84C33 76 43 80 51 72C57 66 65 64 76 65.6"
+      stroke-width="3.6"
+      stroke-dasharray="0.1 10"></path>
+    <circle cx="26" cy="84" r="4.6" stroke-width="2.2"></circle>
+  </g>
+
+  <path d={pin} fill="currentColor" stroke="none" mask={`url(#${pinHoleId})`}
+  ></path>
+</svg>

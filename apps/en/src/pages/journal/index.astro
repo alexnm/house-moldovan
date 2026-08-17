@@ -43,7 +43,7 @@ if (featured) {
         <Hero
           image={featured.data.hero}
           alt={featured.data.title}
-          kicker={en.journal.featuredKicker}
+          kicker={en.journal.featuredKicker[featured.kind]}
           title={featured.data.title}
           meta={featuredSummary}
           accent={featuredAccent}

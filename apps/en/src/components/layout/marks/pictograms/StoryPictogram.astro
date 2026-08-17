@@ -1,0 +1,81 @@
+---
+/**
+ * Type pictogram — Story: "the book, mid-sentence".
+ *
+ * Drawn as line work rather than a solid silhouette: at this size a filled
+ * shape reads as mass, so the weight is carried by a single solid accent
+ * (here, the graphite tip).
+ *
+ * Left page is written out, right page trails off under the pencil — that
+ * unfinished line is what says "story" rather than "book". A dilated pencil
+ * silhouette is punched out of everything beneath it so the barrel reads as
+ * resting on the page instead of fusing with the ruled lines it crosses.
+ *
+ * Sized for ~64px and up; below that the ruled lines close up.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const haloId = `story-pictogram-${crypto.randomUUID().slice(0, 8)}`;
+const spin = "rotate(38 80 66)";
+const pencil = "M75.5 22 84.5 22 84.5 55 80 66 75.5 55Z";
+---
+
+<svg
+  class:list={["block h-auto w-full", className]}
+  viewBox="0 0 120 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <mask id={haloId}>
+    <rect width="120" height="120" fill="white"></rect>
+    <g transform={spin}>
+      <path d={pencil} fill="black" stroke="black" stroke-width="7"></path>
+    </g>
+  </mask>
+
+  <g mask={`url(#${haloId})`}>
+    <path
+      d="M13.1 31.9C26.6 23.6 46.9 25.5 57.4 34.9V95.6C46.9 86.3 26.6 84.4 13.1 92.6Z"
+    ></path>
+    <path
+      d="M106.9 31.9C93.4 23.6 73.1 25.5 62.6 34.9V95.6C73.1 86.3 93.4 84.4 106.9 92.6Z"
+    ></path>
+
+    <path
+      d="M57.4 99.1C46.9 89.8 26.6 87.9 13.1 96.1"
+      stroke-width="1.7"
+      opacity="0.75"></path>
+    <path
+      d="M62.6 99.1C73.1 89.8 93.4 87.9 106.9 96.1"
+      stroke-width="1.7"
+      opacity="0.75"></path>
+
+    <g stroke-width="2">
+      <path d="M20.5 45C30.5 42.5 42.5 43.5 52 46.5"></path>
+      <path d="M21 56C31 53.5 43 54.5 52.3 57.5"></path>
+      <path d="M21.5 67C31.5 64.5 43.5 65.5 52.6 68.5"></path>
+      <path d="M22 78C31 75.8 41 76.5 48 78.5"></path>
+
+      <path d="M99.5 45C89.5 42.5 77.5 43.5 68 46.5"></path>
+      <path d="M99 56C89 53.5 77 54.5 67.7 57.5"></path>
+      <path d="M67.7 65.5C71 64.8 75 64.9 78 65.8"></path>
+    </g>
+  </g>
+
+  <g transform={spin}>
+    <path d={pencil}></path>
+    <path d="M75.5 28.5 84.5 28.5" stroke-width="2"></path>
+    <path d="M75.5 55 84.5 55" stroke-width="2"></path>
+    <path d="M77.8 60.6 80 66 82.2 60.6Z" fill="currentColor" stroke="none"
+    ></path>
+  </g>
+</svg>

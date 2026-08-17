@@ -1,24 +1,38 @@
 ---
 import { en } from "~/i18n/en";
+import TypePictogram from "~/components/layout/marks/TypePictogram.astro";
+import type { ArticleKind } from "~/lib/articles";
 
 interface Props {
   title: string;
   summary: string;
+  /** Draws the type pictogram as the chapter emblem beside the title. */
+  kind: ArticleKind;
 }
 
-const { title, summary } = Astro.props;
+const { title, summary, kind } = Astro.props;
 ---
 
 <section class="pad-canvas mx-auto max-w-canvas pt-20 @md:pt-28">
-  <header class="mt-3 max-w-[40rem]">
-    <a href="/journal" class="micro link-accent link-accent--dim">
-      {en.journal.seeEntire}
-    </a>
-    <h1 class="display page-title mt-3 text-balance">{title}</h1>
-    <p
-      class="mt-4 max-w-[38ch] font-sans text-lg leading-snug text-pretty text-ink-dim"
+  <header class="mt-3">
+    <div class="flex items-center gap-3">
+      <span class="page-title-mark block shrink-0 text-ink" aria-hidden="true">
+        <TypePictogram kind={kind} />
+      </span>
+      <h1 class="display page-title max-w-160 text-balance">{title}</h1>
+    </div>
+    {/* Summary and the way back out of this chapter share a baseline. */}
+    <div
+      class="mt-4 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3"
     >
-      {summary}
-    </p>
+      <p
+        class="max-w-[38ch] font-sans text-lg leading-snug text-pretty text-ink-dim"
+      >
+        {summary}
+      </p>
+      <a href="/journal" class="micro link-accent link-accent--dim">
+        {en.journal.seeEntire}
+      </a>
+    </div>
   </header>
 </section>
