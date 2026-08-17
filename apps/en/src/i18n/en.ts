@@ -18,8 +18,10 @@ export const en = {
   home: {
     kicker: "Travel journal",
     regionsHeading: "Explore by region",
+    countriesHeading: "Featured destinations",
     recentHeading: "Recent journal notes",
-    exploreCta: "See all countries",
+    exploreCta: "See all regions",
+    featuredCta: "See all countries",
     seeAll: "See entire journal",
   },
   journal: {
@@ -27,7 +29,11 @@ export const en = {
     metaDescription:
       "The complete House Moldovan travel journal: every story, photo spotlight and multi-day itinerary from our trips across South America, Asia, the Middle East and Europe.",
     intro: "Latest journal notes",
-    featuredKicker: "Featured story",
+    featuredKicker: {
+      story: "Featured story",
+      spotlight: "Featured spotlight",
+      itinerary: "Featured itinerary",
+    },
     seeEntire: "See entire journal",
     empty:
       "No notes match this filter. Try Stories, Spotlights, or Itineraries above.",

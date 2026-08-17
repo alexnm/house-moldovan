@@ -599,6 +599,21 @@
     }
   }
 
+  /* Home tile row (regions, featured countries): 1 → sm:2 → lg:4 */
+  .grid-tiles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gap);
+
+    @media (width >= 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (width >= 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   .micro {
     font-family: var(--font-mono);
     font-size: 0.72rem;
