@@ -1,0 +1,62 @@
+---
+import CountryCard from "~/components/home/CountryCard.astro";
+import { placeShortName } from "~/lib/articlePlaces";
+import { en } from "~/i18n/en";
+import {
+  getAllPlaces,
+  getFeaturedCountries,
+  type AnyEnArticle,
+} from "~/lib/content";
+import { placeThumbnailForCountry } from "~/lib/placeCover";
+import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
+
+export interface Props {
+  feed: AnyEnArticle[];
+}
+
+const { feed } = Astro.props;
+const [places, regions] = await Promise.all([getAllPlaces(), getAllRegions()]);
+const regionsById = regionMapById(regions);
+const featured = getFeaturedCountries(places);
+---
+
+{
+  featured.length > 0 && (
+    <section class="section section-y">
+      <header class="section-header flex items-baseline justify-between gap-4">
+        <h2 class="display section-heading">{en.home.countriesHeading}</h2>
+        <a
+          href="/explore"
+          class="link-more link-accent link-accent--dim hidden shrink-0 sm:inline"
+        >
+          {en.home.featuredCta} →
+        </a>
+      </header>
+
+      <ul class="grid-tiles">
+        {featured.map((country) => {
+          const region = regionsById.get(regionIdFromPlace(country));
+          const accent = country.data.accent ?? region?.data.accent;
+          return (
+            <CountryCard
+              href={`/explore/${country.id}`}
+              name={placeShortName(country)}
+              flag={country.data.flag}
+              tagline={country.data.tagline}
+              image={placeThumbnailForCountry(country, feed)}
+              imageAlt={`Scenes from ${country.data.name}`}
+              accent={accent}
+            />
+          );
+        })}
+      </ul>
+
+      <a
+        href="/explore"
+        class="link-more link-accent link-accent--dim mt-(--space-block) inline-block sm:hidden"
+      >
+        {en.home.featuredCta} →
+      </a>
+    </section>
+  )
+}

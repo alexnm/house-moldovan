@@ -2,6 +2,7 @@
 import CoverImage from "@shared/components/media/CoverImage.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import RegionStrip from "~/components/home/RegionStrip.astro";
+import FeaturedCountries from "~/components/home/FeaturedCountries.astro";
 import RhythmGrid from "~/components/home/RhythmGrid.astro";
 import { en } from "~/i18n/en";
 import { getEnFeed, getHomeRecentFeed } from "~/lib/content";
@@ -56,6 +57,8 @@ const recent = getHomeRecentFeed(feed);
   </section>
 
   <RegionStrip />
+
+  <FeaturedCountries feed={feed} />
 
   <section class="section section-y-tight">
     <header

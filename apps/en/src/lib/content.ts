@@ -128,3 +128,24 @@ export const articlesForRegion = (
   regionByPlaceId: Map<string, Region>,
 ): AnyEnArticle[] =>
   feed.filter((a) => articleMatchesRegion(a, region, regionByPlaceId));
+
+/** Hand-picked home destinations, in display order. */
+export const FEATURED_COUNTRY_IDS = [
+  "spain",
+  "jordan",
+  "malaysia",
+  "argentina",
+] as const;
+
+export const getFeaturedCountries = (
+  places: CollectionEntry<"places">[],
+  ids: readonly string[] = FEATURED_COUNTRY_IDS,
+): CollectionEntry<"places">[] => {
+  const byId = new Map(places.map((p) => [p.id, p] as const));
+  const out: CollectionEntry<"places">[] = [];
+  for (const id of ids) {
+    const place = byId.get(id);
+    if (place) out.push(place);
+  }
+  return out;
+};
