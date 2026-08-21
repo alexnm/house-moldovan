@@ -22,7 +22,7 @@ const { items } = Astro.props;
       items.map((it) => (
         <div class="flex min-w-0 items-baseline gap-x-2">
           <dt class="micro shrink-0 text-accent-ink">{it.label}</dt>
-          <dd class="min-w-0 font-medium text-ink">
+          <dd class="min-w-0 font-semibold text-ink">
             {Array.isArray(it.value)
               ? it.value.map((link, i) => (
                   <>
@@ -47,7 +47,7 @@ const { items } = Astro.props;
       items.map((it) => (
         <div class="px-5 py-5 first:pl-0 last:pr-0 lg:border-line lg:not-last:border-r">
           <dt class="micro text-accent-ink">{it.label}</dt>
-          <dd class="mt-1 font-medium text-ink">
+          <dd class="mt-1 font-semibold text-ink">
             {Array.isArray(it.value)
               ? it.value.map((link, i) => (
                   <>

@@ -1,0 +1,30 @@
+---
+import ArticlesMap from "~/components/map/ArticlesMap.astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import { buildArticleMapPins } from "~/lib/mapPinData";
+import { en } from "~/i18n/en";
+
+const pins = await buildArticleMapPins();
+---
+
+<BaseLayout
+  title={`Map (dev) · ${en.siteName}`}
+  description="Dev sandbox for article map pins."
+  noindex
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    <header class="mb-6 max-w-2xl">
+      <p class="micro text-ink-faint">Dev</p>
+      <h1 class="mt-1 font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        Article map
+      </h1>
+      <p class="mt-2 text-ink-dim">
+        {pins.length} pin{pins.length === 1 ? "" : "s"} from articles with
+        <code class="font-mono text-sm text-ink">coordinates</code> in frontmatter.
+        Click a pin for the article popup.
+      </p>
+    </header>
+
+    <ArticlesMap pins={pins} />
+  </div>
+</BaseLayout>

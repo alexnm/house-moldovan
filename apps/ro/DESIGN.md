@@ -5,6 +5,9 @@ colors:
   accent-saffron: "oklch(0.88 0.2 86)"
   accent-saffron-soft: "oklch(0.58 0.11 98)"
   accent-saffron-ink: "oklch(0.22 0.04 86)"
+  accent-terracotta: "oklch(0.74 0.18 35)"
+  accent-terracotta-soft: "oklch(0.84 0.11 35)"
+  accent-terracotta-ink: "oklch(0.22 0.04 35)"
   ink-warm: "oklch(0.96 0.012 75)"
   ink-nav: "oklch(0.9 0.014 75)"
   ink-dim: "oklch(0.8 0.012 75)"
@@ -118,11 +121,12 @@ This system rejects AllTrails-style dashboards, impersonal trail boilerplate, br
 
 ## 2. Colors
 
-Same warm film neutrals as House Moldovan. Global chrome accent is saffron (nav underlines, focus, prose links). Chapter organization is geographic (massifs); difficulty colors are a **compare layer** on hikes, not the site's chapter palette.
+Same warm film neutrals as House Moldovan. Global chrome accent is theme-dependent — saffron on dark, terracotta on light — and covers nav underlines, focus, and prose links. Chapter organization is geographic (massifs); difficulty colors are a **compare layer** on hikes, not the site's chapter palette.
 
 ### Primary
 
-- **Saffron** (`oklch(0.88 0.2 86)` dark / `oklch(0.7 0.19 86)` light): Default accent for links, focus rings, prose underlines. Soft companion and on-accent ink as in `app.css`.
+- **Saffron** (`oklch(0.88 0.2 86)`): Dark-theme accent for links, focus rings, prose underlines.
+- **Terracotta** (`oklch(0.74 0.18 35)`): Light-theme accent for the same roles; gold loses its identity against warm paper. Accent as text on the light canvas uses `--color-terracotta-deep` (`oklch(0.5 0.16 35)`). Soft companion and on-accent ink as in `app.css`.
 
 ### Secondary (difficulty compare)
 
@@ -147,7 +151,7 @@ Identical film neutrals to EN: Warm Paper, Nav Paper, Dim/Faint Ink, Film/Panel/
 
 **The Massif Chapter Rule.** Atlas and `/munti` organize by mountain range. Do not reorganize the product around difficulty bands.
 
-**The Difficulty Compare Rule.** Difficulty color is a scannable effort signal on hike cards and related scopes. Always pair with text (`Ușor`, `Mediu`, …). Never use difficulty hues as the global `--color-accent`.
+**The Difficulty Compare Rule.** Difficulty color is a scannable effort signal on hike cards and related scopes, and it only carries meaning inside an `.accent-scope`. Always pair it with text (`Ușor`, `Mediu`, …) — never let hue alone encode effort, since chrome shares the saffron register on dark and the terracotta register on light. Difficulty hues are set per card, never by repointing the global `--color-accent`.
 
 **The Waymark Data Rule.** Waymark SVG colors come from hike frontmatter only. Never promote waymark hues into chrome, focus rings, or generic accents.
 
@@ -225,7 +229,7 @@ Tonal layering and photo contrast over shadow stacks (same vocabulary as EN: lif
 
 ### Prose
 
-- Bricolage headings, Nunito body, saffron link underlines.
+- Bricolage headings, Nunito body, chrome accent link underlines.
 - Tip/warning callouts with tinted backgrounds; no side-stripe borders.
 
 ### Sister site

@@ -23,6 +23,11 @@ export const en = {
     exploreCta: "See all regions",
     featuredCta: "See all countries",
     seeAll: "See entire journal",
+    about: {
+      heading: "The family travel journal",
+      cta: "More about us",
+      portraitAlt: "Alex and Mela on a hillside overlooking the coast",
+    },
   },
   journal: {
     title: "Journal",

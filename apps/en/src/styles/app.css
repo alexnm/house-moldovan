@@ -201,10 +201,11 @@
     --color-surface-raised: oklch(0.955 0.01 85);
     --color-line: oklch(0.87 0.012 85);
     --color-line-strong: oklch(0.78 0.014 85);
-    /* Default yellow: bright gold on canvas (dark mode stays pale lemon, hue 98) */
-    --color-accent: oklch(0.7 0.19 86);
-    --color-accent-soft: oklch(0.84 0.13 86);
-    --color-accent-ink: oklch(0.52 0.19 86);
+    /* Default light accent: terracotta on canvas (dark mode stays pale lemon, hue 98) */
+    --color-accent: oklch(0.72 0.17 35);
+    --color-accent-soft: oklch(0.85 0.1 35);
+    --color-accent-ink: oklch(0.52 0.16 35);
+    --color-on-accent: oklch(0.22 0.04 35);
     --color-jade-ink: oklch(0.48 0.14 155);
     --color-saffron-ink: oklch(0.55 0.15 85);
     --color-terracotta-ink: oklch(0.52 0.15 35);
@@ -256,7 +257,7 @@
     --font-display: var(--font-display-ro);
   }
 
-  /* Site chrome: saffron (Temple Gold register) — EN journal + RO portal */
+  /* Site chrome: saffron on dark, terracotta on light — EN journal + RO portal */
   html[lang="en"]:not([data-theme="light"]),
   html[lang="ro"]:not([data-theme="light"]) {
     --color-accent: oklch(0.88 0.2 86);
@@ -271,9 +272,10 @@
 
   html[lang="en"][data-theme="light"],
   html[lang="ro"][data-theme="light"] {
-    --color-accent: oklch(0.88 0.2 86);
-    --color-accent-soft: oklch(0.82 0.14 86);
-    --color-accent-ink: oklch(0.5 0.2 86);
+    --color-accent: oklch(0.74 0.18 35);
+    --color-accent-soft: oklch(0.84 0.11 35);
+    --color-accent-ink: oklch(0.5 0.16 35);
+    --color-on-accent: oklch(0.22 0.04 35);
     --color-jade-ink: oklch(0.46 0.15 155);
     --color-saffron-ink: oklch(0.53 0.16 85);
     --color-terracotta-ink: oklch(0.5 0.16 35);

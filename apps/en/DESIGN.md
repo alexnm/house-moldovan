@@ -5,6 +5,9 @@ colors:
   accent-saffron: "oklch(0.88 0.2 86)"
   accent-saffron-ink: "oklch(0.5 0.2 86)"
   accent-saffron-on: "oklch(0.22 0.04 86)"
+  accent-terracotta: "oklch(0.74 0.18 35)"
+  accent-terracotta-ink: "oklch(0.5 0.16 35)"
+  accent-terracotta-on: "oklch(0.22 0.04 35)"
   ink-warm: "oklch(0.96 0.012 75)"
   ink-nav: "oklch(0.9 0.014 75)"
   ink-dim: "oklch(0.8 0.012 75)"
@@ -132,7 +135,7 @@ This system explicitly rejects generic AI travel-blog templates, frosted-glass p
 - Film-night warm-neutral canvas tuned so photography pops on phone or laptop
 - Photography-first heroes with light top veils and deep bottom scrims (not heavy flat overlays)
 - Condensed Big Shoulders Display (uppercase for brand, sections, place names) + Bricolage UI/prose headings + Nunito body
-- Passport-stamp micro labels (`.stamp` / `.micro`) in JetBrains Mono; frosted `.stamp-badge` kickers over photos
+- Passport-stamp micro labels (`.stamp` / `.micro`) in JetBrains Mono; solid accent `.stamp-badge--accent` hero kickers, frosted `.stamp-badge` on cards
 - Region-as-chapter color system with watermark chapter numbers on home tiles
 - Sharp film-frame corners (2px) on photo cards; tonal layering over heavy shadows
 - Asymmetric rhythm grids, not uniform card templates
@@ -141,13 +144,16 @@ This system explicitly rejects generic AI travel-blog templates, frosted-glass p
 
 ## 2. Colors
 
-A deep film-night warm neutral base with one global saffron accent and four saturated regional chapter colors. All values are authored in OKLCH in `apps/en/src/styles/app.css`.
+A deep film-night warm neutral base with one global accent per theme and four saturated regional chapter colors. All values are authored in OKLCH in `apps/en/src/styles/app.css`.
 
 ### Primary
 
-- **Saffron Gold** (`oklch(0.88 0.2 86)`): The global accent (`--color-accent`) for prose link underlines, nav underline sweeps, focus rings, selection highlight, hero kicker fills, and `.warning` callout tints. Same value in both themes, set on `html[lang="en"]:not([data-theme="light"])` and `html[lang="en"][data-theme="light"]`. Ink on saffron fills: `oklch(0.22 0.04 86)` (`--color-on-accent`). Saffron as text on a light canvas: `oklch(0.5 0.2 86)` (`--color-accent-ink`); in dark mode `--color-accent-ink` aliases the fill. Not a page background and not a chapter surface.
+The global accent (`--color-accent`) drives prose link underlines, nav underline sweeps, focus rings, selection highlight, hero kicker fills, and `.warning` callout tints. It is theme-dependent: the film-night canvas takes gold, the paper canvas takes clay. Neither is a page background and neither is a chapter surface.
 
-The `@theme` block still declares a pale-lemon default (`oklch(0.9 0.13 98)`) as the pre-locale fallback, and `--color-accent-soft` currently carries a stale hue-98 value in dark mode. Neither is consumed by any EN component: the shipped chrome is saffron. Treat hue ~86 as the only accent to design against.
+- **Saffron Gold** (`oklch(0.88 0.2 86)`): Dark-mode chrome, set on `html[lang="en"]:not([data-theme="light"])`. Ink on saffron fills: `oklch(0.22 0.04 86)` (`--color-on-accent`). In dark mode `--color-accent-ink` aliases the fill.
+- **Terracotta** (`oklch(0.74 0.18 35)`): Light-mode chrome, set on `html[lang="en"][data-theme="light"]`. Gold at this lightness turns muddy against warm paper; clay holds its identity. Accent as text on the light canvas: `oklch(0.5 0.16 35)` (`--color-accent-ink`), the same value as light-mode terracotta ink. Ink on terracotta fills: `oklch(0.22 0.04 35)` (`--color-on-accent`).
+
+The `@theme` block still declares a pale-lemon default (`oklch(0.9 0.13 98)`) as the pre-locale fallback, and `--color-accent-soft` currently carries a stale hue-98 value in dark mode. Neither is consumed by any EN component: the shipped chrome is saffron on dark and terracotta on light. Design against hue ~86 in dark mode and hue ~35 in light mode.
 
 ### Secondary
 
@@ -175,7 +181,7 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 
 **The No Pure Black Rule.** Never use `#000` or `#fff`. Neutrals carry a warm film hue (chroma ~0.012–0.016, hue ~55–75). Photo overlays use tinted darks at partial opacity, not flat hex black.
 
-**The Chapter Color Rule.** Regional color owns region explore surfaces, drenched home tiles, and card accent washes. Saffron Gold owns wayfinding on neutral UI. Chrome saffron (hue 86) and the Asia chapter's Temple Gold (hue 85) are deliberately one gold family: a chapter earns its identity from drenched surfaces and watermark chapter numbers, not from holding a hue that chrome may never touch. Never repoint `--color-accent` at jade, ember, or cobalt, and never let a chapter tint escape its `.accent-scope` into nav, focus rings, or prose links.
+**The Chapter Color Rule.** Regional color owns region explore surfaces, drenched home tiles, and card accent washes; chrome accent owns wayfinding on neutral UI. Chrome and chapters are allowed to share a hue family: dark chrome saffron (hue 86) sits next to the Asia chapter's Temple Gold (hue 85), and light chrome terracotta (hue 35) sits next to the Middle East chapter's Desert Ember. A chapter earns its identity from drenched surfaces and watermark chapter numbers, not from owning a hue outright. What stays fixed is the direction of travel: chrome accent is set once per theme on the `html` element, and a chapter tint may never escape its `.accent-scope` into nav, focus rings, or prose links. Never repoint `--color-accent` at jade or cobalt, which have no chrome register.
 
 **The Photography Floor Rule.** On card and hero surfaces, text sits on gradient scrims (deep bottom, lighter top), never on raw photo pixels without a read layer. Prefer bright photos; keep hero overlay light (`--hero-overlay` ~0.22).
 
@@ -223,7 +229,7 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 
 **The Role-Based Motion Rule.** Use the named classes and tokens; do not invent per-component durations or scales. Content scroll = `.motion-reveal`; cards/photos = `.motion-reveal-media`; hero image = `.motion-parallax`; photo breathe = `.motion-hover-media` on the cover shell; bordered card lift = `.motion-hover-lift`; drenched tile lift = `.motion-hover-lift-strong`. Hover motion only under `@media (hover: hover) and (pointer: fine)`. Put hover scale on the shell, not the `.cover-image` (opacity fade and transform must not share a clobbering `transition` shorthand).
 
-**The One Blur Rule.** `backdrop-filter` is allowed in exactly one place: the `.stamp-badge` kicker, where a 12px blur over a `oklch(0.22 0.016 55 / 0.42)` film tint keeps the label legible on unpredictable photography without hiding the picture behind an opaque chip. That blur is a read layer, not decoration. Everywhere else — nav, dropdowns, mobile panel, cards, callouts, modals — glass stays banned; use `surface-2` fills, borders, and gradient scrims. The `.stamp-badge--accent` variant drops the blur entirely because a saffron fill already carries its own contrast.
+**The One Blur Rule.** `backdrop-filter` is allowed in exactly one place: the `.stamp-badge` kicker, where a 12px blur over a `oklch(0.22 0.016 55 / 0.42)` film tint keeps the label legible on unpredictable photography without hiding the picture behind an opaque chip. That blur is a read layer, not decoration. Everywhere else — nav, dropdowns, mobile panel, cards, callouts, modals — glass stays banned; use `surface-2` fills, borders, and gradient scrims. The `.stamp-badge--accent` variant drops the blur entirely because an opaque accent fill already carries its own contrast.
 
 ## 5. Components
 
@@ -231,7 +237,7 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 
 - **Style:** Fixed top bar; transparent over heroes, solid when scrolled (`.site-nav.is-solid`). Never frosted and never bordered: the bar fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer, so the bar separates tonally instead of by a hairline. Identical shell to the RO nav; only type and accent differ.
 - **Typography:** `.micro.link-accent` for primary links; `.display` uppercase wordmark (~1.65rem).
-- **Hover / Active:** Saffron underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
+- **Hover / Active:** Accent underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
 - **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-lg`.
 - **Dropdown (desktop):** `surface-2` panel; region names in regional accent color.
 - **Sister site:** RO promo in nav/footer/about is optional and currently commented out; when enabled, absolute URL to `pecreste.ro` (working name _Pe creastă_).
@@ -239,7 +245,7 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 ### Links (`.link-accent`)
 
 - **Shape:** No pill; inline with 3px bottom padding for underline track.
-- **Default:** `ink-nav` text; saffron underline hidden (`scaleX(0)`).
+- **Default:** `ink-nav` text; accent underline hidden (`scaleX(0)`).
 - **Hover / Active:** `ink` text; underline full width. Transition `--duration-ui` (280ms) `--ease-cinema`.
 - **Dim variant:** `.link-accent--dim` starts at `ink-dim`.
 
@@ -251,8 +257,8 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 ### Kicker Badge (`.stamp-badge`)
 
 - **Role:** The one badge that sits directly on photography — hero kickers, card type labels, explore region jumps.
-- **Frosted default:** `oklch(0.22 0.016 55 / 0.42)` film tint, `backdrop-filter: blur(12px)`, ink `oklch(0.98 0.008 75)`, `2px` radius, `0.35rem 0.55rem` padding, `max-width: min(100%, 22rem)`. The blur is the sanctioned exception in The One Blur Rule: it buys legibility over bright or busy photos while the picture still reads through.
-- **Accent variant:** `.stamp-badge--accent` fills with `--color-accent` (saffron) and `--color-on-accent` ink, and sets `backdrop-filter: none`.
+- **Frosted default:** `oklch(0.22 0.016 55 / 0.42)` film tint, `backdrop-filter: blur(12px)`, ink `oklch(0.98 0.008 75)`, `2px` radius, `0.35rem 0.55rem` padding, `max-width: min(100%, 22rem)`. The blur is the sanctioned exception in The One Blur Rule: it buys legibility over bright or busy photos while the picture still reads through. Card type labels and photo-grid stamps stay frosted.
+- **Accent variant:** `.stamp-badge--accent` fills with `--color-accent` (saffron on dark, terracotta on light) and `--color-on-accent` ink, and sets `backdrop-filter: none`. **Every full-bleed hero kicker uses this variant** — the opaque chip is the one hard colour signal above the title, and inside an `.accent-scope` hero it carries the regional chapter colour.
 - **Interactive:** `a.stamp-badge:hover` fades to `opacity: 0.88` over `--duration-ui`.
 - **Don't:** stack blurred badges, blur anything larger than a label, or reach for this treatment on neutral UI where `.micro` belongs.
 
@@ -324,8 +330,8 @@ Concrete guardrails derived from `apps/en/PRODUCT.md` and the implemented Kodach
 
 - **Do** let photography occupy the hero: full-bleed images with gradient read layers, not colored placeholder blocks.
 - **Do** use Big Shoulders uppercase only for the homepage brand title and region names; keep section headings, countries, and story titles mixed case.
-- **Do** assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep Saffron Gold (`oklch(0.88 0.2 86)`) for global wayfinding on neutral UI.
-- **Do** reach for the frosted `.stamp-badge` when a kicker has to sit on photography, and `.stamp-badge--accent` when it should read as a saffron signal.
+- **Do** assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep the chrome accent — Saffron Gold (`oklch(0.88 0.2 86)`) on dark, Terracotta (`oklch(0.74 0.18 35)`) on light — for global wayfinding on neutral UI.
+- **Do** give every hero kicker the solid `.stamp-badge--accent` fill, and keep the frosted `.stamp-badge` for card and photo-grid labels.
 - **Do** use OKLCH tokens from `apps/en/src/styles/app.css`; tint every neutral toward warm film hue ~55–75.
 - **Do** honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.
 - **Do** use motion tokens and role classes from `app.css`; put photo hover on the cover shell, not the fading img.
@@ -335,7 +341,7 @@ Concrete guardrails derived from `apps/en/PRODUCT.md` and the implemented Kodach
 ### Don't:
 
 - **Don't** use generic AI travel-blog templates: identical card grids, frosted-glass nav or panels, stock-placeholder heroes, interchangeable Fraunces-and-gradient aesthetics. `.stamp-badge` is the only blurred surface in the system.
-- **Don't** repoint `--color-accent` at a chapter hue (jade, ember, cobalt) or revive the pale-lemon hue-98 accent; EN chrome is saffron.
+- **Don't** repoint `--color-accent` at jade or cobalt, or revive the pale-lemon hue-98 accent; EN chrome is saffron on dark and terracotta on light.
 - **Don't** bring back soft Fraunces editorial display; that voice was retired for Kodachrome Expedition.
 - **Don't** use side-stripe borders (`border-left` / `border-right` > 1px) on cards, TOC items, or callouts. Use spacing, weight, short accent ticks, or full borders instead.
 - **Don't** treat this journal and the Romanian hiking sister site as one visual product.

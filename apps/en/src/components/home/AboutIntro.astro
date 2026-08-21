@@ -1,0 +1,171 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import TypePictogram from "~/components/layout/marks/TypePictogram.astro";
+import { en } from "~/i18n/en";
+import portrait from "~/assets/about/alex-mela.JPG";
+
+const notes = [
+  { ...en.about.notes.stories, kind: "story" },
+  { ...en.about.notes.itineraries, kind: "itinerary" },
+  { ...en.about.notes.spotlights, kind: "spotlight" },
+] as const;
+---
+
+<section class="section section-y home-about">
+  <div class="home-about__copy motion-reveal">
+    <header class="section-header">
+      <h2 class="display section-heading mt-2">{en.home.about.heading}</h2>
+    </header>
+
+    <div class="prose-body">
+      <p>
+        Hi there, fellow travelers! We are Mela and Alex, the two people behind
+        House Moldovan. We are based in Romania and we've been travelling
+        together since 2012.
+      </p>
+      <p>
+        We visited over 40 countries and are eager to share our experiences with
+        you. 👶 Edi is our little travel companion and he's been part of our
+        travels since 2024.
+      </p>
+      <p>
+        We started this site to keep our travel writing and photography in one
+        place: honest impressions from the trips we took, organized so you can
+        <a href="/explore">browse by region</a> or follow along in
+        <a href="/journal">the journal</a>.
+      </p>
+    </div>
+
+    <a
+      href="/about"
+      class="link-more link-accent link-accent--dim mt-(--space-block) inline-block"
+    >
+      {en.home.about.cta} →
+    </a>
+  </div>
+
+  <figure class="home-about__portrait motion-reveal-media">
+    <div class="home-about__shell group motion-hover-media">
+      <CoverImage
+        src={portrait}
+        alt={en.home.about.portraitAlt}
+        widths={[320, 480, 640, 800]}
+        sizes="(min-width: 1024px) 16vw, 56vw"
+        format="avif"
+        quality={82}
+        loading="lazy"
+        placeholder="blur"
+        wrapperClass="absolute inset-0"
+        class="h-full w-full object-cover object-[center_28%]"
+      />
+    </div>
+  </figure>
+
+  <div class="home-about__notes">
+    <ol class="home-notes" aria-label={en.about.notesKicker}>
+      {
+        notes.map((note) => (
+          <li class="home-note motion-reveal">
+            <span class="home-note__mark text-ink" aria-hidden="true">
+              <TypePictogram kind={note.kind} />
+            </span>
+            <div>
+              <span class="home-note__tick" aria-hidden="true" />
+              <h3 class="display subsection-heading">{note.title}</h3>
+              <p class="mt-2 max-w-prose leading-relaxed text-ink-dim">
+                {note.description}
+              </p>
+              <a
+                href={note.href}
+                class="link-more link-accent link-accent--dim mt-3 inline-block"
+              >
+                {note.cta} →
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .home-about {
+    display: grid;
+    gap: var(--space-section-tight);
+    align-items: start;
+
+    @media (width >= 1024px) {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: clamp(1.5rem, 3vw, 2.75rem);
+      align-items: center;
+    }
+  }
+
+  .home-about__copy,
+  .home-about__notes {
+    min-width: 0;
+  }
+
+  .home-about__portrait {
+    margin: 0;
+    justify-self: center;
+  }
+
+  .home-about__shell {
+    position: relative;
+    width: min(16rem, 56vw);
+    aspect-ratio: 1;
+    overflow: clip;
+    border-radius: 50%;
+
+    @media (width >= 1024px) {
+      width: clamp(11rem, 16vw, 16rem);
+    }
+  }
+
+  .home-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-note {
+    display: grid;
+    gap: 0.85rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--color-line);
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    @media (width >= 640px) {
+      grid-template-columns: 5rem 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .home-note__mark {
+    /* Below the rail width the pictogram would squeeze the copy, so it drops. */
+    display: none;
+    align-self: start;
+    width: 5rem;
+    margin-top: -0.8rem;
+
+    @media (width >= 640px) {
+      display: block;
+    }
+  }
+
+  .home-note__tick {
+    display: block;
+    width: 2.25rem;
+    height: 3px;
+    margin-bottom: 0.7rem;
+    background: var(--color-accent);
+    border-radius: 1px;
+  }
+</style>

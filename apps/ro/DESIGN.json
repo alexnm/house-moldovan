@@ -7,7 +7,14 @@
       "accent-saffron": {
         "role": "primary",
         "displayName": "Saffron",
-        "canonical": "oklch(0.88 0.2 86)"
+        "canonical": "oklch(0.88 0.2 86)",
+        "appliesTo": "dark theme chrome"
+      },
+      "accent-terracotta": {
+        "role": "primary",
+        "displayName": "Terracotta",
+        "canonical": "oklch(0.74 0.18 35)",
+        "appliesTo": "light theme chrome"
       },
       "difficulty-usor": {
         "role": "secondary",
@@ -83,7 +90,7 @@
   ],
   "narrative": {
     "northStar": "Marcaj pe hârtie",
-    "overview": "Pe creste is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; stats close it. Massif → trail is the chapter model; difficulty color is a compare signal on hike cards. Sister site: House Moldovan.",
+    "overview": "Pe creste is a kitchen-table decision surface for Romanian Carpathian hikes. Photography sells the idea; stats close it. Massif → trail is the chapter model; difficulty color is a compare signal on hike cards. Chrome accent follows the theme: saffron on dark, terracotta on light. Sister site: House Moldovan.",
     "keyCharacteristics": [
       "Oswald trail-sign display",
       "Massif atlas wayfinding with cobalt range tiles",

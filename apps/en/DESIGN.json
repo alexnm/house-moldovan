@@ -8,6 +8,7 @@
         "role": "primary",
         "displayName": "Saffron Gold",
         "canonical": "oklch(0.88 0.2 86)",
+        "appliesTo": "dark theme chrome",
         "tonalRamp": [
           "oklch(0.22 0.04 86)",
           "oklch(0.35 0.09 86)",
@@ -17,6 +18,22 @@
           "oklch(0.88 0.2 86)",
           "oklch(0.93 0.13 86)",
           "oklch(0.97 0.06 86)"
+        ]
+      },
+      "accent-terracotta": {
+        "role": "primary",
+        "displayName": "Terracotta",
+        "canonical": "oklch(0.74 0.18 35)",
+        "appliesTo": "light theme chrome",
+        "tonalRamp": [
+          "oklch(0.22 0.04 35)",
+          "oklch(0.35 0.09 35)",
+          "oklch(0.5 0.16 35)",
+          "oklch(0.62 0.18 35)",
+          "oklch(0.74 0.18 35)",
+          "oklch(0.84 0.11 35)",
+          "oklch(0.91 0.06 35)",
+          "oklch(0.96 0.02 35)"
         ]
       },
       "surface-film": {
@@ -230,7 +247,7 @@
       "name": "Kicker Badge",
       "kind": "chip",
       "refersTo": "stamp-badge",
-      "description": "The one frosted surface: mono kicker over photography. Accent variant fills saffron and drops the blur.",
+      "description": "The one frosted surface: mono label over photography, used on cards and photo grids. The accent variant fills with the chrome accent (saffron on dark, terracotta on light), drops the blur, and is mandatory for every full-bleed hero kicker.",
       "html": "<span class=\"ds-stamp-badge\">Spotlight</span> <span class=\"ds-stamp-badge ds-stamp-badge--accent\">Travel journal</span>",
       "css": ".ds-stamp-badge { display: inline-flex; align-items: center; max-width: min(100%, 22rem); padding: 0.35rem 0.55rem; border-radius: 2px; font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; background: oklch(0.22 0.016 55 / 0.42); color: oklch(0.98 0.008 75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-stamp-badge--accent { background: oklch(0.88 0.2 86); color: oklch(0.22 0.04 86); -webkit-backdrop-filter: none; backdrop-filter: none; } a.ds-stamp-badge:hover { opacity: 0.88; }"
     },
@@ -285,13 +302,13 @@
   ],
   "narrative": {
     "northStar": "Kodachrome Expedition",
-    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them.\n\nThis file covers housemoldovan.com (apps/en). The Romanian hiking sister site has its own context in apps/ro. Shared token foundation; separate identity.\n\nMotion is choreographed but respectful via the named role system in apps/en/src/styles/app.css. This system rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead. The one sanctioned blur is the `.stamp-badge` kicker over photography.\n\nGlobal chrome is Saffron Gold `oklch(0.88 0.2 86)`, not the pale-lemon hue-98 value still sitting in the `@theme` fallback.",
+    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them.\n\nThis file covers housemoldovan.com (apps/en). The Romanian hiking sister site has its own context in apps/ro. Shared token foundation; separate identity.\n\nMotion is choreographed but respectful via the named role system in apps/en/src/styles/app.css. This system rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead. The one sanctioned blur is the `.stamp-badge` kicker over photography.\n\nGlobal chrome is theme-dependent — Saffron Gold `oklch(0.88 0.2 86)` on the film-night canvas, Terracotta `oklch(0.74 0.18 35)` on the light paper canvas — not the pale-lemon hue-98 value still sitting in the `@theme` fallback.",
     "keyCharacteristics": [
       "Film-night warm-neutral canvas tuned so photography pops on phone or laptop",
       "Photography-first heroes with light top veils and deep bottom scrims",
       "Condensed Big Shoulders Display + Bricolage UI/prose headings + Nunito body",
-      "Passport-stamp micro labels in JetBrains Mono; frosted .stamp-badge kickers over photos",
-      "One global saffron accent (hue 86) for wayfinding; four chapter colors for place",
+      "Passport-stamp micro labels in JetBrains Mono; solid accent .stamp-badge--accent hero kickers, frosted .stamp-badge on cards",
+      "One global chrome accent per theme (saffron hue 86 on dark, terracotta hue 35 on light) for wayfinding; four chapter colors for place",
       "Region-as-chapter color system with watermark chapter numbers on home tiles",
       "Sharp film-frame corners (2px) on photo cards; tonal layering over heavy shadows",
       "Asymmetric rhythm grids, not uniform card templates",
@@ -306,7 +323,7 @@
       },
       {
         "name": "The Chapter Color Rule",
-        "body": "Regional color owns region explore surfaces, drenched home tiles, and card accent washes. Saffron Gold `oklch(0.88 0.2 86)` owns wayfinding on neutral UI. Chrome saffron (hue 86) and the Asia chapter's Temple Gold (hue 85) are deliberately one gold family: a chapter earns identity from drenched surfaces and watermark chapter numbers, not from holding a hue chrome may never touch. Never repoint `--color-accent` at jade, ember, or cobalt, and never let a chapter tint escape its `.accent-scope` into nav, focus rings, or prose links.",
+        "body": "Regional color owns region explore surfaces, drenched home tiles, and card accent washes; the chrome accent owns wayfinding on neutral UI. Chrome and chapters may share a hue family: dark chrome saffron (hue 86) sits beside the Asia chapter's Temple Gold (hue 85), and light chrome terracotta (hue 35) sits beside the Middle East chapter's Desert Ember. A chapter earns identity from drenched surfaces and watermark chapter numbers, not from owning a hue outright. Chrome accent is set once per theme on the `html` element, and a chapter tint may never escape its `.accent-scope` into nav, focus rings, or prose links. Never repoint `--color-accent` at jade or cobalt, which have no chrome register.",
         "section": "colors"
       },
       {
@@ -341,7 +358,7 @@
       },
       {
         "name": "The One Blur Rule",
-        "body": "`backdrop-filter` is allowed in exactly one place: the `.stamp-badge` kicker, where a 12px blur over an `oklch(0.22 0.016 55 / 0.42)` film tint keeps the label legible on unpredictable photography without hiding the picture behind an opaque chip. That blur is a read layer, not decoration. Nav, dropdowns, mobile panel, cards, callouts, and modals stay glass-free; use `surface-2` fills, borders, and gradient scrims. `.stamp-badge--accent` drops the blur because the saffron fill already carries contrast.",
+        "body": "`backdrop-filter` is allowed in exactly one place: the `.stamp-badge` kicker, where a 12px blur over an `oklch(0.22 0.016 55 / 0.42)` film tint keeps the label legible on unpredictable photography without hiding the picture behind an opaque chip. That blur is a read layer, not decoration. Nav, dropdowns, mobile panel, cards, callouts, and modals stay glass-free; use `surface-2` fills, borders, and gradient scrims. `.stamp-badge--accent` drops the blur because the opaque accent fill already carries contrast.",
         "section": "elevation"
       },
       {
@@ -353,8 +370,8 @@
     "dos": [
       "Do let photography occupy the hero: full-bleed images with gradient read layers, not colored placeholder blocks.",
       "Do use Big Shoulders Display uppercase only for the homepage brand title and region names; keep section headings, countries, and story titles mixed case.",
-      "Do assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep Saffron Gold `oklch(0.88 0.2 86)` for global wayfinding on neutral UI.",
-      "Do reach for the frosted `.stamp-badge` when a kicker has to sit on photography, and `.stamp-badge--accent` when it should read as a saffron signal.",
+      "Do assign regional color on explore surfaces, home chapter tiles, and card accent washes; keep the chrome accent (Saffron Gold `oklch(0.88 0.2 86)` on dark, Terracotta `oklch(0.74 0.18 35)` on light) for global wayfinding on neutral UI.",
+      "Do give every hero kicker the solid `.stamp-badge--accent` fill, and keep the frosted `.stamp-badge` for card and photo-grid labels.",
       "Do use OKLCH tokens from `app.css`; tint every neutral toward warm film hue ~55–75.",
       "Do honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.",
       "Do use motion tokens and role classes from `app.css`; put photo hover on the cover shell, not the fading img.",
@@ -363,7 +380,7 @@
     ],
     "donts": [
       "Don't use generic AI travel-blog templates: identical card grids, frosted-glass nav or panels, stock-placeholder heroes, interchangeable Fraunces-and-gradient aesthetics. `.stamp-badge` is the only blurred surface in the system.",
-      "Don't repoint `--color-accent` at a chapter hue (jade, ember, cobalt) or revive the pale-lemon hue-98 accent; EN chrome is saffron.",
+      "Don't repoint `--color-accent` at jade or cobalt, or revive the pale-lemon hue-98 accent; EN chrome is saffron on dark and terracotta on light.",
       "Don't bring back soft Fraunces editorial display on the English journal; that voice was retired for Kodachrome Expedition.",
       "Don't use side-stripe borders (`border-left` / `border-right` > 1px) on cards, TOC items, or callouts. Use spacing, weight, short accent ticks, or full borders instead.",
       "Don't treat this journal and the Romanian hiking sister site as one visual product.",
