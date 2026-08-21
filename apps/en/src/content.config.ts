@@ -13,6 +13,17 @@ export const STORY_DESTINATION_TYPES = [
 /** One-line hook for cards, heroes, and RSS (stories, spotlights, itineraries). */
 export const articleSummary = z.string().min(1).max(200);
 
+/**
+ * A map pin. Articles can list several so an itinerary (or multi-stop story)
+ * can cover every place it visits.
+ */
+export const mapCoordinate = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  /** Optional place name for the pin, e.g. "Petra" or "Tel Aviv". */
+  label: z.string().min(1).optional(),
+});
+
 const regions = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/regions" }),
   schema: ({ image }) =>
@@ -58,6 +69,8 @@ const stories = defineCollection({
       type: z.enum(STORY_DESTINATION_TYPES),
       /** e.g. "March–April" (same free-form string as itineraries) */
       months: z.string().min(1),
+      /** Map pins for places this article covers (empty = not on the map yet). */
+      coordinates: z.array(mapCoordinate).default([]),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
@@ -83,6 +96,8 @@ const spotlights = defineCollection({
         .min(1),
       type: z.enum(STORY_DESTINATION_TYPES),
       months: z.string().min(1),
+      /** Map pins for places this article covers (empty = not on the map yet). */
+      coordinates: z.array(mapCoordinate).default([]),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
@@ -112,6 +127,8 @@ const itineraries = defineCollection({
       months: z.string().min(1),
       published: z.coerce.date(),
       hero: image(),
+      /** Map pins for every stop this itinerary covers. */
+      coordinates: z.array(mapCoordinate).default([]),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
