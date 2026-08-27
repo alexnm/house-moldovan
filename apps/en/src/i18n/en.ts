@@ -67,7 +67,7 @@ export const en = {
     noStoriesYet: "No notes from here yet.",
     backToExplore: "Back to Explore",
     storiesHeading: (name: string) => `Travel guides from ${name}`,
-    locationsHeading: "Explore the places",
+    locationsHeading: "Explore the locations",
   },
   region: {
     /** Meta label on articles (not the chapter stamp). */

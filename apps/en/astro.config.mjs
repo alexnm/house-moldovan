@@ -36,7 +36,6 @@ export default defineConfig({
         return (
           !page.includes("/og/") &&
           !page.includes("/draft/") &&
-          !page.includes("/dev/") &&
           !DRAFT_PATHS.has(path)
         );
       },

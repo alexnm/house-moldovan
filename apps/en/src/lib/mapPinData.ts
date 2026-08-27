@@ -4,112 +4,13 @@ import { accentInkVar, type Accent } from "@shared/lib/accent";
 import { articleHref, articleKicker } from "~/lib/articles";
 import { articleLocationIds } from "~/lib/articleLocations";
 import { placeCountryLine } from "~/lib/articlePlaces";
-import {
-  getAllPlaces,
-  getEnFeed,
-  primaryCountryFromArticle,
-  type AnyEnArticle,
-} from "~/lib/content";
+import { getEnFeed, type AnyEnArticle } from "~/lib/content";
 import { buildLocationIndex, type ResolvedLocation } from "~/lib/locations";
 import { placeCoverFromFrontmatterPath } from "~/lib/placeCover";
 import { getAllRegions, regionIdFromPlace } from "~/lib/regions";
 
 /** Hero crop for map popups, at 2× the rendered width. */
 export const ARTICLE_PIN_THUMB_SIZE = { width: 464, height: 290 } as const;
-
-export type ArticleMapPin = {
-  /** Unique per pin (`kind:id:index`) so multi-stop articles can share a title. */
-  id: string;
-  articleId: string;
-  /** Resolved country for country-scoped maps. */
-  countryId: string;
-  /** Qualified location id, e.g. `jordan/petra`. */
-  locationId: string;
-  kind: AnyEnArticle["kind"];
-  title: string;
-  href: string;
-  /** Article kind, plus day count for itineraries. */
-  meta: string;
-  /** "Petra, Jordan" — no flag, no repeated country. */
-  location: string;
-  /** Chapter accent, so the pin palette can follow the basemap. */
-  accent: Accent;
-  /** `var(--color-*-ink)` so popup accents stay theme-aware. */
-  accentVar: string;
-  /** Build-time optimized hero crop. */
-  thumb: string;
-  lat: number;
-  lng: number;
-};
-
-/**
- * Flatten every article location into a pin. Articles without locations
- * are skipped; drafts are already filtered by `getEnFeed`.
- */
-export async function buildArticleMapPins(
-  feed?: AnyEnArticle[],
-): Promise<ArticleMapPin[]> {
-  const [articles, places, regions, locationIndex] = await Promise.all([
-    feed ?? getEnFeed(),
-    getAllPlaces(),
-    getAllRegions(),
-    buildLocationIndex(),
-  ]);
-
-  const placeById = new Map(places.map((p) => [p.id, p] as const));
-  const regionAccent = new Map(
-    regions.map((r) => [r.id, r.data.accent] as const),
-  );
-
-  const pins: ArticleMapPin[] = [];
-
-  for (const article of articles) {
-    const locationIds = articleLocationIds(article);
-    if (!locationIds.length) continue;
-
-    const primaryRef = primaryCountryFromArticle(article);
-    const primaryPlace = placeById.get(primaryRef.id);
-    const accent = accentForPlace(primaryPlace, regionAccent);
-
-    const thumb = await getImage({
-      src: article.data.hero,
-      ...ARTICLE_PIN_THUMB_SIZE,
-      format: "avif",
-      quality: 70,
-    });
-
-    locationIds.forEach((locationId, index) => {
-      const resolved = locationIndex.get(locationId);
-      if (!resolved) {
-        throw new Error(
-          `Unknown location "${locationId}" on ${article.kind} ${article.id}`,
-        );
-      }
-
-      const place = resolved.country;
-      const countryName = place.data.name;
-
-      pins.push({
-        id: `${article.kind}:${article.id}:${index}`,
-        articleId: article.id,
-        countryId: place.id,
-        locationId,
-        kind: article.kind,
-        title: article.data.title,
-        href: articleHref(article),
-        meta: articleKicker(article),
-        location: placeCountryLine(resolved.name, countryName),
-        accent: accentForPlace(place, regionAccent) ?? accent,
-        accentVar: accentInkVar(accentForPlace(place, regionAccent) ?? accent),
-        thumb: thumb.src,
-        lat: resolved.lat,
-        lng: resolved.lng,
-      });
-    });
-  }
-
-  return pins;
-}
 
 function accentForPlace(
   place: CollectionEntry<"places"> | undefined,
