@@ -14,8 +14,19 @@ const CARTO_ATTRIBUTION =
 const ESRI_ATTRIBUTION =
   'Tiles &copy; <a href="https://www.esri.com">Esri</a> &amp; GIS community';
 
+/** Free at https://carto.com/basemaps/apikey — required for production raster tiles. */
+const CARTO_API_KEY = import.meta.env.PUBLIC_CARTO_API_KEY?.trim();
+
+const withCartoKey = (url: string): string => {
+  if (!CARTO_API_KEY) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}key=${encodeURIComponent(CARTO_API_KEY)}`;
+};
+
 export const MAP_TILES = {
-  url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  url: withCartoKey(
+    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  ),
   maxZoom: 20,
   attribution: CARTO_ATTRIBUTION,
   subdomains: "abcd",
