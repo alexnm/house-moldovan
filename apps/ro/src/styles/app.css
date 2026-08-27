@@ -398,15 +398,6 @@
     );
   }
 
-  .photo-scrim--deep {
-    background: linear-gradient(
-      to top,
-      color-mix(in oklch, var(--color-photo-scrim) 90%, transparent) 0%,
-      color-mix(in oklch, var(--color-photo-scrim) 35%, transparent) 42%,
-      color-mix(in oklch, var(--color-photo-scrim) 5%, transparent) 100%
-    );
-  }
-
   .photo-title-shadow {
     filter: drop-shadow(
       0 2px 12px color-mix(in oklch, var(--color-photo-scrim) 55%, transparent)

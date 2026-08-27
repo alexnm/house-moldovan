@@ -9,12 +9,14 @@ import ItineraryDaysCompact from "~/components/article/ItineraryDaysCompact.astr
 import { en } from "~/i18n/en";
 import { getPlace } from "~/lib/content";
 import {
+  articleHeroLocation,
   countryLinks,
   regionAccentForPlaces,
   uniqueRegionLinks,
 } from "~/lib/articlePlaces";
 import { getAllRegions, regionMapById } from "~/lib/regions";
-import { heroRouteFromItineraryDays } from "~/lib/itinerary";
+import { buildLocationIndex } from "~/lib/locations";
+import { heroRouteFromLocations } from "~/lib/itinerary";
 import { getReadNextArticles } from "~/lib/readNext";
 import ReadNext from "~/components/article/ReadNext.astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
@@ -46,29 +48,35 @@ const accent = regionAccentForPlaces(resolved, regionsById);
 const countryLabel =
   resolved.length > 1 ? en.article.countries : en.article.country;
 const dayCount = data.days.length;
-const placeNames = heroRouteFromItineraryDays(data.days);
-const pageDescription = data.summary;
-
-const dayRows = await Promise.all(
-  data.days.map(async (d, i) => {
-    const locations = await Promise.all(
-      d.locations.map(async (l) => {
-        const place = await getPlace(l.country);
-        if (!place) {
-          throw new Error(
-            `Itinerary ${entry.id} day ${i + 1}: country not found for location "${l.label}"`,
-          );
-        }
-        return { label: l.label, country: place };
-      }),
-    );
-    return {
-      dayIndex: i + 1,
-      description: d.description,
-      locations,
-    };
+const locationIndex = await buildLocationIndex();
+const routeLocations = data.days.flatMap((day) =>
+  day.locations.map((id) => {
+    const loc = locationIndex.get(id);
+    if (!loc) {
+      throw new Error(`Itinerary ${entry.id}: unknown location "${id}"`);
+    }
+    return loc;
   }),
 );
+const placeNames = heroRouteFromLocations(routeLocations);
+const pageDescription = data.summary;
+
+const dayRows = data.days.map((d, i) => {
+  const locations = d.locations.map((id) => {
+    const loc = locationIndex.get(id);
+    if (!loc) {
+      throw new Error(
+        `Itinerary ${entry.id} day ${i + 1}: unknown location "${id}"`,
+      );
+    }
+    return loc;
+  });
+  return {
+    dayIndex: i + 1,
+    description: d.description,
+    locations,
+  };
+});
 
 const items = [
   { label: countryLabel, value: countryLinks(resolved) },
@@ -77,6 +85,7 @@ const items = [
   { label: en.article.months, value: data.months },
 ];
 
+const heroLocation = await articleHeroLocation({ ...entry, kind: "itinerary" });
 const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
 ---
 
@@ -94,6 +103,7 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
       kicker={en.article.itinerary}
       title={data.title}
       meta={data.summary}
+      location={heroLocation}
       transitionName={`hero-${entry.id}`}
     />
 

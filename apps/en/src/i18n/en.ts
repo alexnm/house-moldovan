@@ -66,7 +66,8 @@ export const en = {
     countOf: (n: number) => `${n} ${n === 1 ? "note" : "notes"}`,
     noStoriesYet: "No notes from here yet.",
     backToExplore: "Back to Explore",
-    storiesHeading: (name: string) => `From ${name}`,
+    storiesHeading: (name: string) => `Travel guides from ${name}`,
+    locationsHeading: "Explore the places",
   },
   region: {
     /** Meta label on articles (not the chapter stamp). */
@@ -74,7 +75,7 @@ export const en = {
     chapter: (order: number) => `Chapter - 0${order}`,
     countriesHeading: "Explore by country",
     routesHeading: "Routes across borders",
-    storiesHeading: (name: string) => `From ${name}`,
+    storiesHeading: (name: string) => `Travel guides from ${name}`,
     backToExplore: "All regions",
     openCountry: (name: string) => `Open ${name}`,
   },

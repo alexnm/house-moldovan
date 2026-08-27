@@ -1,15 +1,15 @@
-/** Ordered labels for the hero byline (each label once, in order of first appearance). */
-export function heroRouteFromItineraryDays(
-  days: { locations: { label: string }[] }[],
+import type { ResolvedLocation } from "~/lib/locations";
+
+/** Ordered location names for the hero byline (each name once, in order of first appearance). */
+export function heroRouteFromLocations(
+  locations: readonly ResolvedLocation[],
 ): string {
   const seen = new Set<string>();
   const seq: string[] = [];
-  for (const d of days) {
-    for (const loc of d.locations) {
-      if (seen.has(loc.label)) continue;
-      seen.add(loc.label);
-      seq.push(loc.label);
-    }
+  for (const loc of locations) {
+    if (seen.has(loc.qualifiedId)) continue;
+    seen.add(loc.qualifiedId);
+    seq.push(loc.name);
   }
   return seq.join(" → ");
 }

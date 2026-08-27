@@ -46,12 +46,6 @@ const onPhoto = image != null;
             class="photo-scrim pointer-events-none absolute inset-0"
             aria-hidden="true"
           />
-          {accent && (
-            <div
-              class="country-card__tint pointer-events-none absolute inset-0"
-              aria-hidden="true"
-            />
-          )}
         </>
       )
     }
@@ -84,16 +78,5 @@ const onPhoto = image != null;
     height: 100%;
     width: 100%;
     object-fit: cover;
-  }
-  .country-card__tint {
-    /* Darkened accent, not an accent/scrim mix — see ArticleCard: mixing
-       toward the warm scrim rotates the hue away from the region color. */
-    background: linear-gradient(
-      to top,
-      color-mix(in oklch, var(--card-accent) 38%, black) 0%,
-      transparent 58%
-    );
-    opacity: 0.55;
-    mask-image: linear-gradient(to top, black 0%, transparent 50%);
   }
 </style>

@@ -131,10 +131,10 @@ export const articlesForRegion = (
 
 /** Hand-picked home destinations, in display order. */
 export const FEATURED_COUNTRY_IDS = [
-  "spain",
+  "japan",
+  "argentina",
   "jordan",
   "malaysia",
-  "argentina",
 ] as const;
 
 export const getFeaturedCountries = (

@@ -13,44 +13,30 @@ travelTips:
   - "We spent around €1500 per person back in 2020, excluding the flights to and from Israel."
   - "Border paperwork at airports can be slow; the rest of the experience made up for it."
 days:
-  - description: "First nights by the Med: promenade, markets, hummus, and a modern city break."
-    locations: [{ label: "Tel Aviv", country: israel }]
-  - description: "North coast day trip — Caesarea, Rosh HaNikra, Akko, and the Bahá’í terraces in Haifa in one long day."
-    locations: [{ label: "Tel Aviv", country: israel }]
-  - description: "Jaffa — old port lanes and a free-tour read on layered history, still in the Tel Aviv base."
-    locations: [{ label: "Tel Aviv", country: israel }]
-  - description: Bus up to the high city; first walk inside the walls and the four quarters.
-    locations: [{ label: "Jerusalem", country: israel }]
-  - description: "Temple Mount, Mount of Olives, and more stone alleys in the same stay."
-    locations: [{ label: "Jerusalem", country: israel }]
-  - description: "Yad Vashem in the morning, then overland to the Red Sea in the far south."
-    locations:
-      [
-        { label: "Jerusalem", country: israel },
-        { label: "Eilat", country: israel },
-      ]
-  - description: "Reef, beach, and a breather on the gulf before Jordan."
-    locations: [{ label: "Eilat", country: israel }]
-  - description: "Cross the border, 4x4 in the red desert, bedouin camp under the stars."
-    locations: [{ label: "Wadi Rum", country: jordan }]
-  - description: "Full day in the rock city, return to the Israeli side for a last Red Sea base."
-    locations: [{ label: "Petra", country: jordan }]
-  - description: "Red Canyon hike, then the bus north to the coast for a final night."
-    locations:
-      [
-        { label: "Eilat", country: israel },
-        { label: "Tel Aviv", country: israel },
-      ]
+  - locations: [israel/tel-aviv]
+    description: "City tour, promenade, markets, hummus."
+  - locations: [israel/caesarea, israel/rosh-hanikra]
+    description: "North coast day trip — Caesarea, Rosh HaNikra, Akko, and the Bahá’í terraces in Haifa in one long day."
+  - locations: [israel/tel-aviv]
+    description: "Jaffa — old city port that's part of Tel Aviv, a lot of history during a free-walking tour"
+  - locations: [israel/jerusalem]
+    description: Bus up to the high city; first walk inside the walls and the four quarters.
+  - locations: [israel/jerusalem]
+    description: "Temple Mount, Mount of Olives, and more stone alleys in the same stay."
+  - locations: [israel/jerusalem, israel/eilat]
+    description: "Yad Vashem in the morning, then overland to the Red Sea in the far south."
+  - locations: [israel/eilat]
+    description: "Reef, beach, and a breather on the gulf before Jordan."
+  - locations: [jordan/wadi-rum]
+    description: "Cross the border, 4x4 in the red desert, bedouin camp under the stars."
+  - locations: [jordan/petra]
+    description: "Full day in the rock city, return to the Israeli side for a last Red Sea base."
+  - locations: [israel/eilat, israel/tel-aviv]
+    description: "Red Canyon hike, then the bus north to the coast for a final night."
 months: "March–May, September–November"
 published: 2020-05-03
-hero: ../../assets/jordan/petra-treasury.jpg
-featured: false
-coordinates:
-  - { lat: 32.0853, lng: 34.7818, label: Tel Aviv }
-  - { lat: 31.7683, lng: 35.2137, label: Jerusalem }
-  - { lat: 29.5577, lng: 34.9519, label: Eilat }
-  - { lat: 29.5328, lng: 35.4206, label: Wadi Rum }
-  - { lat: 30.3285, lng: 35.4444, label: Petra }
+hero: ../../assets/jordan/petra-royal-tombs-2.jpg
+heroLocation: jordan/petra
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

@@ -1,10 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import type { ResolvedLocation } from "~/lib/locations";
 
 export type ItineraryDayRow = {
   dayIndex: number;
   description: string;
-  locations: { label: string; country: CollectionEntry<"places"> }[];
+  locations: ResolvedLocation[];
 };
 
 export interface Props {
@@ -33,7 +33,7 @@ const { days } = Astro.props;
               <span>
                 {i > 0 ? <span class="text-ink-faint"> &bull; </span> : null}
                 <span>
-                  {loc.country.data.flag} {loc.label}
+                  {loc.country.data.flag} {loc.name}
                 </span>
               </span>
             ))}

@@ -1,0 +1,160 @@
+---
+/**
+ * Prototype index. Two map-led homepage directions for the same content.
+ */
+import BaseLayout from "~/layouts/BaseLayout.astro";
+
+const LOOKS = [
+  {
+    n: 1,
+    href: "/dev/look-1",
+    name: "Field Notes",
+    move: "A few tweaks",
+    summary:
+      "Today's design with the journey turned up. The article map gets a home on the homepage, the familiar region cards stay in place, and every recent article gets a darker, clearer photo treatment.",
+    keeps: ["Same palette", "Same type", "Same page order"],
+    changes: [
+      "Friendly map section + chapter legend",
+      "Existing region cards",
+      "Dark photo overlays on article cards",
+    ],
+  },
+  {
+    n: 2,
+    href: "/dev/look-2",
+    name: "The Atlas",
+    move: "Middle ground",
+    summary:
+      "The map becomes the spine of the site: it takes the fold, the chapters open into a visual browse view, and the journal becomes a loose trail of stories. It feels like following a trip rather than reading a travel log.",
+    keeps: ["Same palette", "Same type", "Same components underneath"],
+    changes: [
+      "Full-bleed map hero with legend",
+      "Open chapter browse view",
+      "Story trail with inviting summaries",
+      "Colour demoted to ink",
+    ],
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Homepage looks"
+  description="Two refined prototype directions for the English journal."
+  noindex
+>
+  <section class="section pt-32 pb-(--space-section)">
+    <p class="stamp text-accent-ink">Prototypes</p>
+    <h1 class="display page-title mt-4">Two directions</h1>
+    <p class="mt-5 max-w-[62ch] text-lg text-ink-dim">
+      Both keep the photography and regional colour, but feel warmer and more
+      like following a family journey. The places and stories lead, while the
+      map simply helps you wander between them.
+    </p>
+
+    <ol class="looks">
+      {
+        LOOKS.map((look) => (
+          <li class="look">
+            <a href={look.href} class="look__link group">
+              <p class="stamp look__move">
+                {look.n}. {look.move}
+              </p>
+              <h2 class="display look__name">{look.name}</h2>
+              <p class="look__summary">{look.summary}</p>
+
+              <p class="stamp look__label">Changes</p>
+              <ul class="look__list">
+                {look.changes.map((change) => (
+                  <li>{change}</li>
+                ))}
+              </ul>
+
+              <p class="stamp look__label">Keeps</p>
+              <ul class="look__list look__list--keeps">
+                {look.keeps.map((keep) => (
+                  <li>{keep}</li>
+                ))}
+              </ul>
+
+              <span class="link-more link-accent look__cta">Open look →</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</BaseLayout>
+
+<style>
+  .looks {
+    display: grid;
+    gap: 1rem;
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+    padding: 0;
+    list-style: none;
+
+    @media (width >= 60rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .look__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    transition:
+      border-color var(--duration-ui) var(--ease-cinema),
+      background-color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .look__link:hover {
+    border-color: var(--color-line-strong);
+    background: var(--color-surface-3);
+  }
+
+  .look__move {
+    color: var(--color-accent-ink);
+  }
+
+  .look__name {
+    margin-top: 0.75rem;
+    font-size: clamp(1.9rem, 1.4rem + 1.4vw, 2.4rem);
+    line-height: 1;
+  }
+
+  .look__summary {
+    margin-top: 0.9rem;
+    color: var(--color-ink-dim);
+    text-wrap: pretty;
+  }
+
+  .look__label {
+    margin-top: 1.5rem;
+    color: var(--color-ink-faint);
+  }
+
+  .look__list {
+    margin: 0.55rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.95rem;
+    color: var(--color-ink-dim);
+  }
+
+  .look__list li {
+    padding-block: 0.3rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .look__list--keeps {
+    color: var(--color-ink-faint);
+  }
+
+  .look__cta {
+    margin-top: auto;
+    padding-top: 1.75rem;
+  }
+</style>

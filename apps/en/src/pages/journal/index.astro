@@ -5,6 +5,7 @@ import JournalFeed from "~/components/journal/JournalFeed.astro";
 import { en } from "~/i18n/en";
 import { getEnFeed, getPlace } from "~/lib/content";
 import { articleHref, articleRssDescription } from "~/lib/articles";
+import { articleHeroLocation } from "~/lib/articlePlaces";
 import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
 import type { Accent } from "@shared/lib/accent";
 import type { CollectionEntry } from "astro:content";
@@ -17,6 +18,7 @@ const rest = featured ? feed.filter((a) => a !== featured) : feed;
 let featuredAccent: Accent | undefined;
 let featuredHref = "";
 let featuredSummary = "";
+let featuredLocation = "";
 if (featured) {
   const resolved = (
     await Promise.all(featured.data.country.map((ref) => getPlace(ref)))
@@ -29,6 +31,7 @@ if (featured) {
   }
   featuredHref = articleHref(featured);
   featuredSummary = articleRssDescription(featured);
+  featuredLocation = await articleHeroLocation(featured);
 }
 ---
 
@@ -46,6 +49,7 @@ if (featured) {
           kicker={en.journal.featuredKicker[featured.kind]}
           title={featured.data.title}
           meta={featuredSummary}
+          location={featuredLocation}
           accent={featuredAccent}
           transitionName={`hero-${featured.id}`}
         />

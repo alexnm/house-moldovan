@@ -13,15 +13,27 @@ export const STORY_DESTINATION_TYPES = [
 /** One-line hook for cards, heroes, and RSS (stories, spotlights, itineraries). */
 export const articleSummary = z.string().min(1).max(200);
 
-/**
- * A map pin. Articles can list several so an itinerary (or multi-stop story)
- * can cover every place it visits.
- */
-export const mapCoordinate = z.object({
+/** A named place within a country — coordinates live here, not on articles. */
+export const countryLocation = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  /** Relative to the place file, e.g. `../../assets/jordan/petra.jpg`. */
+  image: z.string().optional(),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
-  /** Optional place name for the pin, e.g. "Petra" or "Tel Aviv". */
-  label: z.string().min(1).optional(),
+});
+
+/** Globally unique location reference: `{countryId}/{locationId}`. */
+export const locationRef = z.string().min(1);
+
+/** Contact-sheet photo for country snapshot grids. */
+export const placeSnapshot = z.object({
+  /** Relative to the place file, e.g. `../../assets/jordan/petra.jpg`. */
+  image: z.string().min(1),
+  /** Location id (`jordan/petra`) or a display override when the shot has no catalog entry. */
+  location: z.string().min(1),
+  /** Alt text; falls back to the resolved location label. */
+  caption: z.string().min(1).optional(),
 });
 
 const regions = defineCollection({
@@ -52,8 +64,16 @@ const places = defineCollection({
     accent: z.enum(ACCENTS).optional(),
     /** Relative to the place file, e.g. `../../assets/japan/cover.jpg`. Hero / landscape. */
     cover: z.string().optional(),
+    /** Cover photo location: a location id (`jordan/wadi-rum`) or a display override when the shot has no catalog entry. */
+    coverLocation: z.string().min(1).optional(),
     /** Relative to the place file, e.g. `../../assets/japan/gokayama-thumb.jpg`. Card / portrait. Falls back to cover. */
     thumbnail: z.string().optional(),
+    /** Named places within this country. Referenced by articles as `{countryId}/{id}`. */
+    locations: z.array(countryLocation).default([]),
+    /** Optional contact-sheet for the country page snapshot grid. */
+    snapshots: z.array(placeSnapshot).default([]),
+    /** Show the country page map section (still requires ≥2 locations). */
+    showMap: z.boolean().default(false),
   }),
 });
 
@@ -69,8 +89,10 @@ const stories = defineCollection({
       type: z.enum(STORY_DESTINATION_TYPES),
       /** e.g. "March–April" (same free-form string as itineraries) */
       months: z.string().min(1),
-      /** Map pins for places this article covers (empty = not on the map yet). */
-      coordinates: z.array(mapCoordinate).default([]),
+      /** Map pins — location ids from country entries (empty = not on the map yet). */
+      locations: z.array(locationRef).default([]),
+      /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first pin. */
+      heroLocation: locationRef.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
@@ -96,21 +118,19 @@ const spotlights = defineCollection({
         .min(1),
       type: z.enum(STORY_DESTINATION_TYPES),
       months: z.string().min(1),
-      /** Map pins for places this article covers (empty = not on the map yet). */
-      coordinates: z.array(mapCoordinate).default([]),
+      /** Map pins — location ids from country entries (empty = not on the map yet). */
+      locations: z.array(locationRef).default([]),
+      /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first pin. */
+      heroLocation: locationRef.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
 });
 
-const itineraryLocation = z.object({
-  label: z.string(),
-  country: reference("places"),
-});
-
 const itineraryDay = z.object({
   description: z.string(),
-  locations: z.array(itineraryLocation).min(1),
+  /** Location ids for this day, e.g. `jordan/petra`. */
+  locations: z.array(locationRef).min(1),
 });
 
 const itineraries = defineCollection({
@@ -127,8 +147,8 @@ const itineraries = defineCollection({
       months: z.string().min(1),
       published: z.coerce.date(),
       hero: image(),
-      /** Map pins for every stop this itinerary covers. */
-      coordinates: z.array(mapCoordinate).default([]),
+      /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first stop. */
+      heroLocation: locationRef.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),

@@ -1,0 +1,45 @@
+---
+/**
+ * Where the hero photo was taken, stamped under the title. Same pin + place
+ * pairing the article map uses in its popups, so the two read as one system.
+ */
+export interface Props {
+  location: string;
+  class?: string;
+}
+
+const { location, class: className } = Astro.props;
+---
+
+<p class:list={["stamp hero-location", className]}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    class="hero-location__pin"
+  >
+    <path
+      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+    ></path>
+  </svg>
+  {location}
+</p>
+
+<style>
+  .hero-location {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    color: color-mix(in oklch, var(--color-photo-ink) 76%, transparent);
+  }
+
+  /* Sit the pin on the caps: flex centring uses the full line box, which hangs
+     the glyph below the uppercase text. */
+  .hero-location__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+</style>

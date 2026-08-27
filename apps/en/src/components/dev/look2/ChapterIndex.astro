@@ -1,0 +1,193 @@
+---
+/**
+ * Look 2 chapter index. Replaces the four drenched tiles with an open atlas
+ * browse view: region name in chapter ink, every country listed by name, and a
+ * small strip of travel frames. It keeps the hierarchy without numbering or
+ * tallying the experience.
+ */
+import type { ImageMetadata } from "astro";
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import type { Accent } from "@shared/lib/accent";
+
+export interface Chapter {
+  id: string;
+  name: string;
+  tagline: string;
+  accent: Accent;
+  countries: { id: string; name: string; flag: string }[];
+  frames: ImageMetadata[];
+}
+
+export interface Props {
+  chapters: Chapter[];
+}
+
+const { chapters } = Astro.props;
+---
+
+<ol class="chapter-index">
+  {
+    chapters.map((chapter) => (
+      <li class="accent-scope chapter-row motion-reveal" data-accent={chapter.accent}>
+        <div class="chapter-row__body">
+          <a href={`/explore/region/${chapter.id}`} class="chapter-row__link group">
+            <h3 class="display region-name chapter-row__name">
+              <span class="chapter-row__dot" aria-hidden="true" />
+              {chapter.name}
+            </h3>
+          </a>
+          <p class="chapter-row__tagline">{chapter.tagline}</p>
+
+          <ul class="chapter-row__countries">
+            {chapter.countries.map((country) => (
+              <li>
+                <a href={`/explore/${country.id}`} class="chapter-row__country">
+                  <span aria-hidden="true">{country.flag}</span>
+                  {country.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="chapter-row__frames" aria-hidden="true">
+          {chapter.frames.slice(0, 3).map((frame) => (
+            <div class="chapter-row__frame">
+              <CoverImage
+                src={frame}
+                alt=""
+                widths={[200, 320]}
+                sizes="140px"
+                format="avif"
+                quality={68}
+                loading="lazy"
+                placeholder="shell"
+                wrapperClass="absolute inset-0"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .chapter-index {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chapter-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "body"
+      "frames";
+    gap: 1.25rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--color-line);
+
+    &:last-child {
+      border-bottom: 1px solid var(--color-line);
+    }
+
+    @media (width >= 900px) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "body frames";
+      align-items: center;
+      column-gap: clamp(2rem, 5vw, 5rem);
+      padding-block: 2.5rem;
+    }
+  }
+
+  .chapter-row__body {
+    grid-area: body;
+    min-width: 0;
+  }
+
+  .chapter-row__name {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: clamp(2rem, 1.3rem + 2.2vw, 3rem);
+    line-height: 0.92;
+    color: var(--color-accent-ink);
+    transition: opacity var(--duration-ui) var(--ease-cinema);
+  }
+
+  .chapter-row__dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--accent-base);
+  }
+
+  .chapter-row__link:hover .chapter-row__name {
+    opacity: 0.82;
+  }
+
+  .chapter-row__tagline {
+    margin-top: 0.65rem;
+    max-width: 48ch;
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    line-height: 1.4;
+    text-wrap: pretty;
+    color: var(--color-ink-dim);
+  }
+
+  .chapter-row__countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chapter-row__country {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--color-ink-faint);
+    transition: color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .chapter-row__country:hover {
+    color: var(--color-ink);
+  }
+
+  .chapter-row__frames {
+    grid-area: frames;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .chapter-row__frame {
+    position: relative;
+    width: clamp(4.5rem, 22vw, 8.75rem);
+    aspect-ratio: 4 / 3;
+    overflow: clip;
+    border-radius: 0.45rem;
+
+    &:nth-child(2) {
+      transform: translateY(0.45rem);
+    }
+
+    @media (width >= 900px) {
+      width: 8.75rem;
+    }
+  }
+
+  .chapter-row__frame :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>

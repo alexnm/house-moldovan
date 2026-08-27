@@ -1,6 +1,9 @@
 ---
 import type { ImageMetadata } from "astro";
 import CoverImage from "../media/CoverImage.astro";
+import HeroLocation from "./HeroLocation.astro";
+import SectionNavigation from "./SectionNavigation.astro";
+import type { SectionLink } from "./SectionNavigation.astro";
 import type { Accent } from "../../lib/accent";
 
 export interface Props {
@@ -18,6 +21,10 @@ export interface Props {
    */
   meta?: string;
   metaClass?: string;
+  /** Where the hero photo was taken, e.g. "Petra, Jordan". */
+  location?: string;
+  /** In-hero jumps to page sections (country hubs). */
+  sections?: SectionLink[];
   transitionName?: string;
   accent?: Accent;
 }
@@ -31,12 +38,15 @@ const {
   titleFlag,
   meta,
   metaClass,
+  location,
+  sections,
   transitionName,
   accent,
 } = Astro.props;
 
 const hasKickerSlot = Astro.slots.has("kicker");
 const kickerClass = "stamp-badge stamp-badge--accent";
+const hasSectionNav = (sections?.length ?? 0) > 0;
 ---
 
 <header
@@ -66,7 +76,7 @@ const kickerClass = "stamp-badge stamp-badge--accent";
     >
       {
         hasKickerSlot ? (
-          <div class="m-0 h-5 animate-cinema-fade">
+          <div class="m-0 animate-cinema-fade">
             <slot name="kicker" />
           </div>
         ) : (
@@ -102,6 +112,25 @@ const kickerClass = "stamp-badge stamp-badge--accent";
           >
             {meta}
           </p>
+        )
+      }
+      {
+        hasSectionNav && (
+          <SectionNavigation
+            sections={sections!}
+            class="motion-stagger-2 animate-cinema-fade"
+          />
+        )
+      }
+      {
+        location && (
+          <HeroLocation
+            location={location}
+            class:list={[
+              hasSectionNav ? "motion-stagger-3" : "motion-stagger-2",
+              "animate-cinema-fade",
+            ]}
+          />
         )
       }
     </div>

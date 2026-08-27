@@ -13,46 +13,39 @@ travelTips:
   - "Contrary to popular belief, English is not widely spoken in Japan, so prepare to gesture a lot or learn a few basic words in Japanese."
   - "We spent around €2500 per person back in 2017, without the flights."
 days:
-  - description: "Chiyoda and Taitō — settle in, train lines, and first sakura or almost-sakura in the capital."
-    locations: [{ label: "Tokyo", country: japan }]
-  - description: "Minato, Shinjuku, and Shibuya — towers, Tocho, Gyoen, and the crossing after dark."
-    locations: [{ label: "Tokyo", country: japan }]
-  - description: "Rain-day museum plan — Miraikan, Yurikamome, and indoor backup when the weather fails."
-    locations: [{ label: "Tokyo", country: japan }]
-  - description: "Shinkansen to Kyoto — bullet train south; base in Kansai for the week ahead."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: "Himeji and Kobe — white castle, Akashi bridge, and Kobe beef in one long day from Kyoto."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: "Nara and Osaka — deer, Todai-ji, and Dotonbori evening energy."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: "Kurama and Fushimi Inari — hill walk and endless torii; a long, stair-heavy day."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: "Kiyomizu, gold and silver temples, and Arashiyama — temples, bamboo, and macaques when the schedule allows."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: "Arashiyama and Gion — west-side nature and evening streets before leaving Kansai."
-    locations: [{ label: "Kyoto", country: japan }]
-  - description: Bus over the pass into wooden-town mountain Japan.
-    locations: [{ label: "Takayama", country: japan }]
-  - description: "Shirakawa-go and Okuhida — UNESCO gasshō hamlets, then up to the onsen cluster for the night."
-    locations: [{ label: "Shirakawa-go", country: japan }]
-  - description: "Shinhotaka Ropeway — cable cars and snow walls before another night in the high valley."
-    locations: [{ label: "Okuhida Onsen", country: japan }]
-  - description: "Quick stop inMatsumoto and return to Tokyo"
-    locations: [{ label: "Tokyo", country: japan }]
-  - description: "Chuo, Tsukiji, Ginza, and hanami — sushi at dawn, Hamarikyu, Nakameguro, and a last walk under the blooms."
-    locations: [{ label: "Tokyo", country: japan }]
-  - description: Morning flight home after a packed Honshu loop.
-    locations: [{ label: "Tokyo", country: japan }]
+  - locations: [japan/tokyo]
+    description: "Chiyoda and Taitō — settle in, train lines, and first sakura or almost-sakura in the capital."
+  - locations: [japan/tokyo]
+    description: "Minato, Shinjuku, and Shibuya — towers, Tocho, Gyoen, and the crossing after dark."
+  - locations: [japan/tokyo]
+    description: "Rain-day museum plan — Miraikan, Yurikamome, and indoor backup when the weather fails."
+  - locations: [japan/kyoto]
+    description: "Shinkansen to Kyoto — bullet train south; base in Kansai for the week ahead."
+  - locations: [japan/himeji, japan/kobe]
+    description: "Visit the white castle of Himeji, stop by the Akashi-Kaikyo bridge, and Kobe beef in one day."
+  - locations: [japan/nara, japan/osaka]
+    description: "Temples and deer feeding in Nara, Todai-ji giant Buddha statue, and Dotonbori evening energy."
+  - locations: [japan/kyoto]
+    description: "Kurama and Fushimi Inari — hill walk and endless torii; a long, stair-heavy day."
+  - locations: [japan/kyoto]
+    description: "A grand tour of Kyoto's most famous temples including Kiyomizu, Ryōan-ji, and the Golden Pavilion"
+  - locations: [japan/kyoto]
+    description: "Arashiyama and Gion — west-side nature and evening streets before saying goodbye to Kansai."
+  - locations: [japan/takayama]
+    description: A day in Takayama, a traditional Japanese town in the Japanese Alps.
+  - locations: [japan/shirakawa-go]
+    description: "Shirakawa-go and Okuhida — UNESCO gasshō hamlets, then up to the onsen cluster for the spa night."
+  - locations: [japan/okuhida-onsen]
+    description: "Shinhotaka Ropeway — cable cars and snow walls before another night in the high valley."
+  - locations: [japan/matsumoto, japan/tokyo]
+    description: "Quick stop in Matsumoto and return to Tokyo"
+  - locations: [japan/tokyo]
+    description: "Chuo, Tsukiji, Ginza, and hanami — sushi at dawn, Hamarikyu, Nakameguro, and a last walk under the cherry blossoms."
 
 months: "March–April"
 published: 2020-05-15
 hero: ../../assets/japan/matsumoto.JPG
-featured: false
-coordinates:
-  - { lat: 35.6762, lng: 139.6503, label: Tokyo }
-  - { lat: 35.0116, lng: 135.7681, label: Kyoto }
-  - { lat: 36.1461, lng: 137.2522, label: Takayama }
-  - { lat: 36.2576, lng: 136.9063, label: Shirakawa-go }
+heroLocation: japan/matsumoto
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

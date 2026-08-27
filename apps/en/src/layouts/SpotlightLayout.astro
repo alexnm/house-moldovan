@@ -9,6 +9,7 @@ import { en } from "~/i18n/en";
 import { getPlace } from "~/lib/content";
 import { articleOgPath } from "~/lib/articles";
 import {
+  articleHeroLocation,
   countryLinks,
   regionAccentForPlaces,
   uniqueRegionLinks,
@@ -45,6 +46,7 @@ const items = [
   { label: en.article.months, value: data.months },
 ];
 
+const heroLocation = await articleHeroLocation({ ...entry, kind: "spotlight" });
 const readNext = await getReadNextArticles({ ...entry, kind: "spotlight" });
 const ogImage = articleOgPath({ ...entry, kind: "spotlight" });
 const description = data.summary;
@@ -64,6 +66,7 @@ const description = data.summary;
       kicker={en.article.spotlight}
       title={data.title}
       meta={heroMeta}
+      location={heroLocation}
       accent={accent}
       transitionName={`hero-${entry.id}`}
     />

@@ -1,28 +1,23 @@
 ---
 import type { GetStaticPaths } from "astro";
-import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
+import CountryIntroMosaic from "~/components/country/CountryIntroMosaic.astro";
+import CountryMapHub from "~/components/country/CountryMapHub.astro";
+import Breadcrumbs from "@shared/components/article/Breadcrumbs.astro";
 import Hero from "@shared/components/article/Hero.astro";
 import { en } from "~/i18n/en";
 import {
-  getRegion,
-  getAllRegions,
-  regionIdFromPlace,
-  regionMapById,
-} from "~/lib/regions";
-import {
-  getAllPlaces,
-  getEnFeed,
-  getPlace,
-  countryRefsFromArticle,
-  primaryCountryFromArticle,
-} from "~/lib/content";
-import { articleHref, articleKicker } from "~/lib/articles";
-import { countryLine } from "~/lib/articlePlaces";
-import type { Accent } from "@shared/lib/accent";
-import { requirePlaceCoverFromFrontmatter } from "~/lib/placeCover";
+  countryMapFitZoomOffset,
+  loadCountryPage,
+  showCountryIntro,
+  showCountryMap,
+} from "~/lib/countryPage";
+import { getAllPlaces, getPlace } from "~/lib/content";
+import { placeCoverLocationLabel } from "~/lib/locations";
 import { placeOgPath } from "~/lib/ogPaths";
+import type { SectionLink } from "@shared/components/article/SectionNavigation.astro";
 
 export const getStaticPaths = (async () => {
   const places = await getAllPlaces();
@@ -30,44 +25,41 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const slug = Astro.params.slug!;
-const [feed] = await Promise.all([getEnFeed()]);
 const country = await getPlace(slug);
 if (!country) {
   return Astro.redirect("/explore");
 }
 
-const articles = feed.filter((a) => {
-  const ids = countryRefsFromArticle(a).map((r) => r.id);
-  return ids.includes(country.id);
-});
+const {
+  region,
+  entries,
+  locationPins,
+  locations,
+  snapshots,
+  accent,
+  cover,
+  shape,
+} = await loadCountryPage(country);
+const { Content } = await render(country);
+const coverLocation = await placeCoverLocationLabel(country);
+const showIntro = showCountryIntro(country, snapshots);
+const showMap = showCountryMap(country, locations) && locationPins.length > 0;
 
-const cover = requirePlaceCoverFromFrontmatter(country);
-const regionEntry = await getRegion(country.data.region);
-const accent: Accent =
-  country.data.accent ?? regionEntry?.data.accent ?? "jade";
-const regionLabel = regionEntry?.data.name ?? regionIdFromPlace(country);
-const regionsById = regionMapById(await getAllRegions());
+const breadcrumbs = [
+  { label: "Explore", href: "/explore" },
+  { label: region.data.name, href: `/explore/region/${region.id}` },
+  { label: country.data.name },
+];
 
-const enriched = await Promise.all(
-  articles.map(async (a) => {
-    const href = articleHref(a);
-    const kicker = articleKicker(a);
-    const primary = await getPlace(primaryCountryFromArticle(a));
-    const regionId = primary ? regionIdFromPlace(primary) : undefined;
-    const region = regionId ? regionsById.get(regionId) : undefined;
-    const resolved = (
-      await Promise.all(a.data.country.map((ref) => getPlace(ref)))
-    ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
-    return {
-      a,
-      href,
-      kicker,
-      countryMeta: countryLine(resolved),
-      accent: primary?.data.accent ?? region?.data.accent,
-      regionLabel: region?.data.name,
-    };
-  }),
-);
+const sections: SectionLink[] = [
+  ...(showIntro
+    ? [{ id: "intro", label: "Info", icon: "message" as const }]
+    : []),
+  ...(showMap
+    ? [{ id: "map", label: "Destinations", icon: "map" as const }]
+    : []),
+  { id: "stories", label: "Travel guides", icon: "directions" as const },
+];
 ---
 
 <BaseLayout
@@ -75,53 +67,115 @@ const enriched = await Promise.all(
   description={country.data.tagline}
   ogImage={placeOgPath(country.id)}
 >
-  <Hero
-    image={cover}
-    alt={`${country.data.name}: ${country.data.tagline}`}
-    kicker={regionLabel}
-    kickerHref={`/explore/region/${country.data.region.id}`}
-    title={country.data.name}
-    titleFlag={country.data.flag}
-    meta={country.data.tagline}
-    accent={accent}
-  />
+  <article class="accent-scope" data-accent={accent}>
+    <Hero
+      image={cover}
+      alt={`${country.data.name}: ${country.data.tagline}`}
+      title={country.data.name}
+      titleFlag={country.data.flag}
+      meta={country.data.tagline}
+      location={coverLocation}
+      sections={sections}
+      accent={accent}
+    >
+      <a
+        href={`/explore/region/${region.id}`}
+        class="stamp-badge stamp-badge--accent accent-scope duration-ui transition-opacity ease-cinema hover:opacity-90"
+        data-accent={region.data.accent}
+        slot="kicker"
+      >
+        {region.data.name}
+      </a>
+    </Hero>
 
-  <section id="stories" class="section section-y scroll-mt-28">
-    <header class="section-header">
-      <h2 class="display section-heading">
-        {en.places.storiesHeading(country.data.name)}
-      </h2>
-    </header>
     {
-      enriched.length > 0 ? (
-        <ul class="grid-cards">
-          {enriched.map((item) => (
-            <li>
-              <ArticleCard
-                href={item.href}
-                title={item.a.data.title}
-                kicker={item.kicker}
-                meta={item.countryMeta}
-                image={item.a.data.hero}
-                imageAlt={item.a.data.title}
-                size="md"
-                accent={item.accent}
-                regionLabel={item.regionLabel}
-                transitionName={`hero-${item.a.id}`}
-              />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div class="space-y-4 py-12">
-          <p class="text-ink-dim">{en.places.noStoriesYet}</p>
-          <p>
-            <a href="/explore" class="link-more link-accent link-accent--dim">
-              ← {en.places.backToExplore}
-            </a>
-          </p>
-        </div>
+      showIntro && (
+        <section id="intro" class="section country-intro scroll-mt-8">
+          <div class="motion-reveal-media flex flex-col gap-6">
+            <h2 class="display section-heading">At a glance</h2>
+            <div class="country-intro__copy prose-body">
+              <Content />
+            </div>
+          </div>
+          <CountryIntroMosaic photos={snapshots} />
+        </section>
       )
     }
-  </section>
+
+    {
+      showMap && (
+        <CountryMapHub
+          locations={locations}
+          locationPins={locationPins}
+          shape={shape}
+          locationsHeading={en.places.locationsHeading}
+          fitZoomOffset={countryMapFitZoomOffset(country.id)}
+        />
+      )
+    }
+
+    <section id="stories" class="section section-y scroll-mt-28">
+      <header class="section-header">
+        <h2 class="display section-heading">
+          {en.places.storiesHeading(country.data.name)}
+        </h2>
+      </header>
+
+      {
+        entries.length > 0 ? (
+          <ul class="grid-cards">
+            {entries.map(
+              ({ article, href, kicker, countryMeta, accent, regionLabel }) => (
+                <li>
+                  <ArticleCard
+                    href={href}
+                    title={article.data.title}
+                    kicker={kicker}
+                    meta={countryMeta}
+                    image={article.data.hero}
+                    imageAlt={article.data.title}
+                    size="md"
+                    accent={accent}
+                    regionLabel={regionLabel}
+                    transitionName={`hero-${article.id}`}
+                  />
+                </li>
+              ),
+            )}
+          </ul>
+        ) : (
+          <div class="space-y-4 py-12">
+            <p class="text-ink-dim">{en.places.noStoriesYet}</p>
+            <p>
+              <a href="/explore" class="link-more link-accent link-accent--dim">
+                ← {en.places.backToExplore}
+              </a>
+            </p>
+          </div>
+        )
+      }
+    </section>
+  </article>
 </BaseLayout>
+
+<style>
+  .country-intro {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    padding-block: clamp(3.5rem, 7vw, 7rem);
+
+    @media (width >= 900px) {
+      grid-template-columns: 2fr 3fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  .country-intro__copy {
+    max-width: 42ch;
+  }
+
+  .country-intro__copy :global(p:first-child) {
+    margin-top: 0;
+  }
+</style>

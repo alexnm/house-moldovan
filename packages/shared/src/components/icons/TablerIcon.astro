@@ -1,0 +1,25 @@
+---
+import { tablerIcon, type TablerIconName } from "../../lib/tablerIcon";
+
+export type { TablerIconName };
+
+export interface Props {
+  name: TablerIconName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const svg = tablerIcon(name, className);
+---
+
+<Fragment set:html={svg} />
+
+<style is:global>
+  .tabler-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    stroke-width: 1.5;
+  }
+</style>

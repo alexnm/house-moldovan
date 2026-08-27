@@ -36,8 +36,7 @@ const EXT = "Ext";
 const extFamily = (family: string): string => `${family} ${EXT}`;
 
 /** Font stack for `fontFamily`: base subset first, accented one behind it. */
-const stackFor = (family: string): string =>
-  `${family}, ${extFamily(family)}`;
+const stackFor = (family: string): string => `${family}, ${extFamily(family)}`;
 
 interface FaceSpec {
   family: string;
@@ -96,7 +95,12 @@ const loadFonts = async (variant: "en" | "ro"): Promise<SatoriFont[]> => {
         loadTtf(face.path.replace("{subset}", "latin-ext")),
       ]);
       return [
-        { name: face.family, data: latin, weight: face.weight, style: "normal" },
+        {
+          name: face.family,
+          data: latin,
+          weight: face.weight,
+          style: "normal",
+        },
         {
           name: extFamily(face.family),
           data: ext,

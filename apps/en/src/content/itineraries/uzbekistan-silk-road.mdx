@@ -12,36 +12,27 @@ travelTips:
   - "We travelled internally by train and car, with one domestic flight; we booked a private tour with a local operator from home."
   - "We spent around €2000 per person back in 2019, flights included."
 days:
-  - description: "Arrive, metro and markets, a Soviet-organized but green capital base."
-    locations: [{ label: "Tashkent", country: uzbekistan }]
-  - description: "Fly to Urgench, short transfer; walls and minarets in the Kyzylkum fringe."
-    locations: [{ label: "Khiva", country: uzbekistan }]
-  - description: "Desert train to the old khanate core: plazas, minaret, and still-active madrasas."
-    locations: [{ label: "Bukhara", country: uzbekistan }]
-  - description: "Second day in Bukhara for mosques, Ark, and bazaar browsing."
-    locations: [{ label: "Bukhara", country: uzbekistan }]
-  - description: "Shahrisabz — Timur’s birthplace — then the evening in the Registan’s city."
-    locations: [{ label: "Samarkand", country: uzbekistan }]
-  - description: "Registan, necropolis, and the tilework that justifies the whole trip."
-    locations: [{ label: "Samarkand", country: uzbekistan }]
-  - description: "Mosques, Ulugh Beg, Afrasiyab, and a second day of the same splendour."
-    locations: [{ label: "Samarkand", country: uzbekistan }]
-  - description: "Last hours in the old city, then the train back to the capital to fly out."
-    locations:
-      [
-        { label: "Samarkand", country: uzbekistan },
-        { label: "Tashkent", country: uzbekistan },
-      ]
+  - locations: [uzbekistan/tashkent]
+    description: "Arrive, metro and markets, a Soviet-organized but green capital base."
+  - locations: [uzbekistan/khiva]
+    description: "Fly to Urgench, short transfer; walls and minarets in the Kyzylkum fringe."
+  - locations: [uzbekistan/bukhara]
+    description: "Visit the old khanate core: plazas, minaret, and still-active madrasas."
+  - locations: [uzbekistan/bukhara]
+    description: "Second day in Bukhara for mosques, Ark, and bazaar browsing."
+  - locations: [uzbekistan/shahrisabz, uzbekistan/samarkand]
+    description: "Shahrisabz — Timur’s birthplace — then the evening in the Registan’s city."
+  - locations: [uzbekistan/samarkand]
+    description: "Registan, necropolis, and the amazing tilework"
+  - locations: [uzbekistan/samarkand]
+    description: "Mosques, Ulugh Beg, Afrasiyab, and a second day of the same splendour."
+  - locations: [uzbekistan/samarkand, uzbekistan/tashkent]
+    description: "Last hours in the old city, then the train back to the capital to fly out."
 
 months: "April–May, September–October"
 published: 2020-05-10
 hero: ../../assets/uzbekistan/registan.jpg
-featured: false
-coordinates:
-  - { lat: 41.2995, lng: 69.2401, label: "Tashkent" }
-  - { lat: 41.3775, lng: 60.3619, label: "Khiva" }
-  - { lat: 39.7747, lng: 64.4286, label: "Bukhara" }
-  - { lat: 39.627, lng: 66.975, label: "Samarkand" }
+heroLocation: uzbekistan/samarkand
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

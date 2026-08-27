@@ -45,16 +45,11 @@
   /* Accent as text on canvas — dark mode aliases to --color-accent in @layer base */
   --color-accent-ink: oklch(0.9 0.13 98);
 
-  /* Regional chapter palette — punched chroma for travel chapters */
+  /* Regional chapter fills — dark canvas bumps in @layer base; -ink set per theme there */
   --color-jade: oklch(0.74 0.17 155);
   --color-saffron: oklch(0.88 0.18 85);
   --color-terracotta: oklch(0.74 0.18 35);
-  --color-cobalt: oklch(0.68 0.14 250);
-  /* Regional accent as text on canvas — dark mode aliases in @layer base */
-  --color-jade-ink: oklch(0.74 0.17 155);
-  --color-saffron-ink: oklch(0.88 0.18 85);
-  --color-terracotta-ink: oklch(0.74 0.18 35);
-  --color-cobalt-ink: oklch(0.68 0.14 250);
+  --color-cobalt: oklch(0.75 0.14 250);
 
   --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-cinema-fast: cubic-bezier(0.22, 1, 0.36, 1);
@@ -102,8 +97,9 @@
   --space-section: clamp(3.5rem, 5vw + 1.75rem, 5.5rem);
   --space-section-lg: clamp(4.5rem, 6vw + 2.25rem, 7.5rem);
   --space-section-tight: clamp(2.25rem, 3vw + 1.25rem, 2.75rem);
-  --space-hero-bottom: clamp(3rem, 6vw + 1rem, 6rem);
+  --space-hero-bottom: clamp(2rem, 6vw, 4rem);
   --grid-gap: var(--space-group);
+  --grid-gap-compact: 0.5rem;
 
   --tracking-microcaps: 0.12em;
   --tracking-poster: -0.03em;
@@ -206,10 +202,6 @@
     --color-accent-soft: oklch(0.85 0.1 35);
     --color-accent-ink: oklch(0.52 0.16 35);
     --color-on-accent: oklch(0.22 0.04 35);
-    --color-jade-ink: oklch(0.48 0.14 155);
-    --color-saffron-ink: oklch(0.55 0.15 85);
-    --color-terracotta-ink: oklch(0.52 0.15 35);
-    --color-cobalt-ink: oklch(0.48 0.12 250);
     --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.14);
     --shadow-lift: 0 12px 30px -12px oklch(0 0 0 / 0.1);
     --hero-overlay: 0.32;
@@ -263,10 +255,11 @@
     --color-accent: oklch(0.88 0.2 86);
     --color-accent-soft: oklch(0.58 0.11 98);
     --color-on-accent: oklch(0.22 0.04 86);
+    /* Chapter fills — punched L/C for film-night canvas */
     --color-jade: oklch(0.75 0.175 155);
     --color-saffron: oklch(0.9 0.19 85);
     --color-terracotta: oklch(0.75 0.19 35);
-    --color-cobalt: oklch(0.7 0.15 250);
+    --color-cobalt: oklch(0.77 0.15 250);
     --hero-overlay: 0.22;
   }
 
@@ -276,6 +269,7 @@
     --color-accent-soft: oklch(0.84 0.11 35);
     --color-accent-ink: oklch(0.5 0.16 35);
     --color-on-accent: oklch(0.22 0.04 35);
+    /* Chapter ink — readable accent text on warm paper */
     --color-jade-ink: oklch(0.46 0.15 155);
     --color-saffron-ink: oklch(0.53 0.16 85);
     --color-terracotta-ink: oklch(0.5 0.16 35);
@@ -283,7 +277,7 @@
     --hero-overlay: 0.28;
   }
 
-  /* Dark mode: accent -ink tokens mirror fill colors for text on canvas */
+  /* Dark mode: -ink mirrors fill for text on canvas */
   :root:not([data-theme="light"]),
   :root[data-theme="dark"] {
     --color-accent-ink: var(--color-accent);
@@ -361,25 +355,16 @@
   }
 
   .hero-on-photo-dim {
-    color: color-mix(in oklch, var(--color-photo-ink) 88%, transparent);
+    color: color-mix(in oklch, var(--color-photo-ink) 92%, transparent);
   }
 
   /* Card/photo floor: warm film gradient instead of Tailwind black/white */
   .photo-scrim {
     background: linear-gradient(
       to top,
-      color-mix(in oklch, var(--color-photo-scrim) 94%, transparent) 0%,
-      color-mix(in oklch, var(--color-photo-scrim) 35%, transparent) 42%,
-      transparent 100%
-    );
-  }
-
-  .photo-scrim--deep {
-    background: linear-gradient(
-      to top,
       color-mix(in oklch, var(--color-photo-scrim) 90%, transparent) 0%,
-      color-mix(in oklch, var(--color-photo-scrim) 35%, transparent) 42%,
-      color-mix(in oklch, var(--color-photo-scrim) 5%, transparent) 100%
+      color-mix(in oklch, var(--color-photo-scrim) 60%, transparent) 25%,
+      transparent 50%
     );
   }
 
@@ -1043,6 +1028,7 @@
     transition-property: opacity;
     transition-duration: var(--duration-load);
     transition-timing-function: var(--ease-cinema);
+    filter: contrast(1.1) sepia(0.1);
   }
 
   /* Progressive enhancement: sharp covers stay visible without JS */

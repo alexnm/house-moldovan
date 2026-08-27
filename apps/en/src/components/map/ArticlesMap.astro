@@ -4,24 +4,51 @@ import {
   ARTICLE_PIN_THUMB_SIZE,
   type ArticleMapPin,
 } from "~/lib/mapPinData";
+import type { CountryShape } from "~/lib/countryShape";
+import type { Basemap } from "~/lib/mapStyles";
+import { tileLayerOptions } from "~/lib/mapStyles";
 
 export interface Props {
   pins: ArticleMapPin[];
-  /** Height utility for the map frame. */
-  heightClass?: string;
+  /** CSS length for the map frame. */
+  height?: string;
   /** Edge-to-edge: no card framing. */
   fullBleed?: boolean;
+  /** `paper` = Voyager tiles; `film` = Esri dark gray for the night shell. */
+  basemap?: Basemap;
+  /** Off for heroes, so the page keeps its scroll. */
+  scrollZoom?: boolean;
+  /** Cap for the initial fit-to-pins zoom. */
+  fitMaxZoom?: number;
+  /** Keeps the pin cluster clear of a copy block on the left of a hero. */
+  fitInsetLeft?: boolean;
+  /** Lifts one country out of the basemap and dims everything around it. */
+  highlight?: CountryShape;
+  /** Frame the highlighted country instead of the pins. */
+  fitHighlight?: boolean;
 }
 
 const {
   pins,
-  heightClass = "h-[70svh] max-h-[40rem] lg:h-[min(85vh,52rem)] lg:max-h-none",
+  height = "clamp(26rem, 74svh, 46rem)",
   fullBleed = false,
+  basemap = "paper",
+  scrollZoom = true,
+  fitMaxZoom = 6,
+  fitInsetLeft = false,
+  highlight,
+  fitHighlight = false,
 } = Astro.props;
 
 const payload = {
   pins,
   thumbSize: ARTICLE_PIN_THUMB_SIZE,
+  basemap,
+  scrollZoom,
+  fitMaxZoom,
+  fitInsetLeft,
+  highlight: highlight?.rings ?? null,
+  fitHighlight,
 };
 ---
 
@@ -29,9 +56,10 @@ const payload = {
   <div
     class:list={[
       "articles-map isolate z-0 w-full overflow-hidden",
+      basemap === "film" && "articles-map--film",
       !fullBleed && "rounded-lg border border-line",
-      heightClass,
     ]}
+    style={`--map-height: ${height}`}
     role="presentation"
   >
   </div>
@@ -45,8 +73,9 @@ const payload = {
 </div>
 
 <style>
-  /* Float controls and popups over light topo tiles with the film palette. */
+  /* Float controls and popups over Voyager tiles with the film palette. */
   .articles-map {
+    height: var(--map-height, clamp(26rem, 74svh, 46rem));
     background: var(--color-map-paper, oklch(0.97 0.007 95));
     font-family: var(--font-body);
     font-size: 11px;
@@ -60,6 +89,13 @@ const payload = {
     --color-line-strong: oklch(0.4 0.016 55);
     --color-map-paper: oklch(0.97 0.007 95);
     color-scheme: dark;
+  }
+
+  /* Night canvas: the grey Esri base is warmed toward the film hue so the map
+     sits on the page instead of glowing on it. Pin rings turn dark to match. */
+  .articles-map--film {
+    background: oklch(0.21 0.013 55);
+    --color-map-paper: oklch(0.21 0.013 55);
   }
 
   .articles-map :global(.leaflet-control-attribution) {
@@ -231,26 +267,53 @@ const payload = {
   }
 
   .articles-map :global(.article-pop__place) {
-    margin: 0.3rem 0 0;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.35rem 0 0;
     color: var(--color-ink-dim);
   }
 
-  .articles-map :global(.article-pop__place-label) {
-    color: var(--article-accent, var(--color-ink));
+  /* 1em box + nudge sits the pin on the caps: flex centring uses the full line
+     box, which hangs the glyph below uppercase text. */
+  .articles-map :global(.article-pop__place-icon) {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+    color: var(--article-accent, var(--color-ink-dim));
+  }
+
+  .articles-map :global(.article-pop__place-icon svg) {
+    width: 100%;
+    height: 100%;
   }
 </style>
 
 <script>
   import L from "leaflet";
-  import { MAP_TILES } from "~/lib/mapStyles";
+  import {
+    ACCENT_PIN_COLOR_BY_BASEMAP,
+    MAP_TILES_BY_BASEMAP,
+    mapPopAccentColor,
+    resolveBasemap,
+    tileLayerOptions,
+    type Basemap,
+  } from "~/lib/mapStyles";
+  import { drawCountryHighlight } from "~/lib/countryMapHighlight";
   import type { ArticleMapPin } from "~/lib/mapPinData";
 
   type Payload = {
     pins: ArticleMapPin[];
     thumbSize: { width: number; height: number };
+    basemap: Basemap;
+    scrollZoom: boolean;
+    fitMaxZoom: number;
+    fitInsetLeft: boolean;
+    highlight: [number, number][][] | null;
+    fitHighlight: boolean;
   };
 
   /** Material glyphs on a 24×24 grid, one per article kind. */
@@ -263,6 +326,8 @@ const payload = {
       '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
   };
 
+  const LOCATION_GLYPH = KIND_GLYPH.itinerary;
+
   function escapeHtml(s: string): string {
     return s
       .replaceAll("&", "&amp;")
@@ -272,13 +337,7 @@ const payload = {
   }
 
   function popupHtml(pin: ArticleMapPin, thumbSize: Payload["thumbSize"]): string {
-    const country = `${pin.countryFlag ? `${escapeHtml(pin.countryFlag)} ` : ""}${escapeHtml(pin.countryName)}`;
-    const place =
-      pin.placeLabel && pin.placeLabel !== pin.countryName
-        ? `<span class="article-pop__place-label">${escapeHtml(pin.placeLabel)}</span> · ${country}`
-        : country;
-
-    return `<article class="article-pop" style="--article-accent: ${escapeHtml(pin.accentVar)}">
+    return `<article class="article-pop" style="--article-accent: ${escapeHtml(mapPopAccentColor(pin.accent))}">
   <a class="article-pop__link" href="${escapeHtml(pin.href)}">
     <figure class="article-pop__figure">
       <img class="article-pop__media" src="${escapeHtml(pin.thumb)}" width="${thumbSize.width}" height="${thumbSize.height}" alt="" loading="lazy" decoding="async" />
@@ -286,7 +345,7 @@ const payload = {
     </figure>
     <div class="article-pop__body">
       <h3 class="article-pop__title">${escapeHtml(pin.title)}</h3>
-      <p class="article-pop__place">${place}</p>
+      <p class="stamp article-pop__place"><span class="article-pop__place-icon" aria-hidden="true">${LOCATION_GLYPH}</span>${escapeHtml(pin.location)}</p>
     </div>
   </a>
 </article>`;
@@ -305,17 +364,28 @@ const payload = {
         shell.dataset.mounted = "1";
 
         const payload = JSON.parse(payloadEl.textContent) as Payload;
+        const resolvedBasemap =
+          payload.basemap === "adaptive"
+            ? resolveBasemap("adaptive")
+            : payload.basemap;
+        const tiles = MAP_TILES_BY_BASEMAP[resolvedBasemap];
+        const pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[resolvedBasemap];
+        const colorOf = (pin: ArticleMapPin): string => pinPalette[pin.accent];
+
         const map = L.map(mapEl, {
-          scrollWheelZoom: true,
+          scrollWheelZoom: payload.scrollZoom,
           attributionControl: true,
-          maxZoom: MAP_TILES.maxZoom,
+          maxZoom: tiles.maxZoom,
         });
 
-        L.tileLayer(MAP_TILES.url, {
-          attribution: MAP_TILES.attribution,
-          maxZoom: MAP_TILES.maxZoom,
-          crossOrigin: true,
-        }).addTo(map);
+        L.tileLayer(tiles.url, tileLayerOptions(tiles)).addTo(map);
+
+        const highlightBounds = L.latLngBounds([]);
+        const rings = payload.highlight ?? [];
+
+        for (const ring of rings) {
+          for (const point of ring) highlightBounds.extend(point);
+        }
 
         L.control.scale({ imperial: false, maxWidth: 120 }).addTo(map);
 
@@ -349,7 +419,7 @@ const payload = {
             L.polyline(
               articlePins.map((pin) => [pin.lat, pin.lng]),
               {
-                color: articlePins[0]!.pinColor,
+                color: colorOf(articlePins[0]!),
                 weight: 2,
                 opacity: 0.8,
                 dashArray: "6 7",
@@ -387,7 +457,7 @@ const payload = {
             keyboard: true,
             icon: L.divIcon({
               className: "article-pin",
-              html: `<span class="article-pin__badge" style="--pin-color: ${pin.pinColor}">${KIND_GLYPH[pin.kind]}</span>`,
+              html: `<span class="article-pin__badge" style="--pin-color: ${colorOf(pin)}">${KIND_GLYPH[pin.kind]}</span>`,
               iconSize: [0, 0],
               iconAnchor: [0, 0],
               popupAnchor: [0, -14],
@@ -417,11 +487,34 @@ const payload = {
           });
         }
 
+        // Framing the outline keeps the country whole even when its pins sit in
+        // one corner of it.
+        if (payload.fitHighlight && highlightBounds.isValid()) {
+          bounds.extend(highlightBounds);
+        }
+
         if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.12), { maxZoom: 6 });
+          // Reserve the left of a hero for its title block so the pins are not
+          // read through the scrim.
+          const insetLeft =
+            payload.fitInsetLeft && mapEl.clientWidth >= 900
+              ? Math.round(mapEl.clientWidth * 0.38)
+              : 0;
+
+          map.fitBounds(bounds.pad(0.12), {
+            maxZoom: payload.fitMaxZoom,
+            paddingTopLeft: [insetLeft, 0],
+          });
         } else {
           map.setView([20, 10], 2);
         }
+
+        drawCountryHighlight(
+          map,
+          rings,
+          resolvedBasemap,
+          highlightBounds,
+        );
       });
   }
 

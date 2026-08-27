@@ -1,5 +1,6 @@
 ---
 import CoverImage from "@shared/components/media/CoverImage.astro";
+import HeroLocation from "@shared/components/article/HeroLocation.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import RegionStrip from "~/components/home/RegionStrip.astro";
 import FeaturedCountries from "~/components/home/FeaturedCountries.astro";
@@ -53,6 +54,10 @@ const recent = getHomeRecentFeed(feed);
         >
           {en.description}
         </p>
+        <HeroLocation
+          location="Salkantay pass, Peru"
+          class="motion-stagger-2 animate-cinema-fade"
+        />
       </div>
     </div>
   </section>

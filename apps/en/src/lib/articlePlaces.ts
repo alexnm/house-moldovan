@@ -2,6 +2,13 @@ import type { CollectionEntry } from "astro:content";
 import type { Accent } from "@shared/lib/accent";
 import type { RegionEntry } from "~/lib/regions";
 import { regionIdFromPlace } from "~/lib/regions";
+import { articleLocationIds } from "~/lib/articleLocations";
+import {
+  getPlace,
+  primaryCountryFromArticle,
+  type AnyEnArticle,
+} from "~/lib/content";
+import { buildLocationIndex } from "~/lib/locations";
 
 export interface PlaceLink {
   label: string;
@@ -14,6 +21,45 @@ export function placeShortName(place: CollectionEntry<"places">): string {
 
 export function countryLine(countries: CollectionEntry<"places">[]): string {
   return countries.map((p) => `${p.data.flag} ${p.data.name}`).join(" · ");
+}
+
+/** Friendly location stamp: "Petra, Jordan". Drops a repeated country name. */
+export function placeCountryLine(place?: string, country?: string): string {
+  const namedPlace = place?.trim();
+  const namedCountry = country?.trim();
+  if (namedPlace && namedCountry && namedPlace !== namedCountry) {
+    return `${namedPlace}, ${namedCountry}`;
+  }
+  return namedPlace || namedCountry || "";
+}
+
+/**
+ * Where the hero photo was taken. Uses `heroLocation` when set, otherwise the
+ * article's first map pin.
+ */
+export async function articleHeroLocation(
+  article: AnyEnArticle,
+): Promise<string> {
+  const index = await buildLocationIndex();
+  const heroId = article.data.heroLocation?.trim();
+  if (heroId) {
+    const resolved = index.get(heroId);
+    if (resolved) {
+      return placeCountryLine(resolved.name, resolved.country.data.name);
+    }
+    return heroId;
+  }
+
+  const [firstId] = articleLocationIds(article);
+  if (!firstId) {
+    const ref = primaryCountryFromArticle(article);
+    const place = await getPlace(ref);
+    return place?.data.name ?? ref.id;
+  }
+
+  const resolved = index.get(firstId);
+  if (!resolved) return firstId;
+  return placeCountryLine(resolved.name, resolved.country.data.name);
 }
 
 export function countryLinks(

@@ -1,0 +1,126 @@
+---
+/**
+ * Look 2 hero. The journey is the first thing you see: the article map fills
+ * the fold and the title block sits inside a left-side scrim, so the type reads
+ * without covering the half of the world the pins live in.
+ */
+import ArticlesMap from "~/components/map/ArticlesMap.astro";
+import MapLegend from "~/components/dev/MapLegend.astro";
+import type { ArticleMapPin } from "~/lib/mapPinData";
+import type { Accent } from "@shared/lib/accent";
+
+export interface Props {
+  pins: ArticleMapPin[];
+  kicker: string;
+  title: string;
+  summary: string;
+  chapters: { name: string; accent: Accent; href?: string }[];
+}
+
+const { pins, kicker, title, summary, chapters } = Astro.props;
+---
+
+<section class="map-hero" data-nav-hero>
+  <div class="map-hero__map">
+    <ArticlesMap
+      pins={pins}
+      basemap="film"
+      fullBleed
+      scrollZoom={false}
+      fitMaxZoom={3}
+      fitInsetLeft
+      height="100%"
+    />
+  </div>
+
+  <div class="map-hero__scrim" aria-hidden="true"></div>
+
+  <div class="map-hero__copy pad-canvas">
+    <p class="stamp-badge stamp-badge--accent animate-cinema-fade">{kicker}</p>
+    <h1 class="display page-title map-hero__title animate-cinema-rise">
+      {title}
+    </h1>
+    <p class="hero-summary motion-stagger animate-cinema-fade map-hero__summary">
+      {summary}
+    </p>
+    <div class="map-hero__legend motion-stagger-2 animate-cinema-fade">
+      <MapLegend chapters={chapters} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .map-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 100svh;
+    overflow: clip;
+  }
+
+  .map-hero__map {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* Read layer only where the type sits: the map stays legible to the right. */
+  .map-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in oklch, var(--color-surface) 92%, transparent) 0%,
+        color-mix(in oklch, var(--color-surface) 62%, transparent) 22%,
+        transparent 46%
+      ),
+      linear-gradient(
+        to top,
+        var(--color-surface) 0%,
+        color-mix(in oklch, var(--color-surface) 62%, transparent) 22%,
+        transparent 52%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklch, var(--color-surface) 72%, transparent) 0%,
+        transparent 20%
+      );
+  }
+
+  .map-hero__copy {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    bottom: clamp(3rem, 8vh, 5rem);
+    margin-inline: auto;
+    max-width: var(--container-wide);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    /* Clicks fall through to the pins; only the legend links opt back in. */
+    pointer-events: none;
+
+    @media (width >= 1536px) {
+      max-width: var(--width-canvas);
+    }
+  }
+
+  .map-hero__title {
+    max-width: 14ch;
+    color: var(--color-ink);
+  }
+
+  .map-hero__summary {
+    color: var(--color-ink-dim);
+  }
+
+  .map-hero__legend {
+    margin-top: 0.75rem;
+    width: 100%;
+    max-width: 44rem;
+    pointer-events: auto;
+  }
+</style>

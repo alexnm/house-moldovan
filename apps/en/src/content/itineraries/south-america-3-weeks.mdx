@@ -15,65 +15,49 @@ travelTips:
   - "Southern countries are generally safe, avoid wandering around at night."
   - "We spent around €3500 per person back in 2019, flights included."
 days:
-  - description: "Arrive and get oriented, walking tour"
-    locations: [{ label: "Buenos Aires", country: argentina }]
-  - description: "La Boca: colour, football lore, tango show."
-    locations: [{ label: "Buenos Aires", country: argentina }]
-  - description: Fly to El Calafate and bus into the hiking capital under Fitz Roy.
-    locations: [{ label: "El Chalten", country: argentina }]
-  - description: "Laguna de los Tres — the big day hike to the most famous view in the massif."
-    locations: [{ label: "El Chalten", country: argentina }]
-  - description: "Loma del Pliegue Tumbado — second full day in the same base for the high ridge and wider panorama."
-    locations: [{ label: "El Chalten", country: argentina }]
-  - description: "Lago del Desierto outing, then bus back to the glacier town."
-    locations:
-      [
-        { label: "El Chalten", country: argentina },
-        { label: "El Calafate", country: argentina },
-      ]
-  - description: "Perito Moreno - ice hiking and balconies"
-    locations: [{ label: "El Calafate", country: argentina }]
-  - description: "Long day from Calafate into Chile’s most famous park and back."
-    locations: [{ label: "Torres del Paine", country: chile }]
-  - description: "Fly from Patagonia to Iguazú; connect through BA if needed, base in Puerto Iguazú."
-    locations: [{ label: "Puerto Iguazu", country: argentina }]
-  - description: "Argentine side — circuits, spray, and coatis on the long walkways."
-    locations: [{ label: "Puerto Iguazu", country: argentina }]
-  - description: "Brazilian side of the falls, then back to the capital for a night."
-    locations:
-      [
-        { label: "Puerto Iguazu", country: argentina },
-        { label: "Buenos Aires", country: argentina },
-      ]
-  - description: Cross the Andes to Chile’s long capital between peaks and smog in summer.
-    locations: [{ label: "Santiago", country: chile }]
-  - description: "Plaza, palaces, and memory in a city built between the cordillera and the coast."
-    locations: [{ label: "Santiago", country: chile }]
-  - description: "Cajón del Maipo — high Andean day out: volcano foothills, dry air, and a break from the heat."
-    locations: [{ label: "Santiago", country: chile }]
-  - description: "Day trip toValparaíso — port, funiculars, and street art on the Pacific."
-    locations: [{ label: "Santiago", country: chile }]
-  - description: "Aconcagua — day trip to the high valley and views of the summit from Argentina’s side."
-    locations: [{ label: "Santiago", country: chile }]
-  - description: Fly to the sleepy capital on the Río de la Plata for the home stretch.
-    locations: [{ label: "Montevideo", country: uruguay }]
-  - description: "Beach, old city, and another steak before the short hop to the colonial town."
-    locations: [{ label: "Montevideo", country: uruguay }]
-  - description: "Short stop in Colonia del Sacramento, ferry across the Río de la Plata, last night in BA, and the flight from Ezeiza."
-    locations: [{ label: "Buenos Aires", country: argentina }]
+  - locations: [argentina/buenos-aires]
+    description: "Arrive and get oriented, walking tour"
+  - locations: [argentina/buenos-aires]
+    description: "La Boca: colour, football lore, later tango show."
+  - locations: [argentina/el-chalten]
+    description: Fly to El Calafate and bus into the hiking capital under Fitz Roy.
+  - locations: [argentina/el-chalten]
+    description: "Laguna de los Tres — the big day hike to the most famous view in the massif."
+  - locations: [argentina/el-chalten]
+    description: "Loma del Pliegue Tumbado — second full day in the same base for the high ridge and wider panorama."
+  - locations: [argentina/el-chalten, argentina/el-calafate]
+    description: "Lago del Desierto outing, then bus back to the glacier town."
+  - locations: [argentina/el-calafate]
+    description: "Perito Moreno - ice hiking and balconies"
+  - locations: [chile/torres-del-paine]
+    description: "Long day from Calafate into Chile’s most famous park and back."
+  - locations: [argentina/puerto-iguazu]
+    description: "Fly from Patagonia to Iguazú; connect through BA if needed, base in Puerto Iguazú."
+  - locations: [argentina/puerto-iguazu]
+    description: "Argentine side — circuits, spray, and coatis on the long walkways."
+  - locations: [brazil/iguacu-falls, argentina/buenos-aires]
+    description: "Brazilian side of the falls, then back to Buenos Aires for the night."
+  - locations: [chile/santiago]
+    description: Cross the Andes to Chile’s capital.
+  - locations: [chile/santiago]
+    description: "Plaza, palaces, and memory in a city built between the cordillera and the coast."
+  - locations: [chile/cajon-del-maipo]
+    description: "Cajón del Maipo — high Andean day out: volcano foothills, dry air, and a break from the heat."
+  - locations: [chile/valparaiso]
+    description: "Day trip to Valparaíso — port, funiculars, and street art on the Pacific."
+  - locations: [argentina/aconcagua]
+    description: "Aconcagua — day trip to the high valley and views of the summit from Argentina’s side."
+  - locations: [uruguay/montevideo]
+    description: Fly to the sleepy capital on the Río de la Plata for the home stretch.
+  - locations: [uruguay/montevideo]
+    description: "Beach, old city, and another steak before the short hop to the colonial town."
+  - locations: [uruguay/colonia-del-sacramento, argentina/buenos-aires]
+    description: "Short stop in Colonia del Sacramento, ferry across the Río de la Plata, last night in BA, and the flight from Ezeiza."
 
 months: "December–March"
 published: 2020-05-03
 hero: ../../assets/argentina/perito-moreno-balcony.jpg
-featured: false
-coordinates:
-  - { lat: -34.6037, lng: -58.3816, label: "Buenos Aires" }
-  - { lat: -49.3315, lng: -72.8863, label: "El Chaltén" }
-  - { lat: -50.3379, lng: -72.2648, label: "El Calafate" }
-  - { lat: -50.9423, lng: -73.4068, label: "Torres del Paine" }
-  - { lat: -25.5977, lng: -54.5786, label: "Puerto Iguazú" }
-  - { lat: -33.4489, lng: -70.6693, label: "Santiago" }
-  - { lat: -34.9011, lng: -56.1645, label: "Montevideo" }
+heroLocation: argentina/perito-moreno
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

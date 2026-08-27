@@ -16,63 +16,40 @@ travelTips:
   - "Travel via low-cost direct flights between the different cities."
   - "Best weather for visiting is from January to April."
 days:
-  - description: "Arrive and settle in, discover the city and its streetfood culture."
-    locations: [{ label: "Singapore", country: singapore }]
-  - description: "Chinatown"
-    locations: [{ label: "Singapore", country: singapore }]
-  - description: Little India and flight to Kuala Lumpur
-    locations:
-      [
-        { label: "Singapore", country: singapore },
-        { label: "Kuala Lumpur", country: malaysia },
-      ]
-  - description: "City tour"
-    locations: [{ label: "Kuala Lumpur", country: malaysia }]
-  - description: Day trip to Cameron Highlands from KL
-    locations: [{ label: "Kuala Lumpur", country: malaysia }]
-  - description: Canopy walk, river cruise and jungle trek in Taman Negara
-    locations: [{ label: "Kuala Lumpur", country: malaysia }]
-  - description: Batu Caves
-    locations: [{ label: "Kuala Lumpur", country: malaysia }]
-  - description: Petronas Towers and KL Bird Park
-    locations: [{ label: "Kuala Lumpur", country: malaysia }]
-  - description: Flight to Penang, settling in
-    locations:
-      [
-        { label: "Kuala Lumpur", country: malaysia },
-        { label: "Penang", country: malaysia },
-      ]
-  - description: "Penang hill and Kek Lok Si temple"
-    locations: [{ label: "Penang", country: malaysia }]
-  - description: Flight to Phuket, beach time
-    locations:
-      [
-        { label: "Penang", country: malaysia },
-        { label: "Phuket", country: thailand },
-      ]
-  - description: "Relax on the beaches in Patong"
-    locations: [{ label: "Phuket", country: thailand }]
-  - description: "Island hopping tour"
-    locations: [{ label: "Phuket", country: thailand }]
-  - description: "Flight back to Singapore"
-    locations:
-      [
-        { label: "Phuket", country: thailand },
-        { label: "Singapore", country: singapore },
-      ]
-  - description: "Last day in Singapore"
-    locations: [{ label: "Singapore", country: singapore }]
+  - locations: [singapore/singapore]
+    description: "Arrive and settle in, discover the city and its streetfood culture."
+  - locations: [singapore/singapore]
+    description: "Gardens by the Bay and Chinatown free walking tour"
+  - locations: [singapore/singapore, malaysia/kuala-lumpur]
+    description: Little India and flight to Kuala Lumpur
+  - locations: [malaysia/kuala-lumpur]
+    description: "City tour, KLCC, street food at Jalan Alor"
+  - locations: [malaysia/cameron-highlands]
+    description: Day trip to tea plantations, butterfly farm and strawberry farm
+  - locations: [malaysia/taman-negara]
+    description: Canopy walk, river cruise and jungle trek in the oldest rainforest in Malaysia
+  - locations: [malaysia/kuala-lumpur]
+    description: Batu Caves and National Mosque of Malaysia
+  - locations: [malaysia/kuala-lumpur]
+    description: Petronas Towers and KL Bird Park
+  - locations: [malaysia/kuala-lumpur, malaysia/penang]
+    description: Flight to Penang, exploring the old town and street art
+  - locations: [malaysia/penang]
+    description: "Penang hill and Kek Lok Si temple"
+  - locations: [malaysia/penang, thailand/phuket]
+    description: Flight to Phuket, beach time
+  - locations: [thailand/phuket]
+    description: "Relax on the beaches in Patong"
+  - locations: [thailand/phi-phi-islands]
+    description: "Island hopping tour, Maya Bay, Pileh Lagoon and Bamboo Island"
+  - locations: [thailand/phuket, singapore/singapore]
+    description: "Half-day beach time, then Flight back to Singapore"
+  - locations: [singapore/singapore]
+    description: "Last day in Singapore, last walking tour"
 months: "February–April"
 published: 2026-07-25
 hero: ../../assets/singapore/downtown-view.JPG
 featured: true
-coordinates:
-  - { lat: 1.2868, lng: 103.8494, label: "Singapore" }
-  - { lat: 3.139, lng: 101.6869, label: "Kuala Lumpur" }
-  - { lat: 4.4696, lng: 101.3831, label: "Cameron Highlands" }
-  - { lat: 5.4141, lng: 100.3288, label: "Penang" }
-  - { lat: 7.8804, lng: 98.3923, label: "Phuket" }
-  - { lat: 7.7407, lng: 98.7784, label: "Phi Phi Islands" }
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

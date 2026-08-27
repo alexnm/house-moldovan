@@ -6,7 +6,7 @@ import { countryRefsFromArticle } from "~/lib/content";
 const placeRelativeToAssets = /^\.\.\/\.\.\/assets\//;
 
 const assetModules = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/**/*.{jpg,jpeg,jpe,png,JPG}",
+  "../assets/**/*.{jpg,jpeg,jpe,png,JPG,JPEG}",
   { eager: true },
 );
 

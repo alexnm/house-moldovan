@@ -1,0 +1,702 @@
+---
+import "leaflet/dist/leaflet.css";
+import { ARTICLE_PIN_THUMB_SIZE, type LocationMapPin } from "~/lib/mapPinData";
+import type { CountryShape } from "~/lib/countryShape";
+import type { Basemap } from "~/lib/mapStyles";
+import { tileLayerOptions } from "~/lib/mapStyles";
+
+export interface Props {
+  pins: LocationMapPin[];
+  height?: string;
+  fullBleed?: boolean;
+  basemap?: Basemap;
+  scrollZoom?: boolean;
+  fitMaxZoom?: number;
+  /** Added to the zoom level after fitBounds — for per-country framing tweaks. */
+  fitZoomOffset?: number;
+  highlight?: CountryShape;
+  fitHighlight?: boolean;
+  /** `name` drops the country suffix — for single-country maps. */
+  labelMode?: "full" | "name";
+  /** Match the location stamp to popup link titles. */
+  locationLabelStyle?: "compact" | "title";
+  /** Ink location stamp in the popup header — map pins keep accent colour. */
+  neutralLocationStamp?: boolean;
+  /** Hide article links in the popup — location photo and name only. */
+  locationOnlyPopup?: boolean;
+  /** Animate halfway between overview and close-up when focusing a location. */
+  focusLocations?: boolean;
+}
+
+const {
+  pins,
+  height = "clamp(26rem, 74svh, 46rem)",
+  fullBleed = false,
+  basemap = "paper",
+  scrollZoom = true,
+  fitMaxZoom = 6,
+  fitZoomOffset = 0,
+  highlight,
+  fitHighlight = false,
+  labelMode = "full",
+  locationLabelStyle = "compact",
+  neutralLocationStamp = false,
+  locationOnlyPopup = false,
+  focusLocations = false,
+} = Astro.props;
+
+const payload = {
+  pins,
+  thumbSize: ARTICLE_PIN_THUMB_SIZE,
+  basemap,
+  scrollZoom,
+  fitMaxZoom,
+  fitZoomOffset,
+  highlight: highlight?.rings ?? null,
+  fitHighlight,
+  labelMode,
+  locationOnlyPopup,
+  focusLocations,
+};
+---
+
+<div
+  class:list={[
+    "locations-map-shell flex h-full min-h-0 flex-col",
+    locationLabelStyle === "title" && "locations-map-shell--title-label",
+    neutralLocationStamp && "locations-map-shell--neutral-location-stamp",
+  ]}
+  data-locations-map
+>
+  <div
+    class:list={[
+      "locations-map isolate z-0 w-full overflow-hidden",
+      basemap === "adaptive" && "locations-map--adaptive",
+      basemap === "film" && "locations-map--film",
+      basemap === "paper" && "locations-map--paper",
+      !fullBleed && "rounded-lg border border-line",
+    ]}
+    style={`--map-height: ${height}`}
+    role="presentation"
+  >
+  </div>
+
+  <script
+    type="application/json"
+    data-locations-map-payload
+    is:inline
+    set:html={JSON.stringify(payload)}
+  />
+</div>
+
+<style>
+  .locations-map {
+    height: var(--map-height, clamp(26rem, 74svh, 46rem));
+    background: var(--color-map-paper, oklch(0.97 0.007 95));
+    font-family: var(--font-body);
+    font-size: 11px;
+
+    /* Popups stay on the film-night palette even when the basemap is paper. */
+    --map-pop-ink: oklch(0.96 0.012 75);
+    --map-pop-ink-dim: oklch(0.8 0.012 75);
+    --map-pop-ink-faint: oklch(0.7 0.014 75);
+    --map-pop-surface: oklch(0.22 0.016 55);
+    --map-pop-surface-3: oklch(0.26 0.016 55);
+    --map-pop-line: oklch(0.22 0.016 55);
+  }
+
+  .locations-map--paper,
+  :root[data-theme="light"] .locations-map--adaptive {
+    --color-ink: oklch(0.24 0.02 55);
+    --color-ink-dim: oklch(0.42 0.02 55);
+    --color-ink-faint: oklch(0.55 0.018 55);
+    --color-surface-2: oklch(0.98 0.006 95);
+    --color-surface-3: oklch(0.95 0.008 95);
+    --color-line: oklch(0.88 0.01 95);
+    --color-line-strong: oklch(0.75 0.012 95);
+    --color-map-paper: oklch(0.97 0.007 95);
+    color-scheme: light;
+  }
+
+  .locations-map--film,
+  :root:not([data-theme="light"]) .locations-map--adaptive {
+    --color-ink: oklch(0.96 0.012 75);
+    --color-ink-dim: oklch(0.8 0.012 75);
+    --color-ink-faint: oklch(0.7 0.014 75);
+    --color-surface-2: oklch(0.22 0.016 55);
+    --color-surface-3: oklch(0.26 0.016 55);
+    --color-line: oklch(0.32 0.014 55);
+    --color-line-strong: oklch(0.44 0.016 55);
+    --color-map-paper: oklch(0.21 0.013 55);
+    color-scheme: dark;
+  }
+
+  .locations-map--film,
+  :root:not([data-theme="light"]) .locations-map--adaptive {
+    background: oklch(0.21 0.013 55);
+  }
+
+  .locations-map :global(.leaflet-control-attribution) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    color: var(--color-ink-faint);
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .locations-map :global(.leaflet-control-attribution a) {
+    color: var(--color-ink-dim);
+  }
+
+  .locations-map :global(.leaflet-bar) {
+    border: 1px solid var(--color-line);
+    box-shadow: none;
+  }
+
+  .locations-map :global(.leaflet-bar a) {
+    background: var(--color-surface-2);
+    color: var(--color-ink-dim);
+    border-bottom-color: var(--color-line);
+  }
+
+  .locations-map :global(.leaflet-bar a:hover) {
+    background: var(--color-surface-3);
+    color: var(--color-ink);
+  }
+
+  .locations-map :global(.leaflet-control-scale-line) {
+    background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink-dim);
+  }
+
+  .locations-map :global(.leaflet-div-icon) {
+    background: transparent;
+    border: 0;
+  }
+
+  .locations-map :global(.article-pin) {
+    width: 0;
+    height: 0;
+  }
+
+  .locations-map :global(.article-pin__badge) {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 22px;
+    height: 22px;
+    left: -11px;
+    top: -11px;
+    border-radius: 999px;
+    border: 2px solid var(--color-map-paper);
+    background: var(--pin-color, #c0552c);
+    color: var(--color-map-paper);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.28);
+    transition: scale var(--duration-micro) var(--ease-cinema-fast);
+  }
+
+  .locations-map :global(.article-pin__badge svg) {
+    width: 58%;
+    height: 58%;
+  }
+
+  .locations-map :global(.article-pin.is-hover .article-pin__badge),
+  .locations-map :global(.article-pin:hover .article-pin__badge),
+  .locations-map :global(.article-pin:focus-visible .article-pin__badge) {
+    scale: 1.18;
+  }
+
+  .locations-map :global(.article-pin:focus-visible) {
+    outline: none;
+  }
+
+  .locations-map :global(.article-pin:focus-visible .article-pin__badge) {
+    box-shadow: 0 0 0 2px oklch(0 0 0 / 0.6);
+  }
+
+  .locations-map :global(.article-pin.is-active .article-pin__badge) {
+    scale: 1.28;
+    box-shadow:
+      0 0 0 3px color-mix(in oklch, var(--pin-color, #c0552c) 45%, transparent),
+      0 2px 8px oklch(0 0 0 / 0.35);
+  }
+
+  .locations-map-shell--neutral-location-stamp :global(.location-pop__place),
+  .locations-map-shell--neutral-location-stamp
+    :global(.location-pop__place-icon) {
+    color: var(--map-pop-ink);
+  }
+
+  .locations-map :global(.leaflet-popup-content-wrapper) {
+    background: var(--map-pop-surface);
+    color: var(--map-pop-ink);
+    border: 1px solid var(--map-pop-line);
+    border-radius: 0.5rem;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0;
+    color-scheme: dark;
+  }
+
+  .locations-map :global(.leaflet-popup-tip) {
+    background: var(--map-pop-surface);
+  }
+
+  .locations-map :global(.leaflet-popup-content) {
+    margin: 0;
+    font-family: var(--font-body);
+    line-height: 1.35;
+  }
+
+  .locations-map :global(a.leaflet-popup-close-button) {
+    background: var(--map-pop-surface);
+    color: var(--map-pop-ink-dim);
+    font-family: var(--font-body);
+    font-size: 14px;
+    border-bottom-left-radius: 0.4rem;
+  }
+
+  .locations-map :global(a.leaflet-popup-close-button:hover) {
+    color: var(--map-pop-ink);
+  }
+
+  .locations-map :global(.location-pop__header) {
+    padding: 0.65rem 0.8rem 0.55rem;
+    border-bottom: 1px solid var(--map-pop-line);
+  }
+
+  .locations-map :global(.location-pop__header--on-photo) {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 1.5rem 0.8rem 0.65rem;
+    border-bottom: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--map-pop-surface) 92%, transparent) 0%,
+      transparent 100%
+    );
+  }
+
+  .locations-map :global(.location-pop__figure) {
+    position: relative;
+    margin: 0;
+  }
+
+  .locations-map :global(.location-pop__media) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: var(--map-pop-surface-3);
+    filter: contrast(1.1) sepia(0.1);
+  }
+
+  .locations-map :global(.location-pop__place) {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    color: var(--map-pop-ink-dim);
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .locations-map-shell--title-label :global(.location-pop__place) {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--map-pop-ink);
+  }
+
+  .locations-map-shell--title-label
+    :global(.location-pop__header--on-photo .location-pop__place) {
+    color: var(--map-pop-ink);
+  }
+
+  .locations-map :global(.location-pop__place-icon) {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+    color: var(--location-accent, var(--map-pop-ink-dim));
+  }
+
+  .locations-map :global(.location-pop__place-icon svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .locations-map :global(.location-pop__empty) {
+    margin: 0;
+    padding: 0.65rem 0.8rem;
+    color: var(--map-pop-ink-faint);
+  }
+
+  .locations-map :global(.location-pop__list) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .locations-map :global(.location-pop__item + .location-pop__item) {
+    border-top: 1px solid var(--map-pop-line);
+  }
+
+  .locations-map :global(.location-pop__link) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    color: inherit;
+    text-decoration: none;
+    padding: 0.55rem 0.8rem 0.6rem;
+  }
+
+  .locations-map :global(.location-pop__link:hover .location-pop__title) {
+    color: var(--location-accent, var(--map-pop-ink));
+  }
+
+  .locations-map :global(.location-pop__kind-icon) {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.1rem;
+    color: var(--map-pop-ink-faint);
+  }
+
+  .locations-map :global(.location-pop__kind-icon svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .locations-map :global(.location-pop__link:hover .location-pop__kind-icon) {
+    color: var(--location-accent, var(--map-pop-ink-dim));
+  }
+
+  .locations-map :global(.location-pop__title) {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--map-pop-ink);
+  }
+</style>
+
+<script>
+  import L from "leaflet";
+  import {
+    ACCENT_PIN_COLOR_BY_BASEMAP,
+    MAP_TILES_BY_BASEMAP,
+    mapPopAccentColor,
+    resolveBasemap,
+    tileLayerOptions,
+    type Basemap,
+    type ResolvedBasemap,
+  } from "~/lib/mapStyles";
+  import { mountCountryHighlight } from "~/lib/countryMapHighlight";
+  import type { LocationMapPin } from "~/lib/mapPinData";
+
+  type Payload = {
+    pins: LocationMapPin[];
+    thumbSize: { width: number; height: number };
+    basemap: Basemap;
+    scrollZoom: boolean;
+    fitMaxZoom: number;
+    fitZoomOffset: number;
+    highlight: [number, number][][] | null;
+    fitHighlight: boolean;
+    labelMode: "full" | "name";
+    locationOnlyPopup: boolean;
+    focusLocations: boolean;
+  };
+
+  const PIN_GLYPH =
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
+
+  const KIND_GLYPH: Record<
+    LocationMapPin["activities"][number]["kind"],
+    string
+  > = {
+    story:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.21a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
+    spotlight:
+      '<svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M9 3h6l1.8 2H20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3.2L9 3Zm3 5.4a4.1 4.1 0 1 0 0 8.2 4.1 4.1 0 0 0 0-8.2Z"/></svg>',
+    itinerary:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+  };
+
+  function pinLabel(
+    pin: LocationMapPin,
+    labelMode: Payload["labelMode"],
+  ): string {
+    return labelMode === "name" ? pin.name : pin.label;
+  }
+
+  function locationStamp(
+    pin: LocationMapPin,
+    labelMode: Payload["labelMode"],
+  ): string {
+    return `<p class="location-pop__place"><span class="location-pop__place-icon" aria-hidden="true">${PIN_GLYPH}</span>${escapeHtml(pinLabel(pin, labelMode))}</p>`;
+  }
+
+  function escapeHtml(s: string): string {
+    return s
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function popupHtml(
+    pin: LocationMapPin,
+    thumbSize: Payload["thumbSize"],
+    labelMode: Payload["labelMode"],
+    locationOnlyPopup: Payload["locationOnlyPopup"],
+  ): string {
+    const stamp = locationStamp(pin, labelMode);
+
+    const hero = pin.thumb
+      ? `<figure class="location-pop__figure">
+    <img class="location-pop__media" src="${escapeHtml(pin.thumb)}" width="${thumbSize.width}" height="${thumbSize.height}" alt="" loading="lazy" decoding="async" />
+    <div class="location-pop__header location-pop__header--on-photo">${stamp}</div>
+  </figure>`
+      : `<div class="location-pop__header">${stamp}</div>`;
+
+    if (locationOnlyPopup) {
+      return `<article class="location-pop" style="--location-accent: ${escapeHtml(mapPopAccentColor(pin.accent))}">
+  ${hero}
+</article>`;
+    }
+
+    const activities = pin.activities
+      .map(
+        (activity) =>
+          `<li class="location-pop__item">
+  <a class="location-pop__link" href="${escapeHtml(activity.href)}">
+    <span class="location-pop__kind-icon" aria-hidden="true">${KIND_GLYPH[activity.kind]}</span>
+    <span class="location-pop__title">${escapeHtml(activity.title)}</span>
+  </a>
+</li>`,
+      )
+      .join("");
+
+    const body = activities.length
+      ? `<ul class="location-pop__list">${activities}</ul>`
+      : `<p class="location-pop__empty">No stories here yet.</p>`;
+
+    return `<article class="location-pop" style="--location-accent: ${escapeHtml(mapPopAccentColor(pin.accent))}">
+  ${hero}
+  ${body}
+</article>`;
+  }
+
+  function initLocationsMaps(root: ParentNode = document): void {
+    root
+      .querySelectorAll<HTMLElement>("[data-locations-map]:not([data-mounted])")
+      .forEach((shell) => {
+        const payloadEl = shell.querySelector<HTMLScriptElement>(
+          "[data-locations-map-payload]",
+        );
+        const mapEl = shell.querySelector<HTMLElement>(".locations-map");
+        if (!payloadEl?.textContent || !mapEl) return;
+
+        shell.dataset.mounted = "1";
+
+        const payload = JSON.parse(payloadEl.textContent) as Payload;
+        let resolvedBasemap = resolveBasemap(payload.basemap);
+        let tiles = MAP_TILES_BY_BASEMAP[resolvedBasemap];
+        let pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[resolvedBasemap];
+        const colorOf = (pin: LocationMapPin): string => pinPalette[pin.accent];
+
+        const map = L.map(mapEl, {
+          scrollWheelZoom: payload.scrollZoom,
+          attributionControl: true,
+          maxZoom: tiles.maxZoom,
+        });
+
+        let baseTileLayer = L.tileLayer(
+          tiles.url,
+          tileLayerOptions(tiles),
+        ).addTo(map);
+
+        const highlightBounds = L.latLngBounds([]);
+        const rings = payload.highlight ?? [];
+
+        for (const ring of rings) {
+          for (const point of ring) highlightBounds.extend(point);
+        }
+
+        L.control.scale({ imperial: false, maxWidth: 120 }).addTo(map);
+
+        const popupOptions: L.PopupOptions = {
+          minWidth: 232,
+          maxWidth: 280,
+          autoPanPadding: [24, 24],
+        };
+
+        const bounds = L.latLngBounds([]);
+        const markersById = new Map<string, L.Marker>();
+        let activeMarker: L.Marker | null = null;
+
+        const setActiveMarker = (marker: L.Marker | null): void => {
+          if (activeMarker) {
+            activeMarker.getElement()?.classList.remove("is-active");
+          }
+          activeMarker = marker;
+          activeMarker?.getElement()?.classList.add("is-active");
+        };
+
+        for (const pin of payload.pins) {
+          const latlng: L.LatLngExpression = [pin.lat, pin.lng];
+          bounds.extend(latlng);
+          const label = pinLabel(pin, payload.labelMode);
+
+          const marker = L.marker(latlng, {
+            title: label,
+            alt: label,
+            keyboard: true,
+            icon: L.divIcon({
+              className: "article-pin",
+              html: `<span class="article-pin__badge" style="--pin-color: ${colorOf(pin)}">${PIN_GLYPH}</span>`,
+              iconSize: [0, 0],
+              iconAnchor: [0, 0],
+              popupAnchor: [0, -14],
+            }),
+          }).addTo(map);
+
+          markersById.set(pin.locationId, marker);
+
+          marker.bindPopup(
+            popupHtml(
+              pin,
+              payload.thumbSize,
+              payload.labelMode,
+              payload.locationOnlyPopup,
+            ),
+            popupOptions,
+          );
+
+          marker.on("mouseover", () => {
+            marker.getElement()?.classList.add("is-hover");
+          });
+          marker.on("mouseout", () => {
+            marker.getElement()?.classList.remove("is-hover");
+          });
+          marker.on("popupopen", () => {
+            setActiveMarker(marker);
+            shell.dispatchEvent(
+              new CustomEvent("locations-map:focused", {
+                detail: { id: pin.locationId },
+              }),
+            );
+          });
+          marker.on("popupclose", () => {
+            if (activeMarker === marker) {
+              setActiveMarker(null);
+              shell.dispatchEvent(
+                new CustomEvent("locations-map:focused", {
+                  detail: { id: null },
+                }),
+              );
+            }
+          });
+        }
+
+        shell.addEventListener("locations-map:focus", ((
+          event: CustomEvent<{ id: string }>,
+        ) => {
+          const marker = markersById.get(event.detail.id);
+          if (!marker) return;
+
+          setActiveMarker(marker);
+
+          if (payload.focusLocations) {
+            const latlng = marker.getLatLng();
+            const closeZoom = Math.min(
+              tiles.maxZoom,
+              Math.max(overviewZoom + 4, payload.fitMaxZoom),
+            );
+            const focusZoom = overviewZoom + (closeZoom - overviewZoom) * 0.5;
+            map.flyTo(latlng, focusZoom, { animate: true, duration: 0.65 });
+          } else {
+            map.setView(marker.getLatLng(), map.getZoom(), { animate: false });
+          }
+
+          marker.openPopup();
+        }) as EventListener);
+
+        if (payload.fitHighlight && highlightBounds.isValid()) {
+          bounds.extend(highlightBounds);
+        }
+
+        if (bounds.isValid()) {
+          map.fitBounds(bounds.pad(0.12), { maxZoom: payload.fitMaxZoom });
+          if (payload.fitZoomOffset) {
+            map.setZoom(
+              Math.min(map.getZoom() + payload.fitZoomOffset, tiles.maxZoom),
+            );
+          }
+        } else {
+          map.setView([20, 10], 2);
+        }
+
+        const overviewZoom = map.getZoom();
+
+        let highlightController = mountCountryHighlight(
+          map,
+          rings,
+          resolvedBasemap,
+          highlightBounds,
+        );
+
+        const updatePinColors = (): void => {
+          for (const pin of payload.pins) {
+            const marker = markersById.get(pin.locationId);
+            const badge = marker
+              ?.getElement()
+              ?.querySelector<HTMLElement>(".article-pin__badge");
+            if (badge) {
+              badge.style.setProperty("--pin-color", colorOf(pin));
+            }
+          }
+        };
+
+        const applyBasemap = (next: ResolvedBasemap): void => {
+          if (next === resolvedBasemap) return;
+
+          resolvedBasemap = next;
+          tiles = MAP_TILES_BY_BASEMAP[next];
+          pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[next];
+
+          map.removeLayer(baseTileLayer);
+          baseTileLayer = L.tileLayer(tiles.url, tileLayerOptions(tiles)).addTo(
+            map,
+          );
+          map.setMaxZoom(tiles.maxZoom);
+
+          highlightController?.setBasemap(next);
+          updatePinColors();
+        };
+
+        if (payload.basemap === "adaptive") {
+          new MutationObserver(() => {
+            applyBasemap(resolveBasemap("adaptive"));
+          }).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["data-theme"],
+          });
+        }
+      });
+  }
+
+  initLocationsMaps();
+  document.addEventListener("astro:page-load", () => initLocationsMaps());
+</script>

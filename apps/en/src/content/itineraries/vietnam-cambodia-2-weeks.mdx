@@ -14,48 +14,41 @@ travelTips:
   - "While both countries are rather poor, tourism is super well developed."
   - "We spent around €2200 per person back in 2018, flights included."
 days:
-  - description: "Land and start in the capital: first tastes of the street, the traffic, the pho."
-    locations: [{ label: "Hanoi", country: vietnam }]
-  - description: Transfer to the mountains of Sapa; rice terraces and village walks.
-    locations: [{ label: "Hanoi", country: vietnam }]
-  - description: "Return from Sapa, night in the city before moving on."
-    locations: [{ label: "Hanoi", country: vietnam }]
-  - description: Ha Long Bay cruise and overnight on the water among the karsts.
-    locations: [{ label: "Hanoi", country: vietnam }]
-  - description: "End the cruise, bus to Hanoi, then fly to the south."
-    locations: [{ label: "Ho Chi Minh City", country: vietnam }]
-  - description: "War history day trip — museum, city sights, and the Cu Chi Tunnels from Ho Chi Minh City."
-    locations: [{ label: "Ho Chi Minh City", country: vietnam }]
-  - description: "Saigon in depth — old Saigon, markets, and the southern rhythm."
-    locations: [{ label: "Ho Chi Minh City", country: vietnam }]
-  - description: Day trip into the delta from the city.
-    locations: [{ label: "Ho Chi Minh City", country: vietnam }]
-  - description: Evening flight to the gateway to Angkor.
-    locations: [{ label: "Siem Reap", country: cambodia }]
-  - description: "Countryside and lake — bikes, villages, and a floating community on Tonlé Sap."
-    locations: [{ label: "Siem Reap", country: cambodia }]
-  - description: Full days in the Angkor complex.
-    locations: [{ label: "Siem Reap", country: cambodia }]
-  - description: "From temples to the island, flight from Siem Reap."
-    locations: [{ label: "Phu Quoc", country: vietnam }]
-  - description: Beach and rest in the Gulf of Thailand.
-    locations: [{ label: "Phu Quoc", country: vietnam }]
-  - description: Another day by the water before the long hop north.
-    locations: [{ label: "Phu Quoc", country: vietnam }]
-  - description: "Fly back, last souvenirs, last bowls of pho, and goodbye for now."
-    locations: [{ label: "Hanoi", country: vietnam }]
+  - locations: [vietnam/hanoi]
+    description: "Land and start in the capital: first tastes of the street, the traffic, the pho."
+  - locations: [vietnam/sapa]
+    description: Transfer to the mountains of Sa Pa; rice terraces and village walks.
+  - locations: [vietnam/sapa, vietnam/hanoi]
+    description: "Return from Sa Pa, night in the city before moving on."
+  - locations: [vietnam/ha-long-bay]
+    description: Ha Long Bay cruise and overnight on the water among the karsts.
+  - locations: [vietnam/ho-chi-minh-city]
+    description: "End the cruise, bus to Hanoi, then fly to the south."
+  - locations: [vietnam/ho-chi-minh-city]
+    description: "War history day trip — museum, city sights, and the Cu Chi Tunnels from Ho Chi Minh City."
+  - locations: [vietnam/ho-chi-minh-city]
+    description: "Saigon in depth — old Saigon, markets, and the southern vibes."
+  - locations: [vietnam/mekong-delta]
+    description: Day trip into the delta from the city.
+  - locations: [cambodia/siem-reap]
+    description: Evening flight to the gateway to Angkor Wat.
+  - locations: [cambodia/tonle-sap]
+    description: "Countryside and lake — bikes, villages, and a floating community on Tonlé Sap."
+  - locations: [cambodia/siem-reap]
+    description: Full days at the Angkor Wat temple complex.
+  - locations: [cambodia/siem-reap, vietnam/phu-quoc]
+    description: "Sunrise at Angkor Wat, then flight to Phu Quoc."
+  - locations: [vietnam/phu-quoc]
+    description: Beach and rest in the Gulf of Thailand.
+  - locations: [vietnam/phu-quoc]
+    description: Another day by the water before the long hop north.
+  - locations: [vietnam/hanoi]
+    description: "Fly back to the start, last souvenirs, last bowls of pho, and goodbye for now."
 
 months: "December–March"
 published: 2020-06-16
 hero: ../../assets/vietnam/buddha-mekong.jpg
-featured: false
-coordinates:
-  - { lat: 21.0278, lng: 105.8342, label: "Hanoi" }
-  - { lat: 22.3364, lng: 103.8438, label: "Sapa" }
-  - { lat: 20.9101, lng: 107.1839, label: "Ha Long Bay" }
-  - { lat: 10.7769, lng: 106.7009, label: "Ho Chi Minh City" }
-  - { lat: 13.3633, lng: 103.8564, label: "Siem Reap" }
-  - { lat: 10.227, lng: 103.964, label: "Phu Quoc" }
+heroLocation: vietnam/mekong-delta
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";
@@ -86,19 +79,19 @@ As a European, you instantly feel a cultural difference, but at the same time yo
   caption="Ho Chi Minh Mausoleum."
 />
 
-## Days 2-3: Sapa
+## Days 2-3: Sa Pa
 
-After spending our first day in Hanoi, we left the city for a two-day visit to rural Vietnam, in the mountainous region of Sapa. The landscape is beautiful, packed with never-ending rice fields and terraces. But what impressed us most was the local culture and diversity. You can read more about the experience in Sapa in [our story](/stories/sapa-vietnam-guide).
+After spending our first day in Hanoi, we left the city for a two-day visit to rural Vietnam, in the mountainous region of Sa Pa. The landscape is beautiful, packed with never-ending rice fields and terraces. But what impressed us most was the local culture and diversity. You can read more about the experience in Sa Pa in [our story](/stories/sapa-vietnam-guide).
 
 <AssetFigure
   path="vietnam/sapa2.JPG"
-  alt="Trek in Sapa."
-  caption="Trek in Sapa."
+  alt="Trek in Sa Pa."
+  caption="Trek in Sa Pa."
 />
 
 ## Days 4-5: Ha Long Bay
 
-The trip to Sapa was booked ahead of time, when we were back home. But for Ha Long Bay, we did the booking on the spot, with the help of the hotel staff in Hanoi. They recommended a local agency and helped us decide between the various options. Keep in mind that everything is negotiable in Vietnam, so do your homework before booking a trip :)
+The trip to Sa Pa was booked ahead of time, when we were back home. But for Ha Long Bay, we did the booking on the spot, with the help of the hotel staff in Hanoi. They recommended a local agency and helped us decide between the various options. Keep in mind that everything is negotiable in Vietnam, so do your homework before booking a trip :)
 
 Most of the tours in Vietnam offer all the bus transfers and meals, and this was no exception. After a few hours of driving towards the coast, we reached Ha Long Bay and boarded our cruise for the next two days. As soon as we left the port, we understood why Ha Long Bay is the most visited sight in the entire country.
 
@@ -293,7 +286,7 @@ In both countries, prices are much cheaper than what western tourists are used t
 
 When researching for accommodation, we had two conditions: make sure it's well located and clean. The average prices are quite low compared to the European ones: around 35USD / double room / night. Don't go for lower than that, as some hotels can be quite sketchy. Of course, there are a lot of luxury hotels as well, but we preferred to spend the money elsewhere.
 
-For their services especially, we highly recommend [La Selva hotel](https://www.booking.com/hotel/vn/the-jasmine.en-gb.htm) in Hanoi. We stayed there for just one night, because they had no room available for the night between our trips to Sapa and Ha Long Bay. They moved our luggage from one hotel to the other at no extra cost and they were very helpful with any question we had.
+For their services especially, we highly recommend [La Selva hotel](https://www.booking.com/hotel/vn/the-jasmine.en-gb.htm) in Hanoi. We stayed there for just one night, because they had no room available for the night between our trips to Sa Pa and Ha Long Bay. They moved our luggage from one hotel to the other at no extra cost and they were very helpful with any question we had.
 
 [Shadow Angkor Residence](https://www.booking.com/hotel/kh/shadow-angkor-residence.en-gb.html?aid=304142) in Siem Reap was the best we had during our entire trip. Very clean, air-conditioned room and very good services offered by the staff.
 

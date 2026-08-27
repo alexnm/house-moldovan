@@ -1,0 +1,163 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import type { CountrySnapshot } from "~/lib/countryPage";
+
+export interface Props {
+  photos: CountrySnapshot[];
+}
+
+const { photos } = Astro.props;
+const shots = photos.slice(0, 4);
+const PIN_GLYPH =
+  "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
+---
+
+<div class="country-intro-mosaic">
+  {
+    shots.map((shot, index) => {
+      const wide = index === 0 || index === 3;
+
+      return (
+        <figure
+          class:list={[
+            "country-intro-mosaic__shot motion-reveal-media",
+            wide
+              ? "country-intro-mosaic__shot--wide"
+              : "country-intro-mosaic__shot--portrait",
+          ]}
+        >
+          <CoverImage
+            src={shot.image}
+            alt={shot.caption}
+            widths={wide ? [640, 960, 1280, 1600] : [400, 600, 800, 960]}
+            sizes={
+              wide
+                ? "(min-width: 900px) 36vw, 100vw"
+                : "(min-width: 900px) 18vw, 50vw"
+            }
+            loading={index < 2 ? "eager" : "lazy"}
+            format="avif"
+            quality={82}
+            class="country-intro-mosaic__img"
+          />
+          <div class="country-intro-mosaic__scrim" aria-hidden="true" />
+          <p class="country-intro-mosaic__location">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              class="country-intro-mosaic__pin"
+            >
+              <path d={PIN_GLYPH} />
+            </svg>
+            {shot.location}
+          </p>
+        </figure>
+      );
+    })
+  }
+</div>
+
+<style>
+  .country-intro-mosaic {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--grid-gap-compact);
+    container-type: inline-size;
+  }
+
+  .country-intro-mosaic__shot {
+    display: grid;
+    grid-template: "stack" 1fr / 1fr;
+    overflow: clip;
+    margin: 0;
+    border-radius: 8px;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .country-intro-mosaic__shot--portrait {
+    aspect-ratio: 4 / 5;
+  }
+
+  .country-intro-mosaic__shot--wide {
+    grid-column: span 2;
+    aspect-ratio: 8 / 5;
+  }
+
+  @media (width >= 900px) {
+    .country-intro-mosaic {
+      --mosaic-col: calc((100cqw - 2 * var(--grid-gap)) / 3);
+      --mosaic-row-h: calc(var(--mosaic-col) * 5 / 4);
+    }
+
+    .country-intro-mosaic__shot--portrait,
+    .country-intro-mosaic__shot--wide {
+      aspect-ratio: auto;
+      height: var(--mosaic-row-h);
+    }
+  }
+
+  .country-intro-mosaic__shot > :global(.cover-image-shell),
+  .country-intro-mosaic__scrim,
+  .country-intro-mosaic__location {
+    grid-area: stack;
+  }
+
+  .country-intro-mosaic__shot > :global(.cover-image-shell) {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .country-intro-mosaic__scrim {
+    align-self: end;
+    z-index: 1;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--color-photo-scrim) 70%, transparent),
+      color-mix(in oklch, var(--color-photo-scrim) 40%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .country-intro-mosaic__location {
+    position: relative;
+    z-index: 2;
+    align-self: end;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: calc(100% - 1.5rem);
+    margin: 0 0 0.65rem 0.75rem;
+    color: var(--color-photo-ink);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: var(--tracking-microcaps);
+    line-height: 1.35;
+    text-transform: uppercase;
+    text-shadow: 0 1px 10px
+      color-mix(in oklch, var(--color-photo-scrim) 55%, transparent);
+  }
+
+  .country-intro-mosaic__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+
+  .country-intro-mosaic__shot
+    :global(.cover-image-shell > img[data-astro-image]),
+  .country-intro-mosaic__shot :global(img.country-intro-mosaic__img) {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+  }
+</style>
