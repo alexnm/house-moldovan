@@ -76,9 +76,7 @@ import { THEME_COLORS, THEME_STORAGE_KEY } from "../../lib/theme";
     });
 
     document.addEventListener("astro:page-load", function () {
-      syncToggles(
-        document.documentElement.dataset.theme === "light" ? "light" : "dark",
-      );
+      applyTheme(resolveTheme(), false);
     });
   })();
 </script>

@@ -39,21 +39,20 @@
 
   /* Global chrome: pale lemon — clear of saffron gold (~85) */
   --color-accent: oklch(0.9 0.13 98);
-  --color-accent-soft: oklch(0.55 0.1 98);
   /* Foreground on accent-filled surfaces (badges, drenched panels) */
   --color-on-accent: oklch(0.22 0.04 98);
   /* Accent as text on canvas — dark mode aliases to --color-accent in @layer base */
   --color-accent-ink: oklch(0.9 0.13 98);
 
   /* Regional chapter palette — punched chroma for travel chapters */
-  --color-jade: oklch(0.74 0.17 155);
+  --color-jade: oklch(0.85 0.16 155);
   --color-saffron: oklch(0.88 0.18 85);
   --color-terracotta: oklch(0.74 0.18 35);
   --color-cobalt: oklch(0.68 0.14 250);
   /* Range cards only — airy sky fill (lighter than chapter cobalt) */
   --color-range-sky: oklch(0.7 0.14 250);
   /* Regional accent as text on canvas — dark mode aliases in @layer base */
-  --color-jade-ink: oklch(0.74 0.17 155);
+  --color-jade-ink: oklch(0.85 0.16 155);
   --color-saffron-ink: oklch(0.88 0.18 85);
   --color-terracotta-ink: oklch(0.74 0.18 35);
   --color-cobalt-ink: oklch(0.68 0.14 250);
@@ -95,9 +94,6 @@
   --motion-parallax-shift: 8%;
   --motion-parallax-scale: 1.08;
   --motion-stagger: 120ms;
-
-  --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.6);
-  --shadow-lift: 0 12px 30px -12px oklch(0 0 0 / 0.4);
 
   --container-prose: 68ch;
   --container-wide: 84rem;
@@ -198,9 +194,6 @@
     color-scheme: dark;
     background: var(--color-surface);
     color: var(--color-ink);
-
-    /* Lighter overlay: photography leads; text sits on bottom scrim */
-    --hero-overlay: 0.28;
   }
 
   :root[data-theme="light"] {
@@ -217,16 +210,12 @@
     --color-line-strong: oklch(0.78 0.014 85);
     /* Default light accent: terracotta on canvas (dark mode stays pale lemon, hue 98) */
     --color-accent: oklch(0.72 0.17 35);
-    --color-accent-soft: oklch(0.85 0.1 35);
     --color-accent-ink: oklch(0.52 0.16 35);
     --color-on-accent: oklch(0.22 0.04 35);
     --color-jade-ink: oklch(0.48 0.14 155);
     --color-saffron-ink: oklch(0.55 0.15 85);
     --color-terracotta-ink: oklch(0.52 0.15 35);
     --color-cobalt-ink: oklch(0.48 0.12 250);
-    --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.14);
-    --shadow-lift: 0 12px 30px -12px oklch(0 0 0 / 0.1);
-    --hero-overlay: 0.32;
   }
 
   html {
@@ -285,26 +274,22 @@
   html[lang="en"]:not([data-theme="light"]),
   html[lang="ro"]:not([data-theme="light"]) {
     --color-accent: oklch(0.88 0.2 86);
-    --color-accent-soft: oklch(0.58 0.11 98);
     --color-on-accent: oklch(0.22 0.04 86);
     --color-jade: oklch(0.75 0.175 155);
     --color-saffron: oklch(0.9 0.19 85);
     --color-terracotta: oklch(0.75 0.19 35);
     --color-cobalt: oklch(0.7 0.15 250);
-    --hero-overlay: 0.22;
   }
 
   html[lang="en"][data-theme="light"],
   html[lang="ro"][data-theme="light"] {
     --color-accent: oklch(0.74 0.18 35);
-    --color-accent-soft: oklch(0.84 0.11 35);
     --color-accent-ink: var(--color-terracotta-deep);
     --color-on-accent: oklch(0.22 0.04 35);
     --color-jade-ink: oklch(0.46 0.15 155);
     --color-saffron-ink: oklch(0.53 0.16 85);
     --color-terracotta-ink: var(--color-terracotta-deep);
     --color-cobalt-ink: oklch(0.46 0.13 250);
-    --hero-overlay: 0.28;
   }
 
   /* Dark mode: accent -ink tokens mirror fill colors for text on canvas */
@@ -878,13 +863,13 @@
   }
 
   .prose-body .info {
-    background: var(--color-surface-2);
+    background: color-mix(in oklch, var(--color-accent-ink) 10%, transparent);
     padding: 0.8em 1em;
     border-radius: 6px;
     font-size: 0.95em;
     margin-top: 1.4em;
     margin-bottom: 1.4em;
-    line-height: 1;
+    line-height: 1.2;
     color: var(--color-ink);
     display: flex;
     align-items: center;
@@ -893,6 +878,7 @@
     &.tip::before,
     &.warning::before {
       content: "";
+      background-color: var(--color-accent-ink);
       width: 1.2em;
       height: 1.2em;
       flex-shrink: 0;
@@ -904,32 +890,23 @@
       mask-size: contain;
     }
 
-    &.tip {
-      background: color-mix(in oklch, var(--color-jade) 20%, transparent);
-    }
-
     &.tip::before {
-      background-color: color-mix(
-        in oklch,
-        var(--color-jade-ink) 80%,
-        var(--color-ink) 20%
-      );
       -webkit-mask-image: url("/icons/info-tip.svg");
       mask-image: url("/icons/info-tip.svg");
     }
 
-    &.warning {
-      background: color-mix(in oklch, var(--color-accent) 20%, transparent);
-    }
-
     &.warning::before {
-      background-color: color-mix(
-        in oklch,
-        var(--color-accent-ink) 80%,
-        var(--color-ink) 20%
-      );
       -webkit-mask-image: url("/icons/info-warning.svg");
       mask-image: url("/icons/info-warning.svg");
+    }
+
+    .info__content :where(p) {
+      margin: 0;
+      display: inline;
+    }
+
+    .info__content :where(p + p)::before {
+      content: " ";
     }
   }
 

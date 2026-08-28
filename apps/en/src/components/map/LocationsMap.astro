@@ -119,7 +119,7 @@ const payload = {
   }
 
   .locations-map--film,
-  :root:not([data-theme="light"]) .locations-map--adaptive {
+  :root[data-theme="dark"] .locations-map--adaptive {
     --color-ink: oklch(0.96 0.012 75);
     --color-ink-dim: oklch(0.8 0.012 75);
     --color-ink-faint: oklch(0.7 0.014 75);
@@ -132,7 +132,7 @@ const payload = {
   }
 
   .locations-map--film,
-  :root:not([data-theme="light"]) .locations-map--adaptive {
+  :root[data-theme="dark"] .locations-map--adaptive {
     background: oklch(0.21 0.013 55);
   }
 
@@ -291,7 +291,7 @@ const payload = {
     aspect-ratio: 16 / 10;
     object-fit: cover;
     background: var(--map-pop-surface-3);
-    filter: contrast(1.1) sepia(0.1);
+    filter: var(--image-filter);
   }
 
   .locations-map :global(.location-pop__place) {

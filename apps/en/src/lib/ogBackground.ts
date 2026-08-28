@@ -6,7 +6,7 @@ import type { ImageMetadata } from "astro";
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
 
-/** Matches `.hero-overlay` in app.css (dark theme, `--hero-overlay: 0.28`). */
+/** Matches `.hero-overlay` gradient scrim in app.css. */
 const HERO_OVERLAY_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}">
   <defs>
     <linearGradient id="hero" x1="0" y1="${OG_HEIGHT}" x2="0" y2="0" gradientUnits="userSpaceOnUse">

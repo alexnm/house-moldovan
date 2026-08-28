@@ -5,12 +5,10 @@
 @source "../../../../packages/shared/src";
 
 @theme {
-  /* EN: condensed travel-poster display; RO: Oswald trail-sign register */
+  /* EN: condensed travel-poster display */
   --font-display:
     "Big Shoulders Display Variable", "Big Shoulders Display", ui-sans-serif,
     system-ui, sans-serif;
-  --font-display-ro:
-    "Oswald Variable", "Oswald", ui-sans-serif, system-ui, sans-serif;
   --font-sans:
     "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif,
     system-ui, sans-serif;
@@ -28,8 +26,6 @@
   --color-surface: oklch(0.13 0.014 55);
   --color-surface-2: oklch(0.18 0.016 55);
   --color-surface-3: oklch(0.22 0.016 55);
-  /* Between surface-2/3: cards / “raised” panels */
-  --color-surface-raised: oklch(0.2 0.016 55);
   --color-line: oklch(0.28 0.014 55);
   --color-line-strong: oklch(0.4 0.016 55);
 
@@ -37,19 +33,17 @@
   --color-photo-scrim: oklch(0.13 0.014 55);
   --color-photo-ink: oklch(0.98 0.008 75);
 
-  /* Global chrome: pale lemon — clear of saffron gold (~85) */
-  --color-accent: oklch(0.9 0.13 98);
-  --color-accent-soft: oklch(0.55 0.1 98);
-  /* Foreground on accent-filled surfaces (badges, drenched panels) */
-  --color-on-accent: oklch(0.22 0.04 98);
-  /* Accent as text on canvas — dark mode aliases to --color-accent in @layer base */
-  --color-accent-ink: oklch(0.9 0.13 98);
+  /* Dark-mode defaults; light overrides live in :root[data-theme="light"] */
+  --color-accent: oklch(0.88 0.2 86);
+  --color-on-accent: oklch(0.22 0.04 86);
+  --color-accent-ink: oklch(0.88 0.2 86);
 
-  /* Regional chapter fills — dark canvas bumps in @layer base; -ink set per theme there */
-  --color-jade: oklch(0.74 0.17 155);
-  --color-saffron: oklch(0.88 0.18 85);
-  --color-terracotta: oklch(0.74 0.18 35);
-  --color-cobalt: oklch(0.75 0.14 250);
+  --color-jade: oklch(0.85 0.18 155);
+  --color-saffron: oklch(0.88 0.2 86);
+  --color-terracotta: oklch(0.83 0.19 42);
+  --color-cobalt: oklch(0.81 0.18 255);
+
+  --image-filter: contrast(1.1) sepia(0.1);
 
   --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-cinema-fast: cubic-bezier(0.22, 1, 0.36, 1);
@@ -77,20 +71,14 @@
   --motion-parallax-scale: 1.08;
   --motion-stagger: 120ms;
 
-  --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.6);
-  --shadow-lift: 0 12px 30px -12px oklch(0 0 0 / 0.4);
-
   --container-prose: 68ch;
   --container-wide: 84rem;
   --width-canvas: 92rem;
-  /* Layout: max-w-wide (laptop and below) / max-w-canvas (2xl+) / max-w-prose */
-  --max-width-wide: var(--container-wide);
   --max-width-prose: var(--container-prose);
 
   /* Spacing scale (DESIGN.md) */
   --space-canvas-x: 1.125rem;
   --space-canvas-x-md: 1.5rem;
-  --space-tight: 0.75rem;
   --space-group: 1rem;
   --space-block: 1.5rem;
   --space-header: clamp(1.75rem, 1rem + 1vw, 2.25rem);
@@ -175,36 +163,50 @@
 }
 
 @layer base {
-  :root,
   :root[data-theme="dark"] {
     color-scheme: dark;
     background: var(--color-surface);
     color: var(--color-ink);
 
-    /* Lighter overlay: photography leads; text sits on bottom scrim */
-    --hero-overlay: 0.28;
+    --color-accent: oklch(0.88 0.2 86);
+    --color-on-accent: oklch(0.22 0.04 86);
+    --color-jade: oklch(0.85 0.18 155);
+    --color-saffron: oklch(0.9 0.18 86);
+    --color-terracotta: oklch(0.83 0.19 42);
+    --color-cobalt: oklch(0.81 0.18 255);
+    --color-jade-ink: oklch(0.87 0.1 155);
+    --color-saffron-ink: oklch(0.88 0.1 86);
+    --color-terracotta-ink: oklch(0.83 0.1 42);
+    --color-cobalt-ink: oklch(0.81 0.1 255);
+    --color-accent-ink: var(--color-accent);
   }
 
   :root[data-theme="light"] {
     color-scheme: light;
+    background: var(--color-surface);
+    color: var(--color-ink);
+
     --color-ink: oklch(0.17 0.018 55);
     --color-ink-nav: oklch(0.2 0.018 55);
     --color-ink-dim: oklch(0.36 0.014 55);
     --color-ink-faint: oklch(0.48 0.012 55);
     --color-surface: oklch(0.965 0.009 85);
-    --color-surface-2: oklch(0.945 0.01 85);
+    --color-surface-2: oklch(0.985 0.01 85);
     --color-surface-3: oklch(0.925 0.011 85);
-    --color-surface-raised: oklch(0.955 0.01 85);
     --color-line: oklch(0.87 0.012 85);
     --color-line-strong: oklch(0.78 0.014 85);
-    /* Default light accent: terracotta on canvas (dark mode stays pale lemon, hue 98) */
-    --color-accent: oklch(0.72 0.17 35);
-    --color-accent-soft: oklch(0.85 0.1 35);
-    --color-accent-ink: oklch(0.52 0.16 35);
+
+    --color-accent: oklch(0.83 0.14 42);
+    --color-accent-ink: oklch(0.5 0.16 35);
     --color-on-accent: oklch(0.22 0.04 35);
-    --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.14);
-    --shadow-lift: 0 12px 30px -12px oklch(0 0 0 / 0.1);
-    --hero-overlay: 0.32;
+    --color-jade: oklch(0.85 0.14 155);
+    --color-saffron: oklch(0.88 0.14 86);
+    --color-terracotta: oklch(0.83 0.14 42);
+    --color-cobalt: oklch(0.81 0.14 255);
+    --color-jade-ink: oklch(0.46 0.15 155);
+    --color-saffron-ink: oklch(0.53 0.16 85);
+    --color-terracotta-ink: oklch(0.5 0.16 35);
+    --color-cobalt-ink: oklch(0.46 0.13 250);
   }
 
   html {
@@ -244,52 +246,10 @@
     height: 1px;
     background: var(--color-line);
   }
-
-  [lang="ro"] {
-    --font-display: var(--font-display-ro);
-  }
-
-  /* Site chrome: saffron on dark, terracotta on light — EN journal + RO portal */
-  html[lang="en"]:not([data-theme="light"]),
-  html[lang="ro"]:not([data-theme="light"]) {
-    --color-accent: oklch(0.88 0.2 86);
-    --color-accent-soft: oklch(0.58 0.11 98);
-    --color-on-accent: oklch(0.22 0.04 86);
-    /* Chapter fills — punched L/C for film-night canvas */
-    --color-jade: oklch(0.75 0.175 155);
-    --color-saffron: oklch(0.9 0.19 85);
-    --color-terracotta: oklch(0.75 0.19 35);
-    --color-cobalt: oklch(0.77 0.15 250);
-    --hero-overlay: 0.22;
-  }
-
-  html[lang="en"][data-theme="light"],
-  html[lang="ro"][data-theme="light"] {
-    --color-accent: oklch(0.74 0.18 35);
-    --color-accent-soft: oklch(0.84 0.11 35);
-    --color-accent-ink: oklch(0.5 0.16 35);
-    --color-on-accent: oklch(0.22 0.04 35);
-    /* Chapter ink — readable accent text on warm paper */
-    --color-jade-ink: oklch(0.46 0.15 155);
-    --color-saffron-ink: oklch(0.53 0.16 85);
-    --color-terracotta-ink: oklch(0.5 0.16 35);
-    --color-cobalt-ink: oklch(0.46 0.13 250);
-    --hero-overlay: 0.28;
-  }
-
-  /* Dark mode: -ink mirrors fill for text on canvas */
-  :root:not([data-theme="light"]),
-  :root[data-theme="dark"] {
-    --color-accent-ink: var(--color-accent);
-    --color-jade-ink: var(--color-jade);
-    --color-saffron-ink: var(--color-saffron);
-    --color-terracotta-ink: var(--color-terracotta);
-    --color-cobalt-ink: var(--color-cobalt);
-  }
 }
 
 @layer components {
-  /* Horizontal padding for max-w-canvas / max-w-wide / max-w-prose shells */
+  /* Horizontal padding for max-w-canvas / max-w-prose shells */
   .pad-canvas {
     padding-inline: var(--space-canvas-x);
 
@@ -646,10 +606,6 @@
     text-wrap: balance;
   }
 
-  [lang="ro"] .display {
-    font-weight: 600;
-  }
-
   /* Brand wordmark — nav uses .nav-link metrics; spans only split weight */
   .site-logo {
     text-decoration: none;
@@ -852,13 +808,13 @@
   }
 
   .prose-body .info {
-    background: var(--color-surface-2);
+    background: color-mix(in oklch, var(--color-accent-ink) 10%, transparent);
     padding: 0.8em 1em;
     border-radius: 6px;
     font-size: 0.95em;
     margin-top: 1.4em;
     margin-bottom: 1.4em;
-    line-height: 1;
+    line-height: 1.2;
     color: var(--color-ink);
     display: flex;
     align-items: center;
@@ -867,6 +823,7 @@
     &.tip::before,
     &.warning::before {
       content: "";
+      background-color: var(--color-accent-ink);
       width: 1.2em;
       height: 1.2em;
       flex-shrink: 0;
@@ -878,32 +835,23 @@
       mask-size: contain;
     }
 
-    &.tip {
-      background: color-mix(in oklch, var(--color-jade) 20%, transparent);
-    }
-
     &.tip::before {
-      background-color: color-mix(
-        in oklch,
-        var(--color-jade-ink) 80%,
-        var(--color-ink) 20%
-      );
       -webkit-mask-image: url("/icons/info-tip.svg");
       mask-image: url("/icons/info-tip.svg");
     }
 
-    &.warning {
-      background: color-mix(in oklch, var(--color-accent) 20%, transparent);
-    }
-
     &.warning::before {
-      background-color: color-mix(
-        in oklch,
-        var(--color-accent-ink) 80%,
-        var(--color-ink) 20%
-      );
       -webkit-mask-image: url("/icons/info-warning.svg");
       mask-image: url("/icons/info-warning.svg");
+    }
+
+    .info__content :where(p) {
+      margin: 0;
+      display: inline;
+    }
+
+    .info__content :where(p + p)::before {
+      content: " ";
     }
   }
 
@@ -1028,7 +976,7 @@
     transition-property: opacity;
     transition-duration: var(--duration-load);
     transition-timing-function: var(--ease-cinema);
-    filter: contrast(1.1) sepia(0.1);
+    filter: var(--image-filter);
   }
 
   /* Progressive enhancement: sharp covers stay visible without JS */
@@ -1192,11 +1140,6 @@
     letter-spacing: -0.035em;
   }
 
-  [lang="ro"] .section-heading {
-    line-height: 0.98;
-    letter-spacing: 0.02em;
-  }
-
   .subsection-heading {
     font-size: clamp(1.7rem, 1.15rem + 1.1vw, 2rem);
     text-transform: none;
@@ -1207,11 +1150,6 @@
     letter-spacing: -0.03em;
   }
 
-  [lang="ro"] .subsection-heading {
-    line-height: 1;
-    letter-spacing: 0.015em;
-  }
-
   /* Region chapter names stay luggage-tag uppercase. */
   .region-name {
     text-transform: uppercase;
@@ -1219,10 +1157,6 @@
 
   html[lang="en"] .region-name {
     letter-spacing: -0.035em;
-  }
-
-  [lang="ro"] .region-name {
-    letter-spacing: 0.04em;
   }
 
   .prose-body h2 {
