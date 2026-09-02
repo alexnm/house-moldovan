@@ -103,17 +103,32 @@ function layerViewBox(
 
 export type CountryHighlightController = {
   setBasemap: (basemap: ResolvedBasemap) => void;
+  setRings: (next: Ring[]) => void;
+  setPaused: (paused: boolean) => void;
+  sync: () => void;
   destroy: () => void;
 };
+
+function boundsFromRings(ringList: Ring[]): L.LatLngBounds {
+  const bounds = L.latLngBounds([]);
+  for (const ring of ringList) {
+    for (const point of ring) bounds.extend(point);
+  }
+  return bounds;
+}
 
 /** Country outline, glow, mask, and optional daylight tile clip — one sync path. */
 export function mountCountryHighlight(
   map: L.Map,
-  rings: Ring[],
+  initialRings: Ring[],
   basemap: ResolvedBasemap,
-  highlightBounds: L.LatLngBounds,
-): CountryHighlightController | null {
-  if (!rings.length) return null;
+  initialBounds: L.LatLngBounds,
+): CountryHighlightController {
+  let rings = initialRings;
+  let highlightBounds = initialBounds.isValid()
+    ? initialBounds
+    : boundsFromRings(rings);
+  let syncPaused = false;
 
   const projectableMap = map as ProjectableMap;
   let currentBasemap = basemap;
@@ -138,6 +153,15 @@ export function mountCountryHighlight(
   edgePath.setAttribute("stroke-linejoin", "round");
   svg.append(maskPath, glowPath, edgePath);
 
+  const clearDayTiles = (): void => {
+    if (dayTileLayer) {
+      map.removeLayer(dayTileLayer);
+      dayTileLayer = null;
+    }
+    dayPane?.remove();
+    dayPane = null;
+  };
+
   const applyBasemapStyles = (resolved: ResolvedBasemap): void => {
     const style = COUNTRY_HIGHLIGHT_BY_BASEMAP[resolved];
     const dayTiles = MAP_HIGHLIGHT_TILES_BY_BASEMAP[resolved];
@@ -149,6 +173,11 @@ export function mountCountryHighlight(
     glowPath.style.mixBlendMode = dayTiles ? "multiply" : "screen";
     edgePath.setAttribute("stroke", style.edge);
     edgePath.setAttribute("stroke-opacity", String(style.edgeOpacity));
+
+    if (!rings.length) {
+      clearDayTiles();
+      return;
+    }
 
     if (dayTiles && !dayTileLayer) {
       dayPane = map.createPane("countryTiles");
@@ -163,14 +192,18 @@ export function mountCountryHighlight(
     }
 
     if (!dayTiles && dayTileLayer) {
-      map.removeLayer(dayTileLayer);
-      dayTileLayer = null;
-      dayPane?.remove();
-      dayPane = null;
+      clearDayTiles();
     }
   };
 
   const syncHighlight = (event?: L.LeafletEvent): void => {
+    if (!rings.length || syncPaused) return;
+
+    const animatingZoom = (
+      map as L.Map & { _animatingZoom?: boolean }
+    )._animatingZoom;
+    if (event?.type !== "zoomanim" && animatingZoom) return;
+
     const zoomEvent = zoomEventFrom(event);
     const countryPath = ringsPath(projectableMap, rings, zoomEvent);
     const { topLeft, width, height } = layerViewBox(projectableMap, zoomEvent);
@@ -195,22 +228,50 @@ export function mountCountryHighlight(
     }
   };
 
-  applyBasemapStyles(currentBasemap);
-  syncHighlight();
+  const setRings = (next: Ring[]): void => {
+    rings = next;
+    highlightBounds = boundsFromRings(next);
+    clearDayTiles();
+
+    if (!rings.length) {
+      svgPane.style.display = "none";
+      maskPath.removeAttribute("d");
+      glowPath.removeAttribute("d");
+      edgePath.removeAttribute("d");
+      return;
+    }
+
+    svgPane.style.display = "";
+    applyBasemapStyles(currentBasemap);
+    syncHighlight();
+  };
+
+  if (!rings.length) {
+    svgPane.style.display = "none";
+  } else {
+    applyBasemapStyles(currentBasemap);
+    syncHighlight();
+  }
   map.on("viewreset move zoom zoomanim", syncHighlight);
 
   return {
     setBasemap: (resolved: ResolvedBasemap) => {
       if (resolved === currentBasemap) return;
       currentBasemap = resolved;
+      if (!rings.length) return;
       applyBasemapStyles(resolved);
       syncHighlight();
     },
+    setRings,
+    setPaused: (paused: boolean) => {
+      syncPaused = paused;
+      if (!paused && rings.length) syncHighlight();
+    },
+    sync: () => syncHighlight(),
     destroy: () => {
       map.off("viewreset move zoom zoomanim", syncHighlight);
-      if (dayTileLayer) map.removeLayer(dayTileLayer);
+      clearDayTiles();
       svgPane.remove();
-      dayPane?.remove();
     },
   };
 }

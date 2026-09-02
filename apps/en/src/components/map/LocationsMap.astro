@@ -545,6 +545,21 @@ const payload = {
         const bounds = L.latLngBounds([]);
         const markersById = new Map<string, L.Marker>();
         let activeMarker: L.Marker | null = null;
+        let overviewZoom = 0;
+        let overviewCenter = L.latLng(0, 0);
+        let focusFromZoom = 0;
+        let focusFitMaxZoom = payload.fitMaxZoom;
+        let viewAnimationGeneration = 0;
+        let flyDoneHandler: (() => void) | null = null;
+
+        const cancelViewAnimation = (): void => {
+          viewAnimationGeneration += 1;
+          if (flyDoneHandler) {
+            map.off("moveend", flyDoneHandler);
+            flyDoneHandler = null;
+          }
+          map.stop();
+        };
 
         const setActiveMarker = (marker: L.Marker | null): void => {
           if (activeMarker) {
@@ -622,10 +637,10 @@ const payload = {
             const latlng = marker.getLatLng();
             const closeZoom = Math.min(
               tiles.maxZoom,
-              Math.max(overviewZoom + 4, payload.fitMaxZoom),
+              Math.max(focusFromZoom + 4, focusFitMaxZoom),
             );
-            const focusZoom = overviewZoom + (closeZoom - overviewZoom) * 0.5;
-            map.flyTo(latlng, focusZoom, { animate: true, duration: 0.65 });
+            const focusZoom = focusFromZoom + (closeZoom - focusFromZoom) * 0.5;
+            animateToView(latlng, focusZoom, 0.65);
           } else {
             map.setView(marker.getLatLng(), map.getZoom(), { animate: false });
           }
@@ -633,29 +648,162 @@ const payload = {
           marker.openPopup();
         }) as EventListener);
 
+        const targetViewForBounds = (
+          countryBounds: L.LatLngBounds,
+          maxZoom: number,
+          zoomOffset = 0,
+        ): { center: L.LatLng; zoom: number } => {
+          const padded = countryBounds.pad(0.12);
+          let zoom = Math.min(map.getBoundsZoom(padded, false), maxZoom);
+          if (zoomOffset) {
+            zoom = Math.min(zoom + zoomOffset, tiles.maxZoom);
+          }
+          return { center: padded.getCenter(), zoom };
+        };
+
+        const syncFocusBaseline = (maxZoom: number): void => {
+          focusFromZoom = map.getZoom();
+          focusFitMaxZoom = maxZoom;
+        };
+
+        const animateToView = (
+          target: L.LatLngExpression,
+          zoom: number,
+          duration = 0.7,
+          onDone?: () => void,
+        ): void => {
+          cancelViewAnimation();
+          const generation = viewAnimationGeneration;
+
+          flyDoneHandler = () => {
+            map.off("moveend", flyDoneHandler!);
+            flyDoneHandler = null;
+            if (generation !== viewAnimationGeneration) return;
+            onDone?.();
+          };
+
+          map.on("moveend", flyDoneHandler);
+          map.flyTo(target, zoom, { duration, animate: true });
+        };
+
+        const frameBounds = (
+          countryBounds: L.LatLngBounds,
+          maxZoom: number,
+          zoomOffset = 0,
+          animate = false,
+        ): void => {
+          const { center, zoom } = targetViewForBounds(
+            countryBounds,
+            maxZoom,
+            zoomOffset,
+          );
+          if (animate) {
+            animateToView(center, zoom, 0.7, () => syncFocusBaseline(maxZoom));
+          } else {
+            map.setView(center, zoom, { animate: false });
+            syncFocusBaseline(maxZoom);
+          }
+        };
+
+        shell.addEventListener("locations-map:fit", ((
+          event: CustomEvent<{ ids: string[]; maxZoom?: number }>,
+        ) => {
+          const ids = event.detail.ids ?? [];
+          const points = ids
+            .map((id) => markersById.get(id)?.getLatLng())
+            .filter((ll): ll is L.LatLng => Boolean(ll));
+          if (!points.length) return;
+
+          map.closePopup();
+          setActiveMarker(null);
+
+          const fitBounds = L.latLngBounds(points);
+          const maxZoom =
+            event.detail.maxZoom ??
+            Math.min(
+              tiles.maxZoom,
+              Math.max(overviewZoom + 3, payload.fitMaxZoom),
+            );
+          map.flyToBounds(fitBounds.pad(0.22), {
+            maxZoom,
+            animate: true,
+            duration: 0.7,
+          });
+        }) as EventListener);
+
         if (payload.fitHighlight && highlightBounds.isValid()) {
           bounds.extend(highlightBounds);
         }
 
         if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.12), { maxZoom: payload.fitMaxZoom });
-          if (payload.fitZoomOffset) {
-            map.setZoom(
-              Math.min(map.getZoom() + payload.fitZoomOffset, tiles.maxZoom),
-            );
-          }
+          frameBounds(bounds, payload.fitMaxZoom, payload.fitZoomOffset);
         } else {
           map.setView([20, 10], 2);
         }
 
-        const overviewZoom = map.getZoom();
+        overviewZoom = map.getZoom();
+        overviewCenter = map.getCenter();
+        focusFromZoom = overviewZoom;
+        focusFitMaxZoom = payload.fitMaxZoom;
 
-        let highlightController = mountCountryHighlight(
+        const highlightController = mountCountryHighlight(
           map,
           rings,
           resolvedBasemap,
           highlightBounds,
         );
+
+        const boundsFromRings = (
+          ringList: [number, number][][],
+        ): L.LatLngBounds => {
+          const next = L.latLngBounds([]);
+          for (const ring of ringList) {
+            for (const point of ring) next.extend(point);
+          }
+          return next;
+        };
+
+        shell.addEventListener("locations-map:highlight", ((
+          event: CustomEvent<{
+            rings: [number, number][][] | null;
+            ids?: string[];
+            fit?: boolean;
+            maxZoom?: number;
+            zoomOffset?: number;
+          }>,
+        ) => {
+          const nextRings = event.detail.rings ?? [];
+          highlightController.setRings(nextRings);
+
+          if (!event.detail.fit) return;
+
+          const nextBounds = boundsFromRings(nextRings);
+          for (const id of event.detail.ids ?? []) {
+            const latlng = markersById.get(id)?.getLatLng();
+            if (latlng) nextBounds.extend(latlng);
+          }
+          if (!nextBounds.isValid()) return;
+
+          map.closePopup();
+          setActiveMarker(null);
+          cancelViewAnimation();
+          frameBounds(
+            nextBounds,
+            event.detail.maxZoom ?? payload.fitMaxZoom,
+            event.detail.zoomOffset ?? 0,
+            true,
+          );
+        }) as EventListener);
+
+        shell.addEventListener("locations-map:reset", () => {
+          map.closePopup();
+          setActiveMarker(null);
+          animateToView(overviewCenter, overviewZoom, 0.7, () => {
+            highlightController.setRings([]);
+            focusFromZoom = overviewZoom;
+            focusFitMaxZoom = payload.fitMaxZoom;
+          });
+        });
 
         const updatePinColors = (): void => {
           for (const pin of payload.pins) {
@@ -682,7 +830,7 @@ const payload = {
           );
           map.setMaxZoom(tiles.maxZoom);
 
-          highlightController?.setBasemap(next);
+          highlightController.setBasemap(next);
           updatePinColors();
         };
 

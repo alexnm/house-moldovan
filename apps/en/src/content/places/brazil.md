@@ -4,7 +4,7 @@ flag: 🇧🇷
 region: south-america
 tagline: Thundering falls, tropical forests and cities that never quite sleep.
 showMap: true
-cover: ../../assets/brazil/iguazu-brasil-crowds.jpg
+cover: ../../assets/brazil/iguazu-brasil.jpg
 coverLocation: brazil/iguacu-falls
 thumbnail: ../../assets/brazil/parc-de-aves.jpg
 locations:

@@ -1,6 +1,9 @@
 ---
 import LocationsMap from "~/components/map/LocationsMap.astro";
-import type { CountryLocation } from "~/lib/countryPage";
+import {
+  COUNTRY_MAP_FIT_MAX_ZOOM,
+  type CountryLocation,
+} from "~/lib/countryPage";
 import type { CountryShape } from "~/lib/countryShape";
 import type { LocationMapPin } from "~/lib/mapPinData";
 
@@ -22,13 +25,13 @@ const {
 ---
 
 <section id="map" class="section country-map-hub" data-country-hub>
-  <div class="country-map-hub__map motion-reveal-media">
+  <div class="country-map-hub__map">
     <LocationsMap
       pins={locationPins}
       basemap="adaptive"
       fullBleed
       scrollZoom={false}
-      fitMaxZoom={8}
+      fitMaxZoom={COUNTRY_MAP_FIT_MAX_ZOOM}
       fitZoomOffset={fitZoomOffset}
       height="clamp(28rem, 68svh, 44rem)"
       highlight={shape}
@@ -41,19 +44,21 @@ const {
     />
   </div>
 
-  <div class="country-map-hub__places-wrap motion-reveal-media">
+  <div class="map-hub-index motion-reveal">
     <h2 class="display section-heading">{locationsHeading}</h2>
-    <ol class="country-map-hub__places" aria-label={locationsHeading}>
+    <ol class="map-hub-list" aria-label={locationsHeading}>
       {
         locations.map((location, index) => (
           <li>
             <button
               type="button"
-              class="country-map-hub__place"
+              class="map-hub-item"
               data-focus-location={location.qualifiedId}
             >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <span>{location.name}</span>
+              <span class="map-hub-num">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span class="map-hub-item-name">{location.name}</span>
             </button>
           </li>
         ))
@@ -63,13 +68,16 @@ const {
 </section>
 
 <style>
+  @import "../map/mapHubIndex.css";
+
   .country-map-hub {
     display: grid;
     gap: clamp(2rem, 4vw, 3rem);
     padding-block: clamp(3.5rem, 7vw, 7rem);
+    scroll-margin-top: 7rem;
 
-    @media (width >= 900px) {
-      grid-template-columns: 3fr 2fr;
+    @media (width >= 960px) {
+      grid-template-columns: minmax(0, 11fr) minmax(16rem, 7fr);
       gap: clamp(2rem, 5vw, 5rem);
       align-items: start;
     }
@@ -78,50 +86,6 @@ const {
   .country-map-hub__map {
     overflow: clip;
     border-radius: 8px;
-  }
-
-  .country-map-hub__places-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .country-map-hub__places {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 1px solid var(--color-line);
-  }
-
-  .country-map-hub__places li {
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  .country-map-hub__place {
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    gap: 0.5rem;
-    width: 100%;
-    padding-block: 0.55rem;
-    border: 0;
-    background: transparent;
-    color: var(--color-ink-dim);
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    text-align: start;
-    cursor: pointer;
-    transition: color var(--duration-ui) var(--ease-cinema);
-  }
-
-  .country-map-hub__place:hover,
-  .country-map-hub__place.is-active {
-    color: var(--color-accent-ink);
-  }
-
-  .country-map-hub__place span {
-    color: var(--color-accent-ink);
-    font-family: var(--font-sans);
-    font-size: 1rem;
   }
 </style>
 
@@ -141,10 +105,10 @@ const {
 
         const setActivePlace = (id: string | null): void => {
           for (const button of placeButtons) {
-            button.classList.toggle(
-              "is-active",
-              id !== null && button.dataset.focusLocation === id,
-            );
+            const isActive =
+              id !== null && button.dataset.focusLocation === id;
+            button.classList.toggle("is-active", isActive);
+            button.classList.toggle("is-active-place", isActive);
           }
         };
 

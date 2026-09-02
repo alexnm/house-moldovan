@@ -4,7 +4,7 @@ flag: 🇦🇷
 region: south-america
 tagline: Patagonian ice, Andean peaks, and tango nights in Buenos Aires.
 showMap: true
-cover: ../../assets/argentina/laguna-de-los-tres-evening.jpg
+cover: ../../assets/argentina/laguna-de-los-tres.jpg
 coverLocation: Fitz Roy, El Chaltén
 thumbnail: ../../assets/argentina/laguna-de-los-tres.jpg
 locations:

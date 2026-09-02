@@ -42,7 +42,6 @@ const regions = defineCollection({
     z.object({
       name: z.string(),
       tagline: z.string(),
-      intro: z.string(),
       accent: z.enum(ACCENTS),
       order: z.number().int().positive(),
       /** Contact-sheet photos for the region hero (first four used). */

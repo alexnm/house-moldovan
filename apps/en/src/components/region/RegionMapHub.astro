@@ -1,0 +1,378 @@
+---
+import LocationsMap from "~/components/map/LocationsMap.astro";
+import { en } from "~/i18n/en";
+import {
+  COUNTRY_MAP_FIT_MAX_ZOOM,
+  countryMapFitZoomOffset,
+} from "~/lib/countryPage";
+import type { LocationMapPin } from "~/lib/mapPinData";
+import type { RegionCountry } from "~/lib/regionPage";
+
+export interface Props {
+  countries: RegionCountry[];
+  locationPins: LocationMapPin[];
+  regionName: string;
+}
+
+const { countries, locationPins, regionName } = Astro.props;
+
+const heading = en.region.mapHeading;
+const backLabel = en.region.backToRegion(regionName);
+
+const hubPayload = countries.map((country) => ({
+  id: country.id,
+  pinIds: country.pinIds,
+  rings: country.rings,
+  maxZoom: COUNTRY_MAP_FIT_MAX_ZOOM,
+  zoomOffset: countryMapFitZoomOffset(country.id),
+}));
+---
+
+<section id="map" class="section region-map-hub" data-region-hub>
+  <div class="region-map-hub__map">
+    <LocationsMap
+      pins={locationPins}
+      basemap="adaptive"
+      fullBleed
+      scrollZoom={false}
+      fitMaxZoom={5}
+      height="clamp(28rem, 68svh, 44rem)"
+      labelMode="full"
+      locationLabelStyle="title"
+      neutralLocationStamp
+      locationOnlyPopup
+      focusLocations
+    />
+  </div>
+
+  <div class="map-hub-index motion-reveal">
+    <h2 class="display section-heading">{heading}</h2>
+
+    <div data-hub-overview>
+      <p class="region-map-hub__hint">{en.region.mapHint}</p>
+      <ol class="map-hub-list" aria-label={heading}>
+        {
+          countries.map((country, index) => (
+            <li>
+              <button
+                type="button"
+                class="map-hub-item region-map-hub__country"
+                data-focus-country={country.id}
+              >
+                <span class="map-hub-num">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span class="region-map-hub__meta">
+                  <span class="map-hub-item-name region-map-hub__name">
+                    <span aria-hidden="true">{country.flag}</span>
+                    {country.shortName}
+                  </span>
+                  <span class="stamp region-map-hub__count">
+                    {en.region.placeCount(country.locationCount)}
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div data-hub-detail hidden>
+      {
+        countries.map((country) => (
+          <div data-country-places={country.id} hidden>
+            <div class="region-map-hub__picked">
+              <p class="region-map-hub__picked-name">
+                <span aria-hidden="true">{country.flag}</span>
+                {country.shortName}
+              </p>
+              <button type="button" class="region-map-hub__back" data-hub-back>
+                <span aria-hidden="true">←</span>
+                <span>{backLabel}</span>
+              </button>
+            </div>
+            {country.locations.length > 0 ? (
+              <ol
+                class="map-hub-list"
+                aria-label={en.region.placesIn(country.shortName)}
+              >
+                {country.locations.map((location, index) => (
+                  <li>
+                    <button
+                      type="button"
+                      class="map-hub-item"
+                      data-focus-location={location.qualifiedId}
+                    >
+                      <span class="map-hub-num">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span class="map-hub-item-name">{location.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p class="region-map-hub__hint">{en.region.noPlacesYet}</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <script
+    type="application/json"
+    data-hub-payload
+    is:inline
+    set:html={JSON.stringify(hubPayload)}
+  />
+</section>
+
+<style>
+  @import "../map/mapHubIndex.css";
+
+  .region-map-hub {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    padding-block: clamp(3.5rem, 7vw, 7rem);
+    scroll-margin-top: 7rem;
+
+    @media (width >= 960px) {
+      grid-template-columns: minmax(0, 11fr) minmax(16rem, 7fr);
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  .region-map-hub__map {
+    overflow: clip;
+    border-radius: 8px;
+  }
+
+  .region-map-hub [data-hub-detail]:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .region-map-hub__hint {
+    max-width: 36ch;
+    margin: 0;
+    color: var(--color-ink-dim);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .region-map-hub__picked {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .region-map-hub__picked-name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .region-map-hub__back {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    margin-inline-start: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink-faint);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    line-height: 1.3;
+    text-align: end;
+    white-space: nowrap;
+    transition: color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .region-map-hub__back:hover {
+    color: var(--color-ink);
+  }
+
+  .region-map-hub__name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+
+  .region-map-hub__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 1rem;
+  }
+
+  .region-map-hub__count {
+    color: var(--color-ink-faint);
+  }
+
+  .region-map-hub__country.is-active .region-map-hub__count {
+    color: var(--color-accent-ink);
+  }
+</style>
+
+<script>
+  type HubCountry = {
+    id: string;
+    pinIds: string[];
+    rings: [number, number][][];
+    maxZoom: number;
+    zoomOffset: number;
+  };
+
+  function initRegionHub(root: ParentNode = document): void {
+    root
+      .querySelectorAll<HTMLElement>("[data-region-hub]:not([data-linked])")
+      .forEach((hub) => {
+        hub.dataset.linked = "1";
+
+        const mapShell = hub.querySelector<HTMLElement>("[data-locations-map]");
+        const payloadEl =
+          hub.querySelector<HTMLScriptElement>("[data-hub-payload]");
+        if (!mapShell || !payloadEl?.textContent) return;
+
+        const countries = JSON.parse(payloadEl.textContent) as HubCountry[];
+        const countryById = new Map(
+          countries.map((country) => [country.id, country]),
+        );
+
+        const overview = hub.querySelector<HTMLElement>("[data-hub-overview]");
+        const detail = hub.querySelector<HTMLElement>("[data-hub-detail]");
+        const backButtons = [
+          ...hub.querySelectorAll<HTMLButtonElement>("[data-hub-back]"),
+        ];
+        const placePanels = [
+          ...hub.querySelectorAll<HTMLElement>("[data-country-places]"),
+        ];
+        const placeButtons = [
+          ...hub.querySelectorAll<HTMLButtonElement>("[data-focus-location]"),
+        ];
+
+        let selected: string | null = null;
+
+        const setActivePlace = (id: string | null): void => {
+          for (const button of placeButtons) {
+            const isActive =
+              id !== null && button.dataset.focusLocation === id;
+            button.classList.toggle("is-active", isActive);
+            button.classList.toggle("is-active-place", isActive);
+          }
+        };
+
+        const showDetail = (countryId: string): void => {
+          overview?.setAttribute("hidden", "");
+          detail?.removeAttribute("hidden");
+          for (const panel of placePanels) {
+            panel.toggleAttribute(
+              "hidden",
+              panel.dataset.countryPlaces !== countryId,
+            );
+          }
+        };
+
+        const showOverview = (): void => {
+          detail?.setAttribute("hidden", "");
+          overview?.removeAttribute("hidden");
+          for (const panel of placePanels) {
+            panel.setAttribute("hidden", "");
+          }
+          setActivePlace(null);
+        };
+
+        const highlightCountry = (
+          country: HubCountry | undefined,
+          fit: boolean,
+        ): void => {
+          const rings = country?.rings ?? [];
+          const pinIds = country?.pinIds ?? [];
+
+          mapShell.dispatchEvent(
+            new CustomEvent("locations-map:highlight", {
+              detail: {
+                rings,
+                ids: pinIds,
+                fit,
+                maxZoom: country?.maxZoom,
+                zoomOffset: country?.zoomOffset ?? 0,
+              },
+            }),
+          );
+        };
+
+        const selectCountry = (id: string | null): void => {
+          selected = id;
+
+          if (!id) {
+            showOverview();
+            mapShell.dispatchEvent(new CustomEvent("locations-map:reset"));
+            return;
+          }
+
+          showDetail(id);
+          highlightCountry(countryById.get(id), true);
+        };
+
+        mapShell.addEventListener("locations-map:focused", ((
+          event: CustomEvent<{ id: string | null }>,
+        ) => {
+          const locationId = event.detail.id;
+          if (!locationId) {
+            setActivePlace(null);
+            return;
+          }
+
+          const slash = locationId.indexOf("/");
+          const countryId = slash > 0 ? locationId.slice(0, slash) : locationId;
+
+          if (countryId !== selected) {
+            selectCountry(countryId);
+          }
+          setActivePlace(locationId);
+        }) as EventListener);
+
+        for (const button of hub.querySelectorAll<HTMLButtonElement>(
+          "[data-focus-country]",
+        )) {
+          button.addEventListener("click", () => {
+            selectCountry(button.dataset.focusCountry ?? null);
+          });
+        }
+
+        for (const button of placeButtons) {
+          button.addEventListener("click", () => {
+            const id = button.dataset.focusLocation;
+            if (!id) return;
+            setActivePlace(id);
+            mapShell.dispatchEvent(
+              new CustomEvent("locations-map:focus", { detail: { id } }),
+            );
+          });
+        }
+
+        for (const button of backButtons) {
+          button.addEventListener("click", () => selectCountry(null));
+        }
+      });
+  }
+
+  initRegionHub();
+  document.addEventListener("astro:page-load", () => initRegionHub());
+</script>

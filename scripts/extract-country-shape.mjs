@@ -34,6 +34,12 @@ const SLUG_TO_ISO = {
   vietnam: "VNM",
 };
 
+/**
+ * Drop overseas rings when a place slug should highlight only its European
+ * mainland (Natural Earth admin-0 includes overseas departments).
+ */
+const METROPOLITAN_EUROPE_ONLY = new Set(["france"]);
+
 /** Default simplification for medium/large countries. */
 const DEFAULT_SIMPLIFY = {
   minDistance: 0.08,
@@ -148,6 +154,14 @@ function toLeafletRings(geometry) {
   return rings.filter((_, index) => areas[index] >= minArea);
 }
 
+/** Keep rings whose northern extent lies in Europe (excludes e.g. French Guiana). */
+function filterMetropolitanEurope(rings) {
+  return rings.filter((ring) => {
+    const maxLat = Math.max(...ring.map(([lat]) => lat));
+    return maxLat > 30;
+  });
+}
+
 const placesDir = join(import.meta.dirname, "../apps/en/src/content/places");
 const outDir = join(import.meta.dirname, "../apps/en/src/data/country-shapes");
 
@@ -186,10 +200,15 @@ for (const id of ids) {
     continue;
   }
 
+  let rings = toLeafletRings(feature.geometry);
+  if (METROPOLITAN_EUROPE_ONLY.has(id)) {
+    rings = filterMetropolitanEurope(rings);
+  }
+
   const shape = {
     id,
     name: feature.properties.NAME,
-    rings: toLeafletRings(feature.geometry),
+    rings,
   };
 
   const path = join(outDir, `${id}.json`);

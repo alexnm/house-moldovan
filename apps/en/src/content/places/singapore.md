@@ -6,6 +6,7 @@ tagline: Garden towers, hawker halls, and a harbor where worlds converge.
 thumbnail: ../../assets/singapore/gardens-by-the-bay.jpg
 cover: ../../assets/singapore/gardens-by-the-bay-day.JPG
 coverLocation: Gardens by the Bay
+showMap: true
 locations:
   - id: chinatown
     name: "Chinatown"

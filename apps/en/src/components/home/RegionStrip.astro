@@ -25,7 +25,7 @@ const regions = await getAllRegions();
           <li class="motion-reveal-media">
             <a
               href={`/explore/region/${r.id}`}
-              class="accent-scope accent-drenched region-tile group relative flex aspect-square flex-col gap-16 overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
+              class="accent-scope accent-drenched region-tile group relative flex aspect-square flex-col gap-4 overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
               data-accent={r.data.accent}
             >
               {cover && (
@@ -84,12 +84,12 @@ const regions = await getAllRegions();
     inset-inline: 0;
     bottom: 0;
     z-index: 0;
-    height: 56%;
+    height: 60%;
     overflow: hidden;
     /* Fade the photo out so the tile background shows through — avoids a hard
        color seam on iOS where gradient overlays fail to match accent-drenched. */
-    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%);
-    mask-image: linear-gradient(to top, black 0%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
+    mask-image: linear-gradient(to top, black 50%, transparent 100%);
   }
 
   .region-tile__photo :global(.cover-image-shell),

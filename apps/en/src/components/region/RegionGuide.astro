@@ -1,0 +1,102 @@
+---
+import type { Accent } from "@shared/lib/accent";
+import { en } from "~/i18n/en";
+import type { RegionItinerary } from "~/lib/regionPage";
+import RegionDossier from "./RegionDossier.astro";
+
+export interface Props {
+  itineraries: RegionItinerary[];
+  accent: Accent;
+}
+
+const { itineraries } = Astro.props;
+const hasItineraries = itineraries.length > 0;
+---
+
+<section
+  id="guide"
+  class:list={[
+    "section",
+    "region-guide",
+    { "region-guide--prose-only": !hasItineraries },
+  ]}
+>
+  <div class="region-guide__prose motion-reveal">
+    <h2 class="display section-heading">{en.region.guideHeading}</h2>
+    <div class="prose-body">
+      <slot />
+    </div>
+  </div>
+
+  {
+    hasItineraries && (
+      <div id="routes" class="region-guide__routes">
+        <div class="region-guide__dossier">
+          {itineraries.map((itinerary) => (
+            <RegionDossier
+              href={itinerary.href}
+              title={itinerary.title}
+              summary={itinerary.summary}
+              hero={itinerary.hero}
+              days={itinerary.days}
+              countries={itinerary.countries}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .region-guide {
+    display: grid;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    padding-block: clamp(3.5rem, 7vw, 7rem);
+
+    @media (width >= 900px) {
+      grid-template-columns: 2fr 3fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  .region-guide__prose {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @media (width >= 900px) {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+
+  .region-guide__prose .prose-body {
+    max-width: 42ch;
+  }
+
+  .region-guide--prose-only {
+    @media (width >= 900px) {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  .region-guide--prose-only .region-guide__prose {
+    @media (width >= 900px) {
+      position: static;
+    }
+  }
+
+  .region-guide--prose-only .region-guide__prose .prose-body {
+    max-width: none;
+  }
+
+  .region-guide__routes {
+    min-width: 0;
+  }
+
+  .region-guide__dossier {
+    margin-top: 0.15rem;
+  }
+</style>

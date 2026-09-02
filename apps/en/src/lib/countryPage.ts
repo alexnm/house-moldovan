@@ -34,6 +34,9 @@ const COUNTRY_MAP_FIT_ZOOM_OFFSET: Partial<Record<string, number>> = {
   argentina: 1,
 };
 
+/** Cap used when framing a single country on the map. */
+export const COUNTRY_MAP_FIT_MAX_ZOOM = 8;
+
 export function countryMapFitZoomOffset(countryId: string): number {
   return COUNTRY_MAP_FIT_ZOOM_OFFSET[countryId] ?? 0;
 }
