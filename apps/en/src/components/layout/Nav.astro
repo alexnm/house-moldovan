@@ -3,7 +3,7 @@ import { en } from "~/i18n/en";
 import NavDropdown from "~/components/layout/NavDropdown.astro";
 import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 import { placeShortName } from "~/lib/articlePlaces";
-import { countriesForRegion, getAllPlaces } from "~/lib/content";
+import { countriesForRegion, getPublishedPlaces } from "~/lib/content";
 import { getAllRegions } from "~/lib/regions";
 
 const path = Astro.url.pathname;
@@ -25,7 +25,10 @@ const journalLinks = [
   { href: "/spotlights", label: en.nav.spotlights },
 ];
 
-const [regions, places] = await Promise.all([getAllRegions(), getAllPlaces()]);
+const [regions, places] = await Promise.all([
+  getAllRegions(),
+  getPublishedPlaces(),
+]);
 
 const exploreMenu = regions
   .map((region) => ({
@@ -67,7 +70,7 @@ const exploreMenu = regions
                 <a
                   href={link.href}
                   class:list={[
-                    "nav-link nav-link--sub link-accent link-accent--dim block rounded-md px-2.5 py-2",
+                    "nav-link nav-link--sub link-accent block rounded-md px-2.5 py-2",
                     (path === link.href || path.startsWith(link.href + "/")) &&
                       "is-active",
                   ]}
@@ -156,7 +159,7 @@ const exploreMenu = regions
         Menu
       </summary>
       <div
-        class="nav-mobile-panel absolute right-0 mt-3 w-64 rounded-lg border border-line bg-surface-2 px-5 py-5 shadow-lift"
+        class="nav-mobile-panel shadow-lift absolute right-0 mt-3 w-64 rounded-lg border border-line bg-surface-2 px-5 py-5"
       >
         <ul class="flex flex-col gap-5">
           <li>

@@ -32,9 +32,24 @@ locations:
     image: ../../assets/peru/ollantaytambo.JPG
     lat: -13.2583
     lng: -72.2633
-  - id: salkantay-pass
-    name: "Salkantay Pass"
-    image: ../../assets/peru/salkantay-saddle.jpg
+  - id: pisac
+    name: "Pisac"
+    image: ../../assets/peru/pisac.JPG
+    lat: -13.4225
+    lng: -71.8472
+  - id: moray
+    name: "Moray"
+    image: ../../assets/peru/moray.JPG
+    lat: -13.3297
+    lng: -72.1972
+  - id: maras
+    name: "Maras"
+    image: ../../assets/peru/maras.JPG
+    lat: -13.3028
+    lng: -72.1589
+  - id: salkantay-trek
+    name: "Salkantay Trek"
+    image: ../../assets/peru/salkantay-cover.jpg
     lat: -13.3367
     lng: -72.5747
   - id: machu-picchu

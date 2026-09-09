@@ -64,7 +64,7 @@ export const en = {
   },
   places: {
     countOf: (n: number) => `${n} ${n === 1 ? "note" : "notes"}`,
-    noStoriesYet: "No notes from here yet.",
+    noStoriesYet: "Articles coming soon.",
     backToExplore: "Back to Explore",
     storiesHeading: (name: string) => `Travel guides from ${name}`,
     locationsHeading: "Explore the locations",
@@ -187,7 +187,7 @@ export const en = {
     subscribeLabel: "Subscribe",
     rssLabel: "Subscribe via RSS",
     roCta: "pecreste.ro",
-    roKicker: "Visit our sister website for hiking in Romania",
+    roKicker: "Visit our hiking website for Romania",
   },
 } as const;
 

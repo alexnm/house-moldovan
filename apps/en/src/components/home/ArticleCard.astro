@@ -98,7 +98,11 @@ const titleSize = "text-2xl md:text-2xl lg:text-[1.75rem]";
       >
         {title}
       </h3>
-      {meta && <p class="mt-2.5 text-balance text-photo-ink">{meta}</p>}
+      {
+        meta && (
+          <p class="mt-2.5 font-sans text-balance text-photo-ink">{meta}</p>
+        )
+      }
     </div>
   </figure>
 </a>

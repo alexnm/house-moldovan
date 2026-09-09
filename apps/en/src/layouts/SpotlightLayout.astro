@@ -7,7 +7,7 @@ import MetaBar from "~/components/article/MetaBar.astro";
 import SpotlightPhotoGrid from "~/components/article/SpotlightPhotoGrid.astro";
 import { en } from "~/i18n/en";
 import { getPlace } from "~/lib/content";
-import { articleOgPath } from "~/lib/articles";
+import { articleListingHref, articleOgPath } from "~/lib/articles";
 import {
   articleHeroLocation,
   countryLinks,
@@ -64,6 +64,7 @@ const description = data.summary;
       image={data.hero}
       alt={data.title}
       kicker={en.article.spotlight}
+      kickerHref={articleListingHref("spotlight")}
       title={data.title}
       meta={heroMeta}
       location={heroLocation}

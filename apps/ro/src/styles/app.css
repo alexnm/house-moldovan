@@ -219,11 +219,16 @@
   }
 
   html {
-    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
     scrollbar-gutter: auto;
+  }
+
+  :root:not([data-theme="light"]),
+  :root[data-theme="dark"] {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -390,9 +395,9 @@
   }
 
   .hero-summary {
-    max-width: 38ch;
+    max-width: 40ch;
     font-family: var(--font-sans);
-    font-size: clamp(1.05rem, 0.9rem + 0.45vw, 1.3rem);
+    font-size: clamp(1rem, 0.9rem + 0.45vw, 1.3rem);
     font-weight: 420;
     line-height: 1.4;
     text-wrap: balance;
@@ -521,7 +526,7 @@
       .pad-canvas > ul > li > a.link-accent:hover,
       .pad-canvas > ul > li > a.link-accent.is-active
     ) {
-    color: oklch(0.98 0.005 80 / 0.92);
+    color: #fff;
   }
 
   /* Region-drenched heroes: chapter ink for every accent (incl. Europe / cobalt) */
@@ -664,15 +669,6 @@
   /* Brand wordmark — nav uses .nav-link metrics; spans only split weight */
   .site-logo {
     text-decoration: none;
-  }
-
-  .site-logo__soft {
-    font-weight: 400;
-    opacity: 0.75;
-  }
-
-  .site-logo__strong {
-    font-weight: 550;
   }
 
   .site-logo--footer {
@@ -1168,7 +1164,7 @@
   /* Display-scale page titles. Mixed case by default so long story /
      spotlight / itinerary headlines stay readable (Poster Owns Place Names). */
   .page-title {
-    font-size: clamp(3.15rem, 6vw + 0.75rem, 6.5rem);
+    font-size: clamp(2.5rem, 6vw + 0.75rem, 6.5rem);
     line-height: 1.04;
     letter-spacing: -0.04em;
     text-transform: none;

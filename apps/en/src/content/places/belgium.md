@@ -18,4 +18,9 @@ locations:
     image: ../../assets/belgium/bruges-canal.JPG
     lat: 51.2093
     lng: 3.2247
+  - id: antwerp
+    name: "Antwerp"
+    image: ../../assets/belgium/antwerp.JPG
+    lat: 51.2194
+    lng: 4.4025
 ---

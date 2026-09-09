@@ -6,7 +6,7 @@ import Prose from "@shared/components/article/Prose.astro";
 import MetaBar from "~/components/article/MetaBar.astro";
 import { en } from "~/i18n/en";
 import { getPlace } from "~/lib/content";
-import { articleOgPath } from "~/lib/articles";
+import { articleListingHref, articleOgPath } from "~/lib/articles";
 import {
   articleHeroLocation,
   countryLinks,
@@ -67,6 +67,7 @@ const ogImage = articleOgPath({ ...entry, kind: "story" });
       image={data.hero}
       alt={data.title}
       kicker={en.article.story}
+      kickerHref={articleListingHref("story")}
       title={data.title}
       meta={data.summary}
       location={heroLocation}

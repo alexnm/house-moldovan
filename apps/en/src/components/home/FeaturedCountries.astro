@@ -3,8 +3,8 @@ import CountryCard from "~/components/home/CountryCard.astro";
 import { placeShortName } from "~/lib/articlePlaces";
 import { en } from "~/i18n/en";
 import {
-  getAllPlaces,
   getFeaturedCountries,
+  getPublishedPlaces,
   type AnyEnArticle,
 } from "~/lib/content";
 import { placeThumbnailForCountry } from "~/lib/placeCover";
@@ -15,7 +15,10 @@ export interface Props {
 }
 
 const { feed } = Astro.props;
-const [places, regions] = await Promise.all([getAllPlaces(), getAllRegions()]);
+const [places, regions] = await Promise.all([
+  getPublishedPlaces(),
+  getAllRegions(),
+]);
 const regionsById = regionMapById(regions);
 const featured = getFeaturedCountries(places);
 ---

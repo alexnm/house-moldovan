@@ -1,6 +1,7 @@
 ---
 import { en } from "~/i18n/en";
 import { SISTER_SITE_URL } from "~/lib/site";
+import CrestMark from "@shared/components/layout/CrestMark.astro";
 import SiteLogo from "@shared/components/layout/SiteLogo.astro";
 import ThemeToggle from "@shared/components/layout/ThemeToggle.astro";
 import { getAllRegions } from "~/lib/regions";
@@ -18,28 +19,38 @@ const journalLinks = [
 
 <footer class="mt-32 bg-surface-2">
   <div
-    class="pad-canvas mx-auto grid max-w-canvas grid-cols-2 gap-x-8 gap-y-10 py-16 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-12"
+    class="pad-canvas mx-auto grid max-w-canvas grid-cols-2 gap-x-8 gap-y-10 py-16 md:grid-cols-[3fr_1fr_1fr_1fr] md:gap-12"
   >
     <div class="col-span-2 md:col-span-1">
       <SiteLogo size="footer" link={false} />
       <p class="mt-3 max-w-md text-ink-dim">
         {en.description}
       </p>
+      <a
+        href={SISTER_SITE_URL}
+        class="duration-ui mt-4 block max-w-max rounded-lg border border-line p-4 transition-colors ease-cinema hover:border-line-strong"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <p class="text-ink-dim">{en.footer.roKicker}</p>
+        <p class="mt-1 flex items-center gap-2.5 font-sans text-xl">
+          <span class="block w-7 shrink-0">
+            <CrestMark />
+          </span>
+          {en.footer.roCta}
+        </p>
+      </a>
       <p class="micro mt-8 text-ink-faint">
         © {year}. {en.footer.rights}
       </p>
-      <ThemeToggle
-        lightLabel={en.footer.themeLight}
-        darkLabel={en.footer.themeDark}
-      />
     </div>
 
     <div>
-      <ul class="space-y-2 text-ink-dim">
+      <ul class="space-y-2">
         {
           journalLinks.map((link) => (
             <li>
-              <a href={link.href} class="link-accent link-accent--dim">
+              <a href={link.href} class="link-accent font-sans">
                 {link.label}
               </a>
             </li>
@@ -49,9 +60,9 @@ const journalLinks = [
     </div>
 
     <div>
-      <ul class="space-y-2 text-ink-dim">
+      <ul class="space-y-2">
         <li>
-          <a href="/explore" class="link-accent link-accent--dim">
+          <a href="/explore" class="link-accent font-sans">
             {en.nav.explore}
           </a>
         </li>
@@ -60,7 +71,7 @@ const journalLinks = [
             <li>
               <a
                 href={`/explore/region/${region.id}`}
-                class="link-accent link-accent--dim"
+                class="link-accent font-sans"
               >
                 {region.data.name}
               </a>
@@ -71,16 +82,16 @@ const journalLinks = [
     </div>
 
     <div>
-      <ul class="space-y-2 text-ink-dim">
+      <ul class="space-y-2">
         <li>
-          <a href="/about" class="link-accent link-accent--dim">
+          <a href="/about" class="link-accent font-sans">
             {en.footer.aboutUs}
           </a>
         </li>
         <li>
           <a
             href={en.footer.instagramUrl}
-            class="link-accent link-accent--dim"
+            class="link-accent font-sans"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -88,21 +99,16 @@ const journalLinks = [
           </a>
         </li>
         <li>
-          <a href="/rss.xml" class="link-accent link-accent--dim">
+          <a href="/rss.xml" class="link-accent font-sans">
             {en.footer.subscribeLabel}
           </a>
         </li>
       </ul>
 
-      <a
-        href={SISTER_SITE_URL}
-        class="duration-ui mt-4 block rounded-lg border border-line p-4 transition-colors ease-cinema hover:border-line-strong"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <p class="micro text-ink-faint">{en.footer.roKicker}</p>
-        <p class="display mt-1 text-lg">{en.footer.roCta} →</p>
-      </a>
+      <ThemeToggle
+        lightLabel={en.footer.themeLight}
+        darkLabel={en.footer.themeDark}
+      />
     </div>
   </div>
 </footer>

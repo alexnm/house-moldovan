@@ -6,6 +6,9 @@ const notDraft = <T extends "stories" | "spotlights" | "itineraries">(
   e: CollectionEntry<T>,
 ): boolean => e.data.draft !== true;
 
+const notDraftPlace = (e: CollectionEntry<"places">): boolean =>
+  e.data.draft !== true;
+
 const byPublishedDesc = (
   a: CollectionEntry<"stories" | "spotlights" | "itineraries">,
   b: CollectionEntry<"stories" | "spotlights" | "itineraries">,
@@ -97,6 +100,11 @@ export const getPlace = async (
 
 export const getAllPlaces = async (): Promise<CollectionEntry<"places">[]> =>
   await getCollection("places");
+
+/** Countries visible in explore, nav, and region lists. */
+export const getPublishedPlaces = async (): Promise<
+  CollectionEntry<"places">[]
+> => (await getAllPlaces()).filter(notDraftPlace);
 
 export const regionByPlaceIdMap = (
   places: CollectionEntry<"places">[],

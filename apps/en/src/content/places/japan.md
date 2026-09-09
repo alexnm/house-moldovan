@@ -34,7 +34,7 @@ locations:
     lng: 134.6939
   - id: kobe
     name: "Kobe"
-    image: ../../assets/japan/akashi-kaikyo-bridge.JPG
+    image: ../../assets/japan/kobe.JPG
     lat: 34.6901
     lng: 135.1956
   - id: nara

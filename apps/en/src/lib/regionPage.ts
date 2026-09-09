@@ -6,7 +6,7 @@ import { countryLine, placeShortName } from "~/lib/articlePlaces";
 import {
   articlesForRegion,
   countriesForRegion,
-  getAllPlaces,
+  getPublishedPlaces,
   getEnFeed,
   getPlace,
   primaryCountryFromArticle,
@@ -96,7 +96,7 @@ export async function loadRegionPage(
   const region = await getRegion(slug);
   if (!region) return undefined;
 
-  const [places, feed] = await Promise.all([getAllPlaces(), getEnFeed()]);
+  const [places, feed] = await Promise.all([getPublishedPlaces(), getEnFeed()]);
   const regionMap = regionByPlaceIdMap(places);
   const placeById = new Map(places.map((p) => [p.id, p] as const));
   const countryEntries = countriesForRegion(places, region.id);

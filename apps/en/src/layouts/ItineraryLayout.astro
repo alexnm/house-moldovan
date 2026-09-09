@@ -8,6 +8,7 @@ import ItineraryIntroCards from "~/components/article/ItineraryIntroCards.astro"
 import ItineraryDaysCompact from "~/components/article/ItineraryDaysCompact.astro";
 import { en } from "~/i18n/en";
 import { getPlace } from "~/lib/content";
+import { articleListingHref } from "~/lib/articles";
 import {
   articleHeroLocation,
   countryLinks,
@@ -101,6 +102,7 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
       image={data.hero}
       alt={data.title}
       kicker={en.article.itinerary}
+      kickerHref={articleListingHref("itinerary")}
       title={data.title}
       meta={data.summary}
       location={heroLocation}

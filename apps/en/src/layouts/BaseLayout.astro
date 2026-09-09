@@ -30,7 +30,7 @@ const { title, description, ogImage, type, bodyClass, noindex } = Astro.props;
       noindex={noindex}
     />
   </head>
-  <body class:list={["min-h-screen antialiased", bodyClass]}>
+  <body class:list={["min-h-screen", bodyClass]}>
     <a
       href="#main"
       class="sr-only z-50 focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:rounded focus:bg-surface-2 focus:px-3 focus:py-2"

@@ -13,6 +13,11 @@ locations:
     image: ../../assets/spain/barcelona-milla.JPG
     lat: 41.3874
     lng: 2.1686
+  - id: montserrat
+    name: "Montserrat"
+    image: ../../assets/spain/montserrat.JPG
+    lat: 41.5917
+    lng: 1.8375
   - id: madrid
     name: "Madrid"
     image: ../../assets/spain/madrid.JPG

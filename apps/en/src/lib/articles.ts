@@ -2,6 +2,17 @@ import { en } from "~/i18n/en";
 import type { AnyEnArticle } from "~/lib/content";
 export type ArticleKind = "itinerary" | "story" | "spotlight";
 
+export function articleListingHref(kind: ArticleKind): string {
+  switch (kind) {
+    case "story":
+      return "/stories";
+    case "spotlight":
+      return "/spotlights";
+    case "itinerary":
+      return "/itineraries";
+  }
+}
+
 export function articleHref(a: AnyEnArticle): string {
   switch (a.kind) {
     case "story":

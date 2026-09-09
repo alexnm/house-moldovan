@@ -12,6 +12,7 @@ const NE_URL =
 /** Place slug → Natural Earth ISO_A3. */
 const SLUG_TO_ISO = {
   argentina: "ARG",
+  austria: "AUT",
   belgium: "BEL",
   brazil: "BRA",
   cambodia: "KHM",
@@ -23,9 +24,11 @@ const SLUG_TO_ISO = {
   japan: "JPN",
   jordan: "JOR",
   malaysia: "MYS",
+  netherlands: "NLD",
   peru: "PER",
   poland: "POL",
   singapore: "SGP",
+  slovenia: "SVN",
   spain: "ESP",
   thailand: "THA",
   "united-arab-emirates": "ARE",

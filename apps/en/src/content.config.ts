@@ -73,6 +73,8 @@ const places = defineCollection({
     snapshots: z.array(placeSnapshot).default([]),
     /** Show the country page map section (still requires ≥2 locations). */
     showMap: z.boolean().default(false),
+    /** Hidden from explore, nav, and region lists until ready to publish. */
+    draft: z.boolean().default(false),
   }),
 });
 

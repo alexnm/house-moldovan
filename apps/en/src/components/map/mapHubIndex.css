@@ -22,6 +22,7 @@
 
 .map-hub-item {
   display: grid;
+  align-items: center;
   grid-template-columns: 2.25rem 1fr;
   gap: 0.65rem;
   width: 100%;
@@ -41,7 +42,7 @@
 
 .map-hub-num {
   color: var(--color-accent-ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   line-height: 1.6;

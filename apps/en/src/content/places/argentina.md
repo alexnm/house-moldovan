@@ -10,7 +10,7 @@ thumbnail: ../../assets/argentina/laguna-de-los-tres.jpg
 locations:
   - id: buenos-aires
     name: "Buenos Aires"
-    image: ../../assets/argentina/buenos-aires-obelisco.jpg
+    image: ../../assets/argentina/buenos-aires-casa-rosada.jpg
     lat: -34.6037
     lng: -58.3816
   - id: puerto-iguazu
