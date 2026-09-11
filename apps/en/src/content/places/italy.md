@@ -58,4 +58,21 @@ locations:
     image: ../../assets/italy/dolomites-val-badia.JPG
     lat: 46.5508
     lng: 11.8756
+snapshots:
+  - image: ../../assets/italy/roma-colloseo.JPG
+    location: roma
+  - image: ../../assets/italy/cinque-terre-riomaggiore.jpg
+    location: cinque-terre
+  - image: ../../assets/italy/val-gardena.JPG
+    location: val-gardena
+  - image: ../../assets/italy/firenze.JPG
+    location: firenze
 ---
+
+Italy packs an absurd amount of sights into its boot-shaped territory. Ancient ruins and Renaissance art in the cities, pastel villages clinging to the hills and coasts, and jagged mountain ridges in the north, a lot of them within reach from each other within a single day.
+
+People often associate Italy with the famous cities like **Roma**, **Venezia** or **Milano**. With art, ancient and medieval architecture and food. And we went to a lot of these cities over the years and we definitely loved the experience. For us, **Florence** (or **Firenze** in Italian) remains one of the most beautiful cities in the world.
+
+But then, there are the **[Dolomites](/stories/dolomites-beginners-guide)**, which stole our hearts on repeat visits. **Südtirol** is one of the most beautiful regions in Europe and the Dolomites are a hiker paradise.
+
+We can't write about Italy without mentioning the food. In many parts of the world, people even associate "european" food with italian cuisine. And when visiting Italy, it's not about the fancy dishes or plate arrangements, it's all about the 2-3 ingredients that make up the perfect pasta or pizza.

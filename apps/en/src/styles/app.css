@@ -23,14 +23,14 @@
   --color-ink-dim: oklch(0.8 0.012 75);
   --color-ink-faint: oklch(0.7 0.014 75);
   /* Deeper film-night canvas so photography pops harder */
-  --color-surface: oklch(0.13 0.014 55);
-  --color-surface-2: oklch(0.18 0.016 55);
-  --color-surface-3: oklch(0.22 0.016 55);
+  --color-surface: oklch(0.13 0.006 55);
+  --color-surface-2: oklch(0.17 0.006 55);
+  --color-surface-3: oklch(0.22 0.006 55);
   --color-line: oklch(0.28 0.014 55);
   --color-line-strong: oklch(0.4 0.016 55);
 
   /* Photo read layer — warm film floor/ink (never pure black/white; stays dark in light theme) */
-  --color-photo-scrim: oklch(0.13 0.014 55);
+  --color-photo-scrim: oklch(0.13 0.006 55);
   --color-photo-ink: oklch(0.98 0.008 75);
 
   /* Dark-mode defaults; light overrides live in :root[data-theme="light"] */
@@ -368,7 +368,7 @@
     font-size: 0.68rem;
     letter-spacing: var(--tracking-microcaps);
     text-transform: uppercase;
-    line-height: 1.5;
+    line-height: 1.4;
     text-wrap: balance;
     background: color-mix(in oklch, var(--color-photo-scrim) 42%, transparent);
     color: var(--color-photo-ink);

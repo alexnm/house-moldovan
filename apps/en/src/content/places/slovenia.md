@@ -2,7 +2,7 @@
 name: Slovenia
 flag: 🇸🇮
 region: europe
-tagline: Alpine lakes, emerald rivers, and Julian Alps passes stitched together.
+tagline: The country of emerald lakes and rivers carving the majestic Julian Alps.
 draft: false
 showMap: true
 cover: ../../assets/slovenia/bled-castle.JPG

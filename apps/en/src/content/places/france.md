@@ -2,7 +2,7 @@
 name: France
 flag: 🇫🇷
 region: europe
-tagline: Cathedrals and cafés, from Alsatian lanes to the long French evening.
+tagline: Imposing cathedrals and quaint villages with a touch of Mediterranean flair.
 showMap: true
 thumbnail: ../../assets/france/paris-eiffel.JPG
 cover: ../../assets/france/paris-st-chapelle.JPG

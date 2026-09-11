@@ -57,4 +57,19 @@ locations:
     image: ../../assets/peru/machu-picchu.jpg
     lat: -13.1631
     lng: -72.545
+snapshots:
+  - image: ../../assets/peru/lima-baranco.JPG
+    location: Barranco, Lima
+  - image: ../../assets/peru/huacachina-buggy.JPG
+    location: Huacachina Desert
+  - image: ../../assets/peru/cusco-church-2.JPG
+    location: cusco
+  - image: ../../assets/peru/ollantaytambo.JPG
+    location: ollantaytambo
 ---
+
+Peru is synonymous with the **Inca Empire** and with the famous **Machu Picchu** site. But the country is much more than that. It is actually one of the 17 megadiverse countries in the world, boasting a rich biodiversity and a unique culture and history.
+
+In a single trip in Peru, you can experience deserts, windy coastlines, megacities, ancient ruins, tropical jungles and high-altitude mountains. Our trip to Peru in 2022 took us to Lima and [Cusco](/spotlights/festivals-in-cusco), the two major hubs for exploring the country.
+
+Machu Picchu is the headline of any visit to Peru, but how you get there matters. We strongly recommend the four day Salkantay trek to all the mountain lovers out there. It's a wonderful way to experience the high Andes on your way to the most famous landmark of the country.

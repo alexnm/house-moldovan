@@ -43,6 +43,11 @@ const SLUG_TO_ISO = {
  */
 const METROPOLITAN_EUROPE_ONLY = new Set(["france"]);
 
+/** City-states where Natural Earth 10m is too coarse — keep all vertices and densify. */
+const HIGH_PRECISION_SLUGS = new Set(["singapore", "hong-kong"]);
+
+const HIGH_PRECISION_DENSIFY = 5;
+
 /** Default simplification for medium/large countries. */
 const DEFAULT_SIMPLIFY = {
   minDistance: 0.08,
@@ -83,6 +88,23 @@ function downsample(ring, maxPoints) {
   const out = [];
   for (let i = 0; i < maxPoints; i += 1) {
     out.push(ring[Math.floor(i * step)]);
+  }
+  return out;
+}
+
+/** Insert evenly spaced points along each edge (≈ multiplier × vertex count). */
+function densifyRing(ring, multiplier) {
+  if (ring.length < 2 || multiplier <= 1) return ring;
+
+  const out = [];
+  for (let i = 0; i < ring.length; i += 1) {
+    const a = ring[i];
+    const b = ring[(i + 1) % ring.length];
+    out.push(a);
+    for (let j = 1; j < multiplier; j += 1) {
+      const t = j / multiplier;
+      out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+    }
   }
   return out;
 }
@@ -138,15 +160,24 @@ function outerRings(geometry) {
   throw new Error(`Unsupported geometry: ${geometry.type}`);
 }
 
-function toLeafletRings(geometry) {
+function toLeafletRings(geometry, slug) {
   const latLngRings = outerRings(geometry).map((ring) =>
     ring.map(([lng, lat]) => [lat, lng]),
   );
-  const params = simplificationParams(extentDeg(latLngRings));
+  const highPrecision = HIGH_PRECISION_SLUGS.has(slug);
+  const params = highPrecision
+    ? { minDistance: 0, maxPoints: Infinity, minAreaRatio: 0.001 }
+    : simplificationParams(extentDeg(latLngRings));
 
   const rings = latLngRings.map((ring) => {
-    let simplified = simplifyRing(ring, params.minDistance);
+    let simplified =
+      params.minDistance > 0
+        ? simplifyRing(ring, params.minDistance)
+        : ring;
     simplified = downsample(simplified, params.maxPoints);
+    if (highPrecision) {
+      simplified = densifyRing(simplified, HIGH_PRECISION_DENSIFY);
+    }
     return simplified;
   });
 
@@ -203,7 +234,7 @@ for (const id of ids) {
     continue;
   }
 
-  let rings = toLeafletRings(feature.geometry);
+  let rings = toLeafletRings(feature.geometry, id);
   if (METROPOLITAN_EUROPE_ONLY.has(id)) {
     rings = filterMetropolitanEurope(rings);
   }

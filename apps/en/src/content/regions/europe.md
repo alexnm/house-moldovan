@@ -16,6 +16,6 @@ From the rugged peaks of the Alps to picture-perfect medieval towns and the gran
 
 The mediterranean coast is a great place to start exploring. [Spain](/explore/spain), [France](/explore/france) and [Italy](/explore/italy) offer some of the most picture-perfect cities and coastal landscapes. Inland, Europe is home to some of the most beautiful mountains in the world, with the [Dolomites](/stories/beginners-guide-to-the-dolomites) being one of our favorite destinations for the summer.
 
-Of course everyone wants to see Paris, Rome or Barcelona, but to us, the true beauty of travelling in Europe is discovering small towns and off the beaten path destinations. Don't miss out on less popular destinations like [Poland](/explore/poland) or Slovenia. And of course make sure you visit our home country of Romania.
+Of course everyone wants to see Paris, Rome or Barcelona, but to us, the true beauty of travelling in Europe is discovering small towns and off the beaten path destinations. Don't miss out on less popular destinations like [Poland](/explore/poland) or [Slovenia](/explore/slovenia). And of course make sure you visit our home country of Romania.
 
 We criss-crossed the continent for many years, but we still discover beautiful cities packed with history and charm every year. That is the thing: even when you live here, the list never really shrinks. There is always another nature reserve, another old town or another remote village to discover, just a train ride away.
