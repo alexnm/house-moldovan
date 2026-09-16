@@ -6,6 +6,7 @@ tagline: Rice fields, sunny beaches and bustling cities.
 showMap: true
 cover: ../../assets/vietnam/buddha-mekong.jpg
 coverLocation: vietnam/mekong-delta
+thumbnail: ../../assets/vietnam/hoi-an-boat.JPG
 locations:
   - id: hanoi
     name: "Hanoi"
@@ -57,7 +58,7 @@ snapshots:
     location: ho-chi-minh-city
   - image: ../../assets/vietnam/sapa3.JPG
     location: sapa
-  - image: ../../assets/vietnam/da-nang-beach.JPG
+  - image: ../../assets/vietnam/da-nang-beach-2.JPG
     location: da-nang
   - image: ../../assets/vietnam/hoi-an.JPG
     location: hoi-an
@@ -67,7 +68,7 @@ Vietnam spans over 2000km north to south and packs so many interesting cultural 
 
 Our first taste of Vietnam was [back in 2018](/itineraries/vietnam-cambodia-2-weeks) when we spent some time in the north of the country and then moved south. The contrast between the somewhat rigid and culturally rich **Hanoi** and the business oriented and fast-paced **Ho Chi Minh City** comes quite as a surprise if you're visiting Vietnam for the first time.
 
-The second visit came in 2026 when we used **Da Nang** as the base for exploring the central region while enjoying the sunny beaches and relaxing during our latest south-east Asia trip.
+The second visit came in 2026 when we used [**Da Nang**](/stories/da-nang-vietnam-beach-guide) as the base for exploring the central region while enjoying the sunny beaches and relaxing during our latest south-east Asia trip.
 
 The people in Vietnam are incredibly friendly and welcoming and there's something authentic about wandering around their beautiful country which you don't find in many other places around the world.
 

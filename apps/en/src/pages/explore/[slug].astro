@@ -9,6 +9,7 @@ import Breadcrumbs from "@shared/components/article/Breadcrumbs.astro";
 import Hero from "@shared/components/article/Hero.astro";
 import { en } from "~/i18n/en";
 import {
+  countryMapFitMaxZoom,
   countryMapFitZoomOffset,
   loadCountryPage,
   showCountryIntro,
@@ -109,6 +110,7 @@ const sections: SectionLink[] = [
           locationPins={locationPins}
           shape={shape}
           locationsHeading={en.places.locationsHeading}
+          fitMaxZoom={countryMapFitMaxZoom(country.id)}
           fitZoomOffset={countryMapFitZoomOffset(country.id)}
         />
       )

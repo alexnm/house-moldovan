@@ -37,6 +37,21 @@ const COUNTRY_MAP_FIT_ZOOM_OFFSET: Partial<Record<string, number>> = {
 /** Cap used when framing a single country on the map. */
 export const COUNTRY_MAP_FIT_MAX_ZOOM = 8;
 
+/**
+ * City-states are small enough that the default cap frames them from much
+ * further out than they need, leaving them a speck in the middle of the map.
+ * Raising the cap lets them settle two levels closer on a wide viewport, while
+ * still deferring to whatever actually fits on a narrow one.
+ */
+const COUNTRY_MAP_FIT_MAX_ZOOM_BY_ID: Partial<Record<string, number>> = {
+  singapore: COUNTRY_MAP_FIT_MAX_ZOOM + 2,
+  "hong-kong": COUNTRY_MAP_FIT_MAX_ZOOM + 2,
+};
+
+export function countryMapFitMaxZoom(countryId: string): number {
+  return COUNTRY_MAP_FIT_MAX_ZOOM_BY_ID[countryId] ?? COUNTRY_MAP_FIT_MAX_ZOOM;
+}
+
 export function countryMapFitZoomOffset(countryId: string): number {
   return COUNTRY_MAP_FIT_ZOOM_OFFSET[countryId] ?? 0;
 }

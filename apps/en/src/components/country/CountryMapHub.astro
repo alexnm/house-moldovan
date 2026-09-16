@@ -12,6 +12,7 @@ export interface Props {
   locationPins: LocationMapPin[];
   shape?: CountryShape;
   locationsHeading: string;
+  fitMaxZoom?: number;
   fitZoomOffset?: number;
 }
 
@@ -20,6 +21,7 @@ const {
   locationPins,
   shape,
   locationsHeading,
+  fitMaxZoom = COUNTRY_MAP_FIT_MAX_ZOOM,
   fitZoomOffset = 0,
 } = Astro.props;
 ---
@@ -31,7 +33,7 @@ const {
       basemap="adaptive"
       fullBleed
       scrollZoom={false}
-      fitMaxZoom={COUNTRY_MAP_FIT_MAX_ZOOM}
+      fitMaxZoom={fitMaxZoom}
       fitZoomOffset={fitZoomOffset}
       height="clamp(28rem, 68svh, 44rem)"
       highlight={shape}

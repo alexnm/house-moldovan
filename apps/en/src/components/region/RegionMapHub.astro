@@ -2,7 +2,7 @@
 import LocationsMap from "~/components/map/LocationsMap.astro";
 import { en } from "~/i18n/en";
 import {
-  COUNTRY_MAP_FIT_MAX_ZOOM,
+  countryMapFitMaxZoom,
   countryMapFitZoomOffset,
 } from "~/lib/countryPage";
 import type { LocationMapPin } from "~/lib/mapPinData";
@@ -23,7 +23,7 @@ const hubPayload = countries.map((country) => ({
   id: country.id,
   pinIds: country.pinIds,
   rings: country.rings,
-  maxZoom: COUNTRY_MAP_FIT_MAX_ZOOM,
+  maxZoom: countryMapFitMaxZoom(country.id),
   zoomOffset: countryMapFitZoomOffset(country.id),
 }));
 ---
