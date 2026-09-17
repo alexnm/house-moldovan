@@ -26,7 +26,7 @@ locations:
     lng: 5.1214
   - id: keukenhof
     name: "Keukenhof"
-    image: ../../assets/netherlands/keukenhof.JPG
+    image: ../../assets/netherlands/keukenhof/keukenhof.JPG
     lat: 52.271
     lng: 4.5467
   - id: delft
