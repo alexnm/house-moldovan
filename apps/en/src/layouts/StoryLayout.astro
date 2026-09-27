@@ -82,13 +82,13 @@ const ogImage = articleOgPath({ ...entry, kind: "story" });
         <div class="section section-y section-gap grid md:grid-cols-[14rem_1fr]">
           <ArticleToc sections={toc} />
           <div class="min-w-0">
-            <Prose class="motion-reveal mx-0!">
+            <Prose class="mx-0!">
               <slot />
             </Prose>
           </div>
         </div>
       ) : (
-        <Prose class="motion-reveal section mt-12 @md:mt-16">
+        <Prose class="section mt-12 @md:mt-16">
           <slot />
         </Prose>
       )

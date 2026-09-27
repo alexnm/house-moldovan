@@ -8,7 +8,7 @@ import RhythmGrid from "~/components/home/RhythmGrid.astro";
 import AboutIntro from "~/components/home/AboutIntro.astro";
 import { en } from "~/i18n/en";
 import { getEnFeed, getHomeRecentFeed } from "~/lib/content";
-import heroImage from "~/assets/peru/salkantay-cover.jpg";
+import heroImage from "~/assets/cambodia/angkor-wat.jpg";
 
 const feed = await getEnFeed();
 const recent = getHomeRecentFeed(feed);
@@ -26,7 +26,7 @@ const recent = getHomeRecentFeed(feed);
       <div class="motion-parallax absolute inset-0 -top-[8%] -bottom-[8%]">
         <CoverImage
           src={heroImage}
-          alt="Salkantay trek in the Peruvian Andes"
+          alt="Angkor Wat in Cambodia"
           widths={[1080, 1440, 1920, 2560]}
           sizes="100vw"
           priority
@@ -55,7 +55,7 @@ const recent = getHomeRecentFeed(feed);
           {en.description}
         </p>
         <HeroLocation
-          location="Salkantay pass, Peru"
+          location="Angkor Wat, Cambodia"
           class="motion-stagger-2 animate-cinema-fade"
         />
       </div>
