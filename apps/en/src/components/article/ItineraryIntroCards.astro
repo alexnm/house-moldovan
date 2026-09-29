@@ -3,10 +3,9 @@ import { en } from "~/i18n/en";
 
 export interface Props {
   highlights: string[];
-  travelTips: string[];
 }
 
-const { highlights, travelTips } = Astro.props;
+const { highlights } = Astro.props;
 
 const cardClass = "rounded border border-line bg-accent/10 p-6 md:p-7";
 const headingClass = "micro mb-4 border-b border-line pb-3 text-accent-ink";
@@ -24,14 +23,6 @@ const itemClass =
     </p>
     <ul class="list-none space-y-3 text-base leading-relaxed text-ink">
       {highlights.map((line) => <li class={itemClass}>{line}</li>)}
-    </ul>
-  </div>
-  <div class={cardClass}>
-    <p class={headingClass}>
-      {en.article.itineraryTravelTips}
-    </p>
-    <ul class="list-none space-y-3 text-base leading-relaxed text-ink">
-      {travelTips.map((line) => <li class={itemClass}>{line}</li>)}
     </ul>
   </div>
 </div>

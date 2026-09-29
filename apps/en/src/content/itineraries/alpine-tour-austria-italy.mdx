@@ -5,39 +5,62 @@ country:
   - austria
   - italy
 highlights:
-  - "Salzburg and the quaint villages of the Salzkammergut"
-  - "Driving on some of the most spectacular roads in Austria and Italy"
-  - "Hiking in Val Gardena despite a handful of rainy days"
-  - "Our first ever via ferrata experience"
-travelTips:
-  - "Pack layers and always be prepared for rain in the mountains."
-  - "Prepare for crowds in the most popular locations, especially the Dolomites, but also at Hallstatt and on the Grossglockner road."
-  - "Resist the urge to plan around popular spots, there are plenty of hidden gems to discover."
-days:
-  - locations: [austria/salzburg]
-    description: "City tour — old town, fortress, and the Salzach."
-  - locations: [austria/salzburg, austria/berchtesgaden]
-    description: "Untersbergbahn, Kehlsteinhaus, and short hike on the banks of Königssee."
-  - locations: [austria/hallstatt, austria/gosau, austria/zell-am-see]
-    description: "Pleasant walks in Hallstatt and Gosau before heading west for the evening at Zell am See."
-  - locations: [austria/grossglockner, italy/dobiaco]
-    description: "Grossglockner road, glacier hike at Kaiser-Franz-Josefs-Höhe, driving down to Italy to spend the night in Dobbiaco."
-  - locations: [italy/dobiaco]
-    description: "Classic Tre Cime di Lavaredo loop"
-  - locations: [italy/dobiaco, italy/val-gardena]
-    description: "Lago di Dobbiaco and Lago di Braies, then moving west on the scenic road through Val Badia and Val Gardena."
-  - locations: [italy/val-gardena]
-    description: "Driving up Passo Pordoi and hike to Piz Boe, the highest point in the Sella group."
-  - locations: [italy/val-gardena]
-    description: "Drive along Val di Fassa, on to Lago di Carezza and back to Ortisei/Val Gardena."
-  - locations: [italy/val-gardena]
-    description: "Seceda hike from Col Raiser."
-  - locations: [italy/val-gardena]
-    description: "Drive to Passo Sella and hike the Sassolungo circuit."
-  - locations: [italy/val-gardena]
-    description: "Drive to Passo Gardena and finish the trip with our first ever via ferrata."
+  - image: ../../assets/austria/hallstatt.JPG
+    location: austria/hallstatt
+  - image: ../../assets/austria/grossglockner-glacier.JPG
+    location: austria/grossglockner
+    title: Pasterze glacier
+  - image: ../../assets/italy/dolomites-tre-cime.JPG
+    location: italy/dobiaco
+    title: Tre Cime di Lavaredo
+  - image: ../../assets/italy/dolomites-via-ferrata.JPG
+    location: italy/val-gardena
+    title: First via ferrata
+bases:
+  - location: austria/salzburg
+    days:
+      - locations: [austria/salzburg]
+        description: "City tour: old town, fortress, and the Salzach."
+      - locations: [austria/salzburg, austria/berchtesgaden, austria/salzburg]
+        description: "Untersbergbahn, Kehlsteinhaus, and a short hike at Königssee."
+      - locations:
+          [
+            austria/salzburg,
+            austria/hallstatt,
+            austria/gosau,
+            austria/zell-am-see,
+          ]
+        description: "Pleasant walks in Hallstatt and Gosau before heading west for the evening at Zell am See."
+    toNext: car
+  - location: austria/zell-am-see
+    name: Grossglockner
+    days:
+      - locations: [austria/zell-am-see, austria/grossglockner, italy/dobiaco]
+        description: "Grossglockner road day including a  hike at the Pasterze glacier."
+    toNext: car
+  - location: italy/dobiaco
+    days:
+      - locations: [italy/dobiaco]
+        description: "Classic Tre Cime di Lavaredo loop"
+      - locations: [italy/dobiaco, italy/val-gardena]
+        description: "Lago di Dobbiaco and Lago di Braies, then moving west on the scenic road through Val Badia and Val Gardena."
+    toNext: car
+  - location: italy/val-gardena
+    days:
+      - locations: [italy/val-gardena]
+        description: "Hike to Piz Boe, the highest point in the Sella group."
+      - locations: [italy/val-gardena]
+        description: "Drive along Val di Fassa, on to Lago di Carezza and back to Ortisei/Val Gardena."
+      - locations: [italy/val-gardena]
+        description: "Seceda hike from Col Raiser."
+      - locations: [italy/val-gardena]
+        description: "Hike the Sassolungo circuit."
+      - locations: [italy/val-gardena]
+        description: "Via ferrata on Small Cir from Passo Gardena."
 
 months: "July-September"
+why: "This itinerary has everything from medieval architecture, to quaint rural landscapes and high alpine passes. It is a car centric itinerary, but one that rewards you with a lot of beautiful scenery and takes you from the green mountains of Austria to the capital of hiking in the Dolomites."
+gettingAround: car
 published: 2026-09-04
 hero: ../../assets/italy/dolomites-gardena.jpg
 heroLocation: Passo Gardena, Dolomites

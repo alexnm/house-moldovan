@@ -1,35 +1,59 @@
 ---
 title: Follow the Silk Road in Uzbekistan
-summary: A week along Uzbekistan's Silk Road — walled Khiva, Bukhara's bazaars, and the tilework of Samarkand's Registan.
+summary: A week along Uzbekistan's Silk Road, from walled Khiva to Bukhara's bazaars and the tilework of Samarkand's Registan.
 country:
   - uzbekistan
 highlights:
-  - "The bazaar life in the old Silk Road cities is a fascinating experience"
-  - "Islamic art and architecture is really impressive"
-  - "As east-europeans, we felt like travelling back in time a few decades."
-travelTips:
-  - "Uzbekistan was closed for foreigners until 2018, so expect a less developed tourism infrastructure."
-  - "We travelled internally by train and car, with one domestic flight; we booked a private tour with a local operator from home."
-  - "We spent around €2000 per person back in 2019, flights included."
-days:
-  - locations: [uzbekistan/tashkent]
-    description: "Arrive, metro and markets, a Soviet-organized but green capital base."
-  - locations: [uzbekistan/khiva]
-    description: "Fly to Urgench, short transfer; walls and minarets in the Kyzylkum fringe."
-  - locations: [uzbekistan/bukhara]
-    description: "Visit the old khanate core: plazas, minaret, and still-active madrasas."
-  - locations: [uzbekistan/bukhara]
-    description: "Second day in Bukhara for mosques, Ark, and bazaar browsing."
-  - locations: [uzbekistan/shahrisabz, uzbekistan/samarkand]
-    description: "Shahrisabz — Timur’s birthplace — then the evening in the Registan’s city."
-  - locations: [uzbekistan/samarkand]
-    description: "Registan, necropolis, and the amazing tilework"
-  - locations: [uzbekistan/samarkand]
-    description: "Mosques, Ulugh Beg, Afrasiyab, and a second day of the same splendour."
-  - locations: [uzbekistan/samarkand, uzbekistan/tashkent]
-    description: "Last hours in the old city, then the train back to the capital to fly out."
-
+  - image: ../../assets/uzbekistan/registan-3.jpg
+    location: uzbekistan/samarkand
+    title: Registan Square, Samarkand
+  - image: ../../assets/uzbekistan/bukhara-madrasa.jpg
+    location: uzbekistan/bukhara
+    title: Mir-i-Arab Madrasa, Bukhara
+  - image: ../../assets/uzbekistan/khiva.jpg
+    location: uzbekistan/khiva
+    title: Islam Khoja Minaret, Khiva
+  - image: ../../assets/uzbekistan/samarkand-2.jpg
+    location: uzbekistan/samarkand
+    title: Shah-i-Zinda, Samarkand
+bases:
+  - location: uzbekistan/tashkent
+    days:
+      - locations: [uzbekistan/tashkent]
+        description: "Arrive, metro and markets, a Soviet-organized but green capital base."
+    toNext: plane
+  - location: uzbekistan/khiva
+    days:
+      - locations: [uzbekistan/khiva]
+        description: "Fly to Urgench, then full day visit in Khiva."
+    toNext: car
+  - location: uzbekistan/bukhara
+    days:
+      - locations: [uzbekistan/bukhara]
+        description: "Visit the old khanate core: plazas, minaret, and still-active madrasas."
+      - locations: [uzbekistan/bukhara]
+        description: "Second day in Bukhara for mosques, Ark, and bazaars."
+      - locations:
+          [uzbekistan/bukhara, uzbekistan/shahrisabz, uzbekistan/samarkand]
+        description: "Drive to Samarkant with a stop in Shahrisabz — Timur Lenk's birthplace."
+    toNext: car
+  - location: uzbekistan/samarkand
+    days:
+      - locations: [uzbekistan/samarkand]
+        description: "Registan, Shan-i-Zinda, and the amazing tilework"
+      - locations: [uzbekistan/samarkand]
+        description: "Mosques, Ulugh Beg, Afrasiyab."
+      - locations: [uzbekistan/samarkand]
+        description: "Last hours in the old city, then the train back to Tashkent."
+    toNext: train
+  - location: uzbekistan/tashkent
+    hidden: true
 months: "April–May, September–October"
+why: "This is the classic loop of Uzbekistan's Silk Road. Unlike all the other trips we made, this one was organized through a local travel agency from Romania. It's a realtively relaxed itinerary, with few stops but ample time to explore each place in depth."
+gettingAround:
+  - train
+  - car
+  - plane
 published: 2020-05-10
 hero: ../../assets/uzbekistan/registan-2.jpg
 heroLocation: uzbekistan/samarkand
@@ -39,7 +63,7 @@ import AssetFigure from "~/components/mdx/AssetFigure.astro";
 
 ## How we organized the trip
 
-Unlike all the other trips we made, this one was organized through a local travel agency from Romania. Uzbekistan used to be a closed country before 2018 and it is in slow but steady process of opening its borders to foreign travellers. We didn't know what to expect and we also wanted to have a hastle-free trip, so we relied on a travel agency to plan this for us.
+Uzbekistan used to be a closed country before 2018 and it is in slow but steady process of opening its borders to foreign travellers. We didn't know what to expect and we also wanted to have a hastle-free trip, so we relied on a travel agency to plan this for us.
 
 <AssetFigure
   path="uzbekistan/bukhara-2.jpg"
@@ -158,6 +182,8 @@ Some other interesting places to visit in Samarkand:
 - Afrasiyab, an earlier settlement found in the area
 
 ## Travel tips
+
+We travelled internally by train and car, with one domestic flight, on a private tour booked with a local operator from home. We spent around €2000 per person in 2019, flights included.
 
 Uzbekistan was part of the Soviet Union for over 70 years, so the country is heavily influenced by its communist period. After the fall of the Union, the country slowly made its way towards an open market economy, but at a very slow pace under a regime which was close to a dictatorship. Before 2016, the country was almost closed for foreigners, but things changed and nowadays Uzbekistan is opening its borders more and more to visitors from all over the world.
 

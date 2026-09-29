@@ -4,45 +4,63 @@ summary: Twelve days from the Pacific coast through Cusco, the Sacred Valley and
 country:
   - peru
 highlights:
-  - "Sandboarding at Huacachina and the wildlife of the Ballestas Islands"
-  - "The Sacred Valley's Inca terraces, salt pans, and fortress towns"
-  - "Inti Raymi — Cusco's Festival of the Sun on the winter solstice"
-  - "Four days on the Salkantay trek ending at Machu Picchu"
-travelTips:
-  - "Schedule around Inti Raymi in late June if you want the full Cusco festival experience."
-  - "Spend a day or two in Cusco before the trek to acclimatize — the Salkantay Pass tops out at 4,630 m."
-  - "Book Machu Picchu entry tickets and the Salkantay trek well in advance, especially in peak season."
-days:
-  - locations: [peru/paracas, peru/huacachina]
-    description: "Ballestas Islands boat trip and sandboarding in the desert oasis."
-  - locations: [peru/lima]
-    description: "Miraflores, Barranco, and Lima's legendary food scene."
-  - locations: [peru/cusco]
-    description: "Morning flight to the former Inca capital — slow walk to acclimatize."
-  - locations: [peru/pisac, peru/ollantaytambo]
-    description: "Sacred Valley day — market ruins at Pisac and the fortress town of Ollantaytambo."
-  - locations: [peru/moray, peru/maras]
-    description: "Circular terraces of Moray and the salt pans of Maras."
-  - locations: [peru/cusco]
-    description: "Inti Raymi — the Festival of the Sun on the winter solstice."
-  - locations: [peru/salkantay-trek]
-    description: "Salkantay trek day 1 — Humantay Lake and camp at Soraypampa."
-  - locations: [peru/salkantay-trek]
-    description: "Salkantay trek day 2 — crossing the pass at 4,630 m."
-  - locations: [peru/salkantay-trek]
-    description: "Salkantay trek day 3 — jungle descent, coffee farms, and arrival in Aguas Calientes."
-  - locations: [peru/machu-picchu]
-    description: "Salkantay trek day 4 — sunrise at Machu Picchu."
-  - locations: [peru/cusco]
-    description: "Rest day in Cusco — markets, San Pedro, and one last walk through the stone streets."
-  - locations: [peru/lima]
-    description: "Fly back to Lima for a final night before the long flight home."
+  - image: ../../assets/peru/machu-picchu.jpg
+    location: peru/machu-picchu
+  - image: ../../assets/peru/huacachina.JPG
+    location: peru/huacachina
+  - image: ../../assets/peru/cusco-plaza.JPG
+    location: peru/cusco
+  - image: ../../assets/peru/salkantay-cover.jpg
+    location: peru/salkantay-trek
+bases:
+  - location: peru/huacachina
+    days:
+      - locations: [peru/paracas, peru/huacachina]
+        description: "Ballestas Islands boat trip and sandboarding in the desert oasis."
+  - location: peru/lima
+    days:
+      - locations: [peru/lima]
+        description: "Miraflores, Barranco, and Lima's legendary food scene."
+  - location: peru/cusco
+    days:
+      - locations: [peru/cusco]
+        description: "Morning flight to the former Inca capital — slow walk to acclimatize."
+      - locations: [peru/pisac, peru/ollantaytambo]
+        description: "Sacred Valley day — market ruins at Pisac and the fortress town of Ollantaytambo."
+      - locations: [peru/moray, peru/maras]
+        description: "Circular terraces of Moray and the salt pans of Maras."
+      - locations: [peru/cusco]
+        description: "Inti Raymi — the Festival of the Sun on the winter solstice."
+  - location: peru/salkantay-trek
+    days:
+      - locations: [peru/salkantay-trek]
+        description: "Salkantay trek day 1 — Humantay Lake and camp at Soraypampa."
+      - locations: [peru/salkantay-trek]
+        description: "Salkantay trek day 2 — crossing the pass at 4,630 m."
+      - locations: [peru/salkantay-trek]
+        description: "Salkantay trek day 3 — jungle descent, coffee farms, and arrival in Aguas Calientes."
+  - location: peru/machu-picchu
+    days:
+      - locations: [peru/machu-picchu]
+        description: "Salkantay trek day 4 — sunrise at Machu Picchu."
+  - location: peru/cusco
+    days:
+      - locations: [peru/cusco]
+        description: "Rest day in Cusco — markets, San Pedro, and one last walk through the stone streets."
+  - location: peru/lima
+    days:
+      - locations: [peru/lima]
+        description: "Fly back to Lima for a final night before the long flight home."
 
 months: "May–June, September–October"
+why: ""
+gettingAround:
+  - plane
+  - bus
 published: 2026-09-03
 hero: ../../assets/peru/machu-picchu-sunrise.JPG
 heroLocation: Machu Picchu
-draft: true
+draft: false
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";

@@ -5,47 +5,70 @@ country:
   - vietnam
   - cambodia
 highlights:
-  - "Wandering through the busy streets of Vietnam's cities"
-  - "Vietnamese food is probably our favorite in the world"
-  - "Angkor Wat is without a doubt the most impressive temple complex we've seen"
-  - "Relaxing on the beaches of Phu Quoc"
-travelTips:
-  - "Weather in Vietnam varies from North to South, plan your trip accordingly."
-  - "While both countries are rather poor, tourism is super well developed."
-  - "We spent around €2200 per person back in 2018, flights included."
-days:
-  - locations: [vietnam/hanoi]
-    description: "Land and start in the capital: first tastes of the street, the traffic, the pho."
-  - locations: [vietnam/sapa]
-    description: Transfer to the mountains of Sa Pa; rice terraces and village walks.
-  - locations: [vietnam/sapa, vietnam/hanoi]
-    description: "Return from Sa Pa, night in the city before moving on."
-  - locations: [vietnam/ha-long-bay]
-    description: Ha Long Bay cruise and overnight on the water among the karsts.
-  - locations: [vietnam/ho-chi-minh-city]
-    description: "End the cruise, bus to Hanoi, then fly to the south."
-  - locations: [vietnam/ho-chi-minh-city]
-    description: "War history day trip — museum, city sights, and the Cu Chi Tunnels from Ho Chi Minh City."
-  - locations: [vietnam/ho-chi-minh-city]
-    description: "Saigon in depth — old Saigon, markets, and the southern vibes."
-  - locations: [vietnam/mekong-delta]
-    description: Day trip into the delta from the city.
-  - locations: [cambodia/siem-reap]
-    description: Evening flight to the gateway to Angkor Wat.
-  - locations: [cambodia/tonle-sap]
-    description: "Countryside and lake — bikes, villages, and a floating community on Tonlé Sap."
-  - locations: [cambodia/siem-reap]
-    description: Full days at the Angkor Wat temple complex.
-  - locations: [cambodia/siem-reap, vietnam/phu-quoc]
-    description: "Sunrise at Angkor Wat, then flight to Phu Quoc."
-  - locations: [vietnam/phu-quoc]
-    description: Beach and rest in the Gulf of Thailand.
-  - locations: [vietnam/phu-quoc]
-    description: Another day by the water before the long hop north.
-  - locations: [vietnam/hanoi]
-    description: "Fly back to the start, last souvenirs, last bowls of pho, and goodbye for now."
+  - image: ../../assets/vietnam/ha-long-bay.jpg
+    location: vietnam/ha-long-bay
+  - image: ../../assets/vietnam/sapa2.JPG
+    location: vietnam/sapa
+  - image: ../../assets/cambodia/ta-prohm.JPG
+    location: cambodia/angkor-wat
+  - image: ../../assets/cambodia/angkor-wat.JPG
+    location: cambodia/angkor-wat
+bases:
+  - location: vietnam/hanoi
+    days:
+      - locations: [vietnam/hanoi]
+        description: "First impressions of Vietnam, street life, French quarter and a bowl of pho."
+      - locations: [vietnam/hanoi, vietnam/sapa]
+        description: Transfer to the mountains of Sa Pa; rice terraces and village walks.
+      - locations: [vietnam/sapa, vietnam/hanoi]
+        description: "Return from Sa Pa, night in the city before moving on."
+      - locations: [vietnam/hanoi, vietnam/ha-long-bay]
+        description: Ha Long Bay cruise and overnight on the water among the towering peaks.
+      - locations:
+          [vietnam/ha-long-bay, vietnam/hanoi, vietnam/ho-chi-minh-city]
+        description: "End the cruise, bus to Hanoi, then fly to the south."
+    toNext: plane
+  - location: vietnam/ho-chi-minh-city
+    days:
+      - locations: [vietnam/ho-chi-minh-city]
+        description: "War history day trip — museum, city sights, and the Cu Chi Tunnels from Ho Chi Minh City."
+      - locations: [vietnam/ho-chi-minh-city]
+        description: "Saigon in depth — old Saigon, markets, and the southern vibes."
+      - locations:
+          [
+            vietnam/ho-chi-minh-city,
+            vietnam/mekong-delta,
+            vietnam/ho-chi-minh-city,
+          ]
+        description: Day trip to the Mekong Delta.
+      - locations: [vietnam/ho-chi-minh-city, cambodia/siem-reap]
+        description: Last day in HCMC, flight to Siem Reap.
+    toNext: plane
+  - location: cambodia/siem-reap
+    days:
+      - locations: [cambodia/siem-reap, cambodia/tonle-sap, cambodia/siem-reap]
+        description: "Visit the floating villages on Tonlé Sap."
+      - locations: [cambodia/siem-reap]
+        description: Full day at Angkor Wat.
+      - locations: [cambodia/siem-reap, vietnam/phu-quoc]
+        description: "Sunrise at Angkor Wat, then flight to Phu Quoc."
+    toNext: plane
+  - location: vietnam/phu-quoc
+    days:
+      - locations: [vietnam/phu-quoc]
+        description: Beach and rest in the Gulf of Thailand.
+      - locations: [vietnam/phu-quoc]
+        description: Another day at the beach before the long hop north.
+    toNext: plane
+  - location: vietnam/hanoi
+    days:
+      - locations: [vietnam/hanoi]
+        description: "Last day in Vietnam before the long flight home."
 
-months: "December–March"
+months: "December–April"
+why: "This itinerary covers the two major hubs in Vietnam - north and south - which gives a very good perspective on the country that was torn apart by the war. It also hops over to neighbouring Cambodia to visit the unique complex of Angkor Wat. Then it ends with a few relaxing days on Phu Quoc's beaches."
+gettingAround:
+  - plane
 published: 2020-06-16
 hero: ../../assets/vietnam/buddha-mekong.jpg
 heroLocation: vietnam/mekong-delta
@@ -249,6 +272,8 @@ In the evening, we did another tour of the old town trying to figure out how muc
 ## Travel tips
 
 As almost all our trips, this one was self-organized. We didn't know much about the region but we had some good recommendations and we did our research. Here are some of the things worth sharing, that might help you if you plan on visiting the region.
+
+Weather in Vietnam changes a lot from north to south, so pack for each stretch rather than for one climate. Both countries are poor by European standards, but tourism is very well developed. We spent around €2200 per person in 2018, flights included.
 
 **Visas**
 

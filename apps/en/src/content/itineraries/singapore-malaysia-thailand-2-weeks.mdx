@@ -6,47 +6,71 @@ country:
   - malaysia
   - thailand
 highlights:
-  - "Streetfood culture, both Singapore and KL are great for this."
-  - "Rooftop pool views over KL during the day and the night."
-  - "Penang's streetart and colonial buildings are a must-see."
-  - "Island hopping around the Phi-Phi archipelago is out of this world."
-travelTips:
-  - "Singapore is one of the most expensive places we've visited, but it is 100% worth it."
-  - "Malaysia is somewhat underdeveloped for tourism, so the experience can be a bit more authentic."
-  - "Travel via low-cost direct flights between the different cities."
-  - "Best weather for visiting is from January to April."
-days:
-  - locations: [singapore/singapore]
-    description: "Arrive and settle in, discover the city and its streetfood culture."
-  - locations: [singapore/singapore]
-    description: "Gardens by the Bay and Chinatown free walking tour"
-  - locations: [singapore/singapore, malaysia/kuala-lumpur]
-    description: Little India and flight to Kuala Lumpur
-  - locations: [malaysia/kuala-lumpur]
-    description: "City tour, KLCC, street food at Jalan Alor"
-  - locations: [malaysia/cameron-highlands]
-    description: Day trip to tea plantations, butterfly farm and strawberry farm
-  - locations: [malaysia/taman-negara]
-    description: Canopy walk, river cruise and jungle trek in the oldest rainforest in Malaysia
-  - locations: [malaysia/kuala-lumpur]
-    description: Batu Caves and National Mosque of Malaysia
-  - locations: [malaysia/kuala-lumpur]
-    description: Petronas Towers and KL Bird Park
-  - locations: [malaysia/kuala-lumpur, malaysia/penang]
-    description: Flight to Penang, exploring the old town and street art
-  - locations: [malaysia/penang]
-    description: "Penang hill and Kek Lok Si temple"
-  - locations: [malaysia/penang, thailand/phuket]
-    description: Flight to Phuket, beach time
-  - locations: [thailand/phuket]
-    description: "Relax on the beaches in Patong"
-  - locations: [thailand/phi-phi-islands]
-    description: "Island hopping tour, Maya Bay, Pileh Lagoon and Bamboo Island"
-  - locations: [thailand/phuket, singapore/singapore]
-    description: "Half-day beach time, then Flight back to Singapore"
-  - locations: [singapore/singapore]
-    description: "Last day in Singapore, last walking tour"
+  - image: ../../assets/singapore/gardens-by-the-bay.JPG
+    location: singapore/singapore
+    title: Gardens by the Bay, Singapore
+  - image: ../../assets/malaysia/kl-jalan-alor.JPG
+    location: malaysia/kuala-lumpur
+    title: Jalan Alor, Kuala Lumpur
+  - image: ../../assets/malaysia/penang-street-art2.JPG
+    location: malaysia/penang
+    title: George Town, Penang
+  - image: ../../assets/thailand/pileh-lagoon-2.JPG
+    location: thailand/phi-phi-islands
+bases:
+  - location: singapore/singapore
+    days:
+      - locations: [singapore/singapore]
+        description: "Arrive and settle in, discover the city and its streetfood culture."
+      - locations: [singapore/singapore]
+        description: "Gardens by the Bay and Chinatown free walking tour"
+      - locations: [singapore/singapore, malaysia/kuala-lumpur]
+        description: Little India and flight to Kuala Lumpur
+    toNext: plane
+  - location: malaysia/kuala-lumpur
+    days:
+      - locations: [malaysia/kuala-lumpur]
+        description: "City tour, KLCC, street food at Jalan Alor"
+      - locations:
+          [
+            malaysia/kuala-lumpur,
+            malaysia/cameron-highlands,
+            malaysia/kuala-lumpur,
+          ]
+        description: Day trip to Cameron Highlands
+      - locations:
+          [malaysia/kuala-lumpur, malaysia/taman-negara, malaysia/kuala-lumpur]
+        description: Canopy walk, river cruise and jungle trek in Taman Negara
+      - locations: [malaysia/kuala-lumpur]
+        description: Batu Caves and National Mosque of Malaysia
+      - locations: [malaysia/kuala-lumpur]
+        description: Petronas Towers and KL Bird Park
+    toNext: plane
+  - location: malaysia/penang
+    days:
+      - locations: [malaysia/kuala-lumpur, malaysia/penang]
+        description: Flight to Penang, exploring the old town and street art
+      - locations: [malaysia/penang]
+        description: "Penang hill and Kek Lok Si temple"
+    toNext: plane
+  - location: thailand/phuket
+    days:
+      - locations: [malaysia/penang, thailand/phuket]
+        description: Flight to Phuket, beach time
+      - locations: [thailand/phuket]
+        description: "Relax on the beaches in Patong"
+      - locations: [thailand/phi-phi-islands]
+        description: "Island hopping tour, Maya Bay, Pileh Lagoon and Bamboo Island"
+    toNext: plane
+  - location: singapore/singapore
+    days:
+      - locations: [thailand/phuket, singapore/singapore]
+        description: "Half-day beach time, then Flight back to Singapore"
+      - locations: [singapore/singapore]
+        description: "Last day in Singapore, last walking tour"
 months: "February–April"
+why: "Singapore is a major hub for Southeast Asia so a great way to start and finish the itinerary. From there, it's a natural progression across the Malay peninsula, with short flights linking each city. Phuket is a great choice for this itinerary as it has direct flights from Malaysia and back to Singapore."
+gettingAround: plane
 published: 2026-07-25
 hero: ../../assets/singapore/downtown-view.JPG
 ---

@@ -6,55 +6,82 @@ country:
   - chile
   - uruguay
 highlights:
-  - "Hiking in Patagonia is out of this world"
-  - "Iguazu Falls is probably the most spectacular waterfall we've seen"
-  - "Embedding in the latin-american culture is a great experience"
-  - "Off the beaten path Uruguay was a great surprise"
-travelTips:
-  - "Travelling between countries in South America can be expensive, book your flights early."
-  - "Southern countries are generally safe, avoid wandering around at night."
-  - "We spent around €3500 per person back in 2019, flights included."
-days:
-  - locations: [argentina/buenos-aires]
-    description: "Arrive and get oriented, walking tour"
-  - locations: [argentina/buenos-aires]
-    description: "La Boca: colour, football lore, later tango show."
-  - locations: [argentina/el-chalten]
-    description: Fly to El Calafate and bus into the hiking capital under Fitz Roy.
-  - locations: [argentina/el-chalten]
-    description: "Laguna de los Tres — the big day hike to the most famous view in the massif."
-  - locations: [argentina/el-chalten]
-    description: "Loma del Pliegue Tumbado — second full day in the same base for the high ridge and wider panorama."
-  - locations: [argentina/el-chalten, argentina/el-calafate]
-    description: "Lago del Desierto outing, then bus back to the glacier town."
-  - locations: [argentina/el-calafate]
-    description: "Perito Moreno - ice hiking and balconies"
-  - locations: [chile/torres-del-paine]
-    description: "Long day from Calafate into Chile’s most famous park and back."
-  - locations: [argentina/puerto-iguazu]
-    description: "Fly from Patagonia to Iguazú; connect through BA if needed, base in Puerto Iguazú."
-  - locations: [argentina/puerto-iguazu]
-    description: "Argentine side — circuits, spray, and coatis on the long walkways."
-  - locations: [brazil/iguacu-falls, argentina/buenos-aires]
-    description: "Brazilian side of the falls, then back to Buenos Aires for the night."
-  - locations: [chile/santiago]
-    description: Cross the Andes to Chile’s capital.
-  - locations: [chile/santiago]
-    description: "Plaza, palaces, and memory in a city built between the cordillera and the coast."
-  - locations: [chile/cajon-del-maipo]
-    description: "Cajón del Maipo — high Andean day out: volcano foothills, dry air, and a break from the heat."
-  - locations: [chile/valparaiso]
-    description: "Day trip to Valparaíso — port, funiculars, and street art on the Pacific."
-  - locations: [argentina/aconcagua]
-    description: "Aconcagua — day trip to the high valley and views of the summit from Argentina’s side."
-  - locations: [uruguay/montevideo]
-    description: Fly to the sleepy capital on the Río de la Plata for the home stretch.
-  - locations: [uruguay/montevideo]
-    description: "Beach, old city, and another steak before the short hop to the colonial town."
-  - locations: [uruguay/colonia-del-sacramento, argentina/buenos-aires]
-    description: "Short stop in Colonia del Sacramento, ferry across the Río de la Plata, last night in BA, and the flight from Ezeiza."
-
+  - image: ../../assets/argentina/la-boca-caminito-2.jpg
+    location: argentina/buenos-aires
+    title: La Boca, Buenos Aires
+  - image: ../../assets/argentina/laguna-de-los-tres.jpg
+    location: argentina/el-chalten
+    title: Laguna de los Tres, El Chalten
+  - image: ../../assets/argentina/iguazu-upper-circuit.jpg
+    location: argentina/puerto-iguazu
+    title: Upper Circuit, Iguazú Falls
+  - image: ../../assets/chile/valparaiso-stairs.jpg
+    location: chile/valparaiso
+bases:
+  - location: argentina/buenos-aires
+    days:
+      - locations: [argentina/buenos-aires]
+        description: "Arrive and get oriented, walking tour"
+      - locations: [argentina/buenos-aires]
+        description: "La Boca: colour, football culture, evening tango show."
+    toNext: plane
+  - location: argentina/el-chalten
+    days:
+      - locations: [argentina/el-chalten]
+        description: Fly to El Calafate and bus to El Chalten.
+      - locations: [argentina/el-chalten]
+        description: "Classic hike to Laguna de los Tres."
+      - locations: [argentina/el-chalten]
+        description: "Loma del Pliegue Tumbado, a hidden gem of the area."
+      - locations: [argentina/el-chalten, argentina/el-calafate]
+        description: "Lago del Desierto day trip, then bus back to El Calafate."
+    toNext: bus
+  - location: argentina/el-calafate
+    days:
+      - locations: [argentina/el-calafate]
+        description: "Perito Moreno - ice hiking and balconies"
+      - locations: [chile/torres-del-paine, argentina/el-calafate]
+        description: "Day trip to Torres del Paine National Park."
+    toNext: plane
+  - location: argentina/puerto-iguazu
+    days:
+      - locations: [argentina/puerto-iguazu]
+        description: "Fly into Puerto Iguazú via Buenos Aires."
+      - locations: [argentina/puerto-iguazu]
+        description: "Argentine side of the falls."
+      - locations: [brazil/iguacu-falls, chile/santiago]
+        description: "Brazilian side of the falls."
+    toNext: plane
+  - location: chile/santiago
+    days:
+      - locations: [chile/santiago]
+        description: Exploring the city, Plaza de Armas, parks around the city center.
+      - locations: [chile/santiago]
+        description: Walking tour, Bellavista, Cerro Cristobal, Museum of Memory and Human Rights.
+      - locations: [chile/cajon-del-maipo, chile/santiago]
+        description: "Cajón del Maipo day trip, hiking and volcano views."
+      - locations: [chile/valparaiso, chile/santiago]
+        description: "Valparaíso day trip, port, funiculars, and street art on the Pacific coast."
+      - locations: [argentina/aconcagua, chile/santiago]
+        description: "Aconcagua National Park day trip, short hike and views towards the summit."
+    toNext: plane
+  - location: uruguay/montevideo
+    days:
+      - locations: [uruguay/montevideo]
+        description: Fly to Montevideo, walking tour.
+      - locations: [uruguay/montevideo]
+        description: "Beach time, old city, and Uruguayan steak."
+      - locations: [uruguay/colonia-del-sacramento, argentina/buenos-aires]
+        description: "Short stop in Colonia del Sacramento, ferry across the Río de la Plata to Buenos Aires."
+    toNext: ferry
+  - location: argentina/buenos-aires
+    hidden: true
 months: "December–March"
+why: "This is the itinerary that made us fall in love with the continent and the people living there. The trip in this format really has everything: cosmopolitan cities, spectacular hiking opportunities, colonial towns and out of this world natural wonders."
+gettingAround:
+  - plane
+  - bus
+  - ferry
 published: 2020-05-03
 hero: ../../assets/argentina/perito-moreno-balcony.jpg
 heroLocation: argentina/perito-moreno

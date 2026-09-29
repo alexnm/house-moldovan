@@ -28,6 +28,16 @@ locations:
     image: ../../assets/israel/caesarea.jpg
     lat: 32.519
     lng: 34.9045
+  - id: haifa
+    name: "Haifa"
+    image: ../../assets/israel/haifa.jpg
+    lat: 32.794
+    lng: 34.9896
+  - id: acre
+    name: "Acre"
+    image: ../../assets/israel/acre.jpg
+    lat: 32.9278
+    lng: 35.0817
   - id: rosh-hanikra
     name: "Rosh HaNikra"
     image: ../../assets/israel/rosh-hanikra.jpg

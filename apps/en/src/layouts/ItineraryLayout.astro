@@ -3,10 +3,13 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import Hero from "@shared/components/article/Hero.astro";
 import Prose from "@shared/components/article/Prose.astro";
-import MetaBar from "~/components/article/MetaBar.astro";
-import ItineraryIntroCards from "~/components/article/ItineraryIntroCards.astro";
-import ItineraryDaysCompact from "~/components/article/ItineraryDaysCompact.astro";
+import ItineraryTripCard, {
+  type Fact,
+} from "~/components/article/ItineraryTripCard.astro";
+import ItineraryParts from "~/components/article/ItineraryParts.astro";
+import ItineraryHighlights from "~/components/article/ItineraryHighlights.astro";
 import { en } from "~/i18n/en";
+import { abbreviateMonths } from "~/lib/months";
 import { getPlace } from "~/lib/content";
 import { articleListingHref } from "~/lib/articles";
 import {
@@ -17,7 +20,14 @@ import {
 } from "~/lib/articlePlaces";
 import { getAllRegions, regionMapById } from "~/lib/regions";
 import { buildLocationIndex } from "~/lib/locations";
-import { heroRouteFromLocations } from "~/lib/itinerary";
+import {
+  buildItineraryBases,
+  buildRouteMap,
+  heroRouteFromLocations,
+  itineraryBaseCount,
+  itineraryDayCount,
+  uniqueStops,
+} from "~/lib/itinerary";
 import { getReadNextArticles } from "~/lib/readNext";
 import ReadNext from "~/components/article/ReadNext.astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
@@ -48,43 +58,88 @@ const regionsById = regionMapById(await getAllRegions());
 const accent = regionAccentForPlaces(resolved, regionsById);
 const countryLabel =
   resolved.length > 1 ? en.article.countries : en.article.country;
-const dayCount = data.days.length;
+const dayCount = itineraryDayCount(data.bases);
 const locationIndex = await buildLocationIndex();
-const routeLocations = data.days.flatMap((day) =>
-  day.locations.map((id) => {
-    const loc = locationIndex.get(id);
-    if (!loc) {
-      throw new Error(`Itinerary ${entry.id}: unknown location "${id}"`);
-    }
-    return loc;
-  }),
-);
-const placeNames = heroRouteFromLocations(routeLocations);
-const pageDescription = data.summary;
 
-const dayRows = data.days.map((d, i) => {
-  const locations = d.locations.map((id) => {
-    const loc = locationIndex.get(id);
-    if (!loc) {
-      throw new Error(
-        `Itinerary ${entry.id} day ${i + 1}: unknown location "${id}"`,
-      );
-    }
-    return loc;
+const resolveStop = (id: string, day: number) => {
+  const loc = locationIndex.get(id);
+  if (!loc) {
+    throw new Error(
+      `Itinerary ${entry.id} day ${day}: unknown location "${id}"`,
+    );
+  }
+  return loc;
+};
+
+let dayIndex = 0;
+const bases = data.bases.map((base) => {
+  const location = locationIndex.get(base.location);
+  if (!location) {
+    throw new Error(
+      `Itinerary ${entry.id}: unknown base "${base.location}"`,
+    );
+  }
+  const days = base.days.map((d) => {
+    dayIndex += 1;
+    return {
+      dayIndex,
+      description: d.description,
+      locations: d.locations.map((id) => resolveStop(id, dayIndex)),
+    };
   });
   return {
-    dayIndex: i + 1,
-    description: d.description,
-    locations,
+    location,
+    title: base.title,
+    image: base.image,
+    toNext: base.toNext,
+    hidden: base.hidden,
+    days,
   };
 });
 
-const items = [
+const dayRows = bases.flatMap((base) => base.days);
+const routeLocations = dayRows.flatMap((day) => day.locations);
+const placeNames = heroRouteFromLocations(routeLocations);
+const pageDescription = data.summary;
+
+const parts = buildItineraryBases(bases, contentHeadings);
+const routeMap = buildRouteMap(dayRows, parts);
+const stops = uniqueStops(dayRows);
+const gettingAround = [data.gettingAround].flat();
+
+const facts: Fact[] = [
   { label: countryLabel, value: countryLinks(resolved) },
   { label: en.region.kicker, value: uniqueRegionLinks(resolved, regionsById) },
-  { label: "Duration", value: en.article.days(dayCount) },
-  { label: en.article.months, value: data.months },
+  {
+    label: en.article.itineraryRouteFact,
+    value: [
+      {
+        label: en.article.itineraryRouteCount(
+          itineraryBaseCount(parts),
+          stops.length,
+        ),
+        href: "#itinerary-route-heading",
+      },
+    ],
+  },
+  { label: en.article.itineraryDuration, value: en.article.days(dayCount) },
+  {
+    label: en.article.itineraryGettingAround,
+    transport: gettingAround,
+  },
+  { label: en.article.months, value: abbreviateMonths(data.months) },
 ];
+
+const highlights = data.highlights.map((h) => {
+  const loc = locationIndex.get(h.location);
+  if (!loc) {
+    throw new Error(
+      `Itinerary ${entry.id}: unknown highlight location "${h.location}"`,
+    );
+  }
+  const label = h.title || loc.name;
+  return { image: h.image, caption: label, location: label };
+});
 
 const heroLocation = await articleHeroLocation({ ...entry, kind: "itinerary" });
 const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
@@ -97,7 +152,7 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
   ogImage={`/og/itineraries/${entry.id}.png`}
   noindex={data.draft}
 >
-  <article class="accent-scope" data-accent={accent}>
+  <article class="itinerary-page accent-scope" data-accent={accent}>
     <Hero
       image={data.hero}
       alt={data.title}
@@ -109,7 +164,25 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
       transitionName={`hero-${entry.id}`}
     />
 
-    <MetaBar items={items} />
+    <div
+      class="section itinerary-intro relative z-10 grid gap-y-12 pt-10 lg:grid-cols-[minmax(0,1fr)_32.5rem] lg:gap-x-18 lg:pt-0"
+    >
+      <div class="lg:col-start-2 lg:row-start-1 lg:-mt-56">
+        <ItineraryTripCard
+          facts={facts}
+          why={data.why}
+          map={routeMap}
+          mapLabel={`Route map: ${placeNames}`}
+        />
+      </div>
+      <div class="lg:col-start-1 lg:row-start-1 lg:pt-18">
+        <ItineraryParts parts={parts.filter((part) => !part.hidden)} />
+      </div>
+    </div>
+
+    <div class="section section-y">
+      <ItineraryHighlights highlights={highlights} />
+    </div>
 
     <div
       class:list={[
@@ -119,13 +192,8 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
     >
       {hasToc && <ArticleToc sections={toc} />}
 
-      <div class="flex min-w-0 flex-col gap-[var(--space-section)]">
-        <ItineraryIntroCards
-          highlights={data.highlights}
-          travelTips={data.travelTips}
-        />
-        <ItineraryDaysCompact days={dayRows} />
-        <Prose class="mx-0!">
+      <div class="min-w-0">
+        <Prose class="itinerary-prose mx-0!">
           <slot />
         </Prose>
       </div>
@@ -146,3 +214,23 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
     </nav>
   </article>
 </BaseLayout>
+
+<style>
+  /* Leave room for the trip card that overlaps the bottom-right of the hero. */
+  @media (min-width: 64rem) {
+    :global(.itinerary-page [data-nav-hero] .hero-bottom > *) {
+      max-width: min(100%, calc(100% - 36rem));
+    }
+  }
+
+  /* Short regional tick above each day section in the story. */
+  :global(.itinerary-prose h2::before) {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 4px;
+    margin-bottom: 1.1rem;
+    border-radius: 1px;
+    background: var(--color-accent);
+  }
+</style>

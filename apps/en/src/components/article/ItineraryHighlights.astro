@@ -1,0 +1,96 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import type { CountrySnapshot } from "~/lib/countryPage";
+import { en } from "~/i18n/en";
+
+export interface Props {
+  highlights: CountrySnapshot[];
+}
+
+const { highlights } = Astro.props;
+const PIN_GLYPH =
+  "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
+---
+
+<section aria-labelledby="itinerary-highlights-heading">
+  <h2 id="itinerary-highlights-heading" class="display section-heading mb-8">
+    {en.article.itineraryHighlights}
+  </h2>
+  <ul
+    class="m-0 grid list-none grid-cols-1 gap-[var(--grid-gap)] p-0 sm:grid-cols-2 lg:grid-cols-4"
+  >
+    {
+      highlights.map((h, index) => (
+        <li class="highlight-card motion-reveal-media relative aspect-[3/4] overflow-hidden rounded-sm bg-accent/10">
+          <CoverImage
+            src={h.image}
+            alt={h.caption}
+            widths={[360, 540, 720]}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            loading={index < 2 ? "eager" : "lazy"}
+            class="h-full w-full object-cover"
+            wrapperClass="absolute inset-0"
+          />
+          <div class="highlight-card__scrim" aria-hidden="true" />
+          <p class="highlight-card__location">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              class="highlight-card__pin"
+            >
+              <path d={PIN_GLYPH} />
+            </svg>
+            {h.location}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .highlight-card__scrim {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    height: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--color-photo-scrim) 70%, transparent),
+      color-mix(in oklch, var(--color-photo-scrim) 40%, transparent),
+      transparent
+    );
+  }
+
+  .highlight-card__location {
+    position: absolute;
+    z-index: 2;
+    bottom: 0.65rem;
+    left: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: calc(100% - 1.5rem);
+    margin: 0;
+    color: var(--color-photo-ink);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: var(--tracking-microcaps);
+    line-height: 1.35;
+    text-transform: uppercase;
+    pointer-events: none;
+    text-shadow: 0 1px 10px
+      color-mix(in oklch, var(--color-photo-scrim) 55%, transparent);
+  }
+
+  .highlight-card__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+description: Leave the Astro dev server alone unless the user asks
+alwaysApply: true
+---
+
+# Dev server
+
+The English site dev server is `pnpm dev` (Astro) on port **4321** (`http://localhost:4321`).
+
+- If something is already listening on port 4321, use that server. Open it in the browser for verification.
+- Do not stop, kill, or restart a running dev server.
+- Do not start a new dev server (`pnpm dev`, `astro dev`, or another port).
+- Do not run build tasks (`pnpm build`, `pnpm build:en`, `astro build`, or preview/deploy scripts) unless the user explicitly asks in this conversation.
+
+```text
+# Bad: port 4321 is already in use, so start a second server or kill the existing one
+# Good: open http://localhost:4321 and verify there
+```

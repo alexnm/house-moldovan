@@ -1,0 +1,75 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import type { ItineraryPart } from "~/lib/itinerary";
+import { en } from "~/i18n/en";
+
+export interface Props {
+  parts: ItineraryPart[];
+}
+
+const { parts } = Astro.props;
+---
+
+<section aria-labelledby="itinerary-route-heading">
+  <h2 id="itinerary-route-heading" class="display section-heading mb-7 scroll-mt-28">
+    {en.article.itineraryRoute}
+  </h2>
+
+  <ol class="m-0 list-none p-0">
+    {
+      parts.map((part) => (
+        <li
+          class="grid gap-x-7 gap-y-4 border-t border-line py-6 sm:grid-cols-[11rem_minmax(0,1fr)]"
+          id={`itinerary-part-${part.number}`}
+        >
+          <div class="aspect-[4/3] w-full max-w-[11rem] overflow-hidden rounded-sm bg-surface-2">
+            {part.image && (
+              <CoverImage
+                src={part.image}
+                alt={part.imageAlt ?? part.title}
+                widths={[240, 360, 480]}
+                sizes="11rem"
+                class="h-full w-full object-cover"
+                wrapperClass="h-full w-full"
+              />
+            )}
+          </div>
+          <div class="min-w-0">
+            <h3 class="m-0 text-[1.4rem] leading-tight font-semibold tracking-[-0.02em]">
+              {part.slug ? (
+                <a
+                  href={`#${part.slug}`}
+                  class="inline-flex items-baseline gap-2 text-ink no-underline hover:text-accent-ink"
+                >
+                  <span aria-hidden="true">{part.flag}</span>
+                  {part.title}
+                </a>
+              ) : (
+                <span class="inline-flex items-baseline gap-2">
+                  <span aria-hidden="true">{part.flag}</span>
+                  {part.title}
+                </span>
+              )}
+            </h3>
+            <ol class="m-0 mt-1 list-none p-0">
+              {part.days.map((d) => (
+                <li
+                  class="mt-2.5 grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-2.5"
+                  id={`itinerary-day-${d.dayIndex}`}
+                >
+                  <span class="micro mt-1 text-ink-faint">
+                    {en.article.dayLabel(d.dayIndex)}
+                  </span>
+                  <p class="m-0 leading-relaxed text-ink-dim">
+                    {d.description}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+

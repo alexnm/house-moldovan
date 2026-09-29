@@ -1,5 +1,6 @@
 import { en } from "~/i18n/en";
 import type { AnyEnArticle } from "~/lib/content";
+import { itineraryDayCount } from "~/lib/itinerary";
 export type ArticleKind = "itinerary" | "story" | "spotlight";
 
 export function articleListingHref(kind: ArticleKind): string {
@@ -31,7 +32,7 @@ export function articleKicker(a: AnyEnArticle): string {
     case "spotlight":
       return en.article.spotlight;
     case "itinerary":
-      return `${en.article.itinerary} · ${en.article.days(a.data.days.length)}`;
+      return `${en.article.itinerary} · ${en.article.days(itineraryDayCount(a.data.bases))}`;
   }
 }
 

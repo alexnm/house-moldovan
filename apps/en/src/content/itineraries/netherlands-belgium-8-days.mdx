@@ -5,38 +5,47 @@ country:
   - netherlands
   - belgium
 highlights:
-  - "Amsterdam, Haarlem, Zaanse Schans, and Utrecht — all reachable in an hour from one base"
-  - "Keukenhof in spring, then Delft's old town and Rotterdam's modern skyline"
-  - "Ghent as a quieter alternative to Bruges, with Antwerp and Bruges both an easy train ride away"
-  - "The whole route runs on one of Europe's best regional train networks — no car needed"
-travelTips:
-  - "We've been to this region several times; this is our recommended route, not a day-by-day diary of a single trip."
-  - "Keukenhof is only open mid-March to mid-May — plan day four around tulip season, or swap it for Leiden or The Hague."
-  - "Buy Dutch rail tickets via NS and Belgian legs via SNCB/NMBS; contactless works at most gates."
-  - "Book Ghent accommodation inside or near the historic centre — the canal belt is worth the premium."
-days:
-  - locations: [netherlands/amsterdam]
-    description: "Arrive and settle in — canals, museums, and a first wander through the Jordaan."
-  - locations: [netherlands/haarlem, netherlands/zaanse-schans]
-    description: "Haarlem morning, Zaanse Schans windmills afternoon."
-  - locations: [netherlands/utrecht, netherlands/amsterdam]
-    description: "Utrecht day trip — Domtoren, wharf cafés, back to Amsterdam for the evening."
-  - locations: [netherlands/keukenhof, netherlands/delft]
-    description: "Stop at Keukenhof near Lisse, then train south to Delft."
-  - locations: [netherlands/delft, netherlands/rotterdam]
-    description: "Delft old town in the morning, Rotterdam architecture in the afternoon."
-  - locations: [belgium/antwerp, belgium/ghent]
-    description: "Half-day in Antwerp en route to Ghent."
-  - locations: [belgium/ghent]
-    description: "A full day in Ghent — Graslei, Gravensteen, and no rush."
-  - locations: [belgium/bruges]
-    description: "Day trip to Bruges — canals, Belfry, and chocolate before the train home."
+  - image: ../../assets/netherlands/amsterdam.JPG
+    location: netherlands/amsterdam
+  - image: ../../assets/netherlands/keukenhof/keukenhof.JPG
+    location: netherlands/keukenhof
+  - image: ../../assets/netherlands/delft-main-square.JPG
+    location: netherlands/delft
+  - image: ../../assets/belgium/ghent-canal.JPG
+    location: belgium/ghent
+bases:
+  - location: netherlands/amsterdam
+    toNext: train
+    days:
+      - locations: [netherlands/amsterdam]
+        description: "Arrive and settle in — canals, museums, and a first wander through the Jordaan."
+      - locations: [netherlands/haarlem, netherlands/zaanse-schans]
+        description: "Haarlem morning, Zaanse Schans windmills afternoon."
+      - locations: [netherlands/utrecht, netherlands/amsterdam]
+        description: "Utrecht day trip — Domtoren, wharf cafés, back to Amsterdam for the evening."
+  - location: netherlands/delft
+    toNext: train
+    days:
+      - locations: [netherlands/keukenhof, netherlands/delft]
+        description: "Stop at Keukenhof near Lisse, then train south to Delft."
+      - locations: [netherlands/delft, netherlands/rotterdam, netherlands/delft]
+        description: "Delft old town in the morning, Rotterdam architecture in the afternoon."
+  - location: belgium/ghent
+    days:
+      - locations: [netherlands/delft, belgium/antwerp, belgium/ghent]
+        description: "Half-day in Antwerp en route to Ghent."
+      - locations: [belgium/ghent]
+        description: "A full day in Ghent — Graslei, Gravensteen, and no rush."
+      - locations: [belgium/bruges]
+        description: "Day trip to Bruges — canals, Belfry, and chocolate before the train home."
 
 months: "April–May"
+why: ""
+gettingAround: train
 published: 2026-09-04
 hero: ../../assets/belgium/ghent-canal.JPG
 heroLocation: belgium/ghent
-draft: true
+draft: false
 ---
 
 import AssetFigure from "~/components/mdx/AssetFigure.astro";
@@ -168,6 +177,8 @@ Finish with a day trip to **Bruges**. The train from Ghent takes about 25 minute
 This route assumes eight nights and seven train changes between bases — all straightforward on NS and SNCB. Intercity trains run frequently; you rarely need seat reservations on domestic legs.
 
 Pack light. Amsterdam Centraal, Rotterdam Centraal, and Gent-Sint-Pieters are all easy with a rolling bag, but cobblestones in Delft, Ghent, and Bruges will remind you why a backpack beats a suitcase.
+
+Book somewhere in Ghent inside or near the historic centre. The canal belt is worth the premium.
 
 <Info type="warning">
   Keukenhof is seasonal — check opening dates before you book day four. Outside

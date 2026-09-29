@@ -1,0 +1,110 @@
+---
+import type { RouteMap } from "~/lib/itinerary";
+import ItineraryRouteMap from "./ItineraryRouteMap.astro";
+import TablerIcon from "@shared/components/icons/TablerIcon.astro";
+import { en } from "~/i18n/en";
+
+export type TransportMode = keyof typeof en.article.transport;
+
+export interface FactLink {
+  label: string;
+  href: string;
+}
+
+export interface Fact {
+  label: string;
+  value?: string | FactLink[];
+  /** Getting-around modes, each drawn with its icon. */
+  transport?: TransportMode[];
+  note?: string;
+  /** Span both columns (long values like several countries). */
+  wide?: boolean;
+}
+
+export interface Props {
+  facts: Fact[];
+  why?: string;
+  map: RouteMap;
+  mapLabel: string;
+}
+
+const { facts, why, map, mapLabel } = Astro.props;
+---
+
+<aside
+  class="trip-card surface-card overflow-hidden rounded-lg"
+  aria-label="Trip at a glance"
+>
+  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 p-6 md:p-7">
+    {
+      facts.map((f) => (
+        <div class:list={[f.wide && "col-span-2"]}>
+          <dt class="micro text-accent-ink">{f.label}</dt>
+          <dd class="m-0 mt-1 leading-snug font-semibold text-ink">
+            {f.transport ? (
+              <span class="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+                {f.transport.map((mode) => (
+                  <span class="inline-flex items-center gap-1.5">
+                    <TablerIcon name={mode} class="transport-icon" />
+                    {en.article.transport[mode]}
+                  </span>
+                ))}
+              </span>
+            ) : Array.isArray(f.value) ? (
+              f.value.map((link, i) => (
+                <>
+                  {i > 0 && <span class="text-ink-faint"> · </span>}
+                  <a href={link.href} class="link-accent">
+                    {link.label}
+                  </a>
+                </>
+              ))
+            ) : (
+              f.value
+            )}
+            {f.note && (
+              <span class="block text-sm font-normal text-ink-dim">
+                {f.note}
+              </span>
+            )}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    why && (
+      <div class="border-t border-line bg-accent/10 px-6 py-6 md:px-7">
+        <p class="micro m-0 text-accent-ink">{en.article.itineraryWhy}</p>
+        <p class="m-0 mt-2.5 text-[1.0625rem] leading-relaxed text-ink">
+          {why}
+        </p>
+      </div>
+    )
+  }
+
+  <div class="trip-card__map border-t border-line px-3 pt-4 pb-4">
+    <p class="micro m-0 px-3 pb-1 text-accent-ink">
+      {en.article.itineraryRouteMap}
+    </p>
+    <ItineraryRouteMap map={map} label={mapLabel} />
+  </div>
+</aside>
+
+<style>
+  .trip-card {
+    box-shadow: 0 30px 80px -30px oklch(0 0 0 / 0.6);
+  }
+  .trip-card__map {
+    background: color-mix(
+      in oklch,
+      var(--color-surface-2) 85%,
+      var(--color-surface)
+    );
+  }
+  .trip-card :global(.transport-icon) {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+</style>

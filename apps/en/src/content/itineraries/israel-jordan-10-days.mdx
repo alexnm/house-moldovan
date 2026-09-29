@@ -5,35 +5,65 @@ country:
   - israel
   - jordan
 highlights:
-  - "Mediterranean coast of Israel has a lot to offer"
-  - "Jerusalem - the holy city - is a must-visit"
-  - "Spending the night in the desert of Wadi Rum was a surreal experience"
-travelTips:
-  - "We aimed for two shoulder seasons, spring and autumn, with milder highland weather."
-  - "We spent around €1500 per person back in 2020, excluding the flights to and from Israel."
-  - "Border paperwork at airports can be slow; the rest of the experience made up for it."
-days:
-  - locations: [israel/tel-aviv]
-    description: "City tour, promenade, markets, hummus."
-  - locations: [israel/caesarea, israel/rosh-hanikra]
-    description: "North coast day trip — Caesarea, Rosh HaNikra, Akko, and the Bahá’í terraces in Haifa in one long day."
-  - locations: [israel/tel-aviv]
-    description: "Jaffa — old city port that's part of Tel Aviv, a lot of history during a free-walking tour"
-  - locations: [israel/jerusalem]
-    description: Bus up to the high city; first walk inside the walls and the four quarters.
-  - locations: [israel/jerusalem]
-    description: "Temple Mount, Mount of Olives, and more stone alleys in the same stay."
-  - locations: [israel/jerusalem, israel/eilat]
-    description: "Yad Vashem in the morning, then overland to the Red Sea in the far south."
-  - locations: [israel/eilat]
-    description: "Reef, beach, and a breather on the gulf before Jordan."
-  - locations: [jordan/wadi-rum]
-    description: "Cross the border, 4x4 in the red desert, bedouin camp under the stars."
-  - locations: [jordan/petra]
-    description: "Full day in the rock city, return to the Israeli side for a last Red Sea base."
-  - locations: [israel/eilat, israel/tel-aviv]
-    description: "Red Canyon hike, then the bus north to the coast for a final night."
+  - image: ../../assets/israel/caesarea-tiles.jpg
+    location: israel/caesarea
+  - image: ../../assets/israel/jerusalem-dome-of-the-rock-2.jpg
+    location: israel/jerusalem
+    title: Dome of the Rock, Jerusalem
+  - image: ../../assets/jordan/petra-2.jpg
+    location: jordan/petra
+  - image: ../../assets/jordan/wadi-rum-campsite.jpg
+    location: jordan/wadi-rum
+
+bases:
+  - location: israel/tel-aviv
+    days:
+      - locations: [israel/tel-aviv]
+        description: "City tour, promenade, markets."
+      - locations:
+          [
+            israel/caesarea,
+            israel/acre,
+            israel/rosh-hanikra,
+            israel/haifa,
+            israel/tel-aviv,
+          ]
+        description: "North coast day trip: Caesarea, Rosh HaNikra, Acre, and the Bahá’í terraces in Haifa."
+      - locations: [israel/tel-aviv]
+        description: "Jaffa old city walking tour"
+    toNext: bus
+  - location: israel/jerusalem
+    days:
+      - locations: [israel/jerusalem]
+        description: Tour of the old city and its neighborhoods.
+      - locations: [israel/jerusalem]
+        description: "Temple Mount and Mount of Olives"
+      - locations: [israel/jerusalem, israel/eilat]
+        description: "Yad Vashem in the morning, then bus to Eilat."
+    toNext: bus
+  - location: israel/eilat
+    days:
+      - locations: [israel/eilat]
+        description: "Beach day, coral reef."
+    toNext: bus
+  - location: jordan/wadi-rum
+    days:
+      - locations: [jordan/wadi-rum]
+        description: "Cross the border, 4x4 in the red desert, bedouin camp and desert night under the stars."
+      - locations: [jordan/wadi-rum, jordan/petra, israel/eilat]
+        description: "Full day in the rock city of Petra, return to Eilat for a final day by the Red Sea."
+    toNext: bus
+  - location: israel/eilat
+    image: ../../assets/israel/red-canyon.jpg
+    days:
+      - locations: [israel/eilat, israel/tel-aviv]
+        description: "Red Canyon hike, then the bus north to the coast for a final night."
+    toNext: bus
+  - location: israel/tel-aviv
+    hidden: true
 months: "March–May, September–November"
+why: "This itinerary offers a great mix of history, culture and modern life in the Middle East. You start with Tel Aviv and the Mediterranean coast, then head out to the historical sites of Jerusalem, then south for the sunny beaches of Eilat, before crossing into Jordan and exploring the rock city of Petra and the desert of Wadi Rum."
+gettingAround: bus
 published: 2020-05-03
 hero: ../../assets/jordan/petra-royal-tombs-2.jpg
 heroLocation: jordan/petra
@@ -244,6 +274,8 @@ From the bus stop, you walk half an hour to reach the entrance to the canyon and
 />
 
 ## Travel tips
+
+We aimed for the shoulder seasons, spring and autumn, when the highlands are milder. Border paperwork at the airports can be slow; the rest of the trip made up for it. We spent around €1500 per person in 2020, excluding the flights to and from Israel.
 
 Israelis celebrate the Shabbat on Saturday and most of the stores and restaurants are closed. Also, there's no public transportation, which is tricky especially if you arrive on Saturday at the airport and taxis are the only option.
 

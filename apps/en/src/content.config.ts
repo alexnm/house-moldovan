@@ -134,15 +134,58 @@ const itineraryDay = z.object({
   locations: z.array(locationRef).min(1),
 });
 
+const transportMode = z.enum(["car", "bus", "train", "ferry", "plane"]);
+
 const itineraries = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/itineraries" }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
       summary: articleSummary,
-      highlights: z.array(z.string()).min(1),
-      travelTips: z.array(z.string()).min(1),
-      days: z.array(itineraryDay).min(1),
+      /** Four photos. The place name is the caption. */
+      highlights: z
+        .array(
+          z.object({
+            image: image(),
+            /** Location id, e.g. `jordan/petra`. The place name is the caption. */
+            location: locationRef,
+            /** Shown instead of the location name. */
+            title: z.string().min(1).optional(),
+          }),
+        )
+        .length(4),
+      /** Short paragraph for the trip card. Empty until written. */
+      why: z.string().default(""),
+      /** How you move between stops. One mode, or several. */
+      gettingAround: z.union([
+        transportMode,
+        z.array(transportMode).min(1),
+      ]),
+      /** Overnight stays, in order. Each one opens the route list. */
+      bases: z
+        .array(
+          z.object({
+            /** Where you stay, e.g. `austria/salzburg`. */
+            location: locationRef,
+            /** Shown instead of the location name. */
+            title: z.string().min(1).optional(),
+            /** Card photo. Falls back to the location's picture. */
+            image: image().optional(),
+            /** How you travel from this base to the next one. */
+            toNext: transportMode.optional(),
+            /**
+             * A return point with no nights of its own. The path links back
+             * here, but it is not listed or counted as a base.
+             */
+            hidden: z.boolean().default(false),
+            days: z.array(itineraryDay).default([]),
+          })
+            .refine((base) => base.hidden || base.days.length > 0, {
+              message: "A base needs at least one day",
+              path: ["days"],
+            }),
+        )
+        .min(1),
       country: z.array(reference("places")).min(1),
       /** e.g. "March–April" or "December–March, July–August" */
       months: z.string().min(1),

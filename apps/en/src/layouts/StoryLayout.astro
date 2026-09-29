@@ -5,6 +5,7 @@ import Hero from "@shared/components/article/Hero.astro";
 import Prose from "@shared/components/article/Prose.astro";
 import MetaBar from "~/components/article/MetaBar.astro";
 import { en } from "~/i18n/en";
+import { abbreviateMonths } from "~/lib/months";
 import { getPlace } from "~/lib/content";
 import { articleListingHref, articleOgPath } from "~/lib/articles";
 import {
@@ -47,7 +48,7 @@ const items = [
     label: en.article.type,
     value: en.article.storyType[data.type],
   },
-  { label: en.article.months, value: data.months },
+  { label: en.article.months, value: abbreviateMonths(data.months) },
 ];
 
 const heroLocation = await articleHeroLocation({ ...entry, kind: "story" });

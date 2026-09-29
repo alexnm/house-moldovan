@@ -2,6 +2,7 @@ import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
 import type { Accent } from "@shared/lib/accent";
 import { articleHref, articleKicker } from "~/lib/articles";
+import { itineraryDayCount } from "~/lib/itinerary";
 import { countryLine, placeShortName } from "~/lib/articlePlaces";
 import {
   articlesForRegion,
@@ -121,7 +122,7 @@ export async function loadRegionPage(
     title: a.data.title,
     summary: a.data.summary,
     hero: a.data.hero,
-    days: a.data.days.length,
+    days: itineraryDayCount(a.data.bases),
     countries: a.data.country
       .map((ref) => placeById.get(ref.id))
       .filter((p): p is CollectionEntry<"places"> => Boolean(p))

@@ -142,7 +142,22 @@ export const en = {
     moreFrom: (place: string) => `More from ${place}`,
     nextRead: "Continue reading",
     itineraryHighlights: "Highlights",
-    itineraryTravelTips: "Quick tips",
+    itineraryRoute: "The route",
+    itineraryRouteFact: "Overview",
+    itineraryRouteCount: (bases: number, locations: number) =>
+      `${bases} ${bases === 1 ? "base" : "bases"} · ${locations} ${locations === 1 ? "location" : "locations"}`,
+    itineraryRouteMap: "Route map",
+    itineraryWhy: "Why it works",
+    itineraryDuration: "Duration",
+    itineraryGettingAround: "Getting around",
+    transport: {
+      car: "Car",
+      bus: "Bus",
+      train: "Train",
+      ferry: "Ferry",
+      plane: "Plane",
+    },
+    dayLabel: (n: number) => `Day ${n}`,
     onThisPage: "On this page",
   },
   units: {
