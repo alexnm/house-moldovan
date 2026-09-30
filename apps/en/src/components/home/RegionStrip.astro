@@ -25,7 +25,7 @@ const regions = await getAllRegions();
           <li class="motion-reveal-media">
             <a
               href={`/explore/region/${r.id}`}
-              class="accent-scope accent-drenched region-tile group relative flex aspect-square flex-col gap-4 overflow-clip rounded-sm p-5 md:aspect-4/5 md:p-6"
+              class="accent-scope accent-drenched region-tile group relative flex aspect-square flex-col gap-4 overflow-hidden rounded-sm p-5 shadow-rest md:aspect-4/5 md:p-6"
               data-accent={r.data.accent}
             >
               {cover && (

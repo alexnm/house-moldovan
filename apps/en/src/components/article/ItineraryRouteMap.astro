@@ -1,6 +1,6 @@
 ---
-import { tablerIconPaths } from "@shared/lib/tablerIcon";
-import type { RouteMap } from "~/lib/itinerary";
+import LocationsMap from "~/components/map/LocationsMap.astro";
+import type { RouteMap } from "~/lib/routeMap";
 
 export interface Props {
   map: RouteMap;
@@ -10,154 +10,12 @@ export interface Props {
 const { map, label } = Astro.props;
 ---
 
-<figure class="route-map m-0">
-  <svg
-    viewBox={`0 0 ${map.width} ${map.height}`}
-    role="img"
-    aria-label={label}
-    class="block h-auto w-full"
-  >
-    <g class="route-map__grid">
-      {map.gridX.map((x) => <line x1={x} y1="0" x2={x} y2={map.height} />)}
-      {map.gridY.map((y) => <line x1="0" y1={y} x2={map.width} y2={y} />)}
-    </g>
-    <g class="route-map__lines" fill="none">
-      {
-        map.segments.map((sg) => (
-          <path
-            d={sg.d}
-            class:list={[sg.transfer ? "is-transfer" : "is-day"]}
-          />
-        ))
-      }
-    </g>
-    <g class="route-map__icons">
-      {
-        map.transportIcons.map((ic) => (
-          <g transform={`translate(${ic.x} ${ic.y})`}>
-            <circle cx="9" cy="9" r="11" />
-            <g class="glyph" transform="scale(0.75)">
-              {tablerIconPaths(ic.mode).map((d) => (
-                <path d={d} />
-              ))}
-            </g>
-          </g>
-        ))
-      }
-    </g>
-    <g class="route-map__stops">
-      {
-        map.stops
-          .filter((st) => st.parts.length === 0)
-          .map((st) => <circle cx={st.x} cy={st.y} r="4.5" />)
-      }
-    </g>
-    <g class="route-map__pins">
-      {
-        map.pins.map((p) => (
-          <g>
-            <circle cx={p.x} cy={p.y} r="11" />
-            <text x={p.x} y={p.y + 5} text-anchor="middle">
-              {p.n}
-            </text>
-          </g>
-        ))
-      }
-    </g>
-    <g class="route-map__labels">
-      {
-        map.labels.map((l) => (
-          <text
-            x={l.x}
-            y={l.y}
-            text-anchor={l.anchor}
-            class:list={[l.strong && "is-strong"]}
-          >
-            {l.text}
-          </text>
-        ))
-      }
-    </g>
-    <g
-      class="route-map__scale"
-      transform={`translate(${map.scale.x} ${map.scale.y})`}
-    >
-      <line x1="0" y1="0" x2={map.scale.px} y2="0"></line>
-      <line x1="0" y1="-4" x2="0" y2="4"></line>
-      <line x1={map.scale.px} y1="-4" x2={map.scale.px} y2="4"></line>
-      <text x={map.scale.px / 2} y="-9" text-anchor="middle">
-        {map.scale.km.toLocaleString("en")} km
-      </text>
-    </g>
-  </svg>
+<figure class="route-map m-0" aria-label={label}>
+  <LocationsMap
+    pins={[]}
+    route={map}
+    basemap="adaptive"
+    scrollZoom={false}
+    fullBleed
+  />
 </figure>
-
-<style>
-  .route-map__grid line {
-    stroke: color-mix(in oklch, var(--color-line) 60%, transparent);
-    stroke-width: 1;
-  }
-  .route-map__lines path {
-    stroke: var(--color-accent);
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .route-map__lines .is-day {
-    stroke-width: 3;
-  }
-  .route-map__lines .is-transfer {
-    stroke-width: 2.2;
-    stroke-dasharray: 7 6;
-  }
-  .route-map__icons circle {
-    fill: var(--color-surface-2);
-  }
-  .route-map__icons .glyph {
-    fill: none;
-    stroke: var(--color-accent);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .route-map__stops circle {
-    fill: var(--color-surface-2);
-    stroke: var(--color-accent);
-    stroke-width: 2.5;
-  }
-  .route-map__pins circle {
-    fill: var(--color-accent);
-    stroke: var(--color-surface-2);
-    stroke-width: 2;
-  }
-  .route-map__pins text {
-    fill: var(--accent-ink);
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 13px;
-  }
-  .route-map__labels text {
-    fill: var(--color-ink-dim);
-    font-family: var(--font-sans);
-    font-size: 12.5px;
-    paint-order: stroke;
-    stroke: var(--color-surface-2);
-    stroke-width: 3px;
-    stroke-linejoin: round;
-  }
-  .route-map__labels .is-strong {
-    fill: var(--color-ink);
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .route-map__scale line {
-    stroke: var(--color-ink-faint);
-    stroke-width: 1.5;
-  }
-  .route-map__scale text {
-    fill: var(--color-ink-faint);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-</style>

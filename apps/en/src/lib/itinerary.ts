@@ -2,6 +2,17 @@ import type { ImageMetadata } from "astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
 import type { ResolvedLocation } from "~/lib/locations";
 import { placeCoverFromFrontmatterPath } from "~/lib/placeCover";
+import {
+  archLatLngs,
+  routeCosLat,
+  routeFrame,
+  type RouteMap,
+  type RouteMapSegment,
+  type RouteMapTransport,
+} from "~/lib/routeMap";
+import { routeAtlas } from "~/lib/routeAtlas";
+
+export type { RouteMap } from "~/lib/routeMap";
 
 /** Ordered location names for the hero byline (each name once, in order of first appearance). */
 export function heroRouteFromLocations(
@@ -160,76 +171,10 @@ export function uniqueStops(days: ItineraryDayRow[]): ResolvedLocation[] {
   return out;
 }
 
-/* ------------------------------------------------------------------ */
-/* Route map: a small static SVG projection, no tiles.                 */
-/* ------------------------------------------------------------------ */
-
-export type RouteMapPoint = {
-  id: string;
-  name: string;
-  x: number;
-  y: number;
-  /** Part numbers anchored here (pins); empty = plain stop. */
-  parts: number[];
-};
-
-export type RouteMapSegment = {
-  d: string;
-  /** Hop between bases, including stopovers. Day trips are solid. */
-  transfer: boolean;
-};
-
-export type RouteMapTransportIcon = {
-  x: number;
-  y: number;
-  mode: TransportMode;
-};
-
-export type RouteMapLabel = {
-  x: number;
-  y: number;
-  text: string;
-  anchor: "start" | "middle" | "end";
-  strong: boolean;
-};
-
-export type RouteMapPin = { x: number; y: number; n: number };
-
-export type RouteMap = {
-  width: number;
-  height: number;
-  gridX: number[];
-  gridY: number[];
-  segments: RouteMapSegment[];
-  /** Transport glyph beside each dashed hop between bases. */
-  transportIcons: RouteMapTransportIcon[];
-  stops: RouteMapPoint[];
-  pins: RouteMapPin[];
-  labels: RouteMapLabel[];
-  scale: { km: number; px: number; x: number; y: number };
-};
-
-function niceKm(target: number): number {
-  const pow = 10 ** Math.floor(Math.log10(target));
-  for (const m of [1, 2, 5, 10]) {
-    if (m * pow >= target * 0.75) return m * pow;
-  }
-  return 10 * pow;
-}
-
-type Box = { x1: number; y1: number; x2: number; y2: number };
-const overlaps = (a: Box, b: Box) =>
-  a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
-
 export function buildRouteMap(
   days: ItineraryDayRow[],
   parts: ItineraryPart[],
-  opts: { width?: number; maxHeight?: number; pad?: number } = {},
 ): RouteMap {
-  const W = opts.width ?? 560;
-  const maxH = opts.maxHeight ?? 880;
-  const pad = opts.pad ?? 56;
-
   const stopsLoc = uniqueStops(days);
   const seenStop = new Set(stopsLoc.map((l) => l.qualifiedId));
   for (const part of parts) {
@@ -237,25 +182,9 @@ export function buildRouteMap(
     seenStop.add(part.anchor.qualifiedId);
     stopsLoc.push(part.anchor);
   }
-  const lats = stopsLoc.map((l) => l.lat);
-  const lngs = stopsLoc.map((l) => l.lng);
-  const minLat = Math.min(...lats);
-  const maxLat = Math.max(...lats);
-  const minLng = Math.min(...lngs);
-  const maxLng = Math.max(...lngs);
-  const k = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
-  const spanX = Math.max((maxLng - minLng) * k, 0.3);
-  const spanY = Math.max(maxLat - minLat, 0.3);
-  const s = Math.min((W - 2 * pad) / spanX, (maxH - 2 * pad) / spanY);
-  const H = Math.max(320, Math.round(spanY * s + 2 * pad));
-  const offX = (W - (maxLng - minLng) * k * s) / 2;
-  const offY = (H - (maxLat - minLat) * s) / 2;
-  const project = (l: ResolvedLocation) => ({
-    x: Math.round(offX + (l.lng - minLng) * k * s),
-    y: Math.round(offY + (maxLat - l.lat) * s),
-  });
 
-  const pos = new Map(stopsLoc.map((l) => [l.qualifiedId, project(l)]));
+  const locById = new Map(stopsLoc.map((l) => [l.qualifiedId, l]));
+  const cosLat = routeCosLat(stopsLoc.map((l) => [l.lat, l.lng]));
 
   // Visit order. A return to the same place is kept; only immediate repeats drop.
   const visits: { id: string; base: number }[] = [];
@@ -274,34 +203,26 @@ export function buildRouteMap(
 
   const edgeKey = (a: string, b: string) => [a, b].sort().join("|");
   const segByKey = new Map<string, RouteMapSegment>();
-  // Same bow the old long transfers used: a quadratic bent off the chord.
-  const arched = (p: { x: number; y: number }, q: { x: number; y: number }) => {
-    const mx = (p.x + q.x) / 2;
-    const my = (p.y + q.y) / 2;
-    const dx = q.x - p.x;
-    const dy = q.y - p.y;
-    const bend = 0.22;
-    const cx = Math.round(mx - dy * bend);
-    const cy = Math.round(my + dx * bend);
-    return `M${p.x} ${p.y} Q${cx} ${cy} ${q.x} ${q.y}`;
-  };
   const addSegment = (aId: string, bId: string, transfer: boolean) => {
     const key = edgeKey(aId, bId);
-    const p = pos.get(aId);
-    const q = pos.get(bId);
-    if (!p || !q || (p.x === q.x && p.y === q.y)) return;
+    const a = locById.get(aId);
+    const b = locById.get(bId);
+    if (!a || !b || (a.lat === b.lat && a.lng === b.lng)) return;
+    const latlngs: [number, number][] = transfer
+      ? archLatLngs(a, b, cosLat)
+      : [
+          [a.lat, a.lng],
+          [b.lat, b.lng],
+        ];
     const existing = segByKey.get(key);
     if (existing) {
       if (transfer && !existing.transfer) {
         existing.transfer = true;
-        existing.d = arched(p, q);
+        existing.latlngs = latlngs;
       }
       return;
     }
-    segByKey.set(key, {
-      d: transfer ? arched(p, q) : `M${p.x} ${p.y} L${q.x} ${q.y}`,
-      transfer,
-    });
+    segByKey.set(key, { latlngs, transfer });
   };
 
   for (let i = 1; i < visits.length; i++) {
@@ -311,8 +232,7 @@ export function buildRouteMap(
   // A transfer runs from the last time you are at a base until you arrive at
   // the next one. Stopovers on that stretch stay on the dashed line. A loop
   // that comes back to the base before you leave is a day trip.
-  const transportIcons: RouteMapTransportIcon[] = [];
-  const ICON = 18;
+  const transport: RouteMapTransport[] = [];
   let cursor = 0;
   for (let i = 0; i < parts.length - 1; i++) {
     const fromId = parts[i]!.anchor.qualifiedId;
@@ -321,10 +241,10 @@ export function buildRouteMap(
     for (let j = cursor; j < visits.length; j++) {
       if (visits[j]!.id !== toId) continue;
       let returned = false;
-      for (let k = j + 1; k < visits.length; k++) {
-        const step = visits[k]!;
-        if (step.base > i) break;
-        if (step.id === fromId && step.base <= i) {
+      for (let step = j + 1; step < visits.length; step++) {
+        const visit = visits[step]!;
+        if (visit.base > i) break;
+        if (visit.id === fromId && visit.base <= i) {
           returned = true;
           break;
         }
@@ -341,41 +261,19 @@ export function buildRouteMap(
     }
     let best: { a: string; b: string; len: number } | undefined;
     for (let j = start; j < arrival; j++) {
-      const a = visits[j]!.id;
-      const b = visits[j + 1]!.id;
-      addSegment(a, b, true);
-      const p = pos.get(a);
-      const q = pos.get(b);
-      if (!p || !q) continue;
-      const len = Math.hypot(q.x - p.x, q.y - p.y);
-      if (!best || len > best.len) best = { a, b, len };
+      const aId = visits[j]!.id;
+      const bId = visits[j + 1]!.id;
+      addSegment(aId, bId, true);
+      const a = locById.get(aId);
+      const b = locById.get(bId);
+      if (!a || !b) continue;
+      const len = Math.hypot((b.lng - a.lng) * cosLat, b.lat - a.lat);
+      if (!best || len > best.len) best = { a: aId, b: bId, len };
     }
     const mode = parts[i]!.toNext;
-    if (mode && best && best.len > 0) {
-      const p = pos.get(best.a)!;
-      const q = pos.get(best.b)!;
-      const dx = q.x - p.x;
-      const dy = q.y - p.y;
-      const len = Math.hypot(dx, dy) || 1;
-      const nx = -dy / len;
-      const ny = dx / len;
-      const gap = 16;
-      // Midpoint of the arch (bend 0.22 peaks at half the control offset).
-      const refX = (p.x + q.x) / 2 + nx * len * 0.11;
-      const refY = (p.y + q.y) / 2 + ny * len * 0.11;
-      const candidates = [1, -1].map((side) => ({
-        x: Math.round(refX + nx * gap * side - ICON / 2),
-        y: Math.round(refY + ny * gap * side - ICON / 2),
-      }));
-      const inside = (c: { x: number; y: number }) =>
-        c.x >= 4 && c.y >= 4 && c.x + ICON <= W - 4 && c.y + ICON <= H - 4;
-      const at =
-        candidates.find(inside) ??
-        candidates[0] ?? {
-          x: Math.round(refX - ICON / 2),
-          y: Math.round(refY - ICON / 2),
-        };
-      transportIcons.push({ ...at, mode });
+    const seg = best ? segByKey.get(edgeKey(best.a, best.b)) : undefined;
+    if (mode && seg && best && best.len > 0) {
+      transport.push({ latlngs: seg.latlngs, mode });
     }
     cursor = arrival;
   }
@@ -388,147 +286,25 @@ export function buildRouteMap(
     partsByStop.set(part.anchor.qualifiedId, [part.number]);
   }
 
-  const stops: RouteMapPoint[] = stopsLoc.map((l) => ({
+  const stops = stopsLoc.map((l) => ({
     id: l.qualifiedId,
     name: l.name,
-    ...pos.get(l.qualifiedId)!,
+    lat: l.lat,
+    lng: l.lng,
     parts: partsByStop.get(l.qualifiedId) ?? [],
   }));
 
-  const PIN_R = 11;
-  const DOT_R = 5;
-  const pins: RouteMapPin[] = [];
-  const occupied: Box[] = [];
-  for (const st of stops) {
-    if (st.parts.length === 0) {
-      occupied.push({
-        x1: st.x - DOT_R,
-        y1: st.y - DOT_R,
-        x2: st.x + DOT_R,
-        y2: st.y + DOT_R,
-      });
-      continue;
-    }
-    const n = st.parts.length;
-    st.parts.forEach((num, i) => {
-      const x = st.x + (i - (n - 1) / 2) * (PIN_R * 2 + 2);
-      pins.push({ x, y: st.y, n: num });
-    });
-    const half = (n * (PIN_R * 2 + 2)) / 2;
-    occupied.push({
-      x1: st.x - half,
-      y1: st.y - PIN_R,
-      x2: st.x + half,
-      y2: st.y + PIN_R,
-    });
-  }
+  const points: [number, number][] = [
+    ...stops.map((s) => [s.lat, s.lng] as [number, number]),
+    ...segments.flatMap((s) => s.latlngs),
+  ];
 
-  const pxPerKm = s / 111.32;
-  const km = niceKm((W * 0.22) / pxPerKm);
-  const scalePx = Math.round(km * pxPerKm);
-  const scaleX = W - pad - scalePx;
-  const scaleY = H - 22;
-  occupied.push({
-    x1: scaleX - 4,
-    y1: scaleY - 20,
-    x2: scaleX + scalePx + 4,
-    y2: scaleY + 6,
-  });
-  for (const icon of transportIcons) {
-    occupied.push({
-      x1: icon.x - 2,
-      y1: icon.y - 2,
-      x2: icon.x + ICON + 2,
-      y2: icon.y + ICON + 2,
-    });
-  }
-
-  // Sample the drawn lines so labels can avoid sitting on top of them.
-  const lineBoxes: Box[] = [];
-  for (const sg of segments) {
-    const n = sg.d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
-    const [x0, y0] = [n[0]!, n[1]!];
-    const [cx, cy, x2, y2] =
-      n.length === 6
-        ? [n[2]!, n[3]!, n[4]!, n[5]!]
-        : [(x0 + n[2]!) / 2, (y0 + n[3]!) / 2, n[2]!, n[3]!];
-    for (let t = 0.04; t < 1; t += 0.04) {
-      const x = (1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t ** 2 * x2;
-      const y = (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t ** 2 * y2;
-      lineBoxes.push({ x1: x - 2, y1: y - 2, x2: x + 2, y2: y + 2 });
-    }
-  }
-
-  // Greedy label placement: pins first, then plain stops. Prefer spots that
-  // clear other labels, stops and lines; then allow crossing a line; plain
-  // stops that still don't fit go unlabelled (the day list names them).
-  const labels: RouteMapLabel[] = [];
-  const ordered = [...stops].sort((a, b) => b.parts.length - a.parts.length);
-  for (const st of ordered) {
-    const strong = st.parts.length > 0;
-    const r = strong ? (st.parts.length * (PIN_R * 2 + 2)) / 2 : DOT_R;
-    const w = st.name.length * (strong ? 7.8 : 6.9);
-    const h = strong ? 14 : 13;
-    const mk = (
-      x: number,
-      y: number,
-      anchor: RouteMapLabel["anchor"],
-    ): RouteMapLabel => ({
-      x: Math.round(x),
-      y: Math.round(y),
-      anchor,
-      text: st.name,
-      strong,
-    });
-    const cands: RouteMapLabel[] = [
-      mk(st.x + r + 7, st.y + 5, "start"),
-      mk(st.x - r - 7, st.y + 5, "end"),
-      mk(st.x, st.y - r - 8, "middle"),
-      mk(st.x, st.y + r + 17, "middle"),
-      mk(st.x + r + 4, st.y - r - 4, "start"),
-      mk(st.x - r - 4, st.y - r - 4, "end"),
-      mk(st.x + r + 4, st.y + r + 14, "start"),
-      mk(st.x - r - 4, st.y + r + 14, "end"),
-    ];
-    const boxOf = (c: RouteMapLabel): Box => {
-      const x1 =
-        c.anchor === "start" ? c.x : c.anchor === "end" ? c.x - w : c.x - w / 2;
-      return { x1, y1: c.y - h + 2, x2: x1 + w, y2: c.y + 3 };
-    };
-    const inside = (b: Box) =>
-      b.x1 >= 2 && b.x2 <= W - 2 && b.y1 >= 2 && b.y2 <= H - 2;
-    const clear = (b: Box) => !occupied.some((o) => overlaps(o, b));
-    const offLines = (b: Box) => !lineBoxes.some((o) => overlaps(o, b));
-    const pick =
-      cands.find((c) => {
-        const b = boxOf(c);
-        return inside(b) && clear(b) && offLines(b);
-      }) ??
-      cands.find((c) => {
-        const b = boxOf(c);
-        return inside(b) && clear(b);
-      }) ??
-      (strong ? (cands.find((c) => inside(boxOf(c))) ?? cands[0]) : undefined);
-    if (!pick) continue;
-    occupied.push(boxOf(pick));
-    labels.push(pick);
-  }
-
-  const step = Math.round(W / 5);
-  const gridX = [1, 2, 3, 4].map((i) => i * step);
-  const gridY: number[] = [];
-  for (let y = step; y < H; y += step) gridY.push(y);
-
+  const frame = routeFrame(points);
   return {
-    width: W,
-    height: H,
-    gridX,
-    gridY,
+    ...frame,
     segments,
-    transportIcons,
+    transport,
     stops,
-    pins,
-    labels,
-    scale: { km, px: scalePx, x: scaleX, y: scaleY },
+    atlas: routeAtlas(frame.bounds),
   };
 }

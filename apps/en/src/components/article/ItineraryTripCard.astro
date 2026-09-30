@@ -32,10 +32,10 @@ const { facts, why, map, mapLabel } = Astro.props;
 ---
 
 <aside
-  class="trip-card surface-card overflow-hidden rounded-lg"
+  class="trip-card surface-card shadow-rest animate-cinema-rise overflow-hidden rounded-lg"
   aria-label="Trip at a glance"
 >
-  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 p-6 md:p-7">
+  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
     {
       facts.map((f) => (
         <div class:list={[f.wide && "col-span-2"]}>
@@ -75,7 +75,7 @@ const { facts, why, map, mapLabel } = Astro.props;
 
   {
     why && (
-      <div class="border-t border-line bg-accent/10 px-6 py-6 md:px-7">
+      <div class="border-t border-line px-6 py-6 md:px-7">
         <p class="micro m-0 text-accent-ink">{en.article.itineraryWhy}</p>
         <p class="m-0 mt-2.5 text-[1.0625rem] leading-relaxed text-ink">
           {why}
@@ -84,17 +84,14 @@ const { facts, why, map, mapLabel } = Astro.props;
     )
   }
 
-  <div class="trip-card__map border-t border-line px-3 pt-4 pb-4">
-    <p class="micro m-0 px-3 pb-1 text-accent-ink">
-      {en.article.itineraryRouteMap}
-    </p>
+  <div class="trip-card__map border-t border-line">
     <ItineraryRouteMap map={map} label={mapLabel} />
   </div>
 </aside>
 
 <style>
   .trip-card {
-    box-shadow: 0 30px 80px -30px oklch(0 0 0 / 0.6);
+    animation: cinema-rise var(--duration-enter) var(--ease-cinema) both;
   }
   .trip-card__map {
     background: color-mix(

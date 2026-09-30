@@ -20,7 +20,7 @@ const PIN_GLYPH =
       return (
         <figure
           class:list={[
-            "country-intro-mosaic__shot motion-reveal-media",
+            "country-intro-mosaic__shot motion-reveal-media shadow-rest",
             wide
               ? "country-intro-mosaic__shot--wide"
               : "country-intro-mosaic__shot--portrait",
@@ -69,7 +69,7 @@ const PIN_GLYPH =
   .country-intro-mosaic__shot {
     display: grid;
     grid-template: "stack" 1fr / 1fr;
-    overflow: clip;
+    overflow: hidden;
     margin: 0;
     border-radius: 8px;
     min-height: 0;

@@ -45,7 +45,7 @@ const notes = [
   </div>
 
   <figure class="home-about__portrait motion-reveal-media">
-    <div class="home-about__shell group motion-hover-media">
+    <div class="home-about__shell group motion-hover-media shadow-rest">
       <CoverImage
         src={portrait}
         alt={en.home.about.portraitAlt}
@@ -116,7 +116,7 @@ const notes = [
     position: relative;
     width: min(16rem, 56vw);
     aspect-ratio: 1;
-    overflow: clip;
+    overflow: hidden;
     border-radius: 50%;
 
     @media (width >= 1024px) {

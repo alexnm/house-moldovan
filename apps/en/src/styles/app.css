@@ -85,12 +85,15 @@
   --space-section: clamp(3.5rem, 5vw + 1.75rem, 5.5rem);
   --space-section-lg: clamp(4.5rem, 6vw + 2.25rem, 7.5rem);
   --space-section-tight: clamp(2.25rem, 3vw + 1.25rem, 2.75rem);
-  --space-hero-bottom: clamp(2rem, 6vw, 4rem);
+  --space-hero-bottom: clamp(2rem, 6vw, 3rem);
   --grid-gap: var(--space-group);
   --grid-gap-compact: 0.5rem;
 
   --tracking-microcaps: 0.12em;
   --tracking-poster: -0.03em;
+
+  /* Default contact shadow for maps, cards, and plain images. */
+  --shadow-rest: 0 3px 8px -5px oklch(0 0 0 / 0.6);
 
   --animate-cinema-rise: cinema-rise var(--duration-enter) var(--ease-cinema)
     both;
@@ -801,6 +804,9 @@
     grid-template-columns: 1fr;
     gap: 1rem;
     align-items: start;
+    /* Let each photo's shadow paint; the pair itself is not a plate. */
+    overflow: visible;
+    border-radius: 0;
   }
 
   @media (min-width: 640px) {

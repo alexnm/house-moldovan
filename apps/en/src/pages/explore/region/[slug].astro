@@ -35,6 +35,7 @@ const {
   featuredStory,
   notes,
   locationPins,
+  atlas,
 } = page;
 
 const { Content } = await render(region);
@@ -79,6 +80,7 @@ const { Content } = await render(region);
           countries={countries}
           locationPins={locationPins}
           regionName={name}
+          atlas={atlas}
         />
       )
     }

@@ -35,8 +35,10 @@ const kicker = `${en.article.itinerary} · ${en.article.days(days)}`;
 <a
   href={href}
   class:list={[
-    "region-route group relative flex flex-col overflow-clip text-photo-ink",
-    size === "hero" ? "region-route--hero" : "region-route--plate rounded-sm",
+    "region-route group relative flex flex-col overflow-hidden text-photo-ink",
+    size === "hero"
+      ? "region-route--hero"
+      : "region-route--plate rounded-sm shadow-rest",
   ]}
   style={cardAccentStyle(accent)}
 >

@@ -2,10 +2,12 @@
 import LocationsMap from "~/components/map/LocationsMap.astro";
 import {
   COUNTRY_MAP_FIT_MAX_ZOOM,
+  MAP_FIXED_LOCATION_POPUP,
   type CountryLocation,
 } from "~/lib/countryPage";
 import type { CountryShape } from "~/lib/countryShape";
 import type { LocationMapPin } from "~/lib/mapPinData";
+import type { RouteAtlas } from "~/lib/routeMap";
 
 export interface Props {
   locations: CountryLocation[];
@@ -14,6 +16,8 @@ export interface Props {
   locationsHeading: string;
   fitMaxZoom?: number;
   fitZoomOffset?: number;
+  atlas?: RouteAtlas;
+  atlasFocus?: string;
 }
 
 const {
@@ -23,11 +27,13 @@ const {
   locationsHeading,
   fitMaxZoom = COUNTRY_MAP_FIT_MAX_ZOOM,
   fitZoomOffset = 0,
+  atlas,
+  atlasFocus,
 } = Astro.props;
 ---
 
 <section id="map" class="section country-map-hub" data-country-hub>
-  <div class="country-map-hub__map">
+  <div class="country-map-hub__map shadow-rest">
     <LocationsMap
       pins={locationPins}
       basemap="adaptive"
@@ -38,11 +44,13 @@ const {
       height="clamp(28rem, 68svh, 44rem)"
       highlight={shape}
       fitHighlight={Boolean(shape)}
+      atlas={atlas}
+      atlasFocus={atlasFocus}
       labelMode="name"
       locationLabelStyle="title"
       neutralLocationStamp
       locationOnlyPopup
-      focusLocations
+      focusLocations={MAP_FIXED_LOCATION_POPUP ? "popup" : "zoom"}
     />
   </div>
 
@@ -86,7 +94,7 @@ const {
   }
 
   .country-map-hub__map {
-    overflow: clip;
+    overflow: hidden;
     border-radius: 8px;
   }
 </style>

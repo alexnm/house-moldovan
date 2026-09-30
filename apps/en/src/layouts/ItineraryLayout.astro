@@ -75,9 +75,7 @@ let dayIndex = 0;
 const bases = data.bases.map((base) => {
   const location = locationIndex.get(base.location);
   if (!location) {
-    throw new Error(
-      `Itinerary ${entry.id}: unknown base "${base.location}"`,
-    );
+    throw new Error(`Itinerary ${entry.id}: unknown base "${base.location}"`);
   }
   const days = base.days.map((d) => {
     dayIndex += 1;
@@ -167,7 +165,12 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
     <div
       class="section itinerary-intro relative z-10 grid gap-y-12 pt-10 lg:grid-cols-[minmax(0,1fr)_32.5rem] lg:gap-x-18 lg:pt-0"
     >
-      <div class="lg:col-start-2 lg:row-start-1 lg:-mt-56">
+      <div
+        class:list={[
+          "lg:col-start-2 lg:row-start-1",
+          resolved.length === 3 ? "lg:-mt-64" : "lg:-mt-56",
+        ]}
+      >
         <ItineraryTripCard
           facts={facts}
           why={data.why}

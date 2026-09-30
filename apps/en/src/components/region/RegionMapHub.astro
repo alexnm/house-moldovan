@@ -4,23 +4,27 @@ import { en } from "~/i18n/en";
 import {
   countryMapFitMaxZoom,
   countryMapFitZoomOffset,
+  MAP_FIXED_LOCATION_POPUP,
 } from "~/lib/countryPage";
 import type { LocationMapPin } from "~/lib/mapPinData";
 import type { RegionCountry } from "~/lib/regionPage";
+import type { RouteAtlas } from "~/lib/routeMap";
 
 export interface Props {
   countries: RegionCountry[];
   locationPins: LocationMapPin[];
   regionName: string;
+  atlas?: RouteAtlas;
 }
 
-const { countries, locationPins, regionName } = Astro.props;
+const { countries, locationPins, regionName, atlas } = Astro.props;
 
 const heading = en.region.mapHeading;
 const backLabel = en.region.backToRegion(regionName);
 
 const hubPayload = countries.map((country) => ({
   id: country.id,
+  name: country.name,
   pinIds: country.pinIds,
   rings: country.rings,
   maxZoom: countryMapFitMaxZoom(country.id),
@@ -29,7 +33,7 @@ const hubPayload = countries.map((country) => ({
 ---
 
 <section id="map" class="section region-map-hub" data-region-hub>
-  <div class="region-map-hub__map">
+  <div class="region-map-hub__map shadow-rest">
     <LocationsMap
       pins={locationPins}
       basemap="adaptive"
@@ -41,7 +45,8 @@ const hubPayload = countries.map((country) => ({
       locationLabelStyle="title"
       neutralLocationStamp
       locationOnlyPopup
-      focusLocations
+      focusLocations={MAP_FIXED_LOCATION_POPUP ? "popup" : "zoom"}
+      atlas={atlas}
     />
   </div>
 
@@ -146,7 +151,7 @@ const hubPayload = countries.map((country) => ({
   }
 
   .region-map-hub__map {
-    overflow: clip;
+    overflow: hidden;
     border-radius: 8px;
   }
 
@@ -232,6 +237,7 @@ const hubPayload = countries.map((country) => ({
 <script>
   type HubCountry = {
     id: string;
+    name: string;
     pinIds: string[];
     rings: [number, number][][];
     maxZoom: number;
@@ -312,6 +318,7 @@ const hubPayload = countries.map((country) => ({
                 fit,
                 maxZoom: country?.maxZoom,
                 zoomOffset: country?.zoomOffset ?? 0,
+                focus: country?.name ?? null,
               },
             }),
           );

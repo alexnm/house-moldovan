@@ -4,6 +4,7 @@ import type { Accent } from "@shared/lib/accent";
 import { articleHref, articleKicker } from "~/lib/articles";
 import { countryLine } from "~/lib/articlePlaces";
 import { getCountryShape } from "~/lib/countryShape";
+import { atlasForView } from "~/lib/routeAtlas";
 import {
   countryRefsFromArticle,
   getEnFeed,
@@ -30,12 +31,16 @@ import {
 export const INTRO_SNAPSHOT_COUNT = 4;
 
 /** Extra zoom levels applied after fitBounds on country hub maps. */
-const COUNTRY_MAP_FIT_ZOOM_OFFSET: Partial<Record<string, number>> = {
-  argentina: 1,
-};
+const COUNTRY_MAP_FIT_ZOOM_OFFSET: Partial<Record<string, number>> = {};
 
 /** Cap used when framing a single country on the map. */
 export const COUNTRY_MAP_FIT_MAX_ZOOM = 8;
+
+/**
+ * Picking a location from a country or region map list only opens its popup:
+ * the map neither zooms nor pans. Off, the map zooms in to the location.
+ */
+export const MAP_FIXED_LOCATION_POPUP = false;
 
 /**
  * City-states are small enough that the default cap frames them from much
@@ -153,6 +158,13 @@ export async function loadCountryPage(country: CollectionEntry<"places">) {
     qualifiedId: qualifiedLocationId(country.id, loc.id),
   }));
 
+  const shape = getCountryShape(country.id);
+  const atlasPoints: [number, number][] = [];
+  for (const ring of shape?.rings ?? []) {
+    for (const point of ring) atlasPoints.push(point);
+  }
+  for (const pin of locationPins) atlasPoints.push([pin.lat, pin.lng]);
+
   return {
     country,
     region,
@@ -162,6 +174,8 @@ export async function loadCountryPage(country: CollectionEntry<"places">) {
     snapshots,
     accent,
     cover,
-    shape: getCountryShape(country.id),
+    shape,
+    atlas: atlasPoints.length ? atlasForView(atlasPoints) : undefined,
+    atlasFocus: country.data.name,
   };
 }

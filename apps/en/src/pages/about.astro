@@ -118,7 +118,7 @@ const notes = [
           aria-label="Open Pe creastă"
         >
           <div
-            class="about-sister-preview__shell"
+            class="about-sister-preview__shell shadow-rest"
             style={`aspect-ratio: ${peCreastaOg.width} / ${peCreastaOg.height}`}
           >
             <CoverImage
@@ -142,7 +142,7 @@ const notes = [
       <div class="about-portraits">
         <figure class="about-portrait about-portrait--wide motion-reveal-media">
           <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
             style={`aspect-ratio: ${alexMelaImage.width} / ${alexMelaImage.height}`}
           >
             <CoverImage
@@ -164,7 +164,7 @@ const notes = [
         </figure>
 
         <figure class="about-portrait motion-reveal-media">
-          <div class="about-portrait__shell group motion-hover-media">
+          <div class="about-portrait__shell group motion-hover-media shadow-rest">
             <CoverImage
               src={melaImage}
               alt={en.about.melaAlt}
@@ -183,7 +183,7 @@ const notes = [
         </figure>
 
         <figure class="about-portrait motion-reveal-media">
-          <div class="about-portrait__shell group motion-hover-media">
+          <div class="about-portrait__shell group motion-hover-media shadow-rest">
             <CoverImage
               src={alexImage}
               alt={en.about.alexAlt}
@@ -204,7 +204,7 @@ const notes = [
 
         <figure class="about-portrait about-portrait--wide motion-reveal-media">
           <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
             style={`aspect-ratio: ${alexIguazuImage.width} / ${alexIguazuImage.height}`}
           >
             <CoverImage
@@ -226,7 +226,7 @@ const notes = [
         </figure>
 
         <figure class="about-portrait motion-reveal-media">
-          <div class="about-portrait__shell group motion-hover-media">
+          <div class="about-portrait__shell group motion-hover-media shadow-rest">
             <CoverImage
               src={alexUzbekistanImage}
               alt="Alex standing in a blue-tiled alcove in Uzbekistan"
@@ -246,7 +246,7 @@ const notes = [
         </figure>
 
         <figure class="about-portrait motion-reveal-media">
-          <div class="about-portrait__shell group motion-hover-media">
+          <div class="about-portrait__shell group motion-hover-media shadow-rest">
             <CoverImage
               src={melaPeruImage}
               alt="Mela with alpacas in Peru"
@@ -265,7 +265,7 @@ const notes = [
 
         <figure class="about-portrait about-portrait--wide motion-reveal-media">
           <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
             style={`aspect-ratio: ${melaEdiImage.width} / ${melaEdiImage.height}`}
           >
             <CoverImage
@@ -286,7 +286,7 @@ const notes = [
 
         <figure class="about-portrait about-portrait--wide motion-reveal-media">
           <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media"
+            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
             style={`aspect-ratio: ${coverImage.width} / ${coverImage.height}`}
           >
             <CoverImage
@@ -377,7 +377,7 @@ const notes = [
 
   .about-sister-preview__shell {
     position: relative;
-    overflow: clip;
+    overflow: hidden;
     border-radius: 2px;
   }
 
@@ -403,7 +403,7 @@ const notes = [
 
   .about-portrait__shell {
     position: relative;
-    overflow: clip;
+    overflow: hidden;
     border-radius: 2px;
     aspect-ratio: 4 / 5;
   }

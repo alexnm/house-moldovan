@@ -216,14 +216,15 @@ This system prefers **tonal layering** and **photo contrast** over shadow stacks
 
 ### Shadow Vocabulary
 
+- **Rest** (`shadow-rest`, `0 3px 8px -5px oklch(0 0 0 / 0.6)`): Contact shadow for maps, cards, and plain images. Add the utility on the frame. A map inside a card does not also take it.
 - **Lift** (`0 12px 30px -12px oklch(0 0 0 / 0.4)`): Mobile nav dropdown panel, elevated menus.
 - **Deep** (`0 30px 80px -30px oklch(0 0 0 / 0.6)`): Available but rare; not the default card treatment.
 
-Photo cards use gradient scrims and a short accent tick (not a full-width chrome bar), not box-shadow, for separation from the page.
+Photo cards keep gradient scrims and a short accent tick (not a full-width chrome bar). The rest shadow sits on the card frame. Full-bleed heroes stay unshadowed.
 
 ### Named Rules
 
-**The Flat Page Rule.** Article prose and explore lists sit flat on the film surface. Shadow appears only when a panel detaches (dropdown, mobile menu).
+**The Flat Page Rule.** Article prose and explore lists sit flat on the film surface. Maps, cards, and plain images take `shadow-rest` on the element. Chrome panels that detach (dropdown, mobile menu) use Lift.
 
 **The Transform-Only Motion Rule.** Parallax, hover scale, and reveals use `transform` and `opacity`. Never animate width, height, or layout properties. Honor `prefers-reduced-motion`.
 
@@ -314,13 +315,13 @@ Photo cards use gradient scrims and a short accent tick (not a full-width chrome
 - **Headings:** Bricolage, mixed case.
 - **Links:** Saffron underline via `background-image` (3px).
 - **Blockquotes:** Sans italic, opening quote in saffron, no side-stripe border.
-- **Figures:** Slight radius (`6px`), full width.
+- **Figures:** Slight radius (`6px`), full width, `shadow-rest` on each photo. Paired figures shadow each photo, not the pair.
 - **Info callouts:** `.tip` / `.warning` with tinted backgrounds and SVG mask icons.
 
 ### Surface Cards
 
 - **Shape:** `rounded-lg` (8px), full border `border-line`.
-- **Background:** `surface-2`; no shadow at rest.
+- **Background:** `surface-2`; `shadow-rest` on the frame.
 
 ## 6. Do's and Don'ts
 

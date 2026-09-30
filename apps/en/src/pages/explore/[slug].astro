@@ -40,6 +40,8 @@ const {
   accent,
   cover,
   shape,
+  atlas,
+  atlasFocus,
 } = await loadCountryPage(country);
 const { Content } = await render(country);
 const coverLocation = await placeCoverLocationLabel(country);
@@ -112,6 +114,8 @@ const sections: SectionLink[] = [
           locationsHeading={en.places.locationsHeading}
           fitMaxZoom={countryMapFitMaxZoom(country.id)}
           fitZoomOffset={countryMapFitZoomOffset(country.id)}
+          atlas={atlas}
+          atlasFocus={atlasFocus}
         />
       )
     }

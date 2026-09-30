@@ -52,6 +52,10 @@ export const MAP_TILES_BY_BASEMAP = {
   film: MAP_TILES_FILM,
 } as const;
 
+/** Itinerary maps draw Natural Earth countries instead of tiles. */
+export const NATURAL_EARTH_ATTRIBUTION =
+  'Borders &copy; <a href="https://www.naturalearthdata.com">Natural Earth</a>';
+
 export const resolveBasemap = (basemap: Basemap): ResolvedBasemap => {
   if (basemap !== "adaptive") return basemap;
   return document.documentElement.dataset.theme === "light" ? "paper" : "film";

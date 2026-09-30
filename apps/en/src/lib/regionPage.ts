@@ -15,8 +15,10 @@ import {
   type AnyEnArticle,
 } from "~/lib/content";
 import { getCountryShape } from "~/lib/countryShape";
+import { atlasForView } from "~/lib/routeAtlas";
 import { qualifiedLocationId } from "~/lib/locations";
 import { buildLocationMapPins, type LocationMapPin } from "~/lib/mapPinData";
+import type { RouteAtlas } from "~/lib/routeMap";
 import { placeThumbnailForCountry } from "~/lib/placeCover";
 import { getRegion } from "~/lib/regions";
 
@@ -89,6 +91,7 @@ export type RegionPageData = {
   featuredStory?: RegionNote;
   notes: RegionNote[];
   locationPins: LocationMapPin[];
+  atlas?: RouteAtlas;
 };
 
 export async function loadRegionPage(
@@ -186,6 +189,16 @@ export async function loadRegionPage(
     noteCount: noteCountByCountry.get(country.id) ?? 0,
   }));
 
+  const countryViews = countries.map((country) => {
+    const points: [number, number][] = country.rings.flat();
+    for (const pin of locationPins) {
+      if (pin.countryId === country.id) points.push([pin.lat, pin.lng]);
+    }
+    return points;
+  });
+  const atlasPoints = countryViews.flat();
+  for (const pin of locationPins) atlasPoints.push([pin.lat, pin.lng]);
+
   return {
     region,
     name: region.data.name,
@@ -198,5 +211,8 @@ export async function loadRegionPage(
     featuredStory,
     notes,
     locationPins,
+    atlas: atlasPoints.length
+      ? atlasForView(atlasPoints, countryViews)
+      : undefined,
   };
 }
