@@ -11,7 +11,8 @@ type Props = {
 const { path, alt, caption, sizes } = Astro.props;
 ---
 
-<figure class="shadow-rest">
+<figure>
   <AssetImage path={path} alt={alt} sizes={sizes} />
   <figcaption>{caption}</figcaption>
 </figure>
+

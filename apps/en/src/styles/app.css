@@ -706,6 +706,11 @@
     margin-top: 0;
   }
 
+  /* Keep anchored headings clear of the fixed site nav. */
+  .prose-body :is(h2, h3, h4) {
+    scroll-margin-top: 7rem;
+  }
+
   .prose-body h2 {
     font-family: var(--font-sans);
     font-weight: 650;
@@ -777,8 +782,8 @@
     gap: 4px;
     margin: 0;
     margin-top: 1.4em;
-    border-radius: 6px;
-    overflow: hidden;
+    /* Visible so the photo shadow is not clipped around the caption. */
+    overflow: visible;
   }
 
   .prose-body figure > :is(img, video) {

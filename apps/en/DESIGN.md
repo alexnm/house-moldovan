@@ -315,7 +315,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 - **Headings:** Bricolage, mixed case.
 - **Links:** Saffron underline via `background-image` (3px).
 - **Blockquotes:** Sans italic, opening quote in saffron, no side-stripe border.
-- **Figures:** Slight radius (`6px`), full width, `shadow-rest` on each photo. Paired figures shadow each photo, not the pair.
+- **Figures:** Slight radius (`6px`) and `shadow-rest` on the photo only. The caption sits outside the shadow. Paired figures shadow each photo, not the pair.
 - **Info callouts:** `.tip` / `.warning` with tinted backgrounds and SVG mask icons.
 
 ### Surface Cards
