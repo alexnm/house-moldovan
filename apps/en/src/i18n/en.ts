@@ -43,18 +43,35 @@ export const en = {
     empty:
       "No notes match this filter. Try Stories, Spotlights, or Itineraries above.",
     pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
+    summary: "Every story, itinerary and spotlight, newest first",
+    note: "This is where everything we write ends up: long guides, the routes we followed and the photos we couldn't leave out. Start anywhere, we're still adding to it after every trip.",
+  },
+  /** Personal note from the authors at the top of the journal index pages. */
+  authorNote: {
+    signature: "Mela & Alex",
+    portraitAlt: "Alex and Mela",
+    aboutCta: "More about us",
+  },
+  /** Region filter above the journal index grids. */
+  regionFilter: {
+    label: "Filter by region",
+    all: "All",
   },
   storiesIndex: {
     metaTitle: "Travel stories & travel guides",
     intro: "Dedicated travel guides about a place we visited",
+    note: "We write a story after we get home from a place we loved: the guide we'd hand a friend heading there next. How long to stay, where to base yourself, and what we'd happily skip.",
   },
   spotlightsIndex: {
     metaTitle: "Photo spotlights from around the world",
     intro: "Photo highlights capturing a place or an experience",
+    note: "Some places are better shown than told. Spotlights are the photo sets we keep coming back to: a few words, and a lot of frames.",
+    noteCta: "Follow us on Instagram",
   },
   itinerariesIndex: {
     metaTitle: "Multi-day travel itineraries",
     intro: "Multi-day trips across different locations",
+    note: "These are the routes we actually travelled, day by day, including the parts we'd change next time. Take them as a starting point, not a schedule.",
   },
   explore: {
     title: "Explore the world",

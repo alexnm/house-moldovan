@@ -1,0 +1,223 @@
+---
+import RhythmGrid from "~/components/home/RhythmGrid.astro";
+import { en } from "~/i18n/en";
+import {
+  articlesForRegion,
+  getAllPlaces,
+  regionByPlaceIdMap,
+  type AnyEnArticle,
+} from "~/lib/content";
+import { getAllRegions } from "~/lib/regions";
+
+export interface Props {
+  articles: AnyEnArticle[];
+  /** Show the "See entire journal" link at the end of the filter bar. */
+  showJournalLink?: boolean;
+}
+
+const { articles, showJournalLink = false } = Astro.props;
+
+const regionByPlaceId = regionByPlaceIdMap(await getAllPlaces());
+const groups = (await getAllRegions())
+  .map((region) => ({
+    region,
+    articles: articlesForRegion(articles, region.id, regionByPlaceId),
+  }))
+  .filter((g) => g.articles.length > 0);
+
+const total = articles.length;
+---
+
+<section class="section section-y-tight" data-region-filter>
+  <div class="region-filter">
+    <div
+      class="region-filter__chips"
+      role="group"
+      aria-label={en.regionFilter.label}
+    >
+      <button
+        type="button"
+        class="region-chip region-chip--all"
+        data-region="all"
+        aria-pressed="true"
+      >
+        {en.regionFilter.all}
+        <span class="region-chip__count">{total}</span>
+      </button>
+      {
+        groups.map(({ region, articles: list }) => (
+          <button
+            type="button"
+            class="region-chip accent-scope"
+            data-accent={region.data.accent}
+            data-region={region.id}
+            aria-pressed="false"
+          >
+            <span class="region-chip__tick" aria-hidden="true" />
+            {region.data.name}
+            <span class="region-chip__count">{list.length}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    {
+      showJournalLink && (
+        <a href="/journal" class="micro link-accent link-accent--dim">
+          {en.journal.seeEntire}
+        </a>
+      )
+    }
+  </div>
+
+  {
+    /* One grid per filter so the rhythm (wide/narrow cells) is laid out for
+      each subset, instead of leaving holes when cards are hidden. */
+  }
+  <div data-region-panel="all">
+    <RhythmGrid articles={articles} />
+  </div>
+  {
+    groups.map(({ region, articles: list }) => (
+      <div data-region-panel={region.id} hidden>
+        <RhythmGrid articles={list} />
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .region-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-bottom: var(--space-block, 1.5rem);
+  }
+
+  .region-filter__chips {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .region-chip {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.5rem;
+    padding: 0 0.85rem;
+    border: 1px solid var(--color-line);
+    border-radius: 2px;
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    letter-spacing: var(--tracking-microcaps);
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-ui) var(--ease-cinema),
+      border-color var(--duration-ui) var(--ease-cinema),
+      color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .region-chip:hover {
+    border-color: var(--color-line-strong);
+  }
+
+  .region-chip:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  .region-chip__tick {
+    width: 0.7rem;
+    height: 3px;
+    background: var(--color-accent);
+  }
+
+  .region-chip__count {
+    letter-spacing: 0;
+    color: var(--color-ink-faint);
+  }
+
+  /* Selected: a tint of the region's chapter colour, so its dash stays visible. */
+  .region-chip[aria-pressed="true"] {
+    border-color: color-mix(in oklab, var(--color-accent) 55%, transparent);
+    background: color-mix(
+      in oklab,
+      var(--color-accent) 18%,
+      var(--color-surface-2)
+    );
+  }
+
+  .region-chip--all[aria-pressed="true"] {
+    border-color: var(--color-line-strong);
+    background: var(--color-surface-3);
+  }
+
+  .region-chip[aria-pressed="true"] .region-chip__count {
+    color: var(--color-ink-dim);
+  }
+</style>
+
+<script>
+  function initRegionFilters() {
+    document
+      .querySelectorAll<HTMLElement>("[data-region-filter]")
+      .forEach((root) => {
+        if (root.dataset.regionFilterReady) return;
+        root.dataset.regionFilterReady = "true";
+
+        const buttons = Array.from(
+          root.querySelectorAll<HTMLButtonElement>("button[data-region]"),
+        );
+        const panels = Array.from(
+          root.querySelectorAll<HTMLElement>("[data-region-panel]"),
+        );
+
+        const apply = (requested: string, updateUrl: boolean) => {
+          const id = panels.some((p) => p.dataset.regionPanel === requested)
+            ? requested
+            : "all";
+          for (const button of buttons) {
+            button.setAttribute(
+              "aria-pressed",
+              String(button.dataset.region === id),
+            );
+          }
+          for (const panel of panels) {
+            panel.hidden = panel.dataset.regionPanel !== id;
+          }
+          if (updateUrl) {
+            const url = new URL(window.location.href);
+            if (id === "all") url.searchParams.delete("region");
+            else url.searchParams.set("region", id);
+            // replaceState keeps the router's history entry; the filter is
+            // shareable via the URL without adding back-button steps.
+            window.history.replaceState(window.history.state, "", url);
+          }
+        };
+
+        for (const button of buttons) {
+          button.addEventListener("click", () =>
+            apply(button.dataset.region ?? "all", true),
+          );
+        }
+
+        const initial = new URLSearchParams(window.location.search).get(
+          "region",
+        );
+        if (initial) apply(initial, false);
+      });
+  }
+
+  initRegionFilters();
+  document.addEventListener("astro:page-load", initRegionFilters);
+</script>

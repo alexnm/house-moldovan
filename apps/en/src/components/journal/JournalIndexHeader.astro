@@ -1,38 +1,153 @@
 ---
+import CoverImage from "@shared/components/media/CoverImage.astro";
 import { en } from "~/i18n/en";
-import TypePictogram from "~/components/layout/marks/TypePictogram.astro";
-import type { ArticleKind } from "~/lib/articles";
+import portrait from "~/assets/about/alex-mela.JPG";
 
 interface Props {
   title: string;
   summary: string;
-  /** Draws the type pictogram as the chapter emblem beside the title. */
-  kind: ArticleKind;
+  /** Short first-person note from the authors, shown beside the title. */
+  note: string;
+  /** Link after the signature; defaults to the About page. */
+  link?: { href: string; label: string; external?: boolean };
 }
 
-const { title, summary, kind } = Astro.props;
+const {
+  title,
+  summary,
+  note,
+  link = { href: "/about", label: en.authorNote.aboutCta },
+} = Astro.props;
 ---
 
 <section class="pad-canvas mx-auto max-w-canvas pt-20 @md:pt-28">
-  <header class="mt-3">
-    <div class="flex items-center gap-3">
-      <span class="page-title-mark block shrink-0 text-ink" aria-hidden="true">
-        <TypePictogram kind={kind} />
-      </span>
+  <header class="journal-index-header mt-3">
+    <div class="journal-index-header__title">
       <h1 class="display page-title max-w-160 text-balance">{title}</h1>
-    </div>
-    {/* Summary and the way back out of this chapter share a baseline. */}
-    <div
-      class="mt-4 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3"
-    >
       <p
-        class="max-w-[38ch] font-sans text-lg leading-snug text-pretty text-ink-dim"
+        class="mt-4 max-w-[38ch] font-sans text-lg leading-snug text-pretty text-ink-dim"
       >
         {summary}
       </p>
-      <a href="/journal" class="micro link-accent link-accent--dim">
-        {en.journal.seeEntire}
-      </a>
     </div>
+
+    <figure class="journal-index-note">
+      <div class="journal-index-note__portrait">
+        <CoverImage
+          src={portrait}
+          alt={en.authorNote.portraitAlt}
+          widths={[160, 240, 320]}
+          sizes="7rem"
+          format="avif"
+          quality={82}
+          loading="eager"
+          placeholder="blur"
+          wrapperClass="absolute inset-0"
+          class="h-full w-full object-cover object-[center_28%]"
+        />
+      </div>
+      <div class="journal-index-note__body">
+        <blockquote class="journal-index-note__text">
+          <p>{note}</p>
+        </blockquote>
+        <figcaption class="journal-index-note__caption">
+          <span class="journal-index-note__signature"
+            >— {en.authorNote.signature}</span
+          >
+          <a
+            href={link.href}
+            class="journal-index-note__link"
+            {...link.external
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {}}
+          >
+            {link.label}
+          </a>
+        </figcaption>
+      </div>
+    </figure>
   </header>
 </section>
+
+<style>
+  .journal-index-header {
+    display: grid;
+    gap: 2.5rem;
+    align-items: end;
+
+    @media (width >= 1024px) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: 1.5rem;
+    }
+  }
+
+  .journal-index-note {
+    margin: 0;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+
+    @media (width >= 768px) {
+      gap: 1.75rem;
+    }
+  }
+
+  .journal-index-note__portrait {
+    position: relative;
+    flex: none;
+    width: 4.5rem;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 4px var(--color-surface),
+      0 0 0 5px var(--color-line-strong);
+
+    @media (width >= 768px) {
+      width: 7rem;
+    }
+  }
+
+  .journal-index-note__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .journal-index-note__text {
+    margin: 0;
+    max-width: 58ch;
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--color-ink);
+    text-wrap: pretty;
+  }
+
+  .journal-index-note__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .journal-index-note__signature {
+    color: var(--color-ink);
+  }
+
+  .journal-index-note__link {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    transition: color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .journal-index-note__link:hover {
+    color: var(--color-ink-nav);
+  }
+</style>

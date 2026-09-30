@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import JournalIndexHeader from "~/components/journal/JournalIndexHeader.astro";
-import RhythmGrid from "~/components/home/RhythmGrid.astro";
+import RegionFilteredGrid from "~/components/journal/RegionFilteredGrid.astro";
 import { en } from "~/i18n/en";
 import { getSpotlights, type AnyEnArticle } from "~/lib/content";
 
@@ -19,13 +19,16 @@ const articles: AnyEnArticle[] = raw.map((e) => ({
   <JournalIndexHeader
     title={en.nav.spotlights}
     summary={en.spotlightsIndex.intro}
-    kind="spotlight"
+    note={en.spotlightsIndex.note}
+    link={{
+      href: en.footer.instagramUrl,
+      label: en.spotlightsIndex.noteCta,
+      external: true,
+    }}
   />
   {
     articles.length > 0 ? (
-      <section class="section section-y-tight">
-        <RhythmGrid articles={articles} />
-      </section>
+      <RegionFilteredGrid articles={articles} showJournalLink />
     ) : (
       <p class="pad-canvas mx-auto max-w-canvas py-16 text-ink-dim">
         {en.journal.empty}

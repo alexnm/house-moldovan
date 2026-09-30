@@ -1,38 +1,11 @@
 ---
-import Hero from "@shared/components/article/Hero.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import JournalFeed from "~/components/journal/JournalFeed.astro";
+import JournalIndexHeader from "~/components/journal/JournalIndexHeader.astro";
+import RegionFilteredGrid from "~/components/journal/RegionFilteredGrid.astro";
 import { en } from "~/i18n/en";
-import { getEnFeed, getPlace } from "~/lib/content";
-import { articleHref, articleRssDescription } from "~/lib/articles";
-import { articleHeroLocation } from "~/lib/articlePlaces";
-import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
-import type { Accent } from "@shared/lib/accent";
-import type { CollectionEntry } from "astro:content";
+import { getEnFeed } from "~/lib/content";
 
 const feed = await getEnFeed();
-const regionsById = regionMapById(await getAllRegions());
-const featured = feed.find((a) => a.data.featured) ?? feed[0];
-const rest = featured ? feed.filter((a) => a !== featured) : feed;
-
-let featuredAccent: Accent | undefined;
-let featuredHref = "";
-let featuredSummary = "";
-let featuredLocation = "";
-if (featured) {
-  const resolved = (
-    await Promise.all(featured.data.country.map((ref) => getPlace(ref)))
-  ).filter((p): p is CollectionEntry<"places"> => Boolean(p));
-  if (resolved.length) {
-    const first = resolved[0]!;
-    featuredAccent =
-      first.data.accent ??
-      regionsById.get(regionIdFromPlace(first))?.data.accent;
-  }
-  featuredHref = articleHref(featured);
-  featuredSummary = articleRssDescription(featured);
-  featuredLocation = await articleHeroLocation(featured);
-}
 ---
 
 <BaseLayout
@@ -40,22 +13,18 @@ if (featured) {
   description={en.journal.metaDescription}
   ogImage="/og/journal.png"
 >
+  <JournalIndexHeader
+    title={en.journal.title}
+    summary={en.journal.summary}
+    note={en.journal.note}
+  />
   {
-    featured && (
-      <a href={featuredHref} class="block">
-        <Hero
-          image={featured.data.hero}
-          alt={featured.data.title}
-          kicker={en.journal.featuredKicker[featured.kind]}
-          title={featured.data.title}
-          meta={featuredSummary}
-          location={featuredLocation}
-          accent={featuredAccent}
-          transitionName={`hero-${featured.id}`}
-        />
-      </a>
+    feed.length > 0 ? (
+      <RegionFilteredGrid articles={feed} />
+    ) : (
+      <p class="pad-canvas mx-auto max-w-canvas py-16 text-ink-dim">
+        {en.journal.empty}
+      </p>
     )
   }
-
-  <JournalFeed feed={rest} />
 </BaseLayout>
