@@ -44,7 +44,7 @@ export const en = {
       "No notes match this filter. Try Stories, Spotlights, or Itineraries above.",
     pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
     summary: "Every story, itinerary and spotlight, newest first",
-    note: "This is where everything we write ends up: long guides, the routes we followed and the photos we couldn't leave out. Start anywhere, we're still adding to it after every trip.",
+    note: "This is where everything we write ends up, a single journal with no order and no hierarchy. This is our entire collection of writings and photos from all our trips.",
   },
   /** Personal note from the authors at the top of the journal index pages. */
   authorNote: {
@@ -60,18 +60,17 @@ export const en = {
   storiesIndex: {
     metaTitle: "Travel stories & travel guides",
     intro: "Dedicated travel guides about a place we visited",
-    note: "We write a story after we get home from a place we loved: the guide we'd hand a friend heading there next. How long to stay, where to base yourself, and what we'd happily skip.",
+    note: "Our stories dive deep into a place we visited, sharing our personal experiences and insights. We hope that our recommendations and ideas help you plan your own trip.",
   },
   spotlightsIndex: {
     metaTitle: "Photo spotlights from around the world",
-    intro: "Photo highlights capturing a place or an experience",
-    note: "Some places are better shown than told. Spotlights are the photo sets we keep coming back to: a few words, and a lot of frames.",
-    noteCta: "Follow us on Instagram",
+    intro: "Photo highlights from a location we visited",
+    note: "We are not professional photographers, but we occasionally lean into capturing the mood of a place or an experience. Our spotlights are there when words cannot describe it.",
   },
   itinerariesIndex: {
     metaTitle: "Multi-day travel itineraries",
     intro: "Multi-day trips across different locations",
-    note: "These are the routes we actually travelled, day by day, including the parts we'd change next time. Take them as a starting point, not a schedule.",
+    note: "We hope this section inspires people to discover new places and plan their own trips following our footsteps. Itineraries follow a multi-day trip we took in the past across different locations.",
   },
   explore: {
     title: "Explore the world",
@@ -176,6 +175,13 @@ export const en = {
     },
     dayLabel: (n: number) => `Day ${n}`,
     onThisPage: "On this page",
+    spotlightAbout: "About the visit",
+    photoCount: (n: number) => (n === 1 ? "1 photo" : `${n} photos`),
+    openPhoto: (label: string) => `Open photo: ${label}`,
+    photoPosition: (i: number, n: number) => `${i} / ${n}`,
+    closePhoto: "Close",
+    previousPhoto: "Previous photo",
+    nextPhoto: "Next photo",
   },
   units: {
     km: "km",

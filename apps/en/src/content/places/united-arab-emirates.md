@@ -5,7 +5,7 @@ flag: 🇦🇪
 region: middle-east
 tagline: Desert ambition, glass towers, and engineered coastlines.
 showMap: true
-cover: ../../assets/uae/dubai-cover.JPG
+cover: ../../assets/uae/abu-dhabi.JPG
 coverLocation: Dubai Marina
 locations:
   - id: abu-dhabi

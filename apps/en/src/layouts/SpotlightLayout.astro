@@ -2,9 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import Hero from "@shared/components/article/Hero.astro";
-import Prose from "@shared/components/article/Prose.astro";
-import MetaBar from "~/components/article/MetaBar.astro";
-import SpotlightPhotoGrid from "~/components/article/SpotlightPhotoGrid.astro";
+import SpotlightInfoCard from "~/components/article/SpotlightInfoCard.astro";
+import SpotlightGallery from "~/components/article/SpotlightGallery.astro";
 import { en } from "~/i18n/en";
 import { abbreviateMonths } from "~/lib/months";
 import { getPlace } from "~/lib/content";
@@ -73,25 +72,24 @@ const description = data.summary;
       transitionName={`hero-${entry.id}`}
     />
 
-    <MetaBar items={items} />
+    <div
+      class="section section-y grid gap-6 lg:grid-cols-[26rem_minmax(0,1fr)] lg:items-start"
+    >
+      <div class="spotlight-rail" data-spotlight-rail>
+        <SpotlightInfoCard items={items} hasIntro={hasIntro}>
+          <slot />
+        </SpotlightInfoCard>
+      </div>
 
-    {
-      hasIntro && (
-        <div class="section mt-12 @md:mt-16">
-          <Prose class="mx-0!">
-            <slot />
-          </Prose>
-        </div>
-      )
-    }
-
-    <SpotlightPhotoGrid
-      photos={data.photos.map((p) => ({
-        image: p.image,
-        caption: p.caption,
-        tagline: p.tagline,
-      }))}
-    />
+      <SpotlightGallery
+        title={data.title}
+        photos={data.photos.map((p) => ({
+          image: p.image,
+          caption: p.caption,
+          tagline: p.tagline,
+        }))}
+      />
+    </div>
 
     {
       readNext.length > 0 && (
@@ -108,3 +106,29 @@ const description = data.summary;
     </nav>
   </article>
 </BaseLayout>
+
+<style>
+  /* The card stays beside the photos while they scroll, but only when it fits
+     the viewport; a taller card (long intro) scrolls with the page instead. */
+  @media (min-width: 64rem) {
+    .spotlight-rail[data-fits] {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+</style>
+
+<script>
+  function fitSpotlightRails() {
+    document
+      .querySelectorAll<HTMLElement>("[data-spotlight-rail]")
+      .forEach((rail) => {
+        const fits = rail.offsetHeight <= window.innerHeight - 128;
+        rail.toggleAttribute("data-fits", fits);
+      });
+  }
+
+  fitSpotlightRails();
+  document.addEventListener("astro:page-load", fitSpotlightRails);
+  window.addEventListener("resize", fitSpotlightRails, { passive: true });
+</script>

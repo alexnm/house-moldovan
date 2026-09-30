@@ -1,0 +1,70 @@
+---
+import { en } from "~/i18n/en";
+
+export interface ItemLink {
+  label: string;
+  href: string;
+}
+export interface Item {
+  label: string;
+  value: string | ItemLink[];
+}
+export interface Props {
+  items: Item[];
+  /** Render the default slot (the spotlight's MDX intro). */
+  hasIntro?: boolean;
+}
+
+const { items, hasIntro = false } = Astro.props;
+---
+
+<aside
+  class="spotlight-card surface-card overflow-hidden rounded-lg shadow-rest"
+  aria-label="About this spotlight"
+>
+  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
+    {
+      items.map((it) => (
+        <div>
+          <dt class="micro text-accent-ink">{it.label}</dt>
+          <dd class="m-0 mt-1 leading-snug font-semibold text-ink">
+            {Array.isArray(it.value)
+              ? it.value.map((link, i) => (
+                  <>
+                    {i > 0 && <span class="text-ink-faint"> · </span>}
+                    <a href={link.href} class="link-accent">
+                      {link.label}
+                    </a>
+                  </>
+                ))
+              : it.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    hasIntro && (
+      <div class="border-t border-line px-6 py-6 md:px-7">
+        <p class="micro m-0 text-accent-ink">{en.article.spotlightAbout}</p>
+        <div class="spotlight-card__intro prose-body mt-2.5">
+          <slot />
+        </div>
+      </div>
+    )
+  }
+</aside>
+
+<style>
+  .spotlight-card__intro {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .spotlight-card__intro :global(p) {
+    margin: 0;
+  }
+  .spotlight-card__intro :global(p + p) {
+    margin-top: 0.75rem;
+  }
+</style>
