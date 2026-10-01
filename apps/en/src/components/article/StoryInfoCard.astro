@@ -1,0 +1,188 @@
+---
+import { en } from "~/i18n/en";
+import type { TocSection } from "~/lib/bodyToc";
+
+export interface ItemLink {
+  label: string;
+  href: string;
+}
+export interface Item {
+  label: string;
+  value: string | ItemLink[];
+}
+export interface Props {
+  items: Item[];
+  sections: TocSection[];
+}
+
+const { items, sections } = Astro.props;
+---
+
+<aside
+  class="story-card surface-card overflow-hidden rounded-lg shadow-rest"
+  aria-label={en.article.storyCard}
+>
+  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
+    {
+      items.map((it) => (
+        <div>
+          <dt class="micro text-accent-ink">{it.label}</dt>
+          <dd class="m-0 mt-1 leading-snug font-semibold text-ink">
+            {Array.isArray(it.value)
+              ? it.value.map((link, i) => (
+                  <>
+                    {i > 0 && <span class="text-ink-faint"> · </span>}
+                    <a href={link.href} class="link-accent">
+                      {link.label}
+                    </a>
+                  </>
+                ))
+              : it.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    sections.length > 0 && (
+      <nav
+        class="border-t border-line px-6 py-6 md:px-7"
+        aria-label={en.article.onThisPage}
+        data-story-toc
+      >
+        <p class="micro m-0 text-accent-ink">{en.article.onThisPage}</p>
+        <ol class="m-0 mt-3 flex list-none flex-col gap-2.5 p-0">
+          {sections.map((s) => (
+            <li>
+              <a
+                href={`#${s.slug}`}
+                class="story-toc__link"
+                data-toc-link={s.slug}
+              >
+                {s.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+</aside>
+
+<style>
+  .story-toc__link {
+    display: flex;
+    align-items: baseline;
+    color: var(--color-ink-dim);
+    font-size: 0.95rem;
+    line-height: 1.35;
+    text-align: left;
+    text-decoration: none;
+    transition: color var(--duration-ui) var(--ease-cinema);
+  }
+  .story-toc__link:hover {
+    color: var(--color-accent-ink);
+  }
+  /* Short regional tick in front of the active section (no side stripe).
+     It grows from nothing, so the title slides right; when another section
+     takes over it shrinks and the title slides back. */
+  .story-toc__link::before {
+    content: "";
+    flex: none;
+    align-self: center;
+    width: 0;
+    height: 3px;
+    margin-right: 0;
+    border-radius: 1px;
+    background: var(--color-accent);
+    transition:
+      width 220ms var(--ease-cinema),
+      margin-right 220ms var(--ease-cinema);
+  }
+  .story-toc__link[aria-current="true"] {
+    color: var(--color-ink);
+    font-weight: 650;
+  }
+  .story-toc__link[aria-current="true"]::before {
+    width: 0.75rem;
+    margin-right: 0.5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .story-toc__link::before {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initStoryToc() {
+    document
+      .querySelectorAll<HTMLElement>("[data-story-toc]")
+      .forEach((nav) => {
+        if (nav.dataset.tocReady) return;
+        nav.dataset.tocReady = "true";
+
+        const links = Array.from(
+          nav.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"),
+        );
+        const targets = links
+          .map((a) => document.getElementById(a.dataset.tocLink ?? ""))
+          .filter((el): el is HTMLElement => Boolean(el));
+        if (targets.length === 0) return;
+
+        const setActive = (id: string) =>
+          links.forEach((a) =>
+            a.setAttribute("aria-current", String(a.dataset.tocLink === id)),
+          );
+
+        // A click marks its section straight away and holds it while the page
+        // scrolls there, instead of ticking through every section on the way.
+        let held = false;
+        let quietTimer = 0;
+        const releaseWhenQuiet = () => {
+          window.clearTimeout(quietTimer);
+          quietTimer = window.setTimeout(() => {
+            held = false;
+          }, 150);
+        };
+        links.forEach((a) =>
+          a.addEventListener("click", () => {
+            setActive(a.dataset.tocLink ?? "");
+            held = true;
+            releaseWhenQuiet();
+          }),
+        );
+
+        let frame = 0;
+        const update = () => {
+          frame = 0;
+          if (!nav.isConnected) {
+            window.removeEventListener("scroll", onScroll);
+            return;
+          }
+          if (held) {
+            releaseWhenQuiet();
+            return;
+          }
+          // The section whose heading last crossed the upper third is current.
+          const line = window.innerHeight * 0.33;
+          let active = targets[0]!.id;
+          for (const t of targets) {
+            if (t.getBoundingClientRect().top <= line) active = t.id;
+            else break;
+          }
+          setActive(active);
+        };
+        const onScroll = () => {
+          if (!frame) frame = requestAnimationFrame(update);
+        };
+
+        update();
+        window.addEventListener("scroll", onScroll, { passive: true });
+      });
+  }
+
+  initStoryToc();
+  document.addEventListener("astro:page-load", initStoryToc);
+</script>

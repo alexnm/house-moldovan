@@ -61,6 +61,15 @@ export const resolveBasemap = (basemap: Basemap): ResolvedBasemap => {
   return document.documentElement.dataset.theme === "light" ? "paper" : "film";
 };
 
+/**
+ * Halo behind route strokes. Matches `--color-map-paper` on the locations map.
+ * Missing theme counts as film, same as `resolveBasemap`.
+ */
+export const MAP_PAPER_BY_BASEMAP = {
+  paper: "oklch(0.97 0.007 95)",
+  film: "oklch(0.21 0.013 55)",
+} as const;
+
 export const tileLayerOptions = (
   tiles: MapTileConfig,
 ): {

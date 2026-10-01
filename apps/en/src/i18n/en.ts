@@ -142,6 +142,9 @@ export const en = {
     spotlight: "Spotlight",
     itinerary: "Itinerary",
     published: "Published",
+    readingTime: "Reading time",
+    minutesRead: (n: number) => `${n} min`,
+    storyCard: "Story at a glance",
     days: (n: number) => (n === 1 ? "1 day" : `${n} days`),
     country: "Country",
     countries: "Countries",
@@ -192,6 +195,12 @@ export const en = {
         : `${km.toLocaleString("en-GB", { maximumFractionDigits: 1 })} km`,
   },
   date: {
+    monthYear: (d: Date) =>
+      d.toLocaleDateString("en-GB", {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      }),
     long: (d: Date) =>
       d.toLocaleDateString("en-GB", {
         day: "numeric",

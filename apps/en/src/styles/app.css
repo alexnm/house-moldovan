@@ -726,6 +726,17 @@
     margin-top: 0;
   }
 
+  /* Short regional tick above each top-level heading (no side stripes). */
+  .prose-body h2::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 4px;
+    margin-bottom: 1.1rem;
+    border-radius: 1px;
+    background: var(--color-accent);
+  }
+
   .prose-body h3 {
     font-family: var(--font-sans);
     font-weight: 600;
@@ -795,6 +806,22 @@
 
   .prose-body video:not(figure > video) {
     border-radius: 6px;
+  }
+
+  /* Prose photos open the article's full-screen viewer. */
+  .prose-body .article-photo {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .prose-body .article-photo:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   .prose-body figcaption {

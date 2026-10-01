@@ -3,7 +3,9 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import Hero from "@shared/components/article/Hero.astro";
 import Prose from "@shared/components/article/Prose.astro";
-import MetaBar from "~/components/article/MetaBar.astro";
+import StoryInfoCard from "~/components/article/StoryInfoCard.astro";
+import ArticleLightbox from "~/components/article/ArticleLightbox.astro";
+import { readingMinutes } from "~/lib/readingTime";
 import { en } from "~/i18n/en";
 import { abbreviateMonths } from "~/lib/months";
 import { getPlace } from "~/lib/content";
@@ -19,7 +21,6 @@ import { getReadNextArticles } from "~/lib/readNext";
 import ReadNext from "~/components/article/ReadNext.astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
 import { buildBodyToc } from "~/lib/bodyToc";
-import ArticleToc from "~/components/article/ArticleToc.astro";
 
 export interface Props {
   entry: CollectionEntry<"stories">;
@@ -30,7 +31,6 @@ const { entry, contentHeadings } = Astro.props;
 const { data } = entry;
 
 const toc = buildBodyToc(contentHeadings);
-const hasToc = toc.length > 0;
 
 const places = await Promise.all(data.country.map((ref) => getPlace(ref)));
 const resolved = places.filter((p): p is NonNullable<typeof p> => Boolean(p));
@@ -49,6 +49,11 @@ const items = [
     value: en.article.storyType[data.type],
   },
   { label: en.article.months, value: abbreviateMonths(data.months) },
+  {
+    label: en.article.readingTime,
+    value: en.article.minutesRead(readingMinutes(entry.body)),
+  },
+  { label: en.article.published, value: en.date.monthYear(data.published) },
 ];
 
 const heroLocation = await articleHeroLocation({ ...entry, kind: "story" });
@@ -76,24 +81,20 @@ const ogImage = articleOgPath({ ...entry, kind: "story" });
       transitionName={`hero-${entry.id}`}
     />
 
-    <MetaBar items={items} />
-
-    {
-      hasToc ? (
-        <div class="section section-y section-gap grid md:grid-cols-[14rem_1fr]">
-          <ArticleToc sections={toc} />
-          <div class="min-w-0">
-            <Prose class="mx-0!">
-              <slot />
-            </Prose>
-          </div>
-        </div>
-      ) : (
-        <Prose class="section mt-12 @md:mt-16">
+    <div
+      class="section section-y grid gap-10 lg:grid-cols-[25rem_minmax(0,1fr)] lg:items-start lg:gap-14"
+    >
+      <div class="story-rail" data-story-rail>
+        <StoryInfoCard items={items} sections={toc} />
+      </div>
+      <div class="min-w-0">
+        <Prose class="mx-0!">
           <slot />
         </Prose>
-      )
-    }
+      </div>
+    </div>
+
+    <ArticleLightbox title={data.title} />
 
     {
       readNext.length > 0 && (
@@ -110,3 +111,29 @@ const ogImage = articleOgPath({ ...entry, kind: "story" });
     </nav>
   </article>
 </BaseLayout>
+
+<style>
+  /* The card (facts + contents) stays beside the story while it scrolls,
+     but only when it fits the viewport. */
+  @media (min-width: 64rem) {
+    .story-rail[data-fits] {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+</style>
+
+<script>
+  function fitStoryRails() {
+    document
+      .querySelectorAll<HTMLElement>("[data-story-rail]")
+      .forEach((rail) => {
+        const fits = rail.offsetHeight <= window.innerHeight - 128;
+        rail.toggleAttribute("data-fits", fits);
+      });
+  }
+
+  fitStoryRails();
+  document.addEventListener("astro:page-load", fitStoryRails);
+  window.addEventListener("resize", fitStoryRails, { passive: true });
+</script>

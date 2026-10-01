@@ -33,6 +33,7 @@ import ReadNext from "~/components/article/ReadNext.astro";
 import type { MarkdownHeading } from "@astrojs/markdown-remark";
 import { buildBodyToc } from "~/lib/bodyToc";
 import ArticleToc from "~/components/article/ArticleToc.astro";
+import ArticleLightbox from "~/components/article/ArticleLightbox.astro";
 
 export interface Props {
   entry: CollectionEntry<"itineraries">;
@@ -202,6 +203,8 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
       </div>
     </div>
 
+    <ArticleLightbox title={data.title} />
+
     {
       readNext.length > 0 && (
         <div class="motion-reveal section-divider">
@@ -224,16 +227,5 @@ const readNext = await getReadNextArticles({ ...entry, kind: "itinerary" });
     :global(.itinerary-page [data-nav-hero] .hero-bottom > *) {
       max-width: min(100%, calc(100% - 36rem));
     }
-  }
-
-  /* Short regional tick above each day section in the story. */
-  :global(.itinerary-prose h2::before) {
-    content: "";
-    display: block;
-    width: 3rem;
-    height: 4px;
-    margin-bottom: 1.1rem;
-    border-radius: 1px;
-    background: var(--color-accent);
   }
 </style>

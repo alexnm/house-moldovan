@@ -1,0 +1,335 @@
+---
+import { en } from "~/i18n/en";
+
+export interface Props {
+  /** Shown before the counter in the viewer's top bar. */
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!--
+  Full-screen photo viewer shared by stories, itineraries and spotlights.
+  It collects every `[data-lightbox-item]` in the surrounding <article>, in
+  page order. Each item carries data-full, data-thumb, data-caption, data-alt.
+-->
+<dialog class="lightbox" aria-label={title} data-article-lightbox>
+  <div class="lightbox__top">
+    <p class="micro m-0 text-ink-faint">
+      {title} · <span data-lb-count></span>
+    </p>
+    <button
+      type="button"
+      class="lightbox__btn"
+      aria-label={en.article.closePhoto}
+      data-lb-close
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg
+      >
+    </button>
+  </div>
+  <figure class="lightbox__figure">
+    <img class="lightbox__img" alt="" data-lb-img />
+    <figcaption class="lightbox__caption">
+      <p class="lightbox__tagline" data-lb-tagline></p>
+    </figcaption>
+  </figure>
+  <button
+    type="button"
+    class="lightbox__btn lightbox__prev"
+    aria-label={en.article.previousPhoto}
+    data-lb-prev
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg
+    >
+  </button>
+  <button
+    type="button"
+    class="lightbox__btn lightbox__next"
+    aria-label={en.article.nextPhoto}
+    data-lb-next
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg
+    >
+  </button>
+  <div class="lightbox__strip" data-lb-strip></div>
+</dialog>
+
+<style is:global>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: oklch(0.1 0.01 55);
+    color: var(--color-ink);
+    overflow: hidden;
+  }
+  .lightbox::backdrop {
+    background: oklch(0.1 0.01 55 / 0.9);
+  }
+  .lightbox[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  .lightbox__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+  }
+  .lightbox__figure {
+    margin: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0 clamp(1rem, 6vw, 6rem);
+  }
+  .lightbox__img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+  .lightbox__caption {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+  .lightbox__tagline {
+    max-width: 48rem;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.4;
+    text-wrap: balance;
+  }
+  .lightbox__tagline::before {
+    content: "";
+    display: inline-block;
+    width: 0.875rem;
+    height: 3px;
+    margin: -3px 0.6rem 0 0;
+    border-radius: 1px;
+    background: var(--color-accent);
+    vertical-align: middle;
+  }
+  .lightbox__btn {
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--color-surface) 70%, transparent);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+  .lightbox__btn:focus-visible,
+  .lightbox__thumb:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .lightbox__prev,
+  .lightbox__next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .lightbox__prev {
+    left: 1rem;
+  }
+  .lightbox__next {
+    right: 1rem;
+  }
+  .lightbox[data-single]
+    :is(.lightbox__prev, .lightbox__next, .lightbox__strip) {
+    display: none;
+  }
+  .lightbox__strip {
+    display: flex;
+    gap: 0.375rem;
+    justify-content: safe center;
+    overflow-x: auto;
+    padding: 1rem 1.5rem 1.25rem;
+  }
+  .lightbox__thumb {
+    flex: none;
+    width: 4rem;
+    height: 3rem;
+    padding: 0;
+    border: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0.45;
+    cursor: pointer;
+    background: var(--color-surface-2);
+    transition: opacity var(--duration-ui) var(--ease-cinema);
+  }
+  .lightbox__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .lightbox__thumb[aria-current="true"] {
+    opacity: 1;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+  @media (max-width: 40rem) {
+    .lightbox__prev,
+    .lightbox__next {
+      top: auto;
+      bottom: 5.5rem;
+      transform: none;
+    }
+    .lightbox__strip {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { en } from "~/i18n/en";
+
+  type Slide = { src: string; thumb: string; caption: string; alt: string };
+
+  function initArticleLightboxes() {
+    document
+      .querySelectorAll<HTMLDialogElement>("dialog[data-article-lightbox]")
+      .forEach((dialog) => {
+        if (dialog.dataset.lightboxReady) return;
+        dialog.dataset.lightboxReady = "true";
+
+        const scope: ParentNode = dialog.closest("article") ?? document;
+        const openers = Array.from(
+          scope.querySelectorAll<HTMLElement>("[data-lightbox-item]"),
+        ).filter((el) => el.dataset.full);
+        if (openers.length === 0) return;
+
+        const slides: Slide[] = openers.map((el) => ({
+          src: el.dataset.full!,
+          thumb: el.dataset.thumb ?? el.dataset.full!,
+          caption: el.dataset.caption ?? "",
+          alt: el.dataset.alt ?? el.dataset.caption ?? "",
+        }));
+        if (slides.length === 1) dialog.dataset.single = "";
+
+        const img = dialog.querySelector<HTMLImageElement>("[data-lb-img]")!;
+        const tagline = dialog.querySelector<HTMLElement>("[data-lb-tagline]")!;
+        const count = dialog.querySelector<HTMLElement>("[data-lb-count]")!;
+        const strip = dialog.querySelector<HTMLElement>("[data-lb-strip]")!;
+
+        const thumbs = slides.map((s, i) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "lightbox__thumb";
+          button.setAttribute("aria-label", en.article.openPhoto(s.caption));
+          const thumb = document.createElement("img");
+          thumb.alt = "";
+          thumb.loading = "lazy";
+          thumb.decoding = "async";
+          thumb.src = s.thumb;
+          button.append(thumb);
+          button.addEventListener("click", () => show(i));
+          strip.append(button);
+          return button;
+        });
+
+        let current = 0;
+        let opener: HTMLElement | null = null;
+
+        function show(index: number) {
+          current = (index + slides.length) % slides.length;
+          const s = slides[current]!;
+          img.src = s.src;
+          img.alt = s.alt;
+          tagline.textContent = s.caption;
+          tagline.hidden = !s.caption;
+          count.textContent = en.article.photoPosition(
+            current + 1,
+            slides.length,
+          );
+          thumbs.forEach((t, i) =>
+            t.setAttribute("aria-current", String(i === current)),
+          );
+          thumbs[current]?.scrollIntoView({
+            block: "nearest",
+            inline: "center",
+          });
+          // Warm the neighbours so next/previous feel instant.
+          for (const n of [current + 1, current - 1]) {
+            const neighbour = slides[(n + slides.length) % slides.length];
+            if (neighbour) new Image().src = neighbour.src;
+          }
+        }
+
+        openers.forEach((el, i) => {
+          el.addEventListener("click", () => {
+            opener = el;
+            show(i);
+            dialog.showModal();
+          });
+        });
+
+        dialog
+          .querySelector("[data-lb-prev]")
+          ?.addEventListener("click", () => show(current - 1));
+        dialog
+          .querySelector("[data-lb-next]")
+          ?.addEventListener("click", () => show(current + 1));
+        dialog
+          .querySelector("[data-lb-close]")
+          ?.addEventListener("click", () => dialog.close());
+
+        dialog.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowRight") show(current + 1);
+          else if (event.key === "ArrowLeft") show(current - 1);
+        });
+        // Clicking the dark area around the photo closes the viewer.
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+        dialog.addEventListener("close", () => opener?.focus());
+      });
+  }
+
+  initArticleLightboxes();
+  document.addEventListener("astro:page-load", initArticleLightboxes);
+</script>

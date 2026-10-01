@@ -1100,23 +1100,26 @@ const payload = {
         };
 
         const applyBasemap = (next: ResolvedBasemap): void => {
-          if (next === resolvedBasemap) return;
+          if (next !== resolvedBasemap) {
+            resolvedBasemap = next;
+            pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[next];
+            highlightController?.setBasemap(next);
 
-          resolvedBasemap = next;
-          pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[next];
-          highlightController?.setBasemap(next);
-
-          if (!framed && !usesAtlas) {
-            tiles = MAP_TILES_BY_BASEMAP[next];
-            viewMaxZoom = tiles.maxZoom;
-            baseTileLayer?.remove();
-            baseTileLayer = L.tileLayer(
-              tiles.url,
-              tileLayerOptions(tiles),
-            ).addTo(map);
-            map.setMaxZoom(viewMaxZoom);
+            if (!framed && !usesAtlas) {
+              tiles = MAP_TILES_BY_BASEMAP[next];
+              viewMaxZoom = tiles.maxZoom;
+              baseTileLayer?.remove();
+              baseTileLayer = L.tileLayer(
+                tiles.url,
+                tileLayerOptions(tiles),
+              ).addTo(map);
+              map.setMaxZoom(viewMaxZoom);
+            }
+            updatePinColors();
           }
-          updatePinColors();
+          // Strokes are sampled from CSS variables. A view transition removes
+          // data-theme and puts the same theme back, so the basemap name does
+          // not change — the halo still has to be read again.
           paintRoute();
         };
 
@@ -1134,3 +1137,4 @@ const payload = {
   initLocationsMaps();
   document.addEventListener("astro:page-load", () => initLocationsMaps());
 </script>
+

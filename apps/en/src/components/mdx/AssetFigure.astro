@@ -1,5 +1,7 @@
 ---
 import AssetImage from "~/components/mdx/AssetImage.astro";
+import { en } from "~/i18n/en";
+import { lightboxSources, loadAssetImage } from "~/lib/assetImages";
 
 type Props = {
   path: string;
@@ -9,10 +11,22 @@ type Props = {
 };
 
 const { path, alt, caption, sizes } = Astro.props;
+// Same photo, larger: opens in the article's full-screen viewer.
+const { full, thumb } = await lightboxSources(await loadAssetImage(path));
 ---
 
 <figure>
-  <AssetImage path={path} alt={alt} sizes={sizes} />
+  <button
+    type="button"
+    class="article-photo"
+    aria-label={en.article.openPhoto(caption)}
+    data-lightbox-item
+    data-full={full}
+    data-thumb={thumb}
+    data-caption={caption}
+    data-alt={alt}
+  >
+    <AssetImage path={path} alt={alt} sizes={sizes} />
+  </button>
   <figcaption>{caption}</figcaption>
 </figure>
-

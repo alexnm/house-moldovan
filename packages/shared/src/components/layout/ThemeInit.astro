@@ -68,6 +68,13 @@ import { THEME_COLORS, THEME_STORAGE_KEY } from "../../lib/theme";
       );
     });
 
+    // View transitions replace <html> attributes with the server markup, which
+    // drops data-theme. Restore it before the new page's scripts run — page-load
+    // is too late, the route map samples its stroke colors during that gap.
+    document.addEventListener("astro:after-swap", function () {
+      applyTheme(resolveTheme(), false);
+    });
+
     document.addEventListener("click", function (event) {
       var target = event.target;
       if (!(target instanceof Element)) return;

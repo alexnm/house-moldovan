@@ -1,6 +1,7 @@
 import L from "leaflet";
 import { tablerIcon } from "@shared/lib/tablerIcon";
 import {
+  MAP_PAPER_BY_BASEMAP,
   pinColorForAccent,
   resolveBasemap,
   type ResolvedBasemap,
@@ -43,11 +44,12 @@ function colors(mapEl: HTMLElement): { accent: string; paper: string } {
   const scope = mapEl.closest<HTMLElement>(".accent-scope");
   const name = scope?.dataset.accent;
   const accentName = ACCENTS.find((accent) => accent === name);
-  const accent = pinColorForAccent(accentName, routeBasemap(mapEl));
+  const basemap = routeBasemap(mapEl);
+  const accent = pinColorForAccent(accentName, basemap);
   mapEl.style.setProperty("--route-accent", accent);
   return {
     accent,
-    paper: readColor(mapEl, "--color-map-paper", "oklch(0.97 0.007 95)"),
+    paper: readColor(mapEl, "--color-map-paper", MAP_PAPER_BY_BASEMAP[basemap]),
   };
 }
 
