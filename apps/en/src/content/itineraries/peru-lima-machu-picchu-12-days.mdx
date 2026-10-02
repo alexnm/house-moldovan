@@ -13,24 +13,24 @@ highlights:
   - image: ../../assets/peru/salkantay-cover.jpg
     location: peru/salkantay-trek
 bases:
-  - location: peru/huacachina
-    days:
-      - locations: [peru/paracas, peru/huacachina]
-        description: "Ballestas Islands boat trip and sandboarding in the desert oasis."
   - location: peru/lima
     days:
+      - locations: [peru/lima, peru/paracas, peru/huacachina, peru/lima]
+        description: "Ballestas Islands boat trip and sandboarding in the desert oasis."
       - locations: [peru/lima]
         description: "Miraflores, Barranco, and Lima's legendary food scene."
+    toNext: plane
   - location: peru/cusco
     days:
       - locations: [peru/cusco]
         description: "Morning flight to the former Inca capital — slow walk to acclimatize."
-      - locations: [peru/pisac, peru/ollantaytambo]
+      - locations: [peru/pisac, peru/ollantaytambo, peru/cusco]
         description: "Sacred Valley day — market ruins at Pisac and the fortress town of Ollantaytambo."
-      - locations: [peru/moray, peru/maras]
+      - locations: [peru/moray, peru/maras, peru/cusco]
         description: "Circular terraces of Moray and the salt pans of Maras."
       - locations: [peru/cusco]
         description: "Inti Raymi — the Festival of the Sun on the winter solstice."
+    toNext: bus
   - location: peru/salkantay-trek
     days:
       - locations: [peru/salkantay-trek]
@@ -39,14 +39,14 @@ bases:
         description: "Salkantay trek day 2 — crossing the pass at 4,630 m."
       - locations: [peru/salkantay-trek]
         description: "Salkantay trek day 3 — jungle descent, coffee farms, and arrival in Aguas Calientes."
-  - location: peru/machu-picchu
-    days:
-      - locations: [peru/machu-picchu]
+      - locations: [peru/machu-picchu, peru/cusco]
         description: "Salkantay trek day 4 — sunrise at Machu Picchu."
+    toNext: bus
   - location: peru/cusco
     days:
       - locations: [peru/cusco]
         description: "Rest day in Cusco — markets, San Pedro, and one last walk through the stone streets."
+    toNext: plane
   - location: peru/lima
     days:
       - locations: [peru/lima]

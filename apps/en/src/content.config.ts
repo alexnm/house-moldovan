@@ -94,7 +94,6 @@ const stories = defineCollection({
       locations: z.array(locationRef).default([]),
       /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first pin. */
       heroLocation: locationRef.optional(),
-      featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
 });
@@ -123,7 +122,6 @@ const spotlights = defineCollection({
       locations: z.array(locationRef).default([]),
       /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first pin. */
       heroLocation: locationRef.optional(),
-      featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
 });
@@ -157,29 +155,27 @@ const itineraries = defineCollection({
       /** Short paragraph for the trip card. Empty until written. */
       why: z.string().default(""),
       /** How you move between stops. One mode, or several. */
-      gettingAround: z.union([
-        transportMode,
-        z.array(transportMode).min(1),
-      ]),
+      gettingAround: z.union([transportMode, z.array(transportMode).min(1)]),
       /** Overnight stays, in order. Each one opens the route list. */
       bases: z
         .array(
-          z.object({
-            /** Where you stay, e.g. `austria/salzburg`. */
-            location: locationRef,
-            /** Shown instead of the location name. */
-            title: z.string().min(1).optional(),
-            /** Card photo. Falls back to the location's picture. */
-            image: image().optional(),
-            /** How you travel from this base to the next one. */
-            toNext: transportMode.optional(),
-            /**
-             * A return point with no nights of its own. The path links back
-             * here, but it is not listed or counted as a base.
-             */
-            hidden: z.boolean().default(false),
-            days: z.array(itineraryDay).default([]),
-          })
+          z
+            .object({
+              /** Where you stay, e.g. `austria/salzburg`. */
+              location: locationRef,
+              /** Shown instead of the location name. */
+              title: z.string().min(1).optional(),
+              /** Card photo. Falls back to the location's picture. */
+              image: image().optional(),
+              /** How you travel from this base to the next one. */
+              toNext: transportMode.optional(),
+              /**
+               * A return point with no nights of its own. The path links back
+               * here, but it is not listed or counted as a base.
+               */
+              hidden: z.boolean().default(false),
+              days: z.array(itineraryDay).default([]),
+            })
             .refine((base) => base.hidden || base.days.length > 0, {
               message: "A base needs at least one day",
               path: ["days"],
@@ -193,7 +189,6 @@ const itineraries = defineCollection({
       hero: image(),
       /** Hero photo location id, e.g. `jordan/petra`. Defaults to the first stop. */
       heroLocation: locationRef.optional(),
-      featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
 });

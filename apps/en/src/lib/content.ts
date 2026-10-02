@@ -66,29 +66,6 @@ export const getEnFeed = async (): Promise<AnyEnArticle[]> => {
   );
 };
 
-export const getFeaturedEnArticle = async (): Promise<
-  AnyEnArticle | undefined
-> => {
-  const feed = await getEnFeed();
-  return feed.find((a) => a.data.featured) ?? feed[0];
-};
-
-/** Home uses a static brand hero — keep the featured note in the recent grid. */
-export const getHomeRecentFeed = (
-  feed: AnyEnArticle[],
-  limit = 7,
-): AnyEnArticle[] => {
-  const featured = feed.find((a) => a.data.featured);
-  const newest = feed.slice(0, limit);
-  if (!featured || newest.some((a) => a.id === featured.id)) {
-    return newest;
-  }
-  return [
-    featured,
-    ...feed.filter((a) => a.id !== featured.id).slice(0, limit - 1),
-  ];
-};
-
 export const getPlace = async (
   ref: { collection: "places"; id: string } | string,
 ): Promise<CollectionEntry<"places"> | undefined> => {

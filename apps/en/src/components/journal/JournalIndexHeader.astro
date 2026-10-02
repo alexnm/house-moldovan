@@ -33,18 +33,20 @@ const {
 
     <figure class="journal-index-note">
       <div class="journal-index-note__portrait">
-        <CoverImage
-          src={portrait}
-          alt={en.authorNote.portraitAlt}
-          widths={[160, 240, 320]}
-          sizes="7rem"
-          format="avif"
-          quality={82}
-          loading="eager"
-          placeholder="blur"
-          wrapperClass="absolute inset-0"
-          class="h-full w-full object-cover object-[center_28%]"
-        />
+        <div class="journal-index-note__clip">
+          <CoverImage
+            src={portrait}
+            alt={en.authorNote.portraitAlt}
+            widths={[160, 240, 320]}
+            sizes="7rem"
+            format="avif"
+            quality={82}
+            loading="eager"
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover object-[center_28%]"
+          />
+        </div>
       </div>
       <div class="journal-index-note__body">
         <blockquote class="journal-index-note__text">
@@ -97,7 +99,6 @@ const {
     flex: none;
     width: 4.5rem;
     aspect-ratio: 1;
-    overflow: hidden;
     border-radius: 50%;
     box-shadow:
       0 0 0 4px var(--color-surface),

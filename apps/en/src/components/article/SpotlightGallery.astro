@@ -30,7 +30,7 @@ const slides = await Promise.all(photos.map((p) => lightboxSources(p.image)));
         <li class="motion-reveal-media mb-2.5 break-inside-avoid">
           <button
             type="button"
-            class="gallery-item group relative block w-full cursor-zoom-in overflow-hidden rounded-sm p-0"
+            class="gallery-item group relative block w-full cursor-zoom-in overflow-hidden rounded-sm p-0 shadow-rest"
             style={`aspect-ratio: ${p.image.width} / ${p.image.height}`}
             aria-label={en.article.openPhoto(p.tagline)}
             data-lightbox-item

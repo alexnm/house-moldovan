@@ -1257,6 +1257,48 @@
   }
 }
 
+/* Author portrait on the journal indexes.
+   overflow + border-radius on the frame do not clip this photo during a root
+   view transition: the blur placeholder's filter and transform are captured as
+   their own layer, so the picture paints square until the crossfade ends.
+   clip-path is part of that layer, and the named group clips the snapshot. */
+.journal-index-note__portrait {
+  position: relative;
+}
+
+.journal-index-note__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  clip-path: circle(50%);
+  view-transition-name: journal-author-portrait;
+}
+
+::view-transition-group(journal-author-portrait),
+::view-transition-image-pair(journal-author-portrait),
+::view-transition-old(journal-author-portrait),
+::view-transition-new(journal-author-portrait) {
+  overflow: clip;
+  border-radius: 50%;
+}
+
+::view-transition-old(journal-author-portrait),
+::view-transition-new(journal-author-portrait) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  animation-duration: var(--duration-chrome);
+  animation-timing-function: var(--ease-cinema);
+}
+
+/* Entering a journal index: fade the portrait in. It stays put when moving
+   between those indexes, where an old snapshot exists too. */
+::view-transition-new(journal-author-portrait):only-child {
+  animation: cinema-fade var(--duration-load) var(--ease-cinema-fast) both;
+}
+
 /* View transitions: quiet crossfade; shared hero names handle morph */
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -1308,7 +1350,10 @@
   }
 
   ::view-transition-old(root),
-  ::view-transition-new(root) {
+  ::view-transition-new(root),
+  ::view-transition-old(journal-author-portrait),
+  ::view-transition-new(journal-author-portrait),
+  ::view-transition-new(journal-author-portrait):only-child {
     animation-duration: 1ms;
   }
 }

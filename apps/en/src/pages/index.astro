@@ -7,11 +7,11 @@ import FeaturedCountries from "~/components/home/FeaturedCountries.astro";
 import RhythmGrid from "~/components/home/RhythmGrid.astro";
 import AboutIntro from "~/components/home/AboutIntro.astro";
 import { en } from "~/i18n/en";
-import { getEnFeed, getHomeRecentFeed } from "~/lib/content";
+import { getEnFeed } from "~/lib/content";
 import heroImage from "~/assets/cambodia/angkor-wat.jpg";
 
 const feed = await getEnFeed();
-const recent = getHomeRecentFeed(feed);
+const recent = feed.slice(0, 7);
 ---
 
 <BaseLayout

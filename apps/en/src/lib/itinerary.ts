@@ -185,6 +185,25 @@ export function buildRouteMap(
 
   const locById = new Map(stopsLoc.map((l) => [l.qualifiedId, l]));
   const cosLat = routeCosLat(stopsLoc.map((l) => [l.lat, l.lng]));
+  const seenBase = new Set<string>();
+  const uniqueBases = parts
+    .map((part) => part.anchor)
+    .filter((loc) => {
+      if (seenBase.has(loc.qualifiedId)) return false;
+      seenBase.add(loc.qualifiedId);
+      return true;
+    });
+  const centroid =
+    uniqueBases.length > 0
+      ? {
+          lat:
+            uniqueBases.reduce((sum, loc) => sum + loc.lat, 0) /
+            uniqueBases.length,
+          lng:
+            uniqueBases.reduce((sum, loc) => sum + loc.lng, 0) /
+            uniqueBases.length,
+        }
+      : undefined;
 
   // Visit order. A return to the same place is kept; only immediate repeats drop.
   const visits: { id: string; base: number }[] = [];
@@ -203,13 +222,18 @@ export function buildRouteMap(
 
   const edgeKey = (a: string, b: string) => [a, b].sort().join("|");
   const segByKey = new Map<string, RouteMapSegment>();
-  const addSegment = (aId: string, bId: string, transfer: boolean) => {
+  const addSegment = (
+    aId: string,
+    bId: string,
+    transfer: boolean,
+    away?: { lat: number; lng: number },
+  ) => {
     const key = edgeKey(aId, bId);
     const a = locById.get(aId);
     const b = locById.get(bId);
     if (!a || !b || (a.lat === b.lat && a.lng === b.lng)) return;
     const latlngs: [number, number][] = transfer
-      ? archLatLngs(a, b, cosLat)
+      ? archLatLngs(a, b, cosLat, away, centroid)
       : [
           [a.lat, a.lng],
           [b.lat, b.lng],
@@ -228,6 +252,34 @@ export function buildRouteMap(
   for (let i = 1; i < visits.length; i++) {
     addSegment(visits[i - 1]!.id, visits[i]!.id, false);
   }
+
+  // A→B bows away from C, the next overnight after this transfer, so a
+  // clockwise loop and a counterclockwise one both open outward.
+  const closed =
+    parts.length > 2 &&
+    parts[0]!.anchor.qualifiedId === parts.at(-1)!.anchor.qualifiedId;
+  const awayForTransfer = (
+    fromPart: number,
+  ): { lat: number; lng: number } | undefined => {
+    const here = parts[fromPart]!.anchor.qualifiedId;
+    const there = parts[fromPart + 1]?.anchor.qualifiedId;
+    const pick = (loc: { qualifiedId: string; lat: number; lng: number }) =>
+      loc.qualifiedId !== here && loc.qualifiedId !== there ? loc : undefined;
+    const next = parts[fromPart + 2]?.anchor;
+    if (next) {
+      const loc = pick(next);
+      if (loc) return loc;
+    }
+    if (closed) {
+      const wrap = parts[1]?.anchor;
+      if (wrap) {
+        const loc = pick(wrap);
+        if (loc) return loc;
+      }
+    }
+    const prev = parts[fromPart - 1]?.anchor;
+    return prev ? pick(prev) : undefined;
+  };
 
   // A transfer runs from the last time you are at a base until you arrive at
   // the next one. Stopovers on that stretch stay on the dashed line. A loop
@@ -259,11 +311,12 @@ export function buildRouteMap(
     for (let j = cursor; j < arrival; j++) {
       if (visits[j]!.id === fromId) start = j;
     }
+    const away = awayForTransfer(i);
     let best: { a: string; b: string; len: number } | undefined;
     for (let j = start; j < arrival; j++) {
       const aId = visits[j]!.id;
       const bId = visits[j + 1]!.id;
-      addSegment(aId, bId, true);
+      addSegment(aId, bId, true, away);
       const a = locById.get(aId);
       const b = locById.get(bId);
       if (!a || !b) continue;

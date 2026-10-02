@@ -72,11 +72,18 @@ export function routeCosLat(points: readonly [number, number][]): number {
 /**
  * Quadratic bow off the chord, in the same projected plane the schematic used,
  * sampled back to lat/lng so it sits on the real map.
+ *
+ * `away` is the following point C on A→B→C: the bow sits on the opposite
+ * side of a real turn so the path opens outward. `fallback` is used when C
+ * sits on the line (an out-and-back or a shallow continuation) — typically
+ * the centroid of the overnight bases, i.e. the interior of the journey.
  */
 export function archLatLngs(
   a: LatLng,
   b: LatLng,
   cosLat: number,
+  away?: LatLng,
+  fallback?: LatLng,
 ): [number, number][] {
   const ax = a.lng * cosLat;
   const ay = -a.lat;
@@ -87,8 +94,20 @@ export function archLatLngs(
   const dx = bx - ax;
   const dy = by - ay;
   const bend = 0.22;
-  const cx = mx - dy * bend;
-  const cy = my + dx * bend;
+  // Right-hand offset in this y-down plane: (-dy, dx).
+  const rx = -dy;
+  const ry = dx;
+  const ab2 = dx * dx + dy * dy;
+  const sideOf = (p: LatLng, min: number): number => {
+    const px = p.lng * cosLat;
+    const py = -p.lat;
+    const side = rx * (px - mx) + ry * (py - my);
+    if (ab2 <= 0 || Math.abs(side) <= min * ab2) return 0;
+    return side > 0 ? -1 : 1;
+  };
+  const sign = (away && sideOf(away, 0.12)) || (fallback && sideOf(fallback, 0.08)) || 1;
+  const cx = mx + rx * bend * sign;
+  const cy = my + ry * bend * sign;
   const steps = 16;
   const out: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
