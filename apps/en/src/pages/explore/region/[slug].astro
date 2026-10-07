@@ -2,10 +2,8 @@
 import type { GetStaticPaths } from "astro";
 import { render } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import CountryCard from "~/components/home/CountryCard.astro";
 import RegionHero from "~/components/home/RegionHero.astro";
 import RegionGuide from "~/components/region/RegionGuide.astro";
-import RegionFeaturedStory from "~/components/region/RegionFeaturedStory.astro";
 import RegionMapHub from "~/components/region/RegionMapHub.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import { en } from "~/i18n/en";
@@ -31,8 +29,7 @@ const {
   order,
   images,
   countries,
-  itineraries,
-  featuredStory,
+  dossier,
   notes,
   locationPins,
   atlas,
@@ -55,59 +52,21 @@ const { Content } = await render(region);
   />
 
   <div class="accent-scope" data-accent={accent}>
-    <RegionGuide itineraries={itineraries} accent={accent}>
+    <RegionGuide dossier={dossier} accent={accent}>
       <Content />
     </RegionGuide>
 
     {
-      featuredStory && (
-        <RegionFeaturedStory
-          href={featuredStory.href}
-          title={featuredStory.a.data.title}
-          summary={featuredStory.a.data.summary}
-          hero={featuredStory.a.data.hero}
-          kicker="Featured story"
-          countryMeta={featuredStory.countryMeta}
-          accent={featuredStory.accent}
-          transitionName={`hero-${featuredStory.a.id}`}
-        />
-      )
-    }
-
-    {
-      locationPins.length > 0 && (
+      atlas && countries.length > 0 && (
         <RegionMapHub
           countries={countries}
           locationPins={locationPins}
-          regionName={name}
           atlas={atlas}
+          regionAccent={accent}
         />
       )
     }
   </div>
-
-  <section class="section section-y">
-    <header
-      class="section-header flex flex-wrap items-end justify-between gap-4"
-    >
-      <h2 class="display section-heading">{en.region.countriesHeading}</h2>
-    </header>
-    <ul class="grid-countries">
-      {
-        countries.map((country) => (
-          <CountryCard
-            href={country.href}
-            name={country.shortName}
-            flag={country.flag}
-            tagline={country.tagline}
-            image={country.thumbnail}
-            imageAlt={`Scenes from ${country.name}`}
-            accent={accent}
-          />
-        ))
-      }
-    </ul>
-  </section>
 
   {
     notes.length > 0 && (

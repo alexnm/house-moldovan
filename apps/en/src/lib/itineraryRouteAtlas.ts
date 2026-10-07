@@ -6,10 +6,18 @@ export const ATLAS_MAX_ZOOM = 12;
 
 export type Box = { x1: number; y1: number; x2: number; y2: number };
 
+export type RegionAtlasOptions = {
+  /** Natural Earth country names that belong to this region (clickable). */
+  regionCountryNames: readonly string[];
+  onSelect?: (name: string) => void;
+};
+
 export type RouteAtlasLayer = {
   setVisible: (visible: boolean) => void;
   /** Light one country and sink the rest. `null` draws every country equal. */
   setFocus: (name: string | null) => void;
+  /** Region hub: tint one country on list hover (no zoom / selection). */
+  setPreview: (name: string | null) => void;
   /** Place country names in container pixels, clear of `occupied`. */
   placeLabels: (occupied: readonly Box[]) => void;
 };
@@ -38,11 +46,15 @@ export function mountRouteAtlas(
   map: L.Map,
   atlas: RouteAtlas,
   mapEl: HTMLElement,
+  regionOptions?: RegionAtlasOptions,
 ): RouteAtlasLayer {
+  const regionNames = new Set(regionOptions?.regionCountryNames ?? []);
+  const regionHub = regionNames.size > 0;
   const pane = map.createPane(PANE);
   pane.style.zIndex = "250";
   const labelPane = map.createPane(LABEL_PANE);
   labelPane.style.zIndex = "390";
+  // The pane covers the map. Hits pass through except on the labels themselves.
   labelPane.style.pointerEvents = "none";
 
   const renderer = L.svg({ pane: PANE, padding: 0.5 });
@@ -50,13 +62,14 @@ export function mountRouteAtlas(
   const landByName = new Map<string, L.Polygon>();
 
   for (const country of atlas.countries) {
+    const inRegion = regionNames.has(country.name);
     const polygon = L.polygon(
       country.rings.map((ring) => [ring]),
       {
         pane: PANE,
         renderer,
         className: "atlas-land",
-        interactive: false,
+        interactive: regionHub && inRegion,
         smoothFactor: 0.6,
       },
     ).addTo(shapes);
@@ -79,9 +92,15 @@ export function mountRouteAtlas(
   const labels = L.layerGroup();
   let visible = false;
   let focusName: string | null = null;
+  let previewName: string | null = null;
 
-  const focusClass = (name: string): string =>
-    name === focusName ? "atlas-land is-focus" : "atlas-land";
+  const focusClass = (name: string): string => {
+    const parts = ["atlas-land"];
+    if (regionNames.has(name)) parts.push("is-region");
+    if (name === focusName) parts.push("is-focus");
+    else if (name === previewName) parts.push("is-preview");
+    return parts.join(" ");
+  };
 
   const applyFocus = (): void => {
     mapEl.classList.toggle("locations-map--atlas-focus", focusName !== null);
@@ -91,9 +110,18 @@ export function mountRouteAtlas(
       polygon.getElement()?.setAttribute("class", focusClass(name));
     }
     if (!visible) return;
-    // Neighbours drawn later would cover half of the focus edge.
     const focused = focusName ? landByName.get(focusName) : undefined;
-    if (focused) {
+    if (regionHub) {
+      const previewed = previewName ? landByName.get(previewName) : undefined;
+      for (const [name, polygon] of landByName) {
+        if (!regionNames.has(name) || polygon === focused || polygon === previewed)
+          continue;
+        polygon.bringToFront();
+      }
+      previewed?.bringToFront();
+      focused?.bringToFront();
+      lakes?.bringToFront();
+    } else if (focused) {
       focused.bringToFront();
       lakes?.bringToFront();
     }
@@ -101,11 +129,22 @@ export function mountRouteAtlas(
       "[data-atlas-country]",
     )) {
       el.classList.toggle("is-focus", el.dataset.atlasCountry === focusName);
+      el.classList.toggle(
+        "is-preview",
+        focusName === null && el.dataset.atlasCountry === previewName,
+      );
     }
   };
 
   const setFocus = (name: string | null): void => {
     focusName = name;
+    if (name !== null) previewName = null;
+    applyFocus();
+  };
+
+  const setPreview = (name: string | null): void => {
+    if (focusName !== null) return;
+    previewName = name;
     applyFocus();
   };
 
@@ -133,9 +172,10 @@ export function mountRouteAtlas(
     const ordered = [...atlas.countries].sort((a, b) => a.rank - b.rank);
 
     for (const country of ordered) {
+      if (regionHub && !regionNames.has(country.name)) continue;
       const pt = map.latLngToContainerPoint(country.label);
       const text = country.name.toUpperCase();
-      const w = text.length * CHAR_W;
+      const w = text.length * CHAR_W + (regionHub ? 16 : 0);
       const fits = (y: number): Box | null => {
         const box = {
           x1: pt.x - w / 2,
@@ -158,20 +198,52 @@ export function mountRouteAtlas(
       if (!box) continue;
       taken.push(box);
       const safeName = escapeHtml(country.name);
-      L.marker(map.containerPointToLatLng([pt.x, (box.y1 + box.y2) / 2]), {
-        pane: LABEL_PANE,
-        interactive: false,
-        keyboard: false,
-        icon: L.divIcon({
-          className: "atlas-label-wrap",
-          html: `<span class="atlas-label${country.name === focusName ? " is-focus" : ""}" data-atlas-country="${safeName}">${escapeHtml(text)}</span>`,
-          iconSize: [Math.ceil(w), LABEL_H],
-          iconAnchor: [w / 2, LABEL_H / 2],
-        }),
-      }).addTo(labels);
+      const labelClass = regionHub
+        ? `atlas-label atlas-label--pill${country.name === focusName ? " is-focus" : ""}${focusName === null && country.name === previewName ? " is-preview" : ""}`
+        : `atlas-label${country.name === focusName ? " is-focus" : ""}`;
+      const labelHtml = regionHub
+        ? `<button type="button" class="${labelClass}" data-atlas-country="${safeName}">${escapeHtml(text)}</button>`
+        : `<span class="${labelClass}" data-atlas-country="${safeName}">${escapeHtml(text)}</span>`;
+      const marker = L.marker(
+        map.containerPointToLatLng([pt.x, (box.y1 + box.y2) / 2]),
+        {
+          pane: LABEL_PANE,
+          interactive: regionHub,
+          keyboard: false,
+          icon: L.divIcon({
+            className: "atlas-label-wrap",
+            html: labelHtml,
+            iconSize: [Math.ceil(w), LABEL_H],
+            iconAnchor: [w / 2, LABEL_H / 2],
+          }),
+        },
+      ).addTo(labels);
+      if (regionHub && regionOptions?.onSelect) {
+        marker.on("click", () => {
+          regionOptions.onSelect!(country.name);
+        });
+        marker.on("mouseover", () => setPreview(country.name));
+        marker.on("mouseout", () => {
+          if (previewName === country.name) setPreview(null);
+        });
+      }
     }
   };
 
-  return { setVisible, setFocus, placeLabels };
+  if (regionHub) {
+    for (const [name, polygon] of landByName) {
+      if (!regionNames.has(name)) continue;
+      polygon.on("mouseover", () => {
+        if (focusName !== null) return;
+        setPreview(name);
+      });
+      polygon.on("mouseout", () => {
+        if (focusName !== null) return;
+        if (previewName === name) setPreview(null);
+      });
+    }
+  }
+
+  return { setVisible, setFocus, setPreview, placeLabels };
 }
 

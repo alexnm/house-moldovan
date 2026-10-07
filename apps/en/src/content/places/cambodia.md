@@ -4,9 +4,9 @@ flag: 🇰🇭
 region: asia
 tagline: Temple dawn at Angkor, river life, and history carved in stone.
 showMap: true
-cover: ../../assets/cambodia/angkor-wat-sunrise.JPG
+cover: ../../assets/cambodia/angkor-wat.jpg
 coverLocation: cambodia/angkor-wat
-thumbnail: ../../assets/cambodia/angkor-wat-thumb.jpg
+thumbnail: ../../assets/cambodia/angkor-wat-temple.jpg
 locations:
   - id: siem-reap
     name: "Siem Reap"
@@ -15,7 +15,7 @@ locations:
     lng: 103.8564
   - id: angkor-wat
     name: "Angkor Wat"
-    image: ../../assets/cambodia/angkor-wat-sunrise.JPG
+    image: ../../assets/cambodia/angkor-wat.jpg
     lat: 13.4125
     lng: 103.867
   - id: tonle-sap
@@ -23,4 +23,19 @@ locations:
     image: ../../assets/cambodia/floating-village.JPG
     lat: 13.25
     lng: 103.9
+snapshots:
+  - image: ../../assets/cambodia/angkor-wat-inside.JPG
+    location: angkor-wat
+  - image: ../../assets/cambodia/bayon-face.JPG
+    location: Bayon, Angkor Thom
+  - image: ../../assets/cambodia/preah-khan.JPG
+    location: Preah Khan, Angkor Thom
+  - image: ../../assets/cambodia/floating-village.JPG
+    location: Kampong Khleang
 ---
+
+When you look at the flag of Cambodia, you kind figure out how important Angkor Wat is to the country. Cambodia is a small country with rich history and very warm people, but it was unfortunately torn apart by a brutal war in the late 70s and is still recovering today.
+
+The largest religious site in the world by area, Angkor Wat is a UNESCO World Heritage Site and one of the most iconic landmarks in Southeast Asia. The tourism industry revolves around this site and particularly around Siem Reap, the gateway to Angkor Wat.
+
+Our short visit in 2018 did center around [the visit to Angkor](/stories/angkor-wat-temples/guide), but we also discovered the rural parts of the country around the Tonlé Sap lake. It was an eye-opening experience to see the daily life of the people living in the floating villages around the lake.

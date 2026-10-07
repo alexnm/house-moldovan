@@ -49,7 +49,7 @@ snapshots:
     location: Iguazú Falls
 ---
 
-Argentina is a huge country with so much to offer. From the urban vibes of Buenos Aires to the emptiness of the Patagonian plains and the thundering Iguazú Falls, there is something for everyone.
+Argentina is a huge country with so much to offer. From the urban vibes of Buenos Aires to the emptiness of the Patagonian plains and Andean peaks and the thundering Iguazú Falls, there is something for everyone.
 
 Buenos Aires is one of the [most vibrant cities](/spotlights/colors-tango-and-football) in South America, with wide avenues, great food, and diverse neighbourhoods that can take days to explore. [Iguazú Falls](/stories/iguazu-falls-argentina-vs-brazil), shared with Brazil, are one of the most impressive natural wonders in the world.
 

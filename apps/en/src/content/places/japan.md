@@ -69,7 +69,7 @@ locations:
     lng: 137.972
 ---
 
-Our trip in Japan back in 2017 was the first time we stepped outside of Europe. And it proved to be a fundamental shift in how we see the world. Since then we visited so many more countries outside of Europe, but Japan remains still has a special place in our hearts.
+Our trip in Japan back in 2017 was the first time we stepped outside of Europe. And it proved to be a fundamental shift in how we see the world. Since then we visited so many more countries outside of Europe, but Japan still has a special place in our hearts.
 
 Each year in March and April, the cherry blossom season blooms in Japan, turning the streets and parks into a sea of pink. This comes with a price though, as the country is packed with tourists and the prices are sky high during that time.
 

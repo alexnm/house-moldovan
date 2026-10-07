@@ -1,129 +1,227 @@
 ---
+import { getImage } from "astro:assets";
 import LocationsMap from "~/components/map/LocationsMap.astro";
 import { en } from "~/i18n/en";
 import {
   countryMapFitMaxZoom,
   countryMapFitZoomOffset,
   MAP_FIXED_LOCATION_POPUP,
+  placeHasBody,
 } from "~/lib/countryPage";
 import type { LocationMapPin } from "~/lib/mapPinData";
+import { placeCoverLocationLabel } from "~/lib/locations";
+import { firstParagraph, renderMarkdownFragment } from "~/lib/markdownFragment";
+import type { Accent } from "@shared/lib/accent";
 import type { RegionCountry } from "~/lib/regionPage";
 import type { RouteAtlas } from "~/lib/routeMap";
+import { placeShortName } from "~/lib/articlePlaces";
 
 export interface Props {
   countries: RegionCountry[];
   locationPins: LocationMapPin[];
-  regionName: string;
   atlas?: RouteAtlas;
+  regionAccent: Accent;
 }
 
-const { countries, locationPins, regionName, atlas } = Astro.props;
+const { countries, locationPins, atlas, regionAccent } = Astro.props;
 
-const heading = en.region.mapHeading;
-const backLabel = en.region.backToRegion(regionName);
+const heading = en.region.countriesHeading;
+const regionCountryNames = countries.map((country) => country.name);
 
-const hubPayload = countries.map((country) => ({
-  id: country.id,
-  name: country.name,
-  pinIds: country.pinIds,
-  rings: country.rings,
-  maxZoom: countryMapFitMaxZoom(country.id),
-  zoomOffset: countryMapFitZoomOffset(country.id),
-}));
+const countryCopy = await Promise.all(
+  countries.map(async (country) => {
+    const hasBody = placeHasBody(country.country);
+    if (hasBody) {
+      const bodyHtml = await renderMarkdownFragment(
+        firstParagraph(country.country.body),
+      );
+      return {
+        id: country.id,
+        hasBody: Boolean(bodyHtml),
+        tagline: country.tagline,
+        bodyHtml,
+      };
+    }
+    return {
+      id: country.id,
+      hasBody: false,
+      tagline: country.tagline,
+      bodyHtml: "",
+    };
+  }),
+);
+
+const hubPayload = await Promise.all(
+  countries.map(async (country) => {
+    const hero = country.cover ?? country.thumbnail;
+    let coverSrc: string | undefined;
+    let coverSrcSet: string | undefined;
+    if (hero) {
+      const w480 = await getImage({ src: hero, width: 480, format: "avif" });
+      const w720 = await getImage({ src: hero, width: 720, format: "avif" });
+      const w960 = await getImage({ src: hero, width: 960, format: "avif" });
+      coverSrc = w720.src;
+      coverSrcSet = `${w480.src} 480w, ${w720.src} 720w, ${w960.src} 960w`;
+    }
+    return {
+      id: country.id,
+      name: country.name,
+      flag: country.flag,
+      href: country.href,
+      exploreLabel: en.region.exploreCountry(placeShortName(country.country)),
+      coverLocation: await placeCoverLocationLabel(country.country),
+      coverSrc,
+      coverSrcSet,
+      rings: country.rings,
+      pinIds: country.pinIds,
+      maxZoom: countryMapFitMaxZoom(country.id),
+      zoomOffset: countryMapFitZoomOffset(country.id),
+      accent: country.accent,
+    };
+  }),
+);
+
+const regionCountryAccents = Object.fromEntries(
+  countries.map((country) => [country.name, country.accent]),
+);
 ---
 
 <section id="map" class="section region-map-hub" data-region-hub>
-  <div class="region-map-hub__map shadow-rest">
-    <LocationsMap
-      pins={locationPins}
-      basemap="adaptive"
-      fullBleed
-      scrollZoom={false}
-      fitMaxZoom={5}
-      height="clamp(28rem, 68svh, 44rem)"
-      labelMode="full"
-      locationLabelStyle="title"
-      neutralLocationStamp
-      locationOnlyPopup
-      focusLocations={MAP_FIXED_LOCATION_POPUP ? "popup" : "zoom"}
-      atlas={atlas}
-    />
-  </div>
+  <div class="region-map-hub__stage">
+    <div class="region-map-hub__sidebar">
+      <div class="region-map-hub__overview" data-hub-overview>
+        <header class="region-map-hub__panel-head">
+          <h2 class="display region-map-hub__panel-title">{heading}</h2>
+          <p class="region-map-hub__hint">{en.region.mapHint}</p>
+        </header>
+        <ul class="map-hub-list region-map-hub__list" aria-label={heading}>
+          {
+            countries.map((country) => (
+              <li>
+                <button
+                  type="button"
+                  class="map-hub-item region-map-hub__country"
+                  data-focus-country={country.id}
+                >
+                  <span class="map-hub-item-name region-map-hub__list-name">
+                    <span class="region-map-hub__list-flag" aria-hidden="true">
+                      {country.flag}
+                    </span>
+                    {country.name}
+                  </span>
+                  <span class="region-map-hub__row-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
 
-  <div class="map-hub-index motion-reveal">
-    <h2 class="display section-heading">{heading}</h2>
-
-    <div data-hub-overview>
-      <p class="region-map-hub__hint">{en.region.mapHint}</p>
-      <ol class="map-hub-list" aria-label={heading}>
-        {
-          countries.map((country, index) => (
-            <li>
-              <button
-                type="button"
-                class="map-hub-item region-map-hub__country"
-                data-focus-country={country.id}
+      <div class="region-map-hub__detail" data-hub-detail hidden>
+        <aside class="region-map-hub__card" aria-live="polite">
+          <div
+            class="region-map-hub__cover text-photo-ink"
+            data-hub-cover-wrap
+            hidden
+          >
+            <img
+              class="region-map-hub__cover-img"
+              data-hub-cover
+              alt=""
+              width="960"
+              height="600"
+            />
+            <div
+              class="photo-scrim pointer-events-none absolute inset-0"
+              aria-hidden="true"
+            >
+            </div>
+            <div class="region-map-hub__cover-copy">
+              <h3
+                class="display photo-title-shadow region-map-hub__cover-name"
+                data-hub-title
               >
-                <span class="map-hub-num">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span class="region-map-hub__meta">
-                  <span class="map-hub-item-name region-map-hub__name">
-                    <span aria-hidden="true">{country.flag}</span>
-                    {country.shortName}
-                  </span>
-                  <span class="stamp region-map-hub__count">
-                    {en.region.placeCount(country.locationCount)}
-                  </span>
-                </span>
-              </button>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-
-    <div data-hub-detail hidden>
-      {
-        countries.map((country) => (
-          <div data-country-places={country.id} hidden>
-            <div class="region-map-hub__picked">
-              <p class="region-map-hub__picked-name">
-                <span aria-hidden="true">{country.flag}</span>
-                {country.shortName}
+              </h3>
+              <p
+                class="stamp region-map-hub__cover-location"
+                data-hub-cover-location
+                hidden
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="region-map-hub__cover-pin"
+                >
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                  ></path>
+                </svg>
+                <span data-hub-cover-location-text></span>
               </p>
+            </div>
+          </div>
+          <div class="region-map-hub__card-body">
+            <h3
+              class="region-map-hub__card-name display"
+              data-hub-title-fallback
+              hidden
+            >
+            </h3>
+            <div class="region-map-hub__copy" data-hub-copy-mount></div>
+            <div class="region-map-hub__actions">
               <button type="button" class="region-map-hub__back" data-hub-back>
                 <span aria-hidden="true">←</span>
-                <span>{backLabel}</span>
+                <span>{en.region.allCountries}</span>
               </button>
+              <a class="region-map-hub__explore" data-hub-explore href="#">
+                <span data-hub-explore-label></span>
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
-            {country.locations.length > 0 ? (
-              <ol
-                class="map-hub-list"
-                aria-label={en.region.placesIn(country.shortName)}
-              >
-                {country.locations.map((location, index) => (
-                  <li>
-                    <button
-                      type="button"
-                      class="map-hub-item"
-                      data-focus-location={location.qualifiedId}
-                    >
-                      <span class="map-hub-num">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span class="map-hub-item-name">{location.name}</span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p class="region-map-hub__hint">{en.region.noPlacesYet}</p>
-            )}
           </div>
-        ))
-      }
+        </aside>
+      </div>
     </div>
+
+    <div class="region-map-hub__map shadow-rest">
+      <LocationsMap
+        pins={locationPins}
+        basemap="adaptive"
+        fullBleed
+        scrollZoom={false}
+        fitMaxZoom={5}
+        height="clamp(28rem, 68svh, 44rem)"
+        labelMode="full"
+        locationLabelStyle="title"
+        neutralLocationStamp
+        locationOnlyPopup
+        focusLocations={MAP_FIXED_LOCATION_POPUP ? "popup" : "zoom"}
+        atlas={atlas}
+        regionHub
+        regionCountryNames={regionCountryNames}
+        regionCountryAccents={regionCountryAccents}
+        regionAccent={regionAccent}
+      />
+    </div>
+  </div>
+
+  <div data-hub-body-sources hidden>
+    {
+      countryCopy.map(({ id, hasBody, tagline, bodyHtml }) => (
+        <div data-hub-body-source={id} hidden>
+          {hasBody && bodyHtml ? (
+            <div class="prose-body region-map-hub__prose" set:html={bodyHtml} />
+          ) : (
+            <div class="prose-body region-map-hub__prose">
+              <p>{tagline}</p>
+            </div>
+          )}
+        </div>
+      ))
+    }
   </div>
 
   <script
@@ -138,72 +236,285 @@ const hubPayload = countries.map((country) => ({
   @import "../map/mapHubIndex.css";
 
   .region-map-hub {
-    display: grid;
-    gap: clamp(2rem, 4vw, 3rem);
     padding-block: clamp(3.5rem, 7vw, 7rem);
     scroll-margin-top: 7rem;
-
-    @media (width >= 960px) {
-      grid-template-columns: minmax(0, 11fr) minmax(16rem, 7fr);
-      gap: clamp(2rem, 5vw, 5rem);
-      align-items: start;
-    }
   }
 
-  .region-map-hub__map {
-    overflow: hidden;
-    border-radius: 8px;
-  }
-
-  .region-map-hub [data-hub-detail]:not([hidden]) {
+  .region-map-hub__panel-head {
     display: flex;
+    flex-shrink: 0;
     flex-direction: column;
+    gap: 0.45rem;
+    padding: clamp(1.25rem, 2.5vw, 1.65rem);
+    padding-block-end: clamp(0.85rem, 2vw, 1.1rem);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .region-map-hub__panel-title {
+    margin: 0;
+    font-size: clamp(2rem, 1.35rem + 2.2vw, 2.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .region-map-hub__stage[data-has-selection="1"] .region-map-hub__hint {
+    display: none;
   }
 
   .region-map-hub__hint {
-    max-width: 36ch;
+    max-width: 42ch;
     margin: 0;
     color: var(--color-ink-dim);
     font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.55;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-wrap: pretty;
   }
 
-  .region-map-hub__picked {
+  .region-map-hub__stage {
+    display: grid;
+    grid-template-columns: minmax(25rem, 34%) minmax(0, 1fr);
+    align-items: stretch;
+    width: 100%;
+    min-height: clamp(28rem, 68svh, 44rem);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-surface-2);
+    box-shadow: var(--shadow-rest);
+  }
+
+  .region-map-hub__sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border-inline-end: 1px solid var(--color-line);
+  }
+
+  .region-map-hub__overview:not([hidden]),
+  .region-map-hub__detail:not([hidden]) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .region-map-hub__list {
+    margin: 0;
+    border-top: 0;
+  }
+
+  .region-map-hub__country {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding-inline: clamp(1.25rem, 2.5vw, 1.65rem);
+    padding-block: 0.85rem;
+    transition:
+      background-color var(--duration-ui) var(--ease-cinema),
+      color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .region-map-hub__country:hover {
+    background: color-mix(in oklch, var(--color-ink) 5%, transparent);
+  }
+
+  .region-map-hub__list-name {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .region-map-hub__list-flag {
+    flex-shrink: 0;
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+
+  .region-map-hub__row-arrow {
+    color: var(--color-ink-faint);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1;
+    transform: translateX(0);
+    transition:
+      transform var(--duration-ui) var(--ease-cinema),
+      color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .region-map-hub__country:hover .region-map-hub__row-arrow,
+  .region-map-hub__country.is-active .region-map-hub__row-arrow {
+    color: var(--color-ink-dim);
+    transform: translateX(0.28rem);
+  }
+
+  .region-map-hub__country.is-active {
+    color: var(--color-ink);
+    background: color-mix(in oklch, var(--color-ink) 6%, transparent);
+  }
+
+  .region-map-hub__card {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .region-map-hub__cover {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .region-map-hub__cover[hidden] {
+    display: none;
+  }
+
+  .region-map-hub__cover-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    filter: var(--image-filter);
+  }
+
+  .region-map-hub__cover-copy {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: clamp(1rem, 2.5vw, 1.35rem);
+  }
+
+  .region-map-hub__cover-name {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    margin: 0 0 0.5rem;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: clamp(2.35rem, 3vw, 2.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
   }
 
-  .region-map-hub__picked-name {
+  .region-map-hub__cover-location {
     display: flex;
-    align-items: baseline;
-    gap: 0.4rem;
+    align-items: center;
+    gap: 0.35rem;
     margin: 0;
+    color: color-mix(in oklch, var(--color-photo-ink) 76%, transparent);
+  }
+
+  .region-map-hub__cover-pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+
+  .region-map-hub__card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.85rem;
+    min-height: 0;
+    padding: clamp(1.1rem, 2.5vw, 1.65rem);
+  }
+
+  .region-map-hub__copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .region-map-hub__prose {
+    max-width: none;
+    font-size: 1rem;
+  }
+
+  .region-map-hub__prose :where(p:first-child) {
+    margin-top: 0;
+  }
+
+  .region-map-hub__prose :where(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .region-map-hub__card-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: clamp(2.35rem, 3vw, 2.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .region-map-hub__flag {
+    flex-shrink: 0;
+    font-size: 0.72em;
+    line-height: 1;
+  }
+
+  .region-map-hub__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+  }
+
+  .region-map-hub__explore {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    padding: 0.7rem 1.15rem;
+    border-radius: 6px;
+    background: var(--color-accent);
+    color: var(--accent-ink);
     font-family: var(--font-sans);
-    font-size: 1.15rem;
-    font-weight: 500;
-    line-height: 1.3;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: filter var(--duration-ui) var(--ease-cinema);
+  }
+
+  .region-map-hub__explore:hover {
+    filter: brightness(1.06);
   }
 
   .region-map-hub__back {
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    margin-inline-start: auto;
-    padding: 0;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0;
     border: 0;
     background: transparent;
     color: var(--color-ink-faint);
     cursor: pointer;
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     line-height: 1.3;
-    text-align: end;
-    white-space: nowrap;
+    text-transform: uppercase;
     transition: color var(--duration-ui) var(--ease-cinema);
   }
 
@@ -211,26 +522,33 @@ const hubPayload = countries.map((country) => ({
     color: var(--color-ink);
   }
 
-  .region-map-hub__name {
-    display: flex;
-    align-items: baseline;
-    gap: 0.4rem;
+  .region-map-hub__map {
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
-  .region-map-hub__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.35rem 1rem;
+  .locations-map-shell .locations-map--region-hub {
+    cursor: grab;
   }
 
-  .region-map-hub__count {
-    color: var(--color-ink-faint);
+  .locations-map-shell .locations-map--region-hub.leaflet-dragging {
+    cursor: grabbing;
   }
 
-  .region-map-hub__country.is-active .region-map-hub__count {
-    color: var(--color-accent-ink);
+  @media (width < 720px) {
+    .region-map-hub__stage {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(18rem, 1fr);
+    }
+
+    .region-map-hub__sidebar {
+      max-height: min(52svh, 28rem);
+      border-inline-end: 0;
+      border-bottom: 1px solid var(--color-line);
+    }
   }
 </style>
 
@@ -238,8 +556,14 @@ const hubPayload = countries.map((country) => ({
   type HubCountry = {
     id: string;
     name: string;
-    pinIds: string[];
+    flag: string;
+    href: string;
+    exploreLabel: string;
+    coverLocation?: string;
+    coverSrc?: string;
+    coverSrcSet?: string;
     rings: [number, number][][];
+    pinIds: string[];
     maxZoom: number;
     zoomOffset: number;
   };
@@ -251,70 +575,157 @@ const hubPayload = countries.map((country) => ({
         hub.dataset.linked = "1";
 
         const mapShell = hub.querySelector<HTMLElement>("[data-locations-map]");
+        const stage = hub.querySelector<HTMLElement>(".region-map-hub__stage");
+        const overview = hub.querySelector<HTMLElement>("[data-hub-overview]");
+        const detail = hub.querySelector<HTMLElement>("[data-hub-detail]");
+        const coverWrap = hub.querySelector<HTMLElement>(
+          "[data-hub-cover-wrap]",
+        );
+        const coverImg =
+          hub.querySelector<HTMLImageElement>("[data-hub-cover]");
+        const titleEl = hub.querySelector<HTMLElement>("[data-hub-title]");
+        const titleFallback = hub.querySelector<HTMLElement>(
+          "[data-hub-title-fallback]",
+        );
+        const coverLocationRow = hub.querySelector<HTMLElement>(
+          "[data-hub-cover-location]",
+        );
+        const coverLocationText = hub.querySelector<HTMLElement>(
+          "[data-hub-cover-location-text]",
+        );
+        const copyMount = hub.querySelector<HTMLElement>(
+          "[data-hub-copy-mount]",
+        );
+        const bodySources = hub.querySelector<HTMLElement>(
+          "[data-hub-body-sources]",
+        );
+        const exploreLink =
+          hub.querySelector<HTMLAnchorElement>("[data-hub-explore]");
+        const exploreLabel = hub.querySelector<HTMLElement>(
+          "[data-hub-explore-label]",
+        );
         const payloadEl =
           hub.querySelector<HTMLScriptElement>("[data-hub-payload]");
-        if (!mapShell || !payloadEl?.textContent) return;
+        if (
+          !mapShell ||
+          !payloadEl?.textContent ||
+          !stage ||
+          !overview ||
+          !detail ||
+          !coverWrap ||
+          !coverImg ||
+          !titleEl ||
+          !titleFallback ||
+          !coverLocationRow ||
+          !coverLocationText ||
+          !copyMount ||
+          !bodySources ||
+          !exploreLink ||
+          !exploreLabel
+        )
+          return;
 
         const countries = JSON.parse(payloadEl.textContent) as HubCountry[];
         const countryById = new Map(
           countries.map((country) => [country.id, country]),
         );
-
-        const overview = hub.querySelector<HTMLElement>("[data-hub-overview]");
-        const detail = hub.querySelector<HTMLElement>("[data-hub-detail]");
-        const backButtons = [
-          ...hub.querySelectorAll<HTMLButtonElement>("[data-hub-back]"),
+        const countryByName = new Map(
+          countries.map((country) => [country.name, country]),
+        );
+        const countryButtons = [
+          ...hub.querySelectorAll<HTMLButtonElement>("[data-focus-country]"),
         ];
-        const placePanels = [
-          ...hub.querySelectorAll<HTMLElement>("[data-country-places]"),
-        ];
-        const placeButtons = [
-          ...hub.querySelectorAll<HTMLButtonElement>("[data-focus-location]"),
-        ];
+        const backButton =
+          hub.querySelector<HTMLButtonElement>("[data-hub-back]");
 
         let selected: string | null = null;
 
-        const setActivePlace = (id: string | null): void => {
-          for (const button of placeButtons) {
-            const isActive =
-              id !== null && button.dataset.focusLocation === id;
-            button.classList.toggle("is-active", isActive);
-            button.classList.toggle("is-active-place", isActive);
-          }
-        };
-
-        const showDetail = (countryId: string): void => {
-          overview?.setAttribute("hidden", "");
-          detail?.removeAttribute("hidden");
-          for (const panel of placePanels) {
-            panel.toggleAttribute(
-              "hidden",
-              panel.dataset.countryPlaces !== countryId,
+        const setActiveListItem = (id: string | null): void => {
+          for (const button of countryButtons) {
+            button.classList.toggle(
+              "is-active",
+              id !== null && button.dataset.focusCountry === id,
             );
           }
         };
 
-        const showOverview = (): void => {
-          detail?.setAttribute("hidden", "");
-          overview?.removeAttribute("hidden");
-          for (const panel of placePanels) {
-            panel.setAttribute("hidden", "");
+        const fillTitle = (el: HTMLElement, country: HubCountry): void => {
+          el.textContent = "";
+          const flag = document.createElement("span");
+          flag.className = "region-map-hub__flag";
+          flag.setAttribute("aria-hidden", "true");
+          flag.textContent = country.flag;
+          el.append(flag, document.createTextNode(country.name));
+        };
+
+        const fillCopy = (id: string): void => {
+          const source = bodySources.querySelector<HTMLElement>(
+            `[data-hub-body-source="${id}"]`,
+          );
+          copyMount.replaceChildren();
+          if (!source) return;
+          for (const node of source.childNodes) {
+            copyMount.append(node.cloneNode(true));
           }
-          setActivePlace(null);
+        };
+
+        const fillDetail = (country: HubCountry): void => {
+          fillTitle(titleEl, country);
+          fillTitle(titleFallback, country);
+          fillCopy(country.id);
+
+          exploreLink.href = country.href;
+          exploreLabel.textContent = country.exploreLabel;
+
+          if (country.coverLocation) {
+            coverLocationText.textContent = country.coverLocation;
+            coverLocationRow.removeAttribute("hidden");
+          } else {
+            coverLocationText.textContent = "";
+            coverLocationRow.setAttribute("hidden", "");
+          }
+
+          if (country.coverSrc) {
+            coverImg.src = country.coverSrc;
+            if (country.coverSrcSet) {
+              coverImg.srcset = country.coverSrcSet;
+            } else {
+              coverImg.removeAttribute("srcset");
+            }
+            coverWrap.removeAttribute("hidden");
+            titleFallback.setAttribute("hidden", "");
+          } else {
+            coverImg.removeAttribute("src");
+            coverImg.removeAttribute("srcset");
+            coverWrap.setAttribute("hidden", "");
+            titleFallback.removeAttribute("hidden");
+          }
+        };
+
+        const showOverview = (): void => {
+          overview.removeAttribute("hidden");
+          detail.setAttribute("hidden", "");
+          stage.dataset.hasSelection = "";
+          setActiveListItem(null);
+        };
+
+        const showDetail = (country: HubCountry): void => {
+          fillDetail(country);
+          overview.setAttribute("hidden", "");
+          detail.removeAttribute("hidden");
+          stage.dataset.hasSelection = "1";
+          setActiveListItem(country.id);
         };
 
         const highlightCountry = (
           country: HubCountry | undefined,
           fit: boolean,
         ): void => {
-          const rings = country?.rings ?? [];
-          const pinIds = country?.pinIds ?? [];
-
           mapShell.dispatchEvent(
             new CustomEvent("locations-map:highlight", {
               detail: {
-                rings,
-                ids: pinIds,
+                rings: country?.rings ?? [],
+                ids: country?.pinIds ?? [],
                 fit,
                 maxZoom: country?.maxZoom,
                 zoomOffset: country?.zoomOffset ?? 0,
@@ -324,59 +735,57 @@ const hubPayload = countries.map((country) => ({
           );
         };
 
+        const previewCountry = (country: HubCountry | null): void => {
+          mapShell.dispatchEvent(
+            new CustomEvent("locations-map:preview", {
+              detail: { focus: country?.name ?? null },
+            }),
+          );
+        };
+
         const selectCountry = (id: string | null): void => {
+          if (id && id === selected) return;
+
           selected = id;
 
           if (!id) {
+            previewCountry(null);
             showOverview();
             mapShell.dispatchEvent(new CustomEvent("locations-map:reset"));
             return;
           }
 
-          showDetail(id);
-          highlightCountry(countryById.get(id), true);
+          const country = countryById.get(id);
+          if (!country) return;
+
+          showDetail(country);
+          highlightCountry(country, true);
         };
 
-        mapShell.addEventListener("locations-map:focused", ((
-          event: CustomEvent<{ id: string | null }>,
+        mapShell.addEventListener("locations-map:country-select", ((
+          event: CustomEvent<{ name: string }>,
         ) => {
-          const locationId = event.detail.id;
-          if (!locationId) {
-            setActivePlace(null);
-            return;
-          }
-
-          const slash = locationId.indexOf("/");
-          const countryId = slash > 0 ? locationId.slice(0, slash) : locationId;
-
-          if (countryId !== selected) {
-            selectCountry(countryId);
-          }
-          setActivePlace(locationId);
+          const country = countryByName.get(event.detail.name);
+          if (!country) return;
+          selectCountry(country.id);
         }) as EventListener);
 
-        for (const button of hub.querySelectorAll<HTMLButtonElement>(
-          "[data-focus-country]",
-        )) {
+        for (const button of countryButtons) {
           button.addEventListener("click", () => {
             selectCountry(button.dataset.focusCountry ?? null);
           });
-        }
-
-        for (const button of placeButtons) {
-          button.addEventListener("click", () => {
-            const id = button.dataset.focusLocation;
-            if (!id) return;
-            setActivePlace(id);
-            mapShell.dispatchEvent(
-              new CustomEvent("locations-map:focus", { detail: { id } }),
-            );
+          button.addEventListener("mouseenter", () => {
+            if (selected) return;
+            const country = countryById.get(button.dataset.focusCountry ?? "");
+            if (country) previewCountry(country);
+          });
+          button.addEventListener("mouseleave", () => {
+            if (selected) return;
+            previewCountry(null);
           });
         }
 
-        for (const button of backButtons) {
-          button.addEventListener("click", () => selectCountry(null));
-        }
+        backButton?.addEventListener("click", () => selectCountry(null));
       });
   }
 

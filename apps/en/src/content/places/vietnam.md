@@ -5,7 +5,7 @@ region: asia
 tagline: Rice fields, sunny beaches and bustling cities.
 showMap: true
 cover: ../../assets/vietnam/buddha-mekong.jpg
-coverLocation: vietnam/mekong-delta
+coverLocation: Vinh Tràng Temple, My Tho
 thumbnail: ../../assets/vietnam/hoi-an-boat.JPG
 locations:
   - id: hanoi

@@ -2,7 +2,6 @@ import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
 import type { Accent } from "@shared/lib/accent";
 import { articleHref, articleKicker } from "~/lib/articles";
-import { itineraryDayCount } from "~/lib/itinerary";
 import { countryLine, placeShortName } from "~/lib/articlePlaces";
 import {
   articlesForRegion,
@@ -19,18 +18,78 @@ import { atlasForView } from "~/lib/routeAtlas";
 import { qualifiedLocationId } from "~/lib/locations";
 import { buildLocationMapPins, type LocationMapPin } from "~/lib/mapPinData";
 import type { RouteAtlas } from "~/lib/routeMap";
-import { placeThumbnailForCountry } from "~/lib/placeCover";
+import {
+  placeCoverForCountry,
+  placeThumbnailForCountry,
+} from "~/lib/placeCover";
 import { getRegion } from "~/lib/regions";
 
-export type RegionItinerary = {
-  id: string;
+const REGION_DOSSIER_COUNT = 3;
+
+export type RegionDossierItem = {
   href: string;
   title: string;
   summary: string;
   hero: ImageMetadata;
-  days: number;
-  countries: { id: string; name: string; flag: string }[];
+  kicker: string;
+  meta: string;
 };
+
+const byPublishedDesc = (a: AnyEnArticle, b: AnyEnArticle): number =>
+  b.data.published.getTime() - a.data.published.getTime();
+
+const articleKey = (a: AnyEnArticle): string => `${a.kind}:${a.id}`;
+
+async function dossierFromArticle(
+  a: AnyEnArticle,
+  placeById: Map<string, CollectionEntry<"places">>,
+  fallbackAccent: Accent,
+): Promise<RegionDossierItem> {
+  if (a.kind === "itinerary") {
+    const countries = a.data.country
+      .map((ref) => placeById.get(ref.id))
+      .filter((p): p is CollectionEntry<"places"> => Boolean(p))
+      .map((p) => ({ id: p.id, name: p.data.name, flag: p.data.flag }));
+    return {
+      href: articleHref(a),
+      title: a.data.title,
+      summary: a.data.summary,
+      hero: a.data.hero,
+      kicker: articleKicker(a),
+      meta: countries.map((c) => `${c.flag} ${c.name}`).join(" · "),
+    };
+  }
+  const note = await regionNoteFromArticle(a, fallbackAccent);
+  return {
+    href: note.href,
+    title: a.data.title,
+    summary: a.data.summary,
+    hero: a.data.hero,
+    kicker: note.kicker,
+    meta: note.countryMeta,
+  };
+}
+
+function pickDossierArticles(articles: AnyEnArticle[]): AnyEnArticle[] {
+  const picked: AnyEnArticle[] = [];
+  const seen = new Set<string>();
+
+  const take = (pool: AnyEnArticle[]): void => {
+    for (const a of pool) {
+      if (picked.length >= REGION_DOSSIER_COUNT) return;
+      const key = articleKey(a);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      picked.push(a);
+    }
+  };
+
+  take(articles.filter((a) => a.kind === "itinerary").sort(byPublishedDesc));
+  take(articles.filter((a) => a.kind === "story").sort(byPublishedDesc));
+  take(articles.filter((a) => a.kind === "spotlight").sort(byPublishedDesc));
+
+  return picked;
+}
 
 export type RegionNote = {
   a: AnyEnArticle;
@@ -70,6 +129,8 @@ export type RegionCountry = {
   shortName: string;
   flag: string;
   tagline: string;
+  accent: Accent;
+  cover?: ImageMetadata;
   thumbnail?: ImageMetadata;
   locationCount: number;
   locations: RegionCountryLocation[];
@@ -87,8 +148,7 @@ export type RegionPageData = {
   order: number;
   images: ImageMetadata[];
   countries: RegionCountry[];
-  itineraries: RegionItinerary[];
-  featuredStory?: RegionNote;
+  dossier: RegionDossierItem[];
   notes: RegionNote[];
   locationPins: LocationMapPin[];
   atlas?: RouteAtlas;
@@ -108,32 +168,17 @@ export async function loadRegionPage(
   const articles = articlesForRegion(feed, region.id, regionMap);
   const accent = region.data.accent;
 
-  const itineraryEntries = articles.filter(
-    (a): a is AnyEnArticle & { kind: "itinerary" } => a.kind === "itinerary",
-  );
-  const latestStory = articles
-    .filter((a): a is AnyEnArticle & { kind: "story" } => a.kind === "story")
-    .sort((a, b) => b.data.published.getTime() - a.data.published.getTime())[0];
+  const dossierPicks = pickDossierArticles(articles);
+  const dossierKeys = new Set(dossierPicks.map(articleKey));
 
-  const noteEntries = articles.filter(
-    (a) => a.kind !== "itinerary" && a.id !== latestStory?.id,
-  );
+  const noteEntries = articles
+    .filter((a) => !dossierKeys.has(articleKey(a)))
+    .sort(byPublishedDesc);
 
-  const itineraries: RegionItinerary[] = itineraryEntries.map((a) => ({
-    id: a.id,
-    href: articleHref(a),
-    title: a.data.title,
-    summary: a.data.summary,
-    hero: a.data.hero,
-    days: itineraryDayCount(a.data.bases),
-    countries: a.data.country
-      .map((ref) => placeById.get(ref.id))
-      .filter((p): p is CollectionEntry<"places"> => Boolean(p))
-      .map((p) => ({ id: p.id, name: p.data.name, flag: p.data.flag })),
-  }));
-
-  const [featuredStory, notes] = await Promise.all([
-    latestStory ? regionNoteFromArticle(latestStory, accent) : undefined,
+  const [dossier, notes] = await Promise.all([
+    Promise.all(
+      dossierPicks.map((a) => dossierFromArticle(a, placeById, accent)),
+    ),
     Promise.all(noteEntries.map((a) => regionNoteFromArticle(a, accent))),
   ]);
 
@@ -177,6 +222,8 @@ export async function loadRegionPage(
     shortName: placeShortName(country),
     flag: country.data.flag,
     tagline: country.data.tagline,
+    accent: country.data.accent ?? accent,
+    cover: placeCoverForCountry(country, feed),
     thumbnail: placeThumbnailForCountry(country, feed),
     locationCount: country.data.locations.length,
     locations: country.data.locations.map((loc) => ({
@@ -189,15 +236,8 @@ export async function loadRegionPage(
     noteCount: noteCountByCountry.get(country.id) ?? 0,
   }));
 
-  const countryViews = countries.map((country) => {
-    const points: [number, number][] = country.rings.flat();
-    for (const pin of locationPins) {
-      if (pin.countryId === country.id) points.push([pin.lat, pin.lng]);
-    }
-    return points;
-  });
+  const countryViews = countries.map((country) => country.rings.flat());
   const atlasPoints = countryViews.flat();
-  for (const pin of locationPins) atlasPoints.push([pin.lat, pin.lng]);
 
   return {
     region,
@@ -207,8 +247,7 @@ export async function loadRegionPage(
     order: region.data.order,
     images: region.data.images,
     countries,
-    itineraries,
-    featuredStory,
+    dossier,
     notes,
     locationPins,
     atlas: atlasPoints.length

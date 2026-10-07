@@ -5,6 +5,7 @@ import type { CountryShape } from "~/lib/countryShape";
 import type { Basemap } from "~/lib/mapStyles";
 import { tileLayerOptions } from "~/lib/mapStyles";
 import type { RouteAtlas, RouteMap } from "~/lib/routeMap";
+import { accentVar, type Accent } from "@shared/lib/accent";
 
 export interface Props {
   pins: LocationMapPin[];
@@ -36,6 +37,14 @@ export interface Props {
   atlas?: RouteAtlas;
   /** Country name kept light. Every other country sinks. */
   atlasFocus?: string;
+  /** Region hub: clickable countries, pill labels, accent tint on hover/focus. */
+  regionHub?: boolean;
+  /** Natural Earth names for countries in this region (required when `regionHub`). */
+  regionCountryNames?: string[];
+  /** Chapter accent per Natural Earth country name (region hub map tint). */
+  regionCountryAccents?: Partial<Record<string, Accent>>;
+  /** Region chapter accent (default map tint when `regionHub`). */
+  regionAccent?: Accent;
 }
 
 const {
@@ -56,7 +65,14 @@ const {
   route,
   atlas,
   atlasFocus,
+  regionHub = false,
+  regionCountryNames = [],
+  regionCountryAccents = {},
+  regionAccent,
 } = Astro.props;
+
+const regionHubAccentVar =
+  regionHub && regionAccent ? accentVar(regionAccent) : undefined;
 
 const payload = {
   pins,
@@ -73,6 +89,10 @@ const payload = {
   route: route ?? null,
   atlas: atlas ?? route?.atlas ?? null,
   atlasFocus: atlasFocus ?? null,
+  regionHub,
+  regionCountryNames,
+  regionCountryAccents,
+  regionAccent: regionAccent ?? null,
 };
 ---
 
@@ -96,9 +116,10 @@ const payload = {
       basemap === "paper" && "locations-map--paper",
       (atlas ?? route?.atlas) && "locations-map--atlas",
       atlasFocus && "locations-map--atlas-focus",
+      regionHub && "locations-map--region-hub",
       !fullBleed && "rounded-lg border border-line shadow-rest",
     ]}
-    style={`--map-height: ${height}`}
+    style={`--map-height: ${height}${regionHubAccentVar ? `; --region-hub-accent: ${regionHubAccentVar}` : ""}`}
     role="presentation"
   >
   </div>
@@ -138,6 +159,11 @@ const payload = {
     --color-line-strong: oklch(0.75 0.012 95);
     --color-map-paper: oklch(0.97 0.007 95);
     color-scheme: light;
+    /* Matches ACCENT_PIN_COLOR in mapStyles.ts */
+    --pin-jade: #2f8b57;
+    --pin-saffron: #b07d16;
+    --pin-terracotta: #c0552c;
+    --pin-cobalt: #3d6f8c;
   }
 
   .locations-map--film,
@@ -151,6 +177,11 @@ const payload = {
     --color-line-strong: oklch(0.44 0.016 55);
     --color-map-paper: oklch(0.21 0.013 55);
     color-scheme: dark;
+    /* Matches ACCENT_PIN_COLOR_FILM in mapStyles.ts */
+    --pin-jade: #5fd394;
+    --pin-saffron: #ffc93f;
+    --pin-terracotta: #ff9257;
+    --pin-cobalt: #79b6e6;
   }
 
   .locations-map--film,
@@ -246,6 +277,122 @@ const payload = {
     opacity: 1;
   }
 
+  /* Region hub: theme-aware atlas, pannable, labels open a country. */
+  .locations-map-shell .locations-map--region-hub {
+    cursor: grab;
+  }
+
+  .locations-map-shell .locations-map--region-hub.leaflet-dragging,
+  .locations-map-shell .locations-map--region-hub.leaflet-dragging
+    :global(.atlas-land) {
+    cursor: grabbing;
+  }
+
+  .locations-map--region-hub.locations-map--paper,
+  :root[data-theme="light"] .locations-map--region-hub.locations-map--adaptive {
+    --region-hub-pill-bg: oklch(0.2 0.02 55);
+    --region-hub-pill-ink: oklch(0.98 0.006 95);
+  }
+
+  .locations-map--region-hub.locations-map--film,
+  :root[data-theme="dark"] .locations-map--region-hub.locations-map--adaptive {
+    --region-hub-pill-bg: oklch(0.08 0.004 70);
+    --region-hub-pill-ink: oklch(0.92 0.01 85);
+  }
+
+  .locations-map--region-hub :global(.atlas-land.is-region) {
+    fill: var(--atlas-land);
+    cursor: grab;
+  }
+
+  .locations-map--region-hub.locations-map--atlas-focus
+    :global(.atlas-land:not(.is-region)) {
+    fill: var(--atlas-land-dim);
+  }
+
+  /* srgb: oklch hue interpolation skews chapter accents toward orange on neutral land. */
+  .locations-map--region-hub.locations-map--paper
+    :global(.atlas-land.is-region.is-preview),
+  :root[data-theme="light"]
+    .locations-map--region-hub.locations-map--adaptive
+    :global(.atlas-land.is-region.is-preview) {
+    fill: var(--region-hub-accent);
+    stroke: var(--atlas-border);
+  }
+
+  .locations-map--region-hub.locations-map--paper.locations-map--atlas-focus
+    :global(.atlas-land.is-region.is-focus),
+  :root[data-theme="light"]
+    .locations-map--region-hub.locations-map--adaptive.locations-map--atlas-focus
+    :global(.atlas-land.is-region.is-focus) {
+    fill: var(--region-hub-accent);
+    stroke: var(--atlas-focus-edge);
+  }
+
+  .locations-map--region-hub.locations-map--film
+    :global(.atlas-land.is-region.is-preview),
+  :root[data-theme="dark"]
+    .locations-map--region-hub.locations-map--adaptive
+    :global(.atlas-land.is-region.is-preview) {
+    fill: var(--region-hub-accent);
+    stroke: var(--atlas-border);
+  }
+
+  .locations-map--region-hub.locations-map--film.locations-map--atlas-focus
+    :global(.atlas-land.is-region.is-focus),
+  :root[data-theme="dark"]
+    .locations-map--region-hub.locations-map--adaptive.locations-map--atlas-focus
+    :global(.atlas-land.is-region.is-focus) {
+    fill: color-mix(in srgb, var(--region-hub-accent) 15%, var(--atlas-land));
+    stroke: var(--region-hub-accent);
+  }
+
+  .locations-map--region-hub :global(.atlas-label-wrap) {
+    pointer-events: auto;
+  }
+
+  .locations-map--region-hub :global(button.atlas-label--pill) {
+    display: inline-block;
+    margin: 0;
+    padding: 3px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--region-hub-pill-bg);
+    color: var(--region-hub-pill-ink);
+    font: inherit;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 12px;
+    cursor: pointer;
+  }
+
+  .locations-map--region-hub :global(button.atlas-label--pill:hover:not(.is-focus)) {
+    background: var(--region-hub-pill-bg);
+    color: var(--region-hub-accent);
+  }
+
+  .locations-map--region-hub :global(button.atlas-label--pill:focus-visible) {
+    outline: 2px solid var(--region-hub-pill-ink);
+    outline-offset: 2px;
+  }
+
+  .locations-map--region-hub.locations-map--atlas-focus :global(.atlas-label) {
+    opacity: 0.35;
+  }
+
+  .locations-map--region-hub.locations-map--atlas-focus
+    :global(.atlas-label.atlas-label--pill.is-focus),
+  .locations-map--region-hub.locations-map--atlas-focus
+    :global(.atlas-label.atlas-label--pill.is-preview) {
+    background: var(--region-hub-pill-bg);
+    color: var(--region-hub-pill-ink);
+    opacity: 1;
+  }
+
+  .locations-map--region-hub :global(.atlas-label--pill:not(.is-focus)) {
+    opacity: 1;
+  }
+
   .locations-map :global(.leaflet-control-attribution) {
     background: color-mix(in oklch, var(--color-surface-2) 88%, transparent);
     color: var(--color-ink-faint);
@@ -287,6 +434,22 @@ const payload = {
   .locations-map :global(.article-pin) {
     width: 0;
     height: 0;
+  }
+
+  .locations-map :global(.article-pin__badge[data-accent="jade"]) {
+    --pin-color: var(--pin-jade);
+  }
+
+  .locations-map :global(.article-pin__badge[data-accent="saffron"]) {
+    --pin-color: var(--pin-saffron);
+  }
+
+  .locations-map :global(.article-pin__badge[data-accent="terracotta"]) {
+    --pin-color: var(--pin-terracotta);
+  }
+
+  .locations-map :global(.article-pin__badge[data-accent="cobalt"]) {
+    --pin-color: var(--pin-cobalt);
   }
 
   .locations-map :global(.article-pin__badge) {
@@ -578,7 +741,6 @@ const payload = {
 <script>
   import L from "leaflet";
   import {
-    ACCENT_PIN_COLOR_BY_BASEMAP,
     MAP_TILES_BY_BASEMAP,
     mapPopAccentColor,
     resolveBasemap,
@@ -613,6 +775,12 @@ const payload = {
     route: RouteMap | null;
     atlas: RouteAtlas | null;
     atlasFocus: string | null;
+    regionHub: boolean;
+    regionCountryNames: string[];
+    regionCountryAccents: Partial<
+      Record<string, "jade" | "saffron" | "terracotta" | "cobalt">
+    >;
+    regionAccent: "jade" | "saffron" | "terracotta" | "cobalt" | null;
   };
 
   const PIN_GLYPH =
@@ -716,25 +884,25 @@ const payload = {
         let resolvedBasemap = resolveBasemap(payload.basemap);
         let tiles: MapTileConfig = MAP_TILES_BY_BASEMAP[resolvedBasemap];
         let viewMaxZoom = usesAtlas ? ATLAS_MAX_ZOOM : tiles.maxZoom;
-        let pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[resolvedBasemap];
-        const colorOf = (pin: LocationMapPin): string => pinPalette[pin.accent];
 
         let paintRoute = (): void => {};
         let atlasLayer: RouteAtlasLayer | null = null;
 
+        const staticMap = framed || payload.regionHub;
+
         const map = L.map(mapEl, {
-          scrollWheelZoom: framed ? false : payload.scrollZoom,
+          scrollWheelZoom: staticMap ? false : payload.scrollZoom,
           attributionControl: true,
           maxZoom: viewMaxZoom,
           // Whole-number snap floors the fit and zooms out until the atlas
           // clip shows inside the card. Atlas maps keep the padded fit.
-          zoomSnap: framed || usesAtlas ? 0 : 1,
+          zoomSnap: staticMap || usesAtlas ? 0 : 1,
           zoomControl: !framed,
           dragging: !framed,
-          doubleClickZoom: !framed,
-          boxZoom: !framed,
+          doubleClickZoom: !staticMap,
+          boxZoom: !staticMap,
           keyboard: !framed,
-          touchZoom: !framed,
+          touchZoom: !staticMap,
         });
 
         let baseTileLayer: L.TileLayer | null =
@@ -785,9 +953,22 @@ const payload = {
           activeMarker?.getElement()?.classList.add("is-active");
         };
 
+        const setRegionHubPins = (ids: readonly string[] | null): void => {
+          if (!payload.regionHub) return;
+          const visible = ids ? new Set(ids) : null;
+          for (const [locationId, marker] of markersById) {
+            const show = visible?.has(locationId) ?? false;
+            if (show) {
+              if (!map.hasLayer(marker)) marker.addTo(map);
+            } else if (map.hasLayer(marker)) {
+              marker.remove();
+            }
+          }
+        };
+
         for (const pin of payload.pins) {
           const latlng: L.LatLngExpression = [pin.lat, pin.lng];
-          bounds.extend(latlng);
+          if (!payload.regionHub) bounds.extend(latlng);
           const label = pinLabel(pin, payload.labelMode);
 
           const marker = L.marker(latlng, {
@@ -796,12 +977,13 @@ const payload = {
             keyboard: true,
             icon: L.divIcon({
               className: "article-pin",
-              html: `<span class="article-pin__badge" style="--pin-color: ${colorOf(pin)}">${PIN_GLYPH}</span>`,
+              html: `<span class="article-pin__badge" data-accent="${pin.accent}">${PIN_GLYPH}</span>`,
               iconSize: [0, 0],
               iconAnchor: [0, 0],
               popupAnchor: [0, -14],
             }),
-          }).addTo(map);
+          });
+          if (!payload.regionHub) marker.addTo(map);
 
           markersById.set(pin.locationId, marker);
 
@@ -917,7 +1099,30 @@ const payload = {
           maxZoom: number,
           zoomOffset = 0,
           animate = false,
+          fitPadding?: {
+            topLeft?: L.PointExpression;
+            bottomRight?: L.PointExpression;
+          },
         ): void => {
+          if (fitPadding) {
+            cancelViewAnimation();
+            const padded = countryBounds.pad(0.12);
+            const cappedMax = Math.min(maxZoom + zoomOffset, viewMaxZoom);
+            map.flyToBounds(padded, {
+              paddingTopLeft: fitPadding.topLeft ?? [24, 24],
+              paddingBottomRight: fitPadding.bottomRight ?? [24, 24],
+              maxZoom: cappedMax,
+              animate,
+              duration: animate ? 0.7 : 0,
+            });
+            if (animate) {
+              map.once("moveend", () => syncFocusBaseline(maxZoom));
+            } else {
+              syncFocusBaseline(maxZoom);
+            }
+            return;
+          }
+
           const { center, zoom } = targetViewForBounds(
             countryBounds,
             maxZoom,
@@ -962,7 +1167,50 @@ const payload = {
         }
 
         if (payload.atlas) {
-          atlasLayer = mountRouteAtlas(map, payload.atlas, mapEl);
+          const regionNames = payload.regionHub
+            ? payload.regionCountryNames
+            : [];
+          atlasLayer = mountRouteAtlas(map, payload.atlas, mapEl, {
+            regionCountryNames: regionNames,
+            onSelect:
+              payload.regionHub && regionNames.length
+                ? (name) => {
+                    shell.dispatchEvent(
+                      new CustomEvent("locations-map:country-select", {
+                        detail: { name },
+                      }),
+                    );
+                  }
+                : undefined,
+          });
+          if (payload.regionHub && atlasLayer) {
+            const layer = atlasLayer;
+            let focusCountry: string | null = null;
+
+            const applyRegionHubAccent = (countryName: string | null): void => {
+              const chapter =
+                (countryName && payload.regionCountryAccents[countryName]) ||
+                payload.regionAccent;
+              if (!chapter) return;
+              mapEl.style.setProperty(
+                "--region-hub-accent",
+                `var(--color-${chapter})`,
+              );
+            };
+
+            const setFocus = layer.setFocus.bind(layer);
+            layer.setFocus = (name) => {
+              focusCountry = name;
+              setFocus(name);
+              applyRegionHubAccent(name);
+            };
+
+            const setPreview = layer.setPreview.bind(layer);
+            layer.setPreview = (name) => {
+              setPreview(name);
+              applyRegionHubAccent(name ?? focusCountry);
+            };
+          }
           if (payload.atlasFocus) atlasLayer.setFocus(payload.atlasFocus);
           atlasLayer.setVisible(true);
         }
@@ -975,6 +1223,25 @@ const payload = {
             atlasLayer,
           );
           paintRoute = () => overlay.paint();
+        } else if (bounds.isValid() && !payload.regionHub) {
+          frameBounds(bounds, payload.fitMaxZoom, payload.fitZoomOffset);
+        } else if (payload.regionHub && payload.atlas) {
+          const regionBounds = L.latLngBounds([]);
+          for (const country of payload.atlas.countries) {
+            if (!payload.regionCountryNames.includes(country.name)) continue;
+            for (const ring of country.rings) {
+              for (const point of ring) regionBounds.extend(point);
+            }
+          }
+          if (regionBounds.isValid()) {
+            frameBounds(
+              regionBounds,
+              payload.fitMaxZoom,
+              payload.fitZoomOffset,
+            );
+          } else {
+            map.setView([20, 10], 2);
+          }
         } else if (bounds.isValid()) {
           frameBounds(bounds, payload.fitMaxZoom, payload.fitZoomOffset);
         } else {
@@ -1002,6 +1269,7 @@ const payload = {
             });
           }
           for (const marker of markersById.values()) {
+            if (!map.hasLayer(marker)) continue;
             const pt = map.latLngToContainerPoint(marker.getLatLng());
             boxes.push({
               x1: pt.x - 18,
@@ -1047,6 +1315,10 @@ const payload = {
             maxZoom?: number;
             zoomOffset?: number;
             focus?: string | null;
+            fitPadding?: {
+              topLeft?: L.PointExpression;
+              bottomRight?: L.PointExpression;
+            };
           }>,
         ) => {
           const nextRings = event.detail.rings ?? [];
@@ -1054,6 +1326,10 @@ const payload = {
             atlasLayer.setFocus(event.detail.focus ?? null);
           } else {
             highlightController?.setRings(nextRings);
+          }
+
+          if (payload.regionHub) {
+            setRegionHubPins(event.detail.ids ?? null);
           }
 
           if (!event.detail.fit) return;
@@ -1073,36 +1349,32 @@ const payload = {
             event.detail.maxZoom ?? payload.fitMaxZoom,
             event.detail.zoomOffset ?? 0,
             true,
+            event.detail.fitPadding,
           );
+        }) as EventListener);
+
+        shell.addEventListener("locations-map:preview", ((
+          event: CustomEvent<{ focus?: string | null }>,
+        ) => {
+          atlasLayer?.setPreview(event.detail.focus ?? null);
         }) as EventListener);
 
         shell.addEventListener("locations-map:reset", () => {
           map.closePopup();
           setActiveMarker(null);
+          if (payload.regionHub) setRegionHubPins(null);
           animateToView(overviewCenter, overviewZoom, 0.7, () => {
             highlightController?.setRings([]);
+            atlasLayer?.setPreview(null);
             atlasLayer?.setFocus(null);
             focusFromZoom = overviewZoom;
             focusFitMaxZoom = payload.fitMaxZoom;
           });
         });
 
-        const updatePinColors = (): void => {
-          for (const pin of payload.pins) {
-            const marker = markersById.get(pin.locationId);
-            const badge = marker
-              ?.getElement()
-              ?.querySelector<HTMLElement>(".article-pin__badge");
-            if (badge) {
-              badge.style.setProperty("--pin-color", colorOf(pin));
-            }
-          }
-        };
-
         const applyBasemap = (next: ResolvedBasemap): void => {
           if (next !== resolvedBasemap) {
             resolvedBasemap = next;
-            pinPalette = ACCENT_PIN_COLOR_BY_BASEMAP[next];
             highlightController?.setBasemap(next);
 
             if (!framed && !usesAtlas) {
@@ -1115,7 +1387,6 @@ const payload = {
               ).addTo(map);
               map.setMaxZoom(viewMaxZoom);
             }
-            updatePinColors();
           }
           // Strokes are sampled from CSS variables. A view transition removes
           // data-theme and puts the same theme back, so the basemap name does
@@ -1137,4 +1408,3 @@ const payload = {
   initLocationsMaps();
   document.addEventListener("astro:page-load", () => initLocationsMaps());
 </script>
-

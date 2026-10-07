@@ -1,16 +1,16 @@
 ---
 import type { Accent } from "@shared/lib/accent";
 import { en } from "~/i18n/en";
-import type { RegionItinerary } from "~/lib/regionPage";
+import type { RegionDossierItem } from "~/lib/regionPage";
 import RegionDossier from "./RegionDossier.astro";
 
 export interface Props {
-  itineraries: RegionItinerary[];
+  dossier: RegionDossierItem[];
   accent: Accent;
 }
 
-const { itineraries } = Astro.props;
-const hasItineraries = itineraries.length > 0;
+const { dossier } = Astro.props;
+const hasDossier = dossier.length > 0;
 ---
 
 <section
@@ -18,7 +18,7 @@ const hasItineraries = itineraries.length > 0;
   class:list={[
     "section",
     "region-guide",
-    { "region-guide--prose-only": !hasItineraries },
+    { "region-guide--prose-only": !hasDossier },
   ]}
 >
   <h2 class="display section-heading region-guide__heading">
@@ -33,17 +33,17 @@ const hasItineraries = itineraries.length > 0;
     </div>
 
     {
-      hasItineraries && (
+      hasDossier && (
         <div id="routes" class="region-guide__routes">
           <div class="region-guide__dossier">
-            {itineraries.map((itinerary) => (
+            {dossier.map((item) => (
               <RegionDossier
-                href={itinerary.href}
-                title={itinerary.title}
-                summary={itinerary.summary}
-                hero={itinerary.hero}
-                days={itinerary.days}
-                countries={itinerary.countries}
+                href={item.href}
+                title={item.title}
+                summary={item.summary}
+                hero={item.hero}
+                kicker={item.kicker}
+                meta={item.meta}
               />
             ))}
           </div>
@@ -91,7 +91,9 @@ const hasItineraries = itineraries.length > 0;
     max-width: none;
   }
 
-  .region-guide__dossier :global(.region-dossier:first-of-type) {
-    padding-top: 0;
+  .region-guide__dossier {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
   }
 </style>
