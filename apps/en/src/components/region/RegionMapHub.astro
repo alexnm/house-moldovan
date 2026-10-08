@@ -189,10 +189,9 @@ const regionCountryAccents = Object.fromEntries(
     <div class="region-map-hub__map shadow-rest">
       <LocationsMap
         pins={locationPins}
-        basemap="adaptive"
         fullBleed
         scrollZoom={false}
-        fitMaxZoom={5}
+        fitMaxZoom={7}
         height="clamp(28rem, 68svh, 44rem)"
         labelMode="full"
         locationLabelStyle="title"
@@ -282,6 +281,11 @@ const regionCountryAccents = Object.fromEntries(
     overflow: hidden;
     background: var(--color-surface-2);
     box-shadow: var(--shadow-rest);
+  }
+
+  /* Neutral outline only on the paper canvas; dark mode relies on tonal lift. */
+  :global(html[data-theme="light"]) .region-map-hub__stage {
+    border: 1px solid var(--color-line);
   }
 
   .region-map-hub__sidebar {

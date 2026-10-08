@@ -3,6 +3,7 @@ name: Asia
 tagline: Neon megacities, ancient temples and cultures and paradise tropical beaches.
 accent: saffron
 order: 1
+featured: da-nang-vietnam-beach-guide
 images:
   - ../../assets/hong-kong/victoria-peak-dusk.JPG
   - ../../assets/singapore/gardens-by-the-bay-day.JPG

@@ -32,10 +32,12 @@ const { facts, why, map, mapLabel } = Astro.props;
 ---
 
 <aside
-  class="trip-card surface-card shadow-rest animate-cinema-rise overflow-hidden rounded-lg"
+  class="trip-card surface-card animate-cinema-rise overflow-hidden rounded-lg shadow-rest"
   aria-label="Trip at a glance"
 >
-  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
+  <dl
+    class="trip-card__facts m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7"
+  >
     {
       facts.map((f) => (
         <div class:list={[f.wide && "col-span-2"]}>
@@ -93,12 +95,11 @@ const { facts, why, map, mapLabel } = Astro.props;
   .trip-card {
     animation: cinema-rise var(--duration-enter) var(--ease-cinema) both;
   }
+  :root[data-theme="dark"] .trip-card__facts {
+    background: var(--color-surface-3);
+  }
   .trip-card__map {
-    background: color-mix(
-      in oklch,
-      var(--color-surface-2) 85%,
-      var(--color-surface)
-    );
+    background: var(--color-surface-2);
   }
   .trip-card :global(.transport-icon) {
     width: 0.95rem;

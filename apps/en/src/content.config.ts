@@ -46,6 +46,8 @@ const regions = defineCollection({
       order: z.number().int().positive(),
       /** Contact-sheet photos for the region hero (first four used). */
       images: z.array(image()).min(1),
+      /** Story pinned as the region's featured story. Falls back to the latest story in the region. */
+      featured: reference("stories").optional(),
     }),
 });
 

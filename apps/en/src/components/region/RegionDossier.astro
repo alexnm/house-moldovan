@@ -52,6 +52,11 @@ const { href, title, summary, hero, kicker, meta } = Astro.props;
     }
   }
 
+  /* Neutral outline only on the paper canvas; dark mode relies on tonal lift. */
+  :global(html[data-theme="light"]) .region-dossier {
+    border: 1px solid var(--color-line);
+  }
+
   .region-dossier__photo {
     position: relative;
     min-width: 0;
@@ -86,7 +91,7 @@ const { href, title, summary, hero, kicker, meta } = Astro.props;
 
   .region-dossier__title {
     margin: 0;
-    max-width: 28ch;
+    max-width: 40ch;
     font-size: clamp(1.35rem, 1rem + 1vw, 1.75rem);
     line-height: 0.98;
     letter-spacing: -0.03em;

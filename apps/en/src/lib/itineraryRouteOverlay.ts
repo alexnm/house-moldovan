@@ -33,9 +33,7 @@ function readColor(el: Element, token: string, fallback: string): string {
 
 const ACCENTS = ["jade", "saffron", "terracotta", "cobalt"] as const;
 
-function routeBasemap(mapEl: HTMLElement): ResolvedBasemap {
-  if (mapEl.classList.contains("locations-map--film")) return "film";
-  if (mapEl.classList.contains("locations-map--paper")) return "paper";
+function routeBasemap(): ResolvedBasemap {
   return resolveBasemap("adaptive");
 }
 
@@ -44,7 +42,7 @@ function colors(mapEl: HTMLElement): { accent: string; paper: string } {
   const scope = mapEl.closest<HTMLElement>(".accent-scope");
   const name = scope?.dataset.accent;
   const accentName = ACCENTS.find((accent) => accent === name);
-  const basemap = routeBasemap(mapEl);
+  const basemap = routeBasemap();
   const accent = pinColorForAccent(accentName, basemap);
   mapEl.style.setProperty("--route-accent", accent);
   return {

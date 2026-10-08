@@ -1,36 +1,48 @@
 ---
 import type { Accent } from "@shared/lib/accent";
 import { en } from "~/i18n/en";
-import type { RegionDossierItem } from "~/lib/regionPage";
+import type {
+  RegionDossierItem,
+  RegionFeaturedStory as FeaturedStoryData,
+} from "~/lib/regionPage";
 import RegionDossier from "./RegionDossier.astro";
+import RegionFeaturedStory from "./RegionFeaturedStory.astro";
 
 export interface Props {
   dossier: RegionDossierItem[];
+  featuredStory?: FeaturedStoryData;
   accent: Accent;
 }
 
-const { dossier } = Astro.props;
+const { dossier, featuredStory } = Astro.props;
 const hasDossier = dossier.length > 0;
+const isSingle = !hasDossier || !featuredStory;
 ---
 
 <section
   id="guide"
-  class:list={[
-    "section",
-    "region-guide",
-    { "region-guide--prose-only": !hasDossier },
-  ]}
+  class:list={["section", "region-guide", { "region-guide--single": isSingle }]}
 >
-  <h2 class="display section-heading region-guide__heading">
+  <h2 class="sr-only">
     {en.region.guideHeading}
   </h2>
 
   <div class="region-guide__grid">
-    <div class="region-guide__prose motion-reveal">
-      <div class="prose-body">
-        <slot />
-      </div>
-    </div>
+    {
+      featuredStory && (
+        <div class="region-guide__featured motion-reveal-media">
+          <RegionFeaturedStory
+            href={featuredStory.href}
+            title={featuredStory.title}
+            summary={featuredStory.summary}
+            hero={featuredStory.hero}
+            countryMeta={featuredStory.countryMeta}
+            accent={featuredStory.accent}
+            transitionName={`hero-${featuredStory.a.id}`}
+          />
+        </div>
+      )
+    }
 
     {
       hasDossier && (
@@ -55,40 +67,37 @@ const hasDossier = dossier.length > 0;
 
 <style>
   .region-guide {
-    padding-block: clamp(3.5rem, 7vw, 7rem);
-  }
-
-  .region-guide__heading {
-    margin-bottom: var(--space-header);
+    padding-top: clamp(3.5rem, 7vw, 7rem);
+    padding-bottom: clamp(2rem, 4vw, 3.5rem);
   }
 
   .region-guide__grid {
     display: grid;
-    gap: clamp(2.25rem, 4vw, 3.5rem);
+    gap: 0.85rem;
 
     @media (width >= 900px) {
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2rem, 5vw, 5rem);
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(0.85rem, 1.5vw, 1.25rem);
+      /* Featured card stretches to the combined height of the dossier column. */
+      align-items: stretch;
     }
   }
 
+  .region-guide__featured,
   .region-guide__routes {
     min-width: 0;
   }
 
-  .region-guide__prose .prose-body {
-    max-width: 70ch;
-  }
-
-  .region-guide--prose-only .region-guide__grid {
+  .region-guide--single .region-guide__grid {
     @media (width >= 900px) {
       grid-template-columns: 1fr;
     }
   }
 
-  .region-guide--prose-only .region-guide__prose .prose-body {
-    max-width: none;
+  .region-guide--single .region-guide__featured {
+    @media (width >= 900px) {
+      aspect-ratio: 16 / 7;
+    }
   }
 
   .region-guide__dossier {

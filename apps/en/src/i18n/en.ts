@@ -92,6 +92,8 @@ export const en = {
     countriesHeading: "Explore countries",
     routesHeading: "Routes across borders",
     guideHeading: "Travel guide",
+    featuredStory: "Featured story",
+    editorialKicker: "A note from us",
     mapHeading: "Find destinations",
     mapHint: "Drag the map to look around. Tap a country name to open it",
     backToRegion: (name: string) => `Back to ${name}`,

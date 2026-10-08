@@ -1,6 +1,6 @@
 /**
- * Shared basemap for EN maps: Carto Voyager in light mode — colour and road
- * detail without swapping styles on zoom.
+ * Theme palette for EN maps. Atlases follow the page: `paper` in light mode,
+ * `film` at night.
  */
 export type MapTileConfig = {
   url: string;
@@ -11,8 +11,6 @@ export type MapTileConfig = {
 
 const CARTO_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-const ESRI_ATTRIBUTION =
-  'Tiles &copy; <a href="https://www.esri.com">Esri</a> &amp; GIS community';
 
 /** Free at https://carto.com/basemaps/apikey — required for production raster tiles. */
 const CARTO_API_KEY = import.meta.env.PUBLIC_CARTO_API_KEY?.trim();
@@ -32,25 +30,10 @@ export const MAP_TILES = {
   subdomains: "abcd",
 } as const satisfies MapTileConfig;
 
-/**
- * Night basemap: Esri dark gray canvas so pins and routes carry the colour
- * instead of the terrain.
- */
-export const MAP_TILES_FILM = {
-  url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-  maxZoom: 16,
-  attribution: ESRI_ATTRIBUTION,
-} as const satisfies MapTileConfig;
-
 export type ResolvedBasemap = "paper" | "film";
 
-/** `adaptive` follows site theme: Voyager in light mode, Esri dark gray at night. */
+/** `adaptive` follows the page theme: paper in light mode, film at night. */
 export type Basemap = ResolvedBasemap | "adaptive";
-
-export const MAP_TILES_BY_BASEMAP = {
-  paper: MAP_TILES,
-  film: MAP_TILES_FILM,
-} as const;
 
 /** Itinerary maps draw Natural Earth countries instead of tiles. */
 export const NATURAL_EARTH_ATTRIBUTION =
@@ -109,7 +92,7 @@ export const ACCENT_PIN_COLOR_BY_BASEMAP = {
 } as const;
 
 /**
- * Voyager clipped to a highlighted country on the night basemap — the shape
+ * Voyager clipped to a highlighted country on the night palette — the shape
  * keeps colour and labels instead of turning into a flat cut-out.
  */
 export const MAP_HIGHLIGHT_TILES_BY_BASEMAP = {
@@ -149,18 +132,3 @@ export const pinColorForAccent = (
   accent: keyof typeof ACCENT_PIN_COLOR | undefined,
   basemap: ResolvedBasemap = "paper",
 ): string => ACCENT_PIN_COLOR_BY_BASEMAP[basemap][accent ?? "terracotta"];
-
-/**
- * Chapter accents for map popups. Popups always use the film-night palette, so
- * these stay on the dark-canvas values instead of theme-aware `-ink` tokens.
- */
-export const MAP_POP_ACCENT = {
-  jade: "oklch(0.75 0.175 155)",
-  saffron: "oklch(0.9 0.19 85)",
-  terracotta: "oklch(0.75 0.19 35)",
-  cobalt: "oklch(0.77 0.15 250)",
-} as const;
-
-export const mapPopAccentColor = (
-  accent: keyof typeof MAP_POP_ACCENT | undefined,
-): string => MAP_POP_ACCENT[accent ?? "terracotta"];

@@ -23,6 +23,7 @@ import {
   placeThumbnailForCountry,
 } from "~/lib/placeCover";
 import { getRegion } from "~/lib/regions";
+import { renderMarkdownFragment } from "~/lib/markdownFragment";
 
 const REGION_DOSSIER_COUNT = 3;
 
@@ -116,6 +117,34 @@ async function regionNoteFromArticle(
   };
 }
 
+export type RegionFeaturedStory = RegionNote & {
+  title: string;
+  summary: string;
+  hero: ImageMetadata;
+};
+
+function pickFeaturedStory(
+  articles: AnyEnArticle[],
+  featuredId: string | undefined,
+): AnyEnArticle | undefined {
+  const stories = articles.filter((a) => a.kind === "story");
+  const pinned = featuredId
+    ? stories.find((a) => a.id === featuredId)
+    : undefined;
+  return pinned ?? [...stories].sort(byPublishedDesc)[0];
+}
+
+/** First and last paragraph of the region body, rendered to HTML, for the authors' note. */
+async function editorialFromBody(body: string | undefined): Promise<string[]> {
+  const blocks = (body ?? "")
+    .trim()
+    .split(/\n\n+/)
+    .map((b) => b.trim())
+    .filter(Boolean);
+  const picked = blocks.length > 1 ? [blocks[0]!, blocks.at(-1)!] : blocks;
+  return Promise.all(picked.map(renderMarkdownFragment));
+}
+
 export type RegionCountryLocation = {
   qualifiedId: string;
   name: string;
@@ -149,6 +178,9 @@ export type RegionPageData = {
   images: ImageMetadata[];
   countries: RegionCountry[];
   dossier: RegionDossierItem[];
+  featuredStory?: RegionFeaturedStory;
+  /** Rendered HTML paragraphs for the authors' editorial note. */
+  editorial: string[];
   notes: RegionNote[];
   locationPins: LocationMapPin[];
   atlas?: RouteAtlas;
@@ -168,19 +200,36 @@ export async function loadRegionPage(
   const articles = articlesForRegion(feed, region.id, regionMap);
   const accent = region.data.accent;
 
-  const dossierPicks = pickDossierArticles(articles);
-  const dossierKeys = new Set(dossierPicks.map(articleKey));
+  const featuredArticle = pickFeaturedStory(articles, region.data.featured?.id);
+  const featuredKey = featuredArticle ? articleKey(featuredArticle) : undefined;
+
+  const dossierPicks = pickDossierArticles(
+    articles.filter((a) => articleKey(a) !== featuredKey),
+  );
+  const usedKeys = new Set(dossierPicks.map(articleKey));
+  if (featuredKey) usedKeys.add(featuredKey);
 
   const noteEntries = articles
-    .filter((a) => !dossierKeys.has(articleKey(a)))
+    .filter((a) => !usedKeys.has(articleKey(a)))
     .sort(byPublishedDesc);
 
-  const [dossier, notes] = await Promise.all([
+  const [dossier, notes, featuredNote, editorial] = await Promise.all([
     Promise.all(
       dossierPicks.map((a) => dossierFromArticle(a, placeById, accent)),
     ),
     Promise.all(noteEntries.map((a) => regionNoteFromArticle(a, accent))),
+    featuredArticle
+      ? regionNoteFromArticle(featuredArticle, accent)
+      : Promise.resolve(undefined),
+    editorialFromBody(region.body),
   ]);
+
+  const featuredStory: RegionFeaturedStory | undefined = featuredNote && {
+    ...featuredNote,
+    title: featuredNote.a.data.title,
+    summary: featuredNote.a.data.summary,
+    hero: featuredNote.a.data.hero,
+  };
 
   const locationPins = (await buildLocationMapPins(articles)).filter((pin) =>
     countryIds.has(pin.countryId),
@@ -248,6 +297,8 @@ export async function loadRegionPage(
     images: region.data.images,
     countries,
     dossier,
+    featuredStory,
+    editorial,
     notes,
     locationPins,
     atlas: atlasPoints.length

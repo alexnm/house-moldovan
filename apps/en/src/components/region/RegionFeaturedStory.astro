@@ -3,41 +3,33 @@ import type { ImageMetadata } from "astro";
 import CoverImage from "@shared/components/media/CoverImage.astro";
 import type { Accent } from "@shared/lib/accent";
 import { cardAccentStyle } from "@shared/lib/accent";
+import { en } from "~/i18n/en";
 
 export interface Props {
   href: string;
   title: string;
   summary: string;
   hero: ImageMetadata;
-  kicker: string;
   countryMeta: string;
   accent: Accent;
   transitionName?: string;
 }
 
-const {
-  href,
-  title,
-  summary,
-  hero,
-  kicker,
-  countryMeta,
-  accent,
-  transitionName,
-} = Astro.props;
+const { href, title, summary, hero, countryMeta, accent, transitionName } =
+  Astro.props;
 ---
 
-<section class="section region-story">
-  <a
-    href={href}
-    class="region-story__card group relative flex w-full flex-col overflow-hidden rounded-sm shadow-rest text-photo-ink"
-    style={cardAccentStyle(accent)}
-  >
+<a
+  href={href}
+  class="featured-story group shadow-rest"
+  style={cardAccentStyle(accent)}
+>
+  <div class="featured-story__photo">
     <CoverImage
       src={hero}
       alt={title}
-      widths={[720, 960, 1280, 1600]}
-      sizes="(min-width: 1536px) 92rem, (min-width: 768px) 84rem, 100vw"
+      widths={[640, 960, 1280, 1600]}
+      sizes="(min-width: 900px) 46vw, 100vw"
       format="avif"
       quality={82}
       wrapperClass="motion-hover-media absolute inset-0"
@@ -45,82 +37,87 @@ const {
       class="absolute inset-0 h-full w-full object-cover"
     />
     <div
-      class="photo-scrim pointer-events-none absolute inset-0"
+      class="photo-scrim pointer-events-none absolute inset-0 z-1"
       aria-hidden="true"
     >
     </div>
-    <div class="region-story__copy px-4 pt-14 pb-4 sm:pt-20 md:px-5 md:pb-5">
-      <span class="stamp-badge stamp-badge--accent">{kicker}</span>
-      <h3 class="region-story__title display">{title}</h3>
-      <p class="region-story__summary hidden sm:block">{summary}</p>
-      <p class="region-story__countries">{countryMeta}</p>
-    </div>
-  </a>
-</section>
+  </div>
+
+  <div class="featured-story__copy">
+    <span class="stamp-badge stamp-badge--accent featured-story__badge">
+      {en.region.featuredStory}
+    </span>
+    <h3 class="display photo-title-shadow featured-story__title">{title}</h3>
+    <p class="featured-story__summary">{summary}</p>
+    <p class="featured-story__meta">{countryMeta}</p>
+  </div>
+</a>
 
 <style>
-  .region-story {
-    padding-block: clamp(2rem, 4vw, 3.5rem);
-  }
-
-  .region-story__card {
+  .featured-story {
+    position: relative;
     isolation: isolate;
     display: flex;
     flex-direction: column;
-    aspect-ratio: 1 / 1;
+    justify-content: flex-end;
+    height: 100%;
+    min-height: 26rem;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--color-surface-2);
     text-decoration: none;
-    color: inherit;
-
-    @media (width >= 640px) {
-      aspect-ratio: 16 / 7;
-    }
+    color: var(--color-photo-ink);
   }
 
-  .region-story__copy {
+  /* Photo fills the whole card; copy sits on the standard bottom scrim. */
+  .featured-story__photo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .featured-story__badge {
+    align-self: flex-start;
+    margin-bottom: 0.4rem;
+  }
+
+  .featured-story__copy {
     position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    margin-top: auto;
-    width: 100%;
+    gap: 0.45rem;
+    padding: clamp(1rem, 2vw, 1.4rem);
   }
 
-  .region-story__title {
-    margin-top: 0.85rem;
-    max-width: 30ch;
+  .featured-story__title {
+    margin: 0;
+    max-width: 40ch;
     color: var(--color-photo-ink);
-    font-size: clamp(2.4rem, 6vw, 5.25rem);
-    line-height: 0.88;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.6rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
     text-wrap: balance;
   }
 
-  .region-story__summary {
-    margin-top: 1rem;
-    max-width: 46ch;
-    font-family: var(--font-body);
-    font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.2rem);
-    line-height: 1.45;
-    text-wrap: pretty;
+  .featured-story__summary {
+    margin: 0;
+    max-width: 52ch;
     color: var(--color-photo-ink);
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    line-height: 1.5;
+    text-wrap: pretty;
     opacity: 0.92;
   }
 
-  .region-story__countries {
-    margin-top: 0.85rem;
-    max-width: 42ch;
-    font-family: var(--font-sans);
-    font-size: 0.95rem;
-    line-height: 1.4;
+  .featured-story__meta {
+    margin: 0.15rem 0 0;
     color: var(--color-photo-ink);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    line-height: 1.4;
     opacity: 0.85;
-  }
-
-  .region-story__card img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
   }
 </style>

@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { render } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import RegionHero from "~/components/home/RegionHero.astro";
 import RegionGuide from "~/components/region/RegionGuide.astro";
+import RegionEditorial from "~/components/region/RegionEditorial.astro";
 import RegionMapHub from "~/components/region/RegionMapHub.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import { en } from "~/i18n/en";
@@ -22,7 +22,6 @@ if (!page) {
 }
 
 const {
-  region,
   name,
   tagline,
   accent,
@@ -30,12 +29,12 @@ const {
   images,
   countries,
   dossier,
+  featuredStory,
+  editorial,
   notes,
   locationPins,
   atlas,
 } = page;
-
-const { Content } = await render(region);
 ---
 
 <BaseLayout
@@ -52,9 +51,12 @@ const { Content } = await render(region);
   />
 
   <div class="accent-scope" data-accent={accent}>
-    <RegionGuide dossier={dossier} accent={accent}>
-      <Content />
-    </RegionGuide>
+    <RegionGuide
+      dossier={dossier}
+      featuredStory={featuredStory}
+      accent={accent}
+    />
+    {editorial.length > 0 && <RegionEditorial paragraphs={editorial} />}
 
     {
       atlas && countries.length > 0 && (
