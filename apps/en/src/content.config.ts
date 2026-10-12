@@ -19,6 +19,8 @@ export const countryLocation = z.object({
   name: z.string().min(1),
   /** Relative to the place file, e.g. `../../assets/jordan/petra.jpg`. */
   image: z.string().optional(),
+  /** A few sentences shown when the location is opened on the country map. */
+  summary: z.string().optional(),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
 });
@@ -73,6 +75,41 @@ const places = defineCollection({
     locations: z.array(countryLocation).default([]),
     /** Optional contact-sheet for the country page snapshot grid. */
     snapshots: z.array(placeSnapshot).default([]),
+    /** Headline on the country page "At a glance" card. */
+    headline: z.string().optional(),
+    /**
+     * Standard country facts beside the intro. Region comes from `region`; the
+     * page renders the set in a fixed order and skips any field left out.
+     */
+    facts: z
+      .object({
+        population: z.string().min(1),
+        capital: z.string().min(1),
+        language: z.string().min(1),
+        currency: z.string().min(1),
+        timeZone: z.string().min(1),
+        plugType: z.string().min(1),
+        driving: z.enum(["left", "right"]),
+        /** A few trip categories, e.g. ["Food", "Hiking", "Cities"]. */
+        bestFor: z.array(z.string().min(1)).max(5),
+        bestTime: z.string().min(1),
+      })
+      .partial()
+      .default({}),
+    /** Country name in the local language, e.g. "日本". Stamped beside the English name when it differs enough. */
+    localName: z.string().min(1).optional(),
+    /** Stamp the local name even when it's close to the English one (`true`), or never (`false`). */
+    stampLocalName: z.boolean().optional(),
+    /** Our trips here, oldest first; each becomes a passport stamp on the "At a glance" card. */
+    visits: z
+      .array(
+        z.object({
+          year: z.number().int().min(1990).max(2100),
+          /** Short stamp line, e.g. "14 days" or "Barcelona". */
+          label: z.string().min(1).max(24).optional(),
+        }),
+      )
+      .default([]),
     /** Show the country page map section (still requires ≥2 locations). */
     showMap: z.boolean().default(false),
     /** Hidden from explore, nav, and region lists until ready to publish. */

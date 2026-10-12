@@ -44,7 +44,7 @@ const cells = buildRhythmCells(enriched);
 ---
 
 <div
-  class="rhythm-grid grid grid-cols-1 items-stretch gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3"
+  class="rhythm-grid grid grid-cols-1 items-stretch gap-(--grid-gap-compact) md:grid-cols-2 lg:grid-cols-3"
 >
   {
     cells.map(({ item, span }, index) => {
@@ -92,7 +92,7 @@ const cells = buildRhythmCells(enriched);
   @media (min-width: 1024px) {
     /* Match single-column 4/5 height: col = (grid − 2 gaps) / 3 */
     .rhythm-grid > .rhythm-cell--wide-paired {
-      height: calc((100cqw - 2 * var(--grid-gap)) / 3 * 5 / 4);
+      height: calc((100cqw - 2 * var(--grid-gap-compact)) / 3 * 5 / 4);
     }
 
     .rhythm-grid > [class*="rhythm-cell--wide"] .article-card,

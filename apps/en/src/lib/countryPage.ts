@@ -1,3 +1,4 @@
+import { afterFirstParagraph } from "~/lib/markdownFragment";
 import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
 import type { Accent } from "@shared/lib/accent";
@@ -28,7 +29,10 @@ import {
   regionMapById,
 } from "~/lib/regions";
 
-export const INTRO_SNAPSHOT_COUNT = 4;
+/** Highlights need at least this many snapshots to fill the photo grid. */
+export const HIGHLIGHTS_MIN_COUNT = 3;
+/** The photo grid shows at most this many snapshots. */
+export const HIGHLIGHTS_MAX_COUNT = 5;
 
 /** Extra zoom levels applied after fitBounds on country hub maps. */
 const COUNTRY_MAP_FIT_ZOOM_OFFSET: Partial<Record<string, number>> = {};
@@ -61,10 +65,20 @@ export function countryMapFitZoomOffset(countryId: string): number {
   return COUNTRY_MAP_FIT_ZOOM_OFFSET[countryId] ?? 0;
 }
 
+export type CountryLocationArticle = {
+  href: string;
+  title: string;
+  kicker: string;
+  thumb: string;
+};
+
 export type CountryLocation = {
   id: string;
   name: string;
   qualifiedId: string;
+  summary?: string;
+  cover?: ImageMetadata;
+  articles: CountryLocationArticle[];
 };
 
 export type CountrySnapshot = {
@@ -101,11 +115,13 @@ export async function getPlaceSnapshots(
   return snapshots;
 }
 
-export function showCountryIntro(
-  country: CollectionEntry<"places">,
-  snapshots: CountrySnapshot[],
-): boolean {
-  return placeHasBody(country) && snapshots.length >= INTRO_SNAPSHOT_COUNT;
+/** The At a glance card skips the first paragraph (used on the region page). */
+export function showCountryIntro(country: CollectionEntry<"places">): boolean {
+  return afterFirstParagraph(country.body).length > 0;
+}
+
+export function showCountryHighlights(snapshots: CountrySnapshot[]): boolean {
+  return snapshots.length >= HIGHLIGHTS_MIN_COUNT;
 }
 
 export function showCountryMap(
@@ -152,11 +168,27 @@ export async function loadCountryPage(country: CollectionEntry<"places">) {
     }),
   );
 
-  const locations = (country.data.locations ?? []).map((loc) => ({
-    id: loc.id,
-    name: loc.name,
-    qualifiedId: qualifiedLocationId(country.id, loc.id),
-  }));
+  const pinById = new Map(locationPins.map((pin) => [pin.locationId, pin]));
+  const locations: CountryLocation[] = (country.data.locations ?? []).map(
+    (loc) => {
+      const qualifiedId = qualifiedLocationId(country.id, loc.id);
+      return {
+        id: loc.id,
+        name: loc.name,
+        qualifiedId,
+        summary: loc.summary,
+        cover: loc.image ? placeCoverFromFrontmatterPath(loc.image) : undefined,
+        articles: (pinById.get(qualifiedId)?.activities ?? []).map(
+          (activity) => ({
+            href: activity.href,
+            title: activity.title,
+            kicker: activity.meta,
+            thumb: activity.thumb,
+          }),
+        ),
+      };
+    },
+  );
 
   const shape = getCountryShape(country.id);
   const atlasPoints: [number, number][] = [];

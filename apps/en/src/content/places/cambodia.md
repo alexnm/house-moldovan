@@ -1,6 +1,7 @@
 ---
 name: Cambodia
 flag: 🇰🇭
+localName: "កម្ពុជា"
 region: asia
 tagline: Temple dawn at Angkor, river life, and history carved in stone.
 showMap: true
@@ -24,14 +25,29 @@ locations:
     lat: 13.25
     lng: 103.9
 snapshots:
-  - image: ../../assets/cambodia/angkor-wat-inside.JPG
-    location: angkor-wat
   - image: ../../assets/cambodia/bayon-face.JPG
     location: Bayon, Angkor Thom
-  - image: ../../assets/cambodia/preah-khan.JPG
-    location: Preah Khan, Angkor Thom
-  - image: ../../assets/cambodia/floating-village.JPG
+  - image: ../../assets/cambodia/jayatataka.JPG
+    location: Jayatataka
+  - image: ../../assets/cambodia/angkor-wat-temple.JPG
+    location: angkor-wat
+  - image: ../../assets/cambodia/baphuon.JPG
+    location: Baphuon, Angkor Thom
+  - image: ../../assets/cambodia/children-at-school.JPG
     location: Kampong Khleang
+headline: A country that lives around Angkor
+facts:
+  population: 17.6 million
+  capital: Phnom Penh
+  language: Khmer
+  currency: Cambodian riel (KHR) · US dollar widely used
+  timeZone: UTC+7
+  plugType: Type A / C / G · 230V
+  driving: right
+  bestFor: [Temples, History, Culture]
+  bestTime: November–March, the cool dry season
+visits:
+  - year: 2018
 ---
 
 When you look at the flag of Cambodia, you kind figure out how important Angkor Wat is to the country. Cambodia is a small country with rich history and very warm people, but it was unfortunately torn apart by a brutal war in the late 70s and is still recovering today.

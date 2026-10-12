@@ -1,9 +1,14 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { render } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
-import CountryIntroMosaic from "~/components/country/CountryIntroMosaic.astro";
+import CountryGlance from "~/components/country/CountryGlance.astro";
+import { countryFacts } from "~/lib/countryFacts";
+import {
+  afterFirstParagraph,
+  renderMarkdownFragment,
+} from "~/lib/markdownFragment";
+import CountryHighlights from "~/components/country/CountryHighlights.astro";
 import CountryMapHub from "~/components/country/CountryMapHub.astro";
 import Breadcrumbs from "@shared/components/article/Breadcrumbs.astro";
 import Hero from "@shared/components/article/Hero.astro";
@@ -12,6 +17,7 @@ import {
   countryMapFitMaxZoom,
   countryMapFitZoomOffset,
   loadCountryPage,
+  showCountryHighlights,
   showCountryIntro,
   showCountryMap,
 } from "~/lib/countryPage";
@@ -43,9 +49,12 @@ const {
   atlas,
   atlasFocus,
 } = await loadCountryPage(country);
-const { Content } = await render(country);
+const glanceHtml = await renderMarkdownFragment(
+  afterFirstParagraph(country.body),
+);
 const coverLocation = await placeCoverLocationLabel(country);
-const showIntro = showCountryIntro(country, snapshots);
+const showIntro = showCountryIntro(country);
+const showHighlights = showCountryHighlights(snapshots);
 const showMap = showCountryMap(country, locations) && locationPins.length > 0;
 
 const breadcrumbs = [
@@ -58,10 +67,8 @@ const sections: SectionLink[] = [
   ...(showIntro
     ? [{ id: "intro", label: "Info", icon: "message" as const }]
     : []),
-  ...(showMap
-    ? [{ id: "map", label: "Destinations", icon: "map" as const }]
-    : []),
-  { id: "stories", label: "Travel guides", icon: "directions" as const },
+  ...(showMap ? [{ id: "map", label: "Map", icon: "map" as const }] : []),
+  { id: "stories", label: "Guides", icon: "directions" as const },
 ];
 ---
 
@@ -93,25 +100,35 @@ const sections: SectionLink[] = [
 
     {
       showIntro && (
-        <section id="intro" class="section country-intro scroll-mt-8">
-          <div class="motion-reveal-media flex flex-col gap-6">
-            <h2 class="display section-heading">At a glance</h2>
-            <div class="country-intro__copy prose-body">
-              <Content />
-            </div>
-          </div>
-          <CountryIntroMosaic photos={snapshots} />
-        </section>
+        <CountryGlance
+          country={country.data.name}
+          localName={country.data.localName}
+          forceLocalName={country.data.stampLocalName}
+          headline={country.data.headline}
+          facts={countryFacts(country.data.facts, region.data.name)}
+          visits={country.data.visits}
+          stopCount={showMap ? locations.length : 0}
+          articleCount={entries.length}
+        >
+          <Fragment set:html={glanceHtml} />
+        </CountryGlance>
+      )
+    }
+
+    {
+      showHighlights && (
+        <CountryHighlights photos={snapshots} countryName={country.data.name} />
       )
     }
 
     {
       showMap && (
         <CountryMapHub
+          countryName={country.data.name}
+          accent={accent}
           locations={locations}
           locationPins={locationPins}
           shape={shape}
-          locationsHeading={en.places.locationsHeading}
           fitMaxZoom={countryMapFitMaxZoom(country.id)}
           fitZoomOffset={countryMapFitZoomOffset(country.id)}
           atlas={atlas}
@@ -163,25 +180,3 @@ const sections: SectionLink[] = [
     </section>
   </article>
 </BaseLayout>
-
-<style>
-  .country-intro {
-    display: grid;
-    gap: clamp(2rem, 4vw, 3rem);
-    padding-block: clamp(3.5rem, 7vw, 7rem);
-
-    @media (width >= 900px) {
-      grid-template-columns: 2fr 3fr;
-      gap: clamp(2rem, 5vw, 5rem);
-      align-items: start;
-    }
-  }
-
-  .country-intro__copy {
-    max-width: 55ch;
-  }
-
-  .country-intro__copy :global(p:first-child) {
-    margin-top: 0;
-  }
-</style>

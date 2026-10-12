@@ -1,6 +1,7 @@
 ---
 name: Brazil
 flag: 🇧🇷
+localName: "Brasil"
 region: south-america
 tagline: Thundering falls, tropical forests and cities that never quite sleep.
 showMap: true
@@ -13,4 +14,17 @@ locations:
     image: ../../assets/brazil/iguazu-brasil.jpg
     lat: -25.6953
     lng: -54.4367
+headline: Thundering falls, tropical forests and cities that never quite sleep
+facts:
+  population: 212 million
+  capital: Brasília
+  language: Portuguese
+  currency: Brazilian real (R$)
+  timeZone: UTC−3 for most of the country
+  plugType: Type C / N · 127V / 220V
+  driving: right
+  bestFor: [Beaches, Nature, Cities, Food]
+  bestTime: May–October, the drier months · Iguazú all year
+visits:
+  - year: 2019
 ---

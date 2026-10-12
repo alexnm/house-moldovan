@@ -1,0 +1,321 @@
+---
+/**
+ * Inked passport stamp for a country visit. Drawn in `currentColor`, with an
+ * SVG filter that erodes and wobbles the ink so it reads as a rubber stamp.
+ */
+import { distinctLocalName, estimateTextWidth } from "~/lib/passportStamp";
+
+export type StampVariant = "rect" | "oval" | "round";
+
+export interface Props {
+  /** Unique per page; scopes the filter and text-path ids. */
+  id: string;
+  variant: StampVariant;
+  country: string;
+  /** Name in the local language; stamped beside the English one when it differs enough and fits. */
+  localName?: string;
+  /** Override the "differs enough" check for the local name. */
+  forceLocalName?: boolean;
+  year: number;
+  label?: string;
+  /** Degrees; small tilts look hand-stamped. */
+  rotate?: number;
+  /** Seed for the ink texture, so neighbouring stamps don't look identical. */
+  seed?: number;
+}
+
+const {
+  id,
+  variant,
+  country,
+  localName,
+  forceLocalName,
+  year,
+  label,
+  rotate = 0,
+  seed = 3,
+} = Astro.props;
+const filterId = `stamp-ink-${id}`;
+const topPathId = `stamp-top-${id}`;
+const bottomPathId = `stamp-bottom-${id}`;
+const name = country.toUpperCase();
+const sub = label?.toUpperCase();
+
+/** Top line per variant: font size, room in user units, and any prefix. */
+const TOP = {
+  rect: { size: 14, max: 184, prefix: "" },
+  oval: { size: 12, max: 168, prefix: "ARRIVED · " },
+  round: { size: 15, max: 196, prefix: "" },
+}[variant];
+const SUB = {
+  rect: { size: 11, max: 176 },
+  oval: { size: 10, max: 150 },
+  round: { size: 12, max: 196 },
+}[variant];
+
+// Longest first: local name and prefix when they fit, then shed the prefix,
+// then the local name; only a lone English name that still overflows gets squeezed.
+const local = distinctLocalName(country, localName, forceLocalName);
+const topCandidates = [
+  ...(local ? [`${TOP.prefix}${name} · ${local}`, `${name} · ${local}`] : []),
+  `${TOP.prefix}${name}`,
+  name,
+].filter((text, index, all) => all.indexOf(text) === index);
+/** The local name is set with almost no tracking, so measure it apart. */
+const topWidth = (text: string): number => {
+  const suffix = local ? ` · ${local}` : "";
+  return suffix && text.endsWith(suffix)
+    ? estimateTextWidth(text.slice(0, -suffix.length), TOP.size) +
+        estimateTextWidth(suffix, TOP.size, 0.04)
+    : estimateTextWidth(text, TOP.size);
+};
+const topText = topCandidates.find((text) => topWidth(text) <= TOP.max) ?? name;
+const topLength = topWidth(topText) > TOP.max ? TOP.max : undefined;
+const localSuffix =
+  local && topText.endsWith(` · ${local}`) ? ` · ${local}` : "";
+const topLatin = localSuffix ? topText.slice(0, -localSuffix.length) : topText;
+// No room up top and no label: the local name takes the bottom line instead.
+const localOnSub = Boolean(local && !localSuffix && !sub);
+const subLine = localOnSub ? local : sub;
+const subText = subLine && variant === "round" ? `★ ${subLine} ★` : subLine;
+const subWidth = subText
+  ? estimateTextWidth(subText, SUB.size, localOnSub ? 0.04 : 0.28)
+  : 0;
+const subLength = subWidth > SUB.max ? SUB.max : undefined;
+const viewBox =
+  variant === "round"
+    ? "0 0 200 200"
+    : variant === "rect"
+      ? "0 0 220 136"
+      : "0 0 220 132";
+---
+
+<svg
+  class:list={["passport-stamp", `passport-stamp--${variant}`]}
+  viewBox={viewBox}
+  role="img"
+  aria-label={label ? `${country}, ${year}: ${label}` : `${country}, ${year}`}
+  style={`--stamp-rotate: ${rotate}deg`}
+>
+  <defs>
+    <filter id={filterId} x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.85"
+        numOctaves="2"
+        seed={seed}
+        result="grain"></feTurbulence>
+      <feColorMatrix
+        in="grain"
+        type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.25 1.3"
+        result="mask"></feColorMatrix>
+      <feComposite in="SourceGraphic" in2="mask" operator="in" result="inked"
+      ></feComposite>
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.04"
+        numOctaves="1"
+        seed={seed + 7}
+        result="wobble"></feTurbulence>
+      <feDisplacementMap in="inked" in2="wobble" scale="2.2"
+      ></feDisplacementMap>
+    </filter>
+    {
+      variant === "round" && (
+        <>
+          <path id={topPathId} d="M 32,100 A 68,68 0 0 1 168,100" />
+          <path id={bottomPathId} d="M 26,100 A 74,74 0 0 0 174,100" />
+        </>
+      )
+    }
+  </defs>
+
+  <g filter={`url(#${filterId})`} fill="none" stroke="currentColor">
+    {
+      variant === "rect" && (
+        <>
+          <rect x="4" y="4" width="212" height="128" rx="14" stroke-width="5" />
+          <rect
+            x="13"
+            y="13"
+            width="194"
+            height="110"
+            rx="8"
+            stroke-width="1.6"
+          />
+          <line x1="30" y1="52" x2="190" y2="52" stroke-width="1.4" />
+          <text
+            class="passport-stamp__caps"
+            x="110"
+            y="40"
+            font-size="14"
+            textLength={topLength}
+            lengthAdjust="spacingAndGlyphs"
+          >
+            {topLatin}
+            {localSuffix && (
+              <tspan class="passport-stamp__local">{localSuffix}</tspan>
+            )}
+          </text>
+          <text
+            class="passport-stamp__year"
+            x="110"
+            y={subText ? 92 : 100}
+            font-size="40"
+          >
+            {year}
+          </text>
+          {subText && (
+            <text
+              class:list={[
+                "passport-stamp__caps",
+                { "passport-stamp__local": localOnSub },
+              ]}
+              x="110"
+              y="113"
+              font-size="11"
+              textLength={subLength}
+              lengthAdjust="spacingAndGlyphs"
+            >
+              {subText}
+            </text>
+          )}
+        </>
+      )
+    }
+    {
+      variant === "oval" && (
+        <>
+          <ellipse cx="110" cy="66" rx="105" ry="61" stroke-width="4" />
+          <ellipse cx="110" cy="66" rx="96" ry="52" stroke-width="1.4" />
+          <text
+            class="passport-stamp__caps"
+            x="110"
+            y="48"
+            font-size="12"
+            textLength={topLength}
+            lengthAdjust="spacingAndGlyphs"
+          >
+            {topLatin}
+            {localSuffix && (
+              <tspan class="passport-stamp__local">{localSuffix}</tspan>
+            )}
+          </text>
+          <text
+            class="passport-stamp__year"
+            x="110"
+            y={subText ? 86 : 92}
+            font-size="36"
+          >
+            {year}
+          </text>
+          {subText && (
+            <text
+              class:list={[
+                "passport-stamp__caps",
+                { "passport-stamp__local": localOnSub },
+              ]}
+              x="110"
+              y="104"
+              font-size="10"
+              textLength={subLength}
+              lengthAdjust="spacingAndGlyphs"
+            >
+              {subText}
+            </text>
+          )}
+        </>
+      )
+    }
+    {
+      variant === "round" && (
+        <>
+          <circle cx="100" cy="100" r="95" stroke-width="5" />
+          <circle cx="100" cy="100" r="86" stroke-width="1.6" />
+          <circle cx="100" cy="100" r="54" stroke-width="1.6" />
+          <text class="passport-stamp__caps" font-size="15">
+            <textPath
+              href={`#${topPathId}`}
+              startOffset="50%"
+              textLength={topLength}
+              lengthAdjust="spacingAndGlyphs"
+            >
+              {topLatin}
+              {localSuffix && (
+                <tspan class="passport-stamp__local">{localSuffix}</tspan>
+              )}
+            </textPath>
+          </text>
+          {subText && (
+            <text
+              class:list={[
+                "passport-stamp__caps",
+                { "passport-stamp__local": localOnSub },
+              ]}
+              font-size="12"
+            >
+              <textPath
+                href={`#${bottomPathId}`}
+                startOffset="50%"
+                textLength={subLength}
+                lengthAdjust="spacingAndGlyphs"
+              >
+                {subText}
+              </textPath>
+            </text>
+          )}
+          <text class="passport-stamp__caps" x="100" y="86" font-size="11">
+            VISITED
+          </text>
+          <text class="passport-stamp__year" x="100" y="128" font-size="40">
+            {year}
+          </text>
+        </>
+      )
+    }
+  </g>
+</svg>
+
+<style>
+  .passport-stamp {
+    display: block;
+    height: auto;
+    color: inherit;
+    opacity: 0.9;
+    transform: rotate(var(--stamp-rotate));
+  }
+
+  .passport-stamp--rect,
+  .passport-stamp--oval {
+    width: 8.5rem;
+  }
+
+  .passport-stamp--round {
+    width: 7rem;
+  }
+
+  .passport-stamp text {
+    fill: currentColor;
+    stroke: none;
+    text-anchor: middle;
+  }
+
+  .passport-stamp__caps {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+  }
+
+  /* Local scripts keep their own shapes: no tracking (it breaks Arabic joins). */
+  .passport-stamp__local {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .passport-stamp__year {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+</style>

@@ -1,0 +1,380 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import { en } from "~/i18n/en";
+import portrait from "~/assets/about/alex-mela.JPG";
+
+import PassportStamp from "~/components/country/PassportStamp.astro";
+import type { CountryFact as Fact } from "~/lib/countryFacts";
+
+export interface Visit {
+  year: number;
+  label?: string;
+}
+
+export interface Props {
+  country: string;
+  /** Country name in the local language, for the stamps. */
+  localName?: string;
+  /** Override the "differs enough" check for the local name on stamps. */
+  forceLocalName?: boolean;
+  headline?: string;
+  facts: Fact[];
+  visits: Visit[];
+  /** Places on the map; links to `#map` when > 0. */
+  stopCount: number;
+  /** Articles in the guides section; links to `#stories` when > 0. */
+  articleCount: number;
+}
+
+const {
+  country,
+  localName,
+  forceLocalName,
+  headline,
+  facts,
+  visits,
+  stopCount,
+  articleCount,
+} = Astro.props;
+
+/** Circle, rectangle, ellipse, then repeat. */
+const STAMP_VARIANTS = ["round", "rect", "oval"] as const;
+
+/**
+ * Tilt (deg) and lift (rem) per stamp in the chain, cycled when there are
+ * more visits than steps. Each country gets one, so the cards don't all
+ * look stamped from the same template.
+ */
+const STAMP_PATTERNS = [
+  // Zigzag: down, up, down.
+  [
+    { rotate: -8, lift: 0 },
+    { rotate: 6, lift: 1.6 },
+    { rotate: -3, lift: 0.4 },
+  ],
+  // Climb: each stamp a little higher, leaning alternately.
+  [
+    { rotate: 5, lift: 0 },
+    { rotate: -7, lift: 0.9 },
+    { rotate: 9, lift: 1.8 },
+  ],
+  // Dip: the middle one sits low and almost straight.
+  [
+    { rotate: -11, lift: 1.2 },
+    { rotate: -2, lift: 0 },
+    { rotate: 7, lift: 0.9 },
+  ],
+] as const;
+
+/** Stable per-country "random" (FNV-1a), so a page looks the same on every build. */
+function hashString(value: string): number {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  // Final mix so similar names don't land on the same pattern.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x85ebca6b);
+  hash ^= hash >>> 13;
+  return hash >>> 0;
+}
+
+const stampKey = country.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+const stampHash = hashString(stampKey);
+const pattern =
+  STAMP_PATTERNS[stampHash % STAMP_PATTERNS.length] ?? STAMP_PATTERNS[0];
+const firstVariant = Math.floor(stampHash / 3) % STAMP_VARIANTS.length;
+const stamps = [...visits]
+  .sort((a, b) => a.year - b.year)
+  .map((visit, index) => {
+    const step = pattern[index % pattern.length] ?? pattern[0];
+    return {
+      ...visit,
+      variant:
+        STAMP_VARIANTS[(firstVariant + index) % STAMP_VARIANTS.length] ??
+        "round",
+      rotate: step.rotate,
+      lift: step.lift,
+      seed: (stampHash % 97) + index * 7,
+    };
+  });
+const hasAside = facts.length > 0 || stamps.length > 0;
+---
+
+<section
+  id="intro"
+  class="section country-glance-section scroll-mt-8"
+  aria-label={en.places.glanceKicker}
+>
+  <div
+    class:list={[
+      "country-glance motion-reveal shadow-rest",
+      { "country-glance--single": !hasAside },
+    ]}
+  >
+    <figure class="country-glance__note">
+      <span class="display country-glance__mark" aria-hidden="true">“</span>
+      <p class="stamp country-glance__kicker">{en.places.glanceKicker}</p>
+      {headline && <h2 class="display country-glance__headline">{headline}</h2>}
+      <blockquote class="country-glance__text prose-body">
+        <slot />
+      </blockquote>
+      <figcaption class="country-glance__caption">
+        <span class="country-glance__portrait">
+          <CoverImage
+            src={portrait}
+            alt={en.authorNote.portraitAlt}
+            widths={[120, 160, 240]}
+            sizes="3.5rem"
+            format="avif"
+            quality={82}
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover object-[center_28%]"
+          />
+        </span>
+        <span>— {en.authorNote.signature}</span>
+        {
+          (stopCount > 0 || articleCount > 0) && (
+            <span class="country-glance__links">
+              {stopCount > 0 && (
+                <a href="#map" class="country-glance__link">
+                  {en.places.stopCount(stopCount)}
+                </a>
+              )}
+              {articleCount > 0 && (
+                <a href="#stories" class="country-glance__link">
+                  {en.places.articleCount(articleCount)}
+                </a>
+              )}
+            </span>
+          )
+        }
+      </figcaption>
+    </figure>
+
+    {
+      hasAside && (
+        <div class="country-glance__aside">
+          {facts.length > 0 && (
+            <dl class="country-glance__facts">
+              {facts.map((fact) => (
+                <div
+                  class:list={[
+                    "country-glance__fact",
+                    { "country-glance__fact--wide": fact.wide },
+                  ]}
+                >
+                  <dt class="micro country-glance__fact-label">{fact.label}</dt>
+                  <dd class="country-glance__fact-value">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {stamps.length > 0 && (
+            <div class="country-glance__stamps">
+              {stamps.map((stamp, index) => (
+                <span
+                  class="country-glance__stamp"
+                  style={`--stamp-lift: ${stamp.lift}rem`}
+                >
+                  <PassportStamp
+                    id={`${stampKey}-${index}`}
+                    variant={stamp.variant}
+                    country={country}
+                    localName={localName}
+                    forceLocalName={forceLocalName}
+                    year={stamp.year}
+                    label={stamp.label}
+                    rotate={stamp.rotate}
+                    seed={stamp.seed}
+                  />
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .country-glance-section {
+    padding-top: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .country-glance {
+    display: grid;
+    overflow: hidden;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-accent);
+    background: var(--color-surface-2);
+
+    @media (width >= 900px) {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+
+  .country-glance--single {
+    @media (width >= 900px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Neutral outline only on the paper canvas; the accent stripe stays in both themes. */
+  :global(html[data-theme="light"]) .country-glance {
+    border: 1px solid var(--color-line);
+    border-left: 4px solid var(--color-accent);
+  }
+
+  .country-glance__note {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin: 0;
+    padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .country-glance__mark {
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 1.9rem);
+    right: clamp(1.25rem, 3vw, 2.25rem);
+    font-size: clamp(6rem, 11vw, 8.75rem);
+    line-height: 0.62;
+    color: var(--color-accent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .country-glance__kicker {
+    margin: 0;
+    color: var(--color-accent-ink);
+  }
+
+  .country-glance__headline {
+    margin: 0;
+    max-width: 26ch;
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3rem);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .country-glance__text {
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  .country-glance__text :global(p) {
+    margin-top: 1.1rem;
+  }
+
+  .country-glance__text :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  .country-glance__text :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .country-glance__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  .country-glance__portrait {
+    position: relative;
+    flex: none;
+    width: 3.5rem;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 3px var(--color-surface-2),
+      0 0 0 4px var(--color-line-strong);
+  }
+
+  .country-glance__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.5rem, 3.5vw, 2.5rem);
+    background: var(--color-surface-3);
+  }
+
+  :root[data-theme="light"] .country-glance__aside {
+    border-left: 1px solid var(--color-line);
+    background: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  }
+
+  .country-glance__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem 1.5rem;
+    margin: 0;
+  }
+
+  .country-glance__fact--wide {
+    grid-column: 1 / -1;
+  }
+
+  .country-glance__fact-label {
+    color: var(--color-accent-ink);
+  }
+
+  .country-glance__fact-value {
+    margin: 0.25rem 0 0;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+
+  .country-glance__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-left: auto;
+  }
+
+  .country-glance__link {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    transition: color var(--duration-ui) var(--ease-cinema);
+  }
+
+  .country-glance__link:hover {
+    color: var(--color-ink-nav);
+  }
+
+  /* Overlapping, staggered like a stamped passport page; oldest on the left. */
+  .country-glance__stamps {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    color: var(--color-accent-ink);
+    pointer-events: none;
+  }
+
+  .country-glance__stamp + .country-glance__stamp {
+    margin-left: -1.75rem;
+  }
+
+  .country-glance__stamp {
+    display: block;
+    margin-bottom: var(--stamp-lift, 0);
+  }
+</style>

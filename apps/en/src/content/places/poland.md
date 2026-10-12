@@ -1,6 +1,7 @@
 ---
 name: Poland
 flag: 🇵🇱
+localName: "Polska"
 region: europe
 tagline: Market squares, brick churches, and cities rebuilt with stubborn grace.
 showMap: true
@@ -33,4 +34,38 @@ locations:
     image: ../../assets/poland/warsaw.JPG
     lat: 52.2497
     lng: 21.0122
+headline: The Eastern Europe powerhouse
+facts:
+  population: 37 million
+  capital: Warsaw
+  language: Polish
+  currency: Polish złoty (zł)
+  timeZone: UTC+1
+  plugType: Type C / E · 230V
+  driving: right
+  bestFor: [Cities, History, Architecture]
+  bestTime: May–September · December for Christmas markets
+snapshots:
+  - image: ../../assets/poland/krakow-church.JPG
+    location: krakow
+  - image: ../../assets/poland/gdansk-2.JPG
+    location: gdansk
+  - image: ../../assets/poland/wroclaw-market-2.JPG
+    location: wroclaw
+  - image: ../../assets/poland/torun-copernicus.JPG
+    location: torun
+  - image: ../../assets/poland/wroclaw-panorama.JPG
+    location: wroclaw
+visits:
+  - year: 2016
+  - year: 2017
+    label: "Kraków"
 ---
+
+Poland is one of the most underrated countries in Europe. Its beautiful medieval cities share a common look, with grand market squares, brick churches and colourful townhouses, many of them painstakingly rebuilt after the Second World War.
+
+A country that was split for centuries, then brutally invaded in turns by Nazi Germany and the Soviet Union, yet emerged with a strong identity and the determination to rebuild itself.
+
+**Kraków** is the city most people know and visit, but we found **[Wrocław](/stories/wroclaw-travel-guide)** to be the real hidden gem, with its German influenced architecture and beatiful townhouses. Further north, the Hanseatic waterfront city of **Gdańsk** and the medieval small town of **Toruń** complete our list of [favourite Polish cities](/spotlights/polish-city-squares).
+
+Today, Poland is a country on the rise, with a strong economy and a growing tourism industry. But don't expect to see the level of crowds you might find in other more popular spots in Europe. Which is making Poland a perfect destination for a city break or a longer road trip.

@@ -28,6 +28,11 @@ export interface Props {
    * close-up, `popup` leaves the map where it is and only opens the popup.
    */
   focusLocations?: "pan" | "zoom" | "popup";
+  /**
+   * Off: markers open no popup. A click emits `locations-map:select` and the
+   * host page shows the location (country hub sidebar).
+   */
+  popups?: boolean;
   /** Itinerary path drawn on this map. The path frames the view. */
   route?: RouteMap;
   /** Vector countries instead of tiles. */
@@ -42,6 +47,13 @@ export interface Props {
   regionCountryAccents?: Partial<Record<string, Accent>>;
   /** Region chapter accent (default map tint when `regionHub`). */
   regionAccent?: Accent;
+  /**
+   * Country hub: region-hub look for a single country — neighbours stay
+   * neutral, the country takes an accent tint, places get name pills.
+   */
+  countryHub?: boolean;
+  /** Accent for the country tint when `countryHub`. */
+  countryAccent?: Accent;
 }
 
 const {
@@ -58,6 +70,7 @@ const {
   neutralLocationStamp = false,
   locationOnlyPopup = false,
   focusLocations = "pan",
+  popups = true,
   route,
   atlas,
   atlasFocus,
@@ -65,10 +78,21 @@ const {
   regionCountryNames = [],
   regionCountryAccents = {},
   regionAccent,
+  countryHub = false,
+  countryAccent,
 } = Astro.props;
 
 const regionHubAccentVar =
   regionHub && regionAccent ? accentVar(regionAccent) : undefined;
+const countryHubAccentVar =
+  countryHub && countryAccent ? accentVar(countryAccent) : undefined;
+const mapStyle = [
+  `--map-height: ${height}`,
+  regionHubAccentVar && `--region-hub-accent: ${regionHubAccentVar}`,
+  countryHubAccentVar && `--country-hub-accent: ${countryHubAccentVar}`,
+]
+  .filter(Boolean)
+  .join("; ");
 
 const payload = {
   pins,
@@ -81,6 +105,7 @@ const payload = {
   labelMode,
   locationOnlyPopup,
   focusLocations,
+  popups,
   route: route ?? null,
   atlas: atlas ?? route?.atlas ?? null,
   atlasFocus: atlasFocus ?? null,
@@ -88,6 +113,7 @@ const payload = {
   regionCountryNames,
   regionCountryAccents,
   regionAccent: regionAccent ?? null,
+  countryHub,
 };
 ---
 
@@ -109,9 +135,10 @@ const payload = {
       (atlas ?? route?.atlas) && "locations-map--atlas",
       atlasFocus && "locations-map--atlas-focus",
       regionHub && "locations-map--region-hub",
+      countryHub && "locations-map--country-hub",
       !fullBleed && "rounded-lg border border-line shadow-rest",
     ]}
-    style={`--map-height: ${height}${regionHubAccentVar ? `; --region-hub-accent: ${regionHubAccentVar}` : ""}`}
+    style={mapStyle}
     role="presentation"
   >
   </div>
@@ -140,7 +167,7 @@ const payload = {
     --map-pop-line: oklch(0.22 0.016 55);
   }
 
-    /* Map canvas follows the page theme. Ink, surface, and line inherit from :root. */
+  /* Map canvas follows the page theme. Ink, surface, and line inherit from :root. */
   :root[data-theme="light"] .locations-map {
     --color-map-paper: oklch(0.97 0.007 95);
     color-scheme: light;
@@ -246,7 +273,8 @@ const payload = {
   }
 
   .locations-map-shell .locations-map--region-hub.leaflet-dragging,
-  .locations-map-shell .locations-map--region-hub.leaflet-dragging
+  .locations-map-shell
+    .locations-map--region-hub.leaflet-dragging
     :global(.atlas-land) {
     cursor: grabbing;
   }
@@ -310,7 +338,8 @@ const payload = {
     cursor: pointer;
   }
 
-  .locations-map--region-hub :global(button.atlas-label--pill:hover:not(.is-focus)) {
+  .locations-map--region-hub
+    :global(button.atlas-label--pill:hover:not(.is-focus)) {
     background: var(--region-hub-pill-bg);
     color: var(--region-hub-accent);
   }
@@ -335,6 +364,28 @@ const payload = {
 
   .locations-map--region-hub :global(.atlas-label--pill:not(.is-focus)) {
     opacity: 1;
+  }
+
+  /* Country hub: neutral neighbours, accent-tinted country. */
+  .locations-map--country-hub.locations-map--atlas-focus :global(.atlas-land) {
+    fill: var(--atlas-land);
+  }
+
+  /* srgb: oklch hue interpolation skews chapter accents toward orange on neutral land. */
+  :root:not([data-theme="light"])
+    .locations-map--country-hub.locations-map--atlas-focus
+    :global(.atlas-land.is-focus) {
+    fill: color-mix(in srgb, var(--country-hub-accent) 15%, var(--atlas-land));
+    stroke: var(--country-hub-accent);
+    stroke-width: 1.4px;
+  }
+
+  :root[data-theme="light"]
+    .locations-map--country-hub.locations-map--atlas-focus
+    :global(.atlas-land.is-focus) {
+    fill: color-mix(in srgb, var(--country-hub-accent) 28%, var(--atlas-land));
+    stroke: var(--atlas-focus-edge);
+    stroke-width: 1.4px;
   }
 
   .locations-map :global(.leaflet-control-attribution) {
@@ -708,6 +759,7 @@ const payload = {
     labelMode: "full" | "name";
     locationOnlyPopup: boolean;
     focusLocations: "pan" | "zoom" | "popup";
+    popups: boolean;
     route: RouteMap | null;
     atlas: RouteAtlas | null;
     atlasFocus: string | null;
@@ -717,6 +769,7 @@ const payload = {
       Record<string, "jade" | "saffron" | "terracotta" | "cobalt">
     >;
     regionAccent: "jade" | "saffron" | "terracotta" | "cobalt" | null;
+    countryHub: boolean;
   };
 
   const PIN_GLYPH =
@@ -917,6 +970,24 @@ const payload = {
 
           markersById.set(pin.locationId, marker);
 
+          marker.on("mouseover", () => {
+            marker.getElement()?.classList.add("is-hover");
+          });
+          marker.on("mouseout", () => {
+            marker.getElement()?.classList.remove("is-hover");
+          });
+
+          if (!payload.popups) {
+            marker.on("click", () => {
+              shell.dispatchEvent(
+                new CustomEvent("locations-map:select", {
+                  detail: { id: pin.locationId },
+                }),
+              );
+            });
+            continue;
+          }
+
           marker.bindPopup(
             popupHtml(
               pin,
@@ -927,12 +998,6 @@ const payload = {
             popupOptions,
           );
 
-          marker.on("mouseover", () => {
-            marker.getElement()?.classList.add("is-hover");
-          });
-          marker.on("mouseout", () => {
-            marker.getElement()?.classList.remove("is-hover");
-          });
           marker.on("popupopen", () => {
             setActiveMarker(marker);
             shell.dispatchEvent(
@@ -960,6 +1025,19 @@ const payload = {
           if (!marker) return;
 
           setActiveMarker(marker);
+
+          if (!payload.popups) {
+            const closeZoom = Math.min(
+              viewMaxZoom,
+              Math.max(focusFromZoom + 4, focusFitMaxZoom),
+            );
+            const zoom =
+              payload.focusLocations === "zoom"
+                ? focusFromZoom + (closeZoom - focusFromZoom) * 0.5
+                : map.getZoom();
+            animateToView(marker.getLatLng(), zoom, 0.65);
+            return;
+          }
 
           if (payload.focusLocations === "popup") {
             marker.openPopup();
@@ -1294,9 +1372,12 @@ const payload = {
           setActiveMarker(null);
           if (payload.regionHub) setRegionHubPins(null);
           animateToView(overviewCenter, overviewZoom, 0.7, () => {
-            highlightController?.setRings([]);
+            // Region hub clears its picked country; other maps keep their fixed focus.
+            highlightController?.setRings(payload.regionHub ? [] : rings);
             atlasLayer?.setPreview(null);
-            atlasLayer?.setFocus(null);
+            atlasLayer?.setFocus(
+              payload.regionHub ? null : (payload.atlasFocus ?? null),
+            );
             focusFromZoom = overviewZoom;
             focusFitMaxZoom = payload.fitMaxZoom;
           });
@@ -1325,4 +1406,3 @@ const payload = {
   initLocationsMaps();
   document.addEventListener("astro:page-load", () => initLocationsMaps());
 </script>
-

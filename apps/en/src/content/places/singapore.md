@@ -1,12 +1,13 @@
 ---
 name: Singapore
 flag: 🇸🇬
+localName: "新加坡"
 region: asia
 tagline: Garden towers, hawker halls, and a harbor where worlds converge.
 thumbnail: ../../assets/singapore/gardens-by-the-bay.jpg
 cover: ../../assets/singapore/gardens-by-the-bay-day.JPG
 coverLocation: Gardens by the Bay
-showMap: true
+showMap: false
 locations:
   - id: chinatown
     name: "Chinatown"
@@ -34,19 +35,35 @@ locations:
     lat: 1.2868
     lng: 103.8545
 snapshots:
-  - image: ../../assets/singapore/marina-bay.JPG
-    location: Singapore Skyline
-  - image: ../../assets/singapore/arab-street.JPG
-    location: kampong-glam
+  - image: ../../assets/singapore/night-river.JPG
+    location: Singapore River
+  - image: ../../assets/singapore/gardens-by-the-bay.jpg
+    location: Gardens by the Bay
   - image: ../../assets/singapore/chinatown-mural.JPG
     location: chinatown
-  - image: ../../assets/singapore/marina-bay-sands.JPG
-    location: Marina Bay Sands
+  - image: ../../assets/singapore/arab-street.JPG
+    location: kampong-glam
+  - image: ../../assets/singapore/marina-bay.JPG
+    location: Marina Bay
+headline: Is this the best city in the world?
+facts:
+  population: 6 million
+  capital: Singapore (city-state)
+  language: English, Malay, Mandarin, Tamil
+  currency: Singapore dollar (S$)
+  timeZone: UTC+8
+  plugType: Type G · 230V
+  driving: left
+  bestFor: [Food, Nightlife, Culture]
+  bestTime: February–April, the driest months
+visits:
+  - year: 2023
+  - year: 2026
 ---
 
 Situated in one of the most important shipping choke points of the world, in the strait of Malacca, Singapore a major port and financial center, a real hub for the entire region.
 
-The city is unlike any other place in Southeast Asia. It's a melting pot of cultures, languages and cuisines, all packed into a small island. We arrived here for the first time [in 2023](/itineraries/singapore-malaysia-thailand-2-weeks) and we loved the city so much that we made it part of our last trip to Southeast Asia in 2026.
+This city is unlike any other place in Southeast Asia. It's a melting pot of cultures, languages and cuisines, all packed into a small island. We arrived here for the first time [in 2023](/itineraries/singapore-malaysia-thailand-2-weeks) and we loved the city so much that we made it part of our last trip to Southeast Asia in 2026.
 
 Singapore is one of those cities that hits you immediately — spotless streets, tropical heat, and a skyline that looks like it was designed for [night photography](/spotlights/singapore-by-night). The famous Marina Bay Sands towers and Gardens by the Bay achiveved world-wide landmark recognition, merely years after being built.
 

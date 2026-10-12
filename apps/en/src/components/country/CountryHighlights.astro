@@ -1,0 +1,225 @@
+---
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import { en } from "~/i18n/en";
+import { HIGHLIGHTS_MAX_COUNT, type CountrySnapshot } from "~/lib/countryPage";
+
+export interface Props {
+  /** First photo is the large one in the middle. */
+  photos: CountrySnapshot[];
+  countryName: string;
+}
+
+const { photos, countryName } = Astro.props;
+const shots = photos.slice(0, HIGHLIGHTS_MAX_COUNT);
+const PIN_GLYPH =
+  "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
+---
+
+<section
+  id="highlights"
+  class="section country-highlights-section"
+  aria-label={en.places.highlightsLabel(countryName)}
+>
+  <div
+    class:list={["country-highlights", `country-highlights--${shots.length}`]}
+  >
+    {
+      shots.map((shot, index) => {
+        const featured = index === 0;
+        return (
+          <figure
+            class:list={[
+              "country-highlights__shot motion-reveal-media shadow-rest",
+              { "country-highlights__shot--featured": featured },
+            ]}
+          >
+            <CoverImage
+              src={shot.image}
+              alt={shot.caption}
+              widths={featured ? [640, 960, 1280, 1600] : [400, 600, 800, 960]}
+              sizes={
+                featured
+                  ? "(min-width: 900px) 44vw, 100vw"
+                  : "(min-width: 900px) 28vw, 50vw"
+              }
+              format="avif"
+              quality={82}
+              class="country-highlights__img"
+            />
+            <div class="country-highlights__scrim" aria-hidden="true" />
+            <figcaption class="country-highlights__location">
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                class="country-highlights__pin"
+              >
+                <path d={PIN_GLYPH} />
+              </svg>
+              {shot.location}
+            </figcaption>
+          </figure>
+        );
+      })
+    }
+  </div>
+</section>
+
+<style>
+  .country-highlights-section {
+    padding-top: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .country-highlights {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap-compact);
+  }
+
+  .country-highlights__shot {
+    position: relative;
+    display: grid;
+    grid-template: "stack" 1fr / 1fr;
+    overflow: hidden;
+    margin: 0;
+    border-radius: 2px;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+  }
+
+  .country-highlights__shot--featured {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* An odd photo out on small screens takes the full row. */
+  .country-highlights--4 .country-highlights__shot:last-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+  }
+
+  @media (width >= 900px) {
+    .country-highlights {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      height: clamp(28rem, 44vw, 35rem);
+    }
+
+    .country-highlights__shot,
+    .country-highlights__shot--featured,
+    .country-highlights--4 .country-highlights__shot:last-child {
+      aspect-ratio: auto;
+      grid-column: auto;
+    }
+
+    .country-highlights__shot--featured {
+      grid-column: 2;
+      grid-row: 1 / 3;
+    }
+
+    /* Five photos: two stacked on each side of the large one. */
+    .country-highlights--5 .country-highlights__shot:nth-child(2) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .country-highlights--5 .country-highlights__shot:nth-child(3) {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .country-highlights--5 .country-highlights__shot:nth-child(4) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .country-highlights--5 .country-highlights__shot:nth-child(5) {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    /* Four photos: a tall one on the left, two stacked on the right. */
+    .country-highlights--4 .country-highlights__shot:nth-child(2) {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    .country-highlights--4 .country-highlights__shot:nth-child(3) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .country-highlights--4 .country-highlights__shot:nth-child(4) {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    /* Three photos: three tall columns. */
+    .country-highlights--3 .country-highlights__shot:nth-child(2) {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    .country-highlights--3 .country-highlights__shot:nth-child(3) {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+  }
+
+  .country-highlights__shot > :global(.cover-image-shell),
+  .country-highlights__scrim,
+  .country-highlights__location {
+    grid-area: stack;
+  }
+
+  .country-highlights__shot > :global(.cover-image-shell) {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .country-highlights__shot :global(.cover-image-shell > img[data-astro-image]),
+  .country-highlights__shot :global(img.country-highlights__img) {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+  }
+
+  .country-highlights__scrim {
+    align-self: end;
+    z-index: 1;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--color-photo-scrim) 70%, transparent),
+      color-mix(in oklch, var(--color-photo-scrim) 40%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .country-highlights__location {
+    position: relative;
+    z-index: 2;
+    align-self: end;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: calc(100% - 1.5rem);
+    margin: 0 0 0.65rem 0.75rem;
+    color: var(--color-photo-ink);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: var(--tracking-microcaps);
+    line-height: 1.35;
+    text-transform: uppercase;
+    text-shadow: 0 1px 10px
+      color-mix(in oklch, var(--color-photo-scrim) 55%, transparent);
+  }
+
+  .country-highlights__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+</style>

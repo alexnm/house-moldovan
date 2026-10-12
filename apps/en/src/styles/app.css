@@ -529,7 +529,7 @@
   .grid-cards {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--grid-gap);
+    gap: var(--grid-gap-compact);
 
     @media (width >= 640px) {
       grid-template-columns: repeat(2, 1fr);
@@ -544,7 +544,7 @@
   .grid-countries {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--grid-gap);
+    gap: var(--grid-gap-compact);
 
     @media (width >= 640px) {
       grid-template-columns: repeat(2, 1fr);
@@ -563,7 +563,7 @@
   .grid-tiles {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--grid-gap);
+    gap: var(--grid-gap-compact);
 
     @media (width >= 640px) {
       grid-template-columns: repeat(2, 1fr);

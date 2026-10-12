@@ -1,6 +1,7 @@
 ---
 name: Argentina
 flag: 🇦🇷
+localName: "Argentina"
 region: south-america
 tagline: Patagonian ice, Andean peaks, and tango nights in Buenos Aires.
 showMap: true
@@ -10,11 +11,13 @@ thumbnail: ../../assets/argentina/laguna-de-los-tres.jpg
 locations:
   - id: buenos-aires
     name: "Buenos Aires"
+    summary: "The capital of Argentina is a vibrant city with a rich history and culture. From the passionate football fans to the tango shows and the many distinct neightbourhoods, Buenos Aires is a great spot to start your journey in Argentina."
     image: ../../assets/argentina/buenos-aires-casa-rosada.jpg
     lat: -34.6037
     lng: -58.3816
   - id: puerto-iguazu
     name: "Puerto Iguazú"
+    summary: "A small city situated at the triple border of Argentina, Brazil and Paraguay, Puerto Iguazú is the gateway to the Iguazú Falls, one of the most impressive natural wonders in the world. You can use it as a base to visit both the Argentine and Brazilian sides of the falls."
     image: ../../assets/argentina/iguazu-argentina.jpg
     lat: -25.5977
     lng: -54.5786
@@ -25,6 +28,7 @@ locations:
     lng: -72.2648
   - id: el-chalten
     name: "El Chaltén"
+    summary: "The gateway to the Patagonian wilderness, El Chaltén is a hub for hikers and nature lovers. Many of the great trails in Patagonia start right at the edge of the town."
     image: ../../assets/argentina/laguna-de-los-tres.jpg
     lat: -49.3315
     lng: -72.8863
@@ -39,17 +43,35 @@ locations:
     lat: -32.6532
     lng: -70.0112
 snapshots:
-  - image: ../../assets/argentina/perito-moreno-balcony.jpg
-    location: perito-moreno
-  - image: ../../assets/argentina/la-boca-caminito.jpg
+  - image: ../../assets/argentina/laguna-de-los-tres-evening.jpg
+    location: Mirador Fitz Roy, El Chaltén
+  - image: ../../assets/argentina/la-boca-caminito-2.jpg
     location: La Boca, Buenos Aires
-  - image: ../../assets/argentina/buenos-aires-obelisco.jpg
-    location: buenos-aires
-  - image: ../../assets/argentina/iguazu-upper-circuit.jpg
+  - image: ../../assets/argentina/perito-moreno-balcony.jpg
+    location: Perito Moreno
+  - image: ../../assets/argentina/iguazu-argentina.jpg
     location: Iguazú Falls
+  - image: ../../assets/argentina/loma-del-pliegue-tumbado-viewpoint.jpg
+    location: Loma del Pliegue Tumbado, El Chaltén
+headline: Love at first sight in South America
+facts:
+  population: 46 million
+  capital: Buenos Aires
+  language: Spanish
+  currency: Argentine peso (ARS)
+  timeZone: UTC−3
+  plugType: Type C / I · 220V
+  driving: right
+  bestFor: [Hiking, Nature, Cities, Food]
+  bestTime: October–April for Patagonia · Iguazú all year
+visits:
+  - year: 2019
+    label: Ruta 40
 ---
 
 Argentina is a huge country with so much to offer. From the urban vibes of Buenos Aires to the emptiness of the Patagonian plains and Andean peaks and the thundering Iguazú Falls, there is something for everyone.
+
+Argentina was the first country we visited in South America and it was love at first sight. It's hard to comprehend the sheer size of the country just by looking at a map. It's the eighth largest in the world by land area and offers a huge diversity of landscapes and cultures.
 
 Buenos Aires is one of the [most vibrant cities](/spotlights/colors-tango-and-football) in South America, with wide avenues, great food, and diverse neighbourhoods that can take days to explore. [Iguazú Falls](/stories/iguazu-falls-argentina-vs-brazil), shared with Brazil, are one of the most impressive natural wonders in the world.
 

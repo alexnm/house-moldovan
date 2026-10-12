@@ -1,9 +1,10 @@
 ---
 name: Thailand
 flag: 🇹🇭
+localName: "ไทย"
 region: asia
 tagline: Golden temples, island beaches, and street food at every corner.
-showMap: true
+showMap: false
 cover: ../../assets/thailand/pileh-lagoon-2.JPG
 coverLocation: Pileh Lagoon, Phi Phi Islands
 locations:
@@ -17,4 +18,17 @@ locations:
     image: ../../assets/thailand/maya-bay.JPG
     lat: 7.7407
     lng: 98.7784
+headline: Golden temples, island beaches, and street food at every corner
+facts:
+  population: 66 million
+  capital: Bangkok
+  language: Thai
+  currency: Thai baht (฿)
+  timeZone: UTC+7
+  plugType: Type A / B / C / O · 230V
+  driving: left
+  bestFor: [Food, Beaches, Temples, Islands]
+  bestTime: November–March, the cool dry season
+visits:
+  - year: 2023
 ---
