@@ -73,11 +73,10 @@ const isSingle = !hasDossier || !featuredStory;
 
   .region-guide__grid {
     display: grid;
-    gap: 0.85rem;
+    gap: var(--grid-gap-compact);
 
     @media (width >= 900px) {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: clamp(0.85rem, 1.5vw, 1.25rem);
       /* Featured card stretches to the combined height of the dossier column. */
       align-items: stretch;
     }
@@ -103,6 +102,6 @@ const isSingle = !hasDossier || !featuredStory;
   .region-guide__dossier {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: var(--grid-gap-compact);
   }
 </style>

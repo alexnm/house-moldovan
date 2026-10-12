@@ -24,10 +24,10 @@ const slides = await Promise.all(photos.map((p) => lightboxSources(p.image)));
   aria-label={en.article.photoCount(photos.length)}
   data-spotlight-gallery
 >
-  <ul class="m-0 list-none columns-1 gap-2.5 p-0 sm:columns-2">
+  <ul class="m-0 list-none columns-1 gap-(--grid-gap-compact) p-0 sm:columns-2">
     {
       photos.map((p, i) => (
-        <li class="motion-reveal-media mb-2.5 break-inside-avoid">
+        <li class="motion-reveal-media mb-(--grid-gap-compact) break-inside-avoid">
           <button
             type="button"
             class="gallery-item group relative block w-full cursor-zoom-in overflow-hidden rounded-sm p-0 shadow-rest"

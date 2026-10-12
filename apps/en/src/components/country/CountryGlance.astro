@@ -41,29 +41,15 @@ const {
 const STAMP_VARIANTS = ["round", "rect", "oval"] as const;
 
 /**
- * Tilt (deg) and lift (rem) per stamp in the chain, cycled when there are
- * more visits than steps. Each country gets one, so the cards don't all
- * look stamped from the same template.
+ * Tilt (deg) per stamp in the chain, cycled when there are more visits than
+ * steps. Each country gets one pattern, so the cards don't all look stamped
+ * from the same template. Vertical offset is separate — it grows with the
+ * visit count so a long chain can use the column's height.
  */
 const STAMP_PATTERNS = [
-  // Zigzag: down, up, down.
-  [
-    { rotate: -8, lift: 0 },
-    { rotate: 6, lift: 1.6 },
-    { rotate: -3, lift: 0.4 },
-  ],
-  // Climb: each stamp a little higher, leaning alternately.
-  [
-    { rotate: 5, lift: 0 },
-    { rotate: -7, lift: 0.9 },
-    { rotate: 9, lift: 1.8 },
-  ],
-  // Dip: the middle one sits low and almost straight.
-  [
-    { rotate: -11, lift: 1.2 },
-    { rotate: -2, lift: 0 },
-    { rotate: 7, lift: 0.9 },
-  ],
+  [{ rotate: -8 }, { rotate: 6 }, { rotate: -3 }],
+  [{ rotate: 5 }, { rotate: -7 }, { rotate: 9 }],
+  [{ rotate: -11 }, { rotate: -2 }, { rotate: 7 }],
 ] as const;
 
 /** Stable per-country "random" (FNV-1a), so a page looks the same on every build. */
@@ -85,6 +71,23 @@ const stampHash = hashString(stampKey);
 const pattern =
   STAMP_PATTERNS[stampHash % STAMP_PATTERNS.length] ?? STAMP_PATTERNS[0];
 const firstVariant = Math.floor(stampHash / 3) % STAMP_VARIANTS.length;
+const visitCount = visits.length;
+/**
+ * High stamps rise this far. Five or more need a tall wave: the column is
+ * narrow, so they overlap on x, and the offset keeps each year in the clear.
+ * A pair only gets a small nudge — they sit apart instead of stacking.
+ */
+const stampFan =
+  visitCount >= 5 ? 4.5 : visitCount >= 3 ? 1.75 : 0.7;
+const liftPhase = stampHash % 2;
+
+function stampLift(index: number): number {
+  if (visitCount < 2) return 0;
+  if (visitCount === 2) return index === liftPhase ? 0 : stampFan;
+  const high = (index + liftPhase) % 2 === 1;
+  return high ? stampFan : 0.2;
+}
+
 const stamps = [...visits]
   .sort((a, b) => a.year - b.year)
   .map((visit, index) => {
@@ -95,7 +98,7 @@ const stamps = [...visits]
         STAMP_VARIANTS[(firstVariant + index) % STAMP_VARIANTS.length] ??
         "round",
       rotate: step.rotate,
-      lift: step.lift,
+      lift: stampLift(index),
       seed: (stampHash % 97) + index * 7,
     };
   });
@@ -173,11 +176,22 @@ const hasAside = facts.length > 0 || stamps.length > 0;
             </dl>
           )}
           {stamps.length > 0 && (
-            <div class="country-glance__stamps">
+            <div
+              class:list={[
+                "country-glance__stamps",
+                visitCount >= 3 && "country-glance__stamps--spread",
+                visitCount === 2 && "country-glance__stamps--pair",
+              ]}
+              style={
+                visitCount >= 3
+                  ? `--n: ${visitCount}; --fan: ${stampFan}rem`
+                  : undefined
+              }
+            >
               {stamps.map((stamp, index) => (
                 <span
                   class="country-glance__stamp"
-                  style={`--stamp-lift: ${stamp.lift}rem`}
+                  style={`--stamp-lift: ${stamp.lift}rem; --i: ${index}`}
                 >
                   <PassportStamp
                     id={`${stampKey}-${index}`}
@@ -358,8 +372,10 @@ const hasAside = facts.length > 0 || stamps.length > 0;
     color: var(--color-ink-nav);
   }
 
-  /* Overlapping, staggered like a stamped passport page; oldest on the left. */
+  /* Oldest on the left. One or two sit in a row; three or more share the
+     column width and stagger vertically so a long chain still fits. */
   .country-glance__stamps {
+    --stamp-slot: 8.5rem; /* rect / oval width in PassportStamp.astro */
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
@@ -369,12 +385,49 @@ const hasAside = facts.length > 0 || stamps.length > 0;
     pointer-events: none;
   }
 
-  .country-glance__stamp + .country-glance__stamp {
-    margin-left: -1.75rem;
-  }
-
   .country-glance__stamp {
     display: block;
     margin-bottom: var(--stamp-lift, 0);
+  }
+
+  /* Two stamps stay apart. They shrink only when the column is narrower
+     than the pair plus the gap, so a phone doesn't force them to overlap. */
+  .country-glance__stamps--pair {
+    container-type: inline-size;
+    gap: 2rem;
+  }
+
+  .country-glance__stamps--pair :global(.passport-stamp--rect),
+  .country-glance__stamps--pair :global(.passport-stamp--oval) {
+    width: min(8.5rem, calc((100cqw - 2rem) / 2));
+  }
+
+  .country-glance__stamps--pair :global(.passport-stamp--round) {
+    width: min(7rem, calc((100cqw - 2rem) / 2));
+  }
+
+  /* Distribute across the column. The first sits on the left, the last on
+     the right, and the ones between take equal steps — overlapping only as
+     much as the width requires. --fan lifts every other stamp so that
+     overlap falls on the corners, not the year. */
+  .country-glance__stamps--spread {
+    position: relative;
+    height: calc(7.6rem + var(--fan));
+    padding-top: 0;
+  }
+
+  .country-glance__stamps--spread .country-glance__stamp {
+    position: absolute;
+    bottom: var(--stamp-lift, 0);
+    left: calc(
+      var(--i) / max(var(--n) - 1, 1) * (100% - var(--stamp-slot))
+    );
+    z-index: var(--i);
+    margin-bottom: 0;
+  }
+
+  .country-glance__stamps--spread .country-glance__stamp:last-child {
+    left: auto;
+    right: 0;
   }
 </style>
