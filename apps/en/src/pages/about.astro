@@ -1,9 +1,14 @@
 ---
 import Hero from "@shared/components/article/Hero.astro";
 import CoverImage from "@shared/components/media/CoverImage.astro";
+import type { SectionLink } from "@shared/components/article/SectionNavigation.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import TypePictogram from "~/components/layout/marks/TypePictogram.astro";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import AboutContactSheet from "~/components/about/AboutContactSheet.astro";
+import PassportPages from "~/components/about/PassportPages.astro";
 import { en } from "~/i18n/en";
+import { getEnFeed } from "~/lib/content";
+import { SISTER_SITE_URL } from "~/lib/site";
 import heroImage from "~/assets/about/hero.JPG";
 import alexMelaImage from "~/assets/about/alex-mela.JPG";
 import coverImage from "~/assets/about/cover.jpg";
@@ -14,13 +19,67 @@ import alexUzbekistanImage from "~/assets/about/alex-uzbekistan.jpg";
 import melaPeruImage from "~/assets/about/mela-peru.JPG";
 import melaEdiImage from "~/assets/about/mela-edi.JPG";
 import peCreastaOg from "~/assets/about/pe-creasta-og.png";
-import { SISTER_SITE_URL } from "~/lib/site";
 
-const notes = [
-  { ...en.about.notes.stories, kind: "story" },
-  { ...en.about.notes.itineraries, kind: "itinerary" },
-  { ...en.about.notes.spotlights, kind: "spotlight" },
-] as const;
+const feed = await getEnFeed();
+
+const sections: SectionLink[] = [
+  { id: "passport", label: en.about.sections.passport, icon: "plane" },
+  { id: "journal", label: en.about.sections.journal, icon: "directions" },
+  { id: "sister", label: en.about.sections.sister, icon: "map" },
+];
+
+const facts = [
+  { label: en.about.facts.basedIn, value: en.about.facts.basedInValue },
+  { label: en.about.facts.since, value: "2012" },
+  { label: en.about.facts.countries, value: en.about.facts.countriesValue },
+  { label: en.about.facts.copilot, value: en.about.facts.copilotValue },
+];
+
+const prints = [
+  { image: melaImage, alt: en.about.melaAlt, place: "Bruges, Belgium" },
+  { image: alexImage, alt: en.about.alexAlt, place: "Dolomites, Italy" },
+  {
+    image: alexIguazuImage,
+    alt: "Alex with arms open facing Iguazu Falls",
+    place: "Iguazu Falls, Brazil",
+  },
+  {
+    image: alexUzbekistanImage,
+    alt: "Alex standing in a blue-tiled alcove in Uzbekistan",
+    place: "Khiva, Uzbekistan",
+  },
+  {
+    image: melaPeruImage,
+    alt: "Mela with alpacas in Peru",
+    place: "Cusco, Peru",
+  },
+  {
+    image: melaEdiImage,
+    alt: "Mela carrying Edi overlooking a coastal lagoon",
+    place: "Crete, Greece",
+  },
+  { image: coverImage, alt: en.about.melaAlexAlt, place: "Romania" },
+];
+
+/** One card per note type, fronted by its newest photo (newest first feed). */
+const noteTypes = [
+  { ...en.about.notes.stories, kind: "story" as const },
+  { ...en.about.notes.itineraries, kind: "itinerary" as const },
+  { ...en.about.notes.spotlights, kind: "spotlight" as const },
+].flatMap((note) => {
+  const ofKind = feed.filter((a) => a.kind === note.kind);
+  const latest = ofKind[0];
+  return latest
+    ? [
+        {
+          ...note,
+          count: ofKind.length,
+          image: latest.data.hero,
+          alt: latest.data.title,
+        },
+      ]
+    : [];
+});
 ---
 
 <BaseLayout
@@ -34,70 +93,101 @@ const notes = [
     title={en.about.heroTitle}
     meta={en.about.heroSummary}
     location="Tenerife, Spain"
+    sections={sections}
     transitionName="hero-about"
   />
 
-  <section class="section section-y-lg about-split">
-    <div class="about-copy">
-      <div class="prose-body motion-reveal max-w-prose">
-        <p>
-          Hi there, fellow travelers! We are Mela and Alex, the two people
-          behind House Moldovan. We are based in Romania and we've been
-          travelling together since 2012.
-        </p>
-        <p>
-          We visited over 40 countries and are eager to share our experiences
-          with you. 👶 Edi is our little travel companion and he's been part of
-          our travels since 2024.
-        </p>
-        <p>
-          We started this site to keep our travel writing and photography in one
-          place: honest impressions from the trips we took, organized so you can
-          <a href="/explore">browse by region</a> or follow along in
-          <a href="/journal">the journal</a>.
-        </p>
+  <section id="us" class="section section-y-lg scroll-mt-20">
+    <figure class="about-note motion-reveal shadow-rest">
+      <span class="about-note__mark" aria-hidden="true">“</span>
+
+      <div class="about-note__portrait">
+        <div class="about-note__clip">
+          <CoverImage
+            src={alexMelaImage}
+            alt={en.home.about.portraitAlt}
+            widths={[160, 240, 320]}
+            sizes="9rem"
+            format="avif"
+            quality={82}
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover object-[center_28%]"
+          />
+        </div>
       </div>
 
-      <div class="about-notes-block" aria-labelledby="about-notes-heading">
-        <header class="section-header">
-          <p class="stamp text-ink-dim">{en.about.notesKicker}</p>
-          <h2 id="about-notes-heading" class="display section-heading mt-2">
-            {en.about.notesHeading}
-          </h2>
-        </header>
+      <div class="about-note__body">
+        <p class="stamp about-note__kicker">{en.region.editorialKicker}</p>
+        <blockquote class="about-note__text">
+          <p>
+            Hi there, fellow travelers! We are Mela and Alex, the two people
+            behind House Moldovan. We are based in Romania and we've been
+            travelling together since 2012.
+          </p>
+          <p>
+            We visited over 40 countries and are eager to share our experiences
+            with you. 👶 Edi is our little travel companion and he's been part
+            of our travels since 2024.
+          </p>
+          <p>
+            We started this site to keep our travel writing and photography in
+            one place: honest impressions from the trips we took, organized so
+            you can <a href="/explore">browse by region</a> or follow along in
+            <a href="/journal">the journal</a>.
+          </p>
+        </blockquote>
 
-        <ol class="about-notes">
+        <dl class="about-facts">
           {
-            notes.map((note) => (
-              <li class="about-note motion-reveal">
-                <span class="about-note__mark text-ink" aria-hidden="true">
-                  <TypePictogram kind={note.kind} />
-                </span>
-                <div class="about-note__body">
-                  <span class="about-note__tick" aria-hidden="true" />
-                  <h3 class="display subsection-heading">{note.title}</h3>
-                  <p class="mt-3 max-w-prose leading-relaxed text-ink-dim">
-                    {note.description}
-                  </p>
-                  <a
-                    href={note.href}
-                    class="link-more link-accent link-accent--dim mt-5 inline-block"
-                  >
-                    {note.cta} →
-                  </a>
-                </div>
-              </li>
+            facts.map((fact) => (
+              <div class="about-facts__item">
+                <dt class="micro about-facts__label">{fact.label}</dt>
+                <dd class="display about-facts__value">{fact.value}</dd>
+              </div>
             ))
           }
-        </ol>
+        </dl>
       </div>
+    </figure>
 
-      <div class="motion-reveal max-w-prose">
-        <p class="stamp text-ink-dim">Sister website</p>
-        <h2 id="about-sister-heading" class="display section-heading mt-2">
-          Pe creaste
-        </h2>
-        <p class="mt-4 text-lg leading-relaxed">
+    <div class="about-sheet">
+      <AboutContactSheet prints={prints} label={en.about.contactSheetLabel} />
+    </div>
+  </section>
+
+  <PassportPages />
+
+  <section id="journal" class="section section-y-lg scroll-mt-20">
+    <header class="section-header">
+      <p class="stamp text-accent-ink">{en.about.notesKicker}</p>
+      <h2 class="display section-heading mt-2">{en.about.journalHeading}</h2>
+    </header>
+
+    <ul class="about-notes">
+      {
+        noteTypes.map((note) => (
+          <li>
+            <ArticleCard
+              href={note.href}
+              title={note.title}
+              kicker={en.about.noteCount(note.count, note.kind)}
+              meta={note.description}
+              image={note.image}
+              imageAlt={note.alt}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section id="sister" class="section section-y-lg scroll-mt-20">
+    <div class="about-sister motion-reveal shadow-rest">
+      <div class="about-sister__copy">
+        <p class="stamp about-sister__kicker text-accent-ink">Sister website</p>
+        <h2 class="display section-heading mt-2">Pe creste</h2>
+        <p class="mt-3 max-w-prose leading-relaxed text-ink-dim">
           When we are not abroad, we hike the Romanian Carpathians. Our sister
           site, written in Romanian, collects routes, elevation profiles, and
           notes from those days on the ridge.
@@ -110,313 +200,222 @@ const notes = [
         >
           Visit pecreste.ro →
         </a>
-        <a
-          href={SISTER_SITE_URL}
-          class="about-sister-preview group motion-hover-media mt-6 block"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open Pe creastă"
-        >
-          <div
-            class="about-sister-preview__shell shadow-rest"
-            style={`aspect-ratio: ${peCreastaOg.width} / ${peCreastaOg.height}`}
-          >
-            <CoverImage
-              src={peCreastaOg}
-              alt="Pe creastă — hiking journal for the Romanian Carpathians"
-              widths={[640, 960, 1200]}
-              sizes="(min-width: 1024px) 36vw, 88vw"
-              format="png"
-              quality={90}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-          </div>
-        </a>
       </div>
+      <a
+        href={SISTER_SITE_URL}
+        class="about-sister__preview group"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open Pe creastă"
+      >
+        <div class="about-sister__shell">
+          <CoverImage
+            src={peCreastaOg}
+            alt="Pe creastă — hiking journal for the Romanian Carpathians"
+            widths={[640, 960, 1200]}
+            sizes="(min-width: 1024px) 40vw, 92vw"
+            format="png"
+            quality={90}
+            loading="lazy"
+            placeholder="blur"
+            wrapperClass="absolute inset-0"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </a>
     </div>
-
-    <aside class="about-photos" aria-label="Portraits">
-      <div class="about-portraits">
-        <figure class="about-portrait about-portrait--wide motion-reveal-media">
-          <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
-            style={`aspect-ratio: ${alexMelaImage.width} / ${alexMelaImage.height}`}
-          >
-            <CoverImage
-              src={alexMelaImage}
-              alt="Alex and Mela on a hillside overlooking the coast"
-              widths={[640, 960, 1280, 1600]}
-              sizes="(min-width: 1024px) 36vw, 100vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10"
-              >🇪🇸 Tenerife</span
-            >
-          </div>
-        </figure>
-
-        <figure class="about-portrait motion-reveal-media">
-          <div
-            class="about-portrait__shell group motion-hover-media shadow-rest"
-          >
-            <CoverImage
-              src={melaImage}
-              alt={en.about.melaAlt}
-              widths={[320, 480, 640, 960]}
-              sizes="(min-width: 1024px) 18vw, 44vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10">🇧🇪 Bruges</span
-            >
-          </div>
-        </figure>
-
-        <figure class="about-portrait motion-reveal-media">
-          <div
-            class="about-portrait__shell group motion-hover-media shadow-rest"
-          >
-            <CoverImage
-              src={alexImage}
-              alt={en.about.alexAlt}
-              widths={[320, 480, 640, 960]}
-              sizes="(min-width: 1024px) 18vw, 44vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10"
-              >🇮🇹 Dolomites</span
-            >
-          </div>
-        </figure>
-
-        <figure class="about-portrait about-portrait--wide motion-reveal-media">
-          <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
-            style={`aspect-ratio: ${alexIguazuImage.width} / ${alexIguazuImage.height}`}
-          >
-            <CoverImage
-              src={alexIguazuImage}
-              alt="Alex with arms open facing Iguazu Falls"
-              widths={[640, 960, 1280, 1600]}
-              sizes="(min-width: 1024px) 36vw, 100vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10"
-              >🇧🇷 Iguazu Falls</span
-            >
-          </div>
-        </figure>
-
-        <figure class="about-portrait motion-reveal-media">
-          <div
-            class="about-portrait__shell group motion-hover-media shadow-rest"
-          >
-            <CoverImage
-              src={alexUzbekistanImage}
-              alt="Alex standing in a blue-tiled alcove in Uzbekistan"
-              widths={[320, 480, 640, 960]}
-              sizes="(min-width: 1024px) 18vw, 44vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10"
-              >🇺🇿 Uzbekistan</span
-            >
-          </div>
-        </figure>
-
-        <figure class="about-portrait motion-reveal-media">
-          <div
-            class="about-portrait__shell group motion-hover-media shadow-rest"
-          >
-            <CoverImage
-              src={melaPeruImage}
-              alt="Mela with alpacas in Peru"
-              widths={[320, 480, 640, 960]}
-              sizes="(min-width: 1024px) 18vw, 44vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10">🇵🇪 Peru</span>
-          </div>
-        </figure>
-
-        <figure class="about-portrait about-portrait--wide motion-reveal-media">
-          <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
-            style={`aspect-ratio: ${melaEdiImage.width} / ${melaEdiImage.height}`}
-          >
-            <CoverImage
-              src={melaEdiImage}
-              alt="Mela carrying Edi overlooking a coastal lagoon"
-              widths={[640, 960, 1280, 1600]}
-              sizes="(min-width: 1024px) 36vw, 100vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10">🇬🇷 Crete</span>
-          </div>
-        </figure>
-
-        <figure class="about-portrait about-portrait--wide motion-reveal-media">
-          <div
-            class="about-portrait__shell about-portrait__shell--wide group motion-hover-media shadow-rest"
-            style={`aspect-ratio: ${coverImage.width} / ${coverImage.height}`}
-          >
-            <CoverImage
-              src={coverImage}
-              alt={en.about.melaAlexAlt}
-              widths={[640, 960, 1280, 1600]}
-              sizes="(min-width: 1024px) 36vw, 100vw"
-              format="avif"
-              quality={82}
-              loading="lazy"
-              placeholder="blur"
-              wrapperClass="absolute inset-0"
-              class="h-full w-full object-cover"
-            />
-            <span class="stamp-badge absolute top-2 left-2 z-10"
-              >🇷🇴 Romania</span
-            >
-          </div>
-        </figure>
-      </div>
-    </aside>
   </section>
 </BaseLayout>
 
 <style>
-  .about-split {
-    display: grid;
-    gap: clamp(2.5rem, 5vw, 4rem);
-
-    @media (width >= 1024px) {
-      grid-template-columns: 3fr 2fr;
-      gap: clamp(2rem, 4vw, 3.5rem);
-      align-items: start;
-    }
-  }
-
-  .about-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-section-lg);
-    min-width: 0;
-  }
-
-  .about-notes {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
+  /* Same card as the region page's "A note from us". */
   .about-note {
-    display: grid;
-    gap: 1rem;
-    padding-block: clamp(1.75rem, 3vw, 2.25rem);
-    border-top: 1px solid var(--color-line);
+    --note-bg: var(--color-surface-2);
+    position: relative;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin: 0;
+    overflow: hidden;
+    padding: clamp(1.5rem, 4vw, 3.25rem);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-accent);
+    background: var(--note-bg);
 
-    @media (width >= 640px) {
-      /* Rail is sized by the pictogram, which needs ~7rem to stay legible. */
-      grid-template-columns: 7rem 1fr;
-      gap: 2rem;
+    @media (width >= 768px) {
+      gap: 2.25rem;
     }
+  }
+
+  :global(html[data-theme="light"]) .about-note {
+    border: 1px solid var(--color-line);
+    border-left: 4px solid var(--color-accent);
   }
 
   .about-note__mark {
-    /* Below the rail width the pictogram would squeeze the copy, so it drops. */
-    display: none;
-    align-self: start;
-    width: 7rem;
-    /* The drawings carry roughly a fifth of their height as empty space above
-       the artwork; pull most of it back so the top edge reads level with the
-       heading instead of floating below it. */
-    margin-top: -1.1rem;
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 2rem);
+    right: clamp(1.25rem, 3vw, 2.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 12vw, 11rem);
+    line-height: 0.62;
+    color: var(--color-accent);
+    pointer-events: none;
+  }
 
-    @media (width >= 640px) {
-      display: block;
+  .about-note__portrait {
+    position: relative;
+    flex: none;
+    width: 4.5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 4px var(--note-bg),
+      0 0 0 5px var(--color-line-strong);
+
+    @media (width >= 768px) {
+      width: 7rem;
     }
   }
 
-  .about-note__tick {
-    display: block;
-    width: 3rem;
-    height: 3px;
-    margin-bottom: 0.85rem;
-    background: var(--color-accent);
-    border-radius: 1px;
-  }
-
-  .about-sister-preview__shell {
-    position: relative;
+  .about-note__clip {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 50%;
   }
 
-  .about-photos {
+  .about-note__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     min-width: 0;
+  }
 
-    @media (width >= 1024px) {
-      position: sticky;
-      top: 6rem;
+  .about-note__kicker {
+    margin: 0;
+    color: var(--color-accent-ink);
+  }
+
+  .about-note__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 80ch;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-ink);
+    text-wrap: pretty;
+  }
+
+  .about-note__text p {
+    margin: 0;
+  }
+
+  .about-note__text a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .about-note__signature {
+    font-size: 0.9rem;
+    color: var(--color-ink);
+  }
+
+  .about-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 80ch;
+    margin: 0.5rem 0 0;
+    border-top: 1px solid var(--color-line);
+
+    @media (width >= 768px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
-  .about-portraits {
+  .about-facts__item {
+    padding-block: 1rem 0.25rem;
+  }
+
+  .about-facts__label {
+    color: var(--color-accent-ink);
+  }
+
+  .about-facts__value {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .about-sheet {
+    margin-top: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .about-notes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: var(--grid-gap-compact);
-    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (width >= 768px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
-  .about-portrait--wide {
-    grid-column: 1 / -1;
-  }
-
-  .about-portrait__shell {
-    position: relative;
+  /* Full-width card: copy padded on the left, the site preview bleeding to the
+     top, right and bottom edges. Stacks with the preview bleeding below. */
+  .about-sister {
+    display: grid;
     overflow: hidden;
-    border-radius: 2px;
-    aspect-ratio: 4 / 5;
+    border-radius: 8px;
+    background: var(--color-surface-2);
+
+    @media (width >= 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      align-items: stretch;
+    }
   }
 
-  .about-portrait__shell--wide {
-    aspect-ratio: auto;
+  :global(html[data-theme="light"]) .about-sister {
+    border: 1px solid var(--color-line);
+  }
+
+  .about-sister__copy {
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  }
+
+  .about-sister__copy :global(.section-heading) {
+    font-size: clamp(2rem, 1.4rem + 1.6vw, 2.75rem);
+  }
+
+  .about-sister__preview {
+    display: block;
+    min-height: 14rem;
+    margin-left: clamp(1.5rem, 3.5vw, 2.5rem);
+
+    @media (width < 768px) {
+      margin-left: 0;
+    }
+  }
+
+  .about-sister__shell {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .about-sister__shell :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: left center;
   }
 </style>

@@ -92,18 +92,18 @@ const description = data.summary;
     </div>
 
     {
-      readNext.length > 0 && (
+      readNext.length > 0 ? (
         <div class="motion-reveal section-divider">
           <ReadNext articles={readNext} />
         </div>
+      ) : (
+        <nav class="section mt-4 mb-24">
+          <a href="/journal" class="link-more link-accent link-accent--dim">
+            ← {en.article.backToJournal}
+          </a>
+        </nav>
       )
     }
-
-    <nav class="section mt-4 mb-24">
-      <a href="/journal" class="link-more link-accent link-accent--dim">
-        ← {en.article.backToJournal}
-      </a>
-    </nav>
   </article>
 </BaseLayout>
 

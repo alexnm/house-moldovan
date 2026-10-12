@@ -20,12 +20,14 @@ export const en = {
     regionsHeading: "Explore by region",
     countriesHeading: "Featured destinations",
     recentHeading: "Recent journal notes",
+    latestStory: "Latest story",
     exploreCta: "See all regions",
     featuredCta: "See all countries",
     seeAll: "See entire journal",
     about: {
+      editorialKicker: "About us",
       heading: "The family travel journal",
-      cta: "More about us",
+      passportCta: "Check out our passport",
       portraitAlt: "Alex and Mela on a hillside overlooking the coast",
     },
   },
@@ -134,6 +136,36 @@ export const en = {
     kicker: "About",
     heroTitle: "House Moldovan",
     heroSummary: "A few words about us and our travel journal",
+    sections: {
+      passport: "Our passport",
+      journal: "The journal",
+      sister: "Pe creste",
+    },
+    facts: {
+      basedIn: "Based in",
+      basedInValue: "Romania",
+      since: "Travelling since",
+      countries: "Countries",
+      countriesValue: "40+",
+      copilot: "Travelling with Edi since",
+      copilotValue: "2024",
+    },
+    contactSheetLabel: "Us, on the road",
+    passport: {
+      kicker: "Our passport",
+      heading: (firstYear: number) => `Travelling since ${firstYear}`,
+      summary:
+        "Every trip we've written about here, stamped with the year we went. Each stamp opens the country.",
+      pageLabel: "Visas",
+      years: "Years",
+      stamps: "Stamps",
+      countries: "Countries",
+      stampLabel: (country: string, year: number) =>
+        `${country}, ${year}: open the ${country} page`,
+    },
+    journalHeading: "Three types of content",
+    noteCount: (n: number, kind: "story" | "itinerary" | "spotlight") =>
+      `${n} ${kind === "story" ? (n === 1 ? "story" : "stories") : kind === "itinerary" ? (n === 1 ? "itinerary" : "itineraries") : n === 1 ? "spotlight" : "spotlights"}`,
     notesKicker: "What's in the journal",
     notesHeading: "The journal",
     notes: {

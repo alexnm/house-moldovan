@@ -30,4 +30,7 @@ facts:
   driving: right
   bestFor: [Cities, Architecture, Desert, Shopping]
   bestTime: November–March, before the summer heat
+visits:
+  - year: 2025
+    label: Dubai
 ---

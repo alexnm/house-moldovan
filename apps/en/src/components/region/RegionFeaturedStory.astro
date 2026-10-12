@@ -13,10 +13,20 @@ export interface Props {
   countryMeta: string;
   accent: Accent;
   transitionName?: string;
+  /** Badge above the title; defaults to "Featured story". */
+  badge?: string;
 }
 
-const { href, title, summary, hero, countryMeta, accent, transitionName } =
-  Astro.props;
+const {
+  href,
+  title,
+  summary,
+  hero,
+  countryMeta,
+  accent,
+  transitionName,
+  badge = en.region.featuredStory,
+} = Astro.props;
 ---
 
 <a
@@ -45,7 +55,7 @@ const { href, title, summary, hero, countryMeta, accent, transitionName } =
 
   <div class="featured-story__copy">
     <span class="stamp-badge stamp-badge--accent featured-story__badge">
-      {en.region.featuredStory}
+      {badge}
     </span>
     <h3 class="display photo-title-shadow featured-story__title">{title}</h3>
     <p class="featured-story__summary">{summary}</p>

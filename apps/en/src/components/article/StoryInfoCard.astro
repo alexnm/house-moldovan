@@ -22,7 +22,7 @@ const { items, sections } = Astro.props;
   class="story-card surface-card overflow-hidden rounded-lg shadow-rest"
   aria-label={en.article.storyCard}
 >
-  <dl class="m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
+  <dl class="story-card__facts m-0 grid grid-cols-2 gap-x-6 gap-y-5 bg-accent/10 p-6 md:p-7">
     {
       items.map((it) => (
         <div>
@@ -71,6 +71,9 @@ const { items, sections } = Astro.props;
 </aside>
 
 <style>
+  :root[data-theme="dark"] .story-card__facts {
+    background: var(--color-surface-3);
+  }
   .story-toc__link {
     display: flex;
     align-items: baseline;

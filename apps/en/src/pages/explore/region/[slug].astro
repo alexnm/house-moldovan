@@ -56,7 +56,14 @@ const {
       featuredStory={featuredStory}
       accent={accent}
     />
-    {editorial.length > 0 && <RegionEditorial paragraphs={editorial} />}
+    {
+      editorial.length > 0 && (
+        <RegionEditorial
+          paragraphs={editorial}
+          countries={countries.map((c) => c.country)}
+        />
+      )
+    }
 
     {
       atlas && countries.length > 0 && (

@@ -46,12 +46,17 @@ const enriched: Enriched[] = await Promise.all(
 ---
 
 <section class="section" aria-labelledby="read-next-heading">
-  <h2
-    id="read-next-heading"
-    class="display subsection-heading mb-(--space-header) text-ink"
-  >
-    {en.article.nextRead}
-  </h2>
+  <header class="section-header flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
+    <h2 id="read-next-heading" class="display subsection-heading text-ink">
+      {en.article.nextRead}
+    </h2>
+    <a
+      href="/journal"
+      class="link-more link-accent link-accent--dim ml-auto shrink-0"
+    >
+      {en.article.backToJournal} →
+    </a>
+  </header>
   <div class:list={[enriched.length > 1 ? "grid-cards" : "mx-auto max-w-2xl"]}>
     {
       enriched.map((item) => (

@@ -1,0 +1,316 @@
+---
+/**
+ * Every visit from the places collection, stamped on passport pages: one page
+ * per year, ink colour from the country's region. Each stamp links to its
+ * country page.
+ */
+import PassportStamp from "~/components/country/PassportStamp.astro";
+import { en } from "~/i18n/en";
+import { getPublishedPlaces } from "~/lib/content";
+import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
+import type { Accent } from "@shared/lib/accent";
+
+const VARIANTS = ["rect", "round", "oval"] as const;
+/** Small hand-stamped tilts, cycled across the whole passport. */
+const TILTS = [-8, 6, -3, 9, -6, 4, -11, 2, 7, -5] as const;
+
+interface Stamp {
+  placeId: string;
+  country: string;
+  localName?: string;
+  forceLocalName?: boolean;
+  label?: string;
+  accent?: Accent;
+}
+
+const [places, regions] = await Promise.all([
+  getPublishedPlaces(),
+  getAllRegions(),
+]);
+const regionsById = regionMapById(regions);
+
+const byYear = new Map<number, Stamp[]>();
+const stampedCountries = new Set<string>();
+
+for (const place of [...places].sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+)) {
+  const accent =
+    place.data.accent ?? regionsById.get(regionIdFromPlace(place))?.data.accent;
+  for (const visit of place.data.visits) {
+    stampedCountries.add(place.id);
+    const list = byYear.get(visit.year) ?? [];
+    list.push({
+      placeId: place.id,
+      country: place.data.name,
+      localName: place.data.localName,
+      forceLocalName: place.data.stampLocalName,
+      label: visit.label,
+      accent,
+    });
+    byYear.set(visit.year, list);
+  }
+}
+
+let stampIndex = 0;
+const pages = [...byYear.entries()]
+  .sort(([a], [b]) => a - b)
+  .map(([year, stamps], pageIndex) => ({
+    year,
+    stamps: stamps.map((stamp, i) => {
+      const n = stampIndex++;
+      return {
+        ...stamp,
+        variant: VARIANTS[(pageIndex + i) % VARIANTS.length]!,
+        rotate: TILTS[n % TILTS.length]!,
+        seed: (n * 7) % 97,
+        id: `about-${stamp.placeId}-${year}-${i}`,
+      };
+    }),
+  }));
+
+const firstYear = pages[0]?.year;
+const counts = [
+  { label: en.about.passport.years, value: pages.length },
+  { label: en.about.passport.stamps, value: stampIndex },
+  { label: en.about.passport.countries, value: stampedCountries.size },
+];
+---
+
+{
+  pages.length > 0 && firstYear && (
+    <section
+      id="passport"
+      class="section passport-section scroll-mt-20"
+      aria-labelledby="passport-heading"
+    >
+      <div>
+        <header class="passport-head">
+          <div class="motion-reveal">
+            <p class="stamp passport-head__kicker">{en.about.passport.kicker}</p>
+            <h2 id="passport-heading" class="display section-heading mt-2">
+              {en.about.passport.heading(firstYear)}
+            </h2>
+            <p class="passport-head__summary">{en.about.passport.summary}</p>
+          </div>
+          <dl class="passport-counts">
+            {counts.map((count) => (
+              <div>
+                <dt class="stamp passport-counts__label">{count.label}</dt>
+                <dd class="display passport-counts__value">{count.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </header>
+
+        <ol class="passport-pages motion-reveal-media shadow-rest">
+          {pages.map((page) => (
+            <li class="passport-page">
+              <p class="passport-page__head stamp" aria-hidden="true">
+                <span>{en.about.passport.pageLabel}</span>
+                <span class="passport-page__year">{page.year}</span>
+              </p>
+              <h3 class="sr-only">{page.year}</h3>
+              <ul class="passport-page__stamps">
+                {page.stamps.map((stamp) => (
+                  <li>
+                    <a
+                      href={`/explore/${stamp.placeId}`}
+                      class="passport-page__stamp"
+                      data-ink={stamp.accent}
+                      aria-label={en.about.passport.stampLabel(
+                        stamp.country,
+                        page.year,
+                      )}
+                    >
+                      <PassportStamp
+                        id={stamp.id}
+                        variant={stamp.variant}
+                        country={stamp.country}
+                        localName={stamp.localName}
+                        forceLocalName={stamp.forceLocalName}
+                        year={page.year}
+                        label={stamp.label}
+                        rotate={stamp.rotate}
+                        seed={stamp.seed}
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .passport-section {
+    /* Paper and inks stay the same in both themes: it's a printed object. */
+    --paper: oklch(0.93 0.025 82);
+    --paper-edge: oklch(0.83 0.03 75);
+    --paper-ink: oklch(0.32 0.03 60);
+  }
+
+  .passport-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .passport-head__kicker {
+    margin: 0;
+    color: var(--color-accent-ink);
+  }
+
+  .passport-head__summary {
+    margin: 1rem 0 0;
+    max-width: 52ch;
+    color: var(--color-ink-dim);
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  .passport-counts {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin: 0;
+  }
+
+  .passport-counts__label {
+    color: var(--color-ink-faint);
+  }
+
+  .passport-counts__value {
+    margin: 0.35rem 0 0;
+    font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    line-height: 0.9;
+    color: var(--color-accent-ink);
+  }
+
+  .passport-pages {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Every page as tall as the fullest one, across all rows. */
+    grid-auto-rows: 1fr;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--paper-edge);
+    gap: 1px;
+
+    @media (width >= 760px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (width >= 1100px) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .passport-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 15rem;
+    padding: 0.9rem 0.9rem 1.25rem;
+    color: var(--paper-ink);
+    background-color: var(--paper);
+    /* Faint guilloche, like the security print on a real visa page. */
+    background-image:
+      radial-gradient(
+        circle at 50% 115%,
+        oklch(0.88 0.04 80) 0,
+        transparent 60%
+      ),
+      repeating-radial-gradient(
+        circle at 50% 50%,
+        oklch(0.32 0.03 60 / 0.04) 0 1px,
+        transparent 1px 9px
+      );
+  }
+
+  .passport-page__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid oklch(0.32 0.03 60 / 0.22);
+    font-size: 0.66rem;
+    color: oklch(0.32 0.03 60 / 0.7);
+  }
+
+  .passport-page__year {
+    font-weight: 500;
+    color: var(--paper-ink);
+  }
+
+  .passport-page__stamps {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem 0.4rem;
+    margin: 0;
+    padding: 1rem 0 0;
+    list-style: none;
+  }
+
+  .passport-page__stamp {
+    display: block;
+    color: var(--paper-ink);
+    transition: transform var(--duration-ui) var(--ease-cinema);
+  }
+
+  .passport-page__stamp :global(.passport-stamp--rect),
+  .passport-page__stamp :global(.passport-stamp--oval) {
+    width: 6.25rem;
+  }
+
+  .passport-page__stamp :global(.passport-stamp--round) {
+    width: 5.25rem;
+  }
+
+  /* Region inks, tuned for paper (the light-theme ink values). */
+  .passport-page__stamp[data-ink="saffron"] {
+    color: oklch(0.53 0.16 85);
+  }
+  .passport-page__stamp[data-ink="cobalt"] {
+    color: oklch(0.46 0.13 250);
+  }
+  .passport-page__stamp[data-ink="terracotta"] {
+    color: oklch(0.5 0.16 35);
+  }
+  .passport-page__stamp[data-ink="jade"] {
+    color: oklch(0.46 0.15 155);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .passport-page__stamp:hover {
+      transform: scale(var(--motion-photo-scale, 1.04));
+    }
+  }
+
+  .passport-page__stamp:focus-visible {
+    outline: 2px solid var(--paper-ink);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .passport-page__stamp {
+      transition: none;
+    }
+  }
+</style>

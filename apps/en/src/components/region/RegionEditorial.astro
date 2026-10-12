@@ -1,15 +1,41 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import CoverImage from "@shared/components/media/CoverImage.astro";
+import PassportStamp from "~/components/country/PassportStamp.astro";
 import { en } from "~/i18n/en";
 import portrait from "~/assets/about/alex-mela.JPG";
 
 export interface Props {
   /** Rendered HTML paragraphs (first is the lede). */
   paragraphs: string[];
+  /** The region's countries; their latest visits become the stamps. */
+  countries?: CollectionEntry<"places">[];
 }
 
-const { paragraphs } = Astro.props;
+const { paragraphs, countries = [] } = Astro.props;
 const [lede, ...rest] = paragraphs;
+
+const STAMP_COUNT = 3;
+const VARIANTS = ["round", "rect", "oval"] as const;
+const TILTS = [-8, 7, -3] as const;
+
+/** Three most recent trips in the region, one stamp per country. */
+const stamps = countries
+  .flatMap((place) => {
+    const latest = [...place.data.visits].sort((a, b) => b.year - a.year)[0];
+    return latest ? [{ place, visit: latest }] : [];
+  })
+  .sort(
+    (a, b) =>
+      b.visit.year - a.visit.year ||
+      a.place.data.name.localeCompare(b.place.data.name),
+  )
+  .slice(0, STAMP_COUNT)
+  .map((stamp, i) => ({
+    ...stamp,
+    variant: VARIANTS[i % VARIANTS.length]!,
+    rotate: TILTS[i % TILTS.length]!,
+  }));
 ---
 
 <section class="section">
@@ -55,6 +81,28 @@ const [lede, ...rest] = paragraphs;
         </a>
       </figcaption>
     </div>
+
+    {
+      stamps.length > 0 && (
+        <ul class="region-editorial__stamps" aria-hidden="true">
+          {stamps.map((stamp, i) => (
+            <li class="region-editorial__stamp">
+              <PassportStamp
+                id={`region-note-${stamp.place.id}-${stamp.visit.year}`}
+                variant={stamp.variant}
+                country={stamp.place.data.name}
+                localName={stamp.place.data.localName}
+                forceLocalName={stamp.place.data.stampLocalName}
+                year={stamp.visit.year}
+                label={stamp.visit.label}
+                rotate={stamp.rotate}
+                seed={17 + i * 11}
+              />
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </figure>
 </section>
 
@@ -125,7 +173,6 @@ const [lede, ...rest] = paragraphs;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem 1.1rem;
-    font-size: 0.9rem;
   }
 
   .region-editorial__link {
@@ -144,15 +191,51 @@ const [lede, ...rest] = paragraphs;
   .region-editorial {
     --editorial-bg: var(--color-surface-2);
     --editorial-ring: var(--color-line-strong);
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: 1.25rem;
-    align-items: flex-start;
+    align-items: start;
     padding: clamp(1.5rem, 4vw, 3.25rem);
     background: var(--editorial-bg);
     border-left: 4px solid var(--color-accent);
 
     @media (width >= 768px) {
       gap: 2.25rem;
+    }
+
+    @media (width >= 1100px) {
+      grid-template-columns: auto minmax(0, 1fr) minmax(14rem, 19rem);
+    }
+  }
+
+  /* Three stamps beside the note, centred on the card's height: two side by
+     side, the third tucked under them. Below the note on narrower screens. */
+  .region-editorial__stamps {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-accent-ink);
+    pointer-events: none;
+
+    @media (width >= 1100px) {
+      grid-column: 3;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-self: center;
+      justify-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .region-editorial__stamp:nth-child(3) {
+    @media (width >= 1100px) {
+      grid-column: 1 / -1;
+      margin-top: -0.75rem;
     }
   }
 

@@ -1,0 +1,109 @@
+---
+/**
+ * Home "Recent journal notes": the newest story as a large featured card,
+ * with the next four notes of any kind stacked beside it as dossier rows
+ * (the region page's guide layout).
+ */
+import type { CollectionEntry } from "astro:content";
+import RegionFeaturedStory from "~/components/region/RegionFeaturedStory.astro";
+import RegionDossier from "~/components/region/RegionDossier.astro";
+import { en } from "~/i18n/en";
+import { articleHref, articleKicker } from "~/lib/articles";
+import { countryLine } from "~/lib/articlePlaces";
+import {
+  getPlace,
+  primaryCountryFromArticle,
+  type AnyEnArticle,
+} from "~/lib/content";
+import { getAllRegions, regionIdFromPlace, regionMapById } from "~/lib/regions";
+
+const ROW_COUNT = 4;
+
+export interface Props {
+  /** Newest first. */
+  feed: AnyEnArticle[];
+}
+
+const { feed } = Astro.props;
+const regionsById = regionMapById(await getAllRegions());
+
+const featured = feed.find((a) => a.kind === "story") ?? feed[0];
+const rows = feed.filter((a) => a !== featured).slice(0, ROW_COUNT);
+
+async function places(a: AnyEnArticle): Promise<CollectionEntry<"places">[]> {
+  return (await Promise.all(a.data.country.map((ref) => getPlace(ref)))).filter(
+    (p): p is CollectionEntry<"places"> => Boolean(p),
+  );
+}
+
+const featuredPrimary = featured
+  ? await getPlace(primaryCountryFromArticle(featured))
+  : undefined;
+const featuredAccent =
+  featuredPrimary?.data.accent ??
+  (featuredPrimary
+    ? regionsById.get(regionIdFromPlace(featuredPrimary))?.data.accent
+    : undefined) ??
+  "saffron";
+
+const dossier = await Promise.all(
+  rows.map(async (a) => ({
+    href: articleHref(a),
+    title: a.data.title,
+    summary: a.data.summary,
+    hero: a.data.hero,
+    kicker: articleKicker(a),
+    meta: countryLine(await places(a)),
+  })),
+);
+---
+
+{
+  featured && (
+    <div class="recent-notes">
+      <div class="recent-notes__featured motion-reveal-media">
+        <RegionFeaturedStory
+          href={articleHref(featured)}
+          title={featured.data.title}
+          summary={featured.data.summary}
+          hero={featured.data.hero}
+          countryMeta={countryLine(await places(featured))}
+          accent={featuredAccent}
+          transitionName={`hero-${featured.id}`}
+          badge={en.home.latestStory}
+        />
+      </div>
+      {dossier.length > 0 && (
+        <div class="recent-notes__rows">
+          {dossier.map((item) => (
+            <RegionDossier {...item} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .recent-notes {
+    display: grid;
+    gap: var(--grid-gap-compact);
+
+    @media (width >= 900px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      /* Featured card stretches to the height of the stacked rows. */
+      align-items: stretch;
+    }
+  }
+
+  .recent-notes__featured,
+  .recent-notes__rows {
+    min-width: 0;
+  }
+
+  .recent-notes__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap-compact);
+  }
+</style>
