@@ -269,4 +269,56 @@ const stamps = [...regions]
       transform: translateY(1.5rem);
     }
   }
+
+  /* Below sm the portrait joins the signature row, as on the country card. */
+  @media (width < 640px) {
+    .home-note {
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 0.75rem;
+      row-gap: 1rem;
+      align-items: center;
+    }
+
+    .home-note__body {
+      display: contents;
+    }
+
+    .home-note__kicker,
+    .home-note__body :global(.section-heading),
+    .home-note__text {
+      grid-column: 1 / -1;
+    }
+
+    .home-note__kicker {
+      order: 1;
+    }
+
+    .home-note__body :global(.section-heading) {
+      order: 2;
+    }
+
+    .home-note__text {
+      order: 3;
+    }
+
+    .home-note__portrait {
+      order: 4;
+      width: 3.5rem;
+      align-self: center;
+      box-shadow:
+        0 0 0 3px var(--note-bg),
+        0 0 0 4px var(--color-line-strong);
+    }
+
+    .home-note__caption {
+      order: 5;
+      align-self: center;
+      align-items: center;
+    }
+
+    .home-note__stamps {
+      order: 6;
+      align-self: stretch;
+    }
+  }
 </style>

@@ -859,6 +859,35 @@ const payload = {
     root
       .querySelectorAll<HTMLElement>("[data-locations-map]:not([data-mounted])")
       .forEach((shell) => {
+        const hubMap = shell.closest<HTMLElement>(
+          ".country-hub__map, .region-map-hub__map",
+        );
+        const compactQuery = window.matchMedia("(width < 720px)");
+        if (
+          hubMap &&
+          (compactQuery.matches || hubMap.getBoundingClientRect().width < 20)
+        ) {
+          if (shell.dataset.mapWait !== "1") {
+            shell.dataset.mapWait = "1";
+            const startWhenWide = (): void => {
+              if (
+                compactQuery.matches ||
+                hubMap.getBoundingClientRect().width < 20
+              ) {
+                return;
+              }
+              compactQuery.removeEventListener("change", startWhenWide);
+              resizeObserver.disconnect();
+              delete shell.dataset.mapWait;
+              requestAnimationFrame(() => initLocationsMaps(document));
+            };
+            const resizeObserver = new ResizeObserver(startWhenWide);
+            compactQuery.addEventListener("change", startWhenWide);
+            resizeObserver.observe(hubMap);
+          }
+          return;
+        }
+
         const payloadEl = shell.querySelector<HTMLScriptElement>(
           "[data-locations-map-payload]",
         );
@@ -1400,6 +1429,25 @@ const payload = {
           attributes: true,
           attributeFilter: ["data-theme"],
         });
+
+        if (hubMap) {
+          const refitHubMap = (): void => {
+            if (
+              compactQuery.matches ||
+              hubMap.getBoundingClientRect().width < 20
+            ) {
+              return;
+            }
+            requestAnimationFrame(() => {
+              map.invalidateSize();
+              refreshAtlasLabels();
+            });
+          };
+          compactQuery.addEventListener("change", refitHubMap);
+          new ResizeObserver(refitHubMap).observe(hubMap);
+        }
+
+        shell.dispatchEvent(new CustomEvent("locations-map:ready"));
       });
   }
 

@@ -39,8 +39,8 @@ const PIN_GLYPH =
               widths={featured ? [640, 960, 1280, 1600] : [400, 600, 800, 960]}
               sizes={
                 featured
-                  ? "(min-width: 900px) 44vw, 100vw"
-                  : "(min-width: 900px) 28vw, 50vw"
+                  ? "(min-width: 900px) 44vw, (min-width: 640px) 50vw, 100vw"
+                  : "(min-width: 900px) 28vw, (min-width: 640px) 50vw, 100vw"
               }
               format="avif"
               quality={82}
@@ -66,13 +66,9 @@ const PIN_GLYPH =
 </section>
 
 <style>
-  .country-highlights-section {
-    padding-top: clamp(3.5rem, 7vw, 6rem);
-  }
-
   .country-highlights {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--grid-gap-compact);
   }
 
@@ -85,18 +81,20 @@ const PIN_GLYPH =
     border-radius: 2px;
     min-width: 0;
     min-height: 0;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1;
   }
 
-  .country-highlights__shot--featured {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 10;
+  /* Below the mosaic, only the first four photos are shown. */
+  @media (width < 900px) {
+    .country-highlights__shot:nth-child(n + 5) {
+      display: none;
+    }
   }
 
-  /* An odd photo out on small screens takes the full row. */
-  .country-highlights--4 .country-highlights__shot:last-child {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 10;
+  @media (width >= 640px) {
+    .country-highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (width >= 900px) {
@@ -106,9 +104,7 @@ const PIN_GLYPH =
       height: clamp(28rem, 44vw, 35rem);
     }
 
-    .country-highlights__shot,
-    .country-highlights__shot--featured,
-    .country-highlights--4 .country-highlights__shot:last-child {
+    .country-highlights__shot {
       aspect-ratio: auto;
       grid-column: auto;
     }

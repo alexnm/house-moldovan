@@ -293,10 +293,33 @@
     margin-block: var(--space-section-tight);
   }
 
+  /* Country and region pages. One leading margin per section, so padding
+     and the next section's margin cannot stack. The first block after the
+     hero opens a little wider than the beats that follow. */
+  .place-rhythm > section.section,
+  .place-rhythm > .accent-scope > section {
+    margin-top: var(--space-section);
+    margin-bottom: 0;
+  }
+
+  .place-rhythm > header + section.section,
+  .place-rhythm > .accent-scope > section:first-child {
+    margin-top: var(--space-section-lg);
+  }
+
+  /* Continue reading is a coda. Drop the article's closing section margin
+     so it cannot stack with the divider, and keep the rule close under
+     the last paragraph. */
+  article > .section-y:not(:has(~ .section-y)) {
+    margin-bottom: 0;
+  }
+
   .section-divider {
-    margin-block: var(--space-section);
-    padding-top: var(--space-block);
-    border-top: 1px solid var(--color-line);
+    /* Footer is mt-32 (8rem). Pull it up so the gap under the cards
+       matches the tight gap above this block. */
+    margin-bottom: calc(var(--space-section-tight) - 8rem);
+    padding-top: 8rem;
+    padding-bottom: 4rem;
   }
 
   .hero-bottom {

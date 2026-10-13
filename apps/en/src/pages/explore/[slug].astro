@@ -77,7 +77,7 @@ const sections: SectionLink[] = [
   description={country.data.tagline}
   ogImage={placeOgPath(country.id)}
 >
-  <article class="accent-scope" data-accent={accent}>
+  <article class="accent-scope place-rhythm" data-accent={accent}>
     <Hero
       image={cover}
       alt={`${country.data.name}: ${country.data.tagline}`}
@@ -137,7 +137,7 @@ const sections: SectionLink[] = [
       )
     }
 
-    <section id="stories" class="section section-y scroll-mt-28">
+    <section id="stories" class="section scroll-mt-28">
       <header class="section-header">
         <h2 class="display section-heading">
           {en.places.storiesHeading(country.data.name)}

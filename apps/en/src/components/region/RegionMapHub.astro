@@ -235,7 +235,6 @@ const regionCountryAccents = Object.fromEntries(
   @import "../map/mapHubIndex.css";
 
   .region-map-hub {
-    padding-block: clamp(3.5rem, 7vw, 7rem);
     scroll-margin-top: 7rem;
   }
 
@@ -544,14 +543,37 @@ const regionCountryAccents = Object.fromEntries(
 
   @media (width < 720px) {
     .region-map-hub__stage {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto minmax(18rem, 1fr);
+      display: block;
+      min-height: 0;
+    }
+
+    .region-map-hub__hint {
+      display: none;
+    }
+
+    .region-map-hub__map {
+      display: none;
     }
 
     .region-map-hub__sidebar {
-      max-height: min(52svh, 28rem);
+      display: block;
+      max-height: none;
+      overflow: visible;
       border-inline-end: 0;
-      border-bottom: 1px solid var(--color-line);
+    }
+
+    .region-map-hub__overview:not([hidden]),
+    .region-map-hub__detail:not([hidden]) {
+      flex: none;
+      min-height: auto;
+      overflow: visible;
+    }
+
+    .region-map-hub__card,
+    .region-map-hub__copy {
+      flex: none;
+      min-height: auto;
+      overflow: visible;
     }
   }
 </style>
@@ -746,6 +768,12 @@ const regionCountryAccents = Object.fromEntries(
             }),
           );
         };
+
+        mapShell.addEventListener("locations-map:ready", () => {
+          if (!selected) return;
+          const country = countryById.get(selected);
+          if (country) highlightCountry(country, true);
+        });
 
         const selectCountry = (id: string | null): void => {
           if (id && id === selected) return;

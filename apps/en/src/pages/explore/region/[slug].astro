@@ -42,68 +42,70 @@ const {
   description={tagline}
   ogImage={regionOgPath(page.region.id)}
 >
-  <RegionHero
-    name={name}
-    tagline={tagline}
-    order={order}
-    accent={accent}
-    images={images}
-  />
-
-  <div class="accent-scope" data-accent={accent}>
-    <RegionGuide
-      dossier={dossier}
-      featuredStory={featuredStory}
+  <div class="place-rhythm">
+    <RegionHero
+      name={name}
+      tagline={tagline}
+      order={order}
       accent={accent}
+      images={images}
     />
-    {
-      editorial.length > 0 && (
-        <RegionEditorial
-          paragraphs={editorial}
-          countries={countries.map((c) => c.country)}
-        />
-      )
-    }
+
+    <div class="accent-scope" data-accent={accent}>
+      <RegionGuide
+        dossier={dossier}
+        featuredStory={featuredStory}
+        accent={accent}
+      />
+      {
+        editorial.length > 0 && (
+          <RegionEditorial
+            paragraphs={editorial}
+            countries={countries.map((c) => c.country)}
+          />
+        )
+      }
+
+      {
+        atlas && countries.length > 0 && (
+          <RegionMapHub
+            countries={countries}
+            locationPins={locationPins}
+            atlas={atlas}
+            regionAccent={accent}
+          />
+        )
+      }
+    </div>
 
     {
-      atlas && countries.length > 0 && (
-        <RegionMapHub
-          countries={countries}
-          locationPins={locationPins}
-          atlas={atlas}
-          regionAccent={accent}
-        />
+      notes.length > 0 && (
+        <section class="section">
+          <header class="section-header">
+            <h2 class="display section-heading">
+              {en.region.storiesHeading(name)}
+            </h2>
+          </header>
+          <ul class="grid-cards">
+            {notes.map((item) => (
+              <li>
+                <ArticleCard
+                  href={item.href}
+                  title={item.a.data.title}
+                  kicker={item.kicker}
+                  meta={item.countryMeta}
+                  image={item.a.data.hero}
+                  imageAlt={item.a.data.title}
+                  size="md"
+                  accent={item.accent}
+                  regionLabel={name}
+                  transitionName={`hero-${item.a.id}`}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
       )
     }
   </div>
-
-  {
-    notes.length > 0 && (
-      <section class="section section-y">
-        <header class="section-header">
-          <h2 class="display section-heading">
-            {en.region.storiesHeading(name)}
-          </h2>
-        </header>
-        <ul class="grid-cards">
-          {notes.map((item) => (
-            <li>
-              <ArticleCard
-                href={item.href}
-                title={item.a.data.title}
-                kicker={item.kicker}
-                meta={item.countryMeta}
-                image={item.a.data.hero}
-                imageAlt={item.a.data.title}
-                size="md"
-                accent={item.accent}
-                regionLabel={name}
-                transitionName={`hero-${item.a.id}`}
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
 </BaseLayout>
