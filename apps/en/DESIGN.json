@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-11T12:32:12.000Z",
+  "generatedAt": "2026-10-13T08:20:00.000Z",
   "title": "Design System: House Moldovan",
   "extensions": {
     "colorMeta": {
@@ -111,6 +111,86 @@
           "oklch(0.93 0.07 35)"
         ]
       },
+      "passport-paper": {
+        "role": "neutral",
+        "displayName": "Visa Paper",
+        "canonical": "oklch(0.93 0.025 82)",
+        "appliesTo": "passport pages, both themes",
+        "tonalRamp": [
+          "oklch(0.22 0.02 82)",
+          "oklch(0.32 0.02 82)",
+          "oklch(0.42 0.02 82)",
+          "oklch(0.52 0.02 82)",
+          "oklch(0.62 0.02 82)",
+          "oklch(0.72 0.02 82)",
+          "oklch(0.84 0.02 82)",
+          "oklch(0.94 0.02 82)"
+        ]
+      },
+      "passport-paper-edge": {
+        "role": "neutral",
+        "displayName": "Visa Edge",
+        "canonical": "oklch(0.83 0.03 75)",
+        "appliesTo": "gap between passport pages",
+        "tonalRamp": [
+          "oklch(0.22 0.03 75)",
+          "oklch(0.32 0.03 75)",
+          "oklch(0.42 0.03 75)",
+          "oklch(0.52 0.03 75)",
+          "oklch(0.62 0.03 75)",
+          "oklch(0.72 0.03 75)",
+          "oklch(0.84 0.03 75)",
+          "oklch(0.94 0.03 75)"
+        ]
+      },
+      "passport-ink": {
+        "role": "neutral",
+        "displayName": "Passport Ink",
+        "canonical": "oklch(0.32 0.03 60)",
+        "appliesTo": "default die color on visa paper",
+        "tonalRamp": [
+          "oklch(0.22 0.03 60)",
+          "oklch(0.32 0.03 60)",
+          "oklch(0.42 0.03 60)",
+          "oklch(0.52 0.03 60)",
+          "oklch(0.62 0.03 60)",
+          "oklch(0.72 0.03 60)",
+          "oklch(0.84 0.03 60)",
+          "oklch(0.94 0.03 60)"
+        ]
+      },
+      "map-paper": {
+        "role": "neutral",
+        "displayName": "Atlas Paper",
+        "canonical": "oklch(0.97 0.007 95)",
+        "appliesTo": "map ground in light theme",
+        "tonalRamp": [
+          "oklch(0.22 0.007 95)",
+          "oklch(0.32 0.007 95)",
+          "oklch(0.42 0.007 95)",
+          "oklch(0.52 0.007 95)",
+          "oklch(0.62 0.007 95)",
+          "oklch(0.72 0.007 95)",
+          "oklch(0.84 0.007 95)",
+          "oklch(0.94 0.007 95)"
+        ]
+      },
+      "map-film": {
+        "role": "neutral",
+        "displayName": "Atlas Film",
+        "canonical": "oklch(0.21 0.013 55)",
+        "appliesTo": "map ground at night",
+        "tonalRamp": [
+          "oklch(0.22 0.013 55)",
+          "oklch(0.32 0.013 55)",
+          "oklch(0.42 0.013 55)",
+          "oklch(0.52 0.013 55)",
+          "oklch(0.62 0.013 55)",
+          "oklch(0.72 0.013 55)",
+          "oklch(0.84 0.013 55)",
+          "oklch(0.94 0.013 55)"
+        ]
+      },
       "region-europe": {
         "role": "secondary",
         "displayName": "Alpine Cobalt",
@@ -145,11 +225,16 @@
         "purpose": "Nunito article prose, max 68ch."
       },
       "label": {
-        "displayName": "Stamp / Micro",
-        "purpose": "JetBrains Mono uppercase metadata on photos and chrome."
+        "displayName": "Micro label",
+        "purpose": "Bricolage uppercase metadata on photos and neutral UI. Not the inked passport die, and not navigation."
       }
     },
     "shadows": [
+      {
+        "name": "rest",
+        "value": "1px 2px 8px -5px oklch(0 0 0 / 0.6)",
+        "purpose": "Contact shadow on cards, maps, photos, and the passport. One shadow per frame."
+      },
       {
         "name": "lift",
         "value": "0 12px 30px -12px oklch(0 0 0 / 0.4)",
@@ -233,23 +318,23 @@
       "refersTo": "link-accent",
       "description": "Nav and footer wayfinding with ember underline sweep.",
       "html": "<a class=\"ds-link-accent\" href=\"#\">Explore</a>",
-      "css": ".ds-link-accent { position: relative; display: inline-block; font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.9 0.014 75); text-decoration: none; padding-bottom: 3px; transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent::after { content: \"\"; position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: oklch(0.88 0.2 86); transform: scaleX(0); transform-origin: left; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent:hover { color: oklch(0.96 0.012 75); } .ds-link-accent:hover::after { transform: scaleX(1); } .ds-link-accent:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-link-accent { position: relative; display: inline-block; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.9 0.014 75); text-decoration: none; padding-bottom: 3px; transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent::after { content: \"\"; position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: oklch(0.88 0.2 86); transform: scaleX(0); transform-origin: left; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent:hover { color: oklch(0.96 0.012 75); } .ds-link-accent:hover::after { transform: scaleX(1); } .ds-link-accent:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
-      "name": "Passport Stamp",
+      "name": "Micro label",
       "kind": "chip",
       "refersTo": "stamp",
-      "description": "Uppercase mono metadata for kickers and photo labels.",
+      "description": "Uppercase Bricolage metadata for kickers and photo labels. Not the inked passport die.",
       "html": "<span class=\"ds-stamp\">Spotlight · Europe</span>",
-      "css": ".ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+      "css": ".ds-stamp { font-family: \"Bricolage Grotesque Variable\", \"Bricolage Grotesque\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
     },
     {
       "name": "Kicker Badge",
       "kind": "chip",
       "refersTo": "stamp-badge",
-      "description": "The one frosted surface: mono label over photography, used on cards and photo grids. The accent variant fills with the chrome accent (saffron on dark, terracotta on light), drops the blur, and is mandatory for every full-bleed hero kicker.",
+      "description": "The one frosted surface: Bricolage micro label over photography, used on cards and photo grids. The accent variant fills with the chrome accent (saffron on dark, terracotta on light), drops the blur, and is mandatory for every full-bleed hero kicker.",
       "html": "<span class=\"ds-stamp-badge\">Spotlight</span> <span class=\"ds-stamp-badge ds-stamp-badge--accent\">Travel journal</span>",
-      "css": ".ds-stamp-badge { display: inline-flex; align-items: center; max-width: min(100%, 22rem); padding: 0.35rem 0.55rem; border-radius: 2px; font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; background: oklch(0.22 0.016 55 / 0.42); color: oklch(0.98 0.008 75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-stamp-badge--accent { background: oklch(0.88 0.2 86); color: oklch(0.22 0.04 86); -webkit-backdrop-filter: none; backdrop-filter: none; } a.ds-stamp-badge:hover { opacity: 0.88; }"
+      "css": ".ds-stamp-badge { display: inline-flex; align-items: center; max-width: min(100%, 22rem); padding: 0.35rem 0.55rem; border-radius: 2px; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; background: oklch(0.22 0.016 55 / 0.42); color: oklch(0.98 0.008 75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-stamp-badge--accent { background: oklch(0.88 0.2 86); color: oklch(0.22 0.04 86); -webkit-backdrop-filter: none; backdrop-filter: none; } a.ds-stamp-badge:hover { opacity: 0.88; }"
     },
     {
       "name": "Filter Pill Active",
@@ -257,7 +342,7 @@
       "refersTo": "filter-pill",
       "description": "Journal type filter selected state.",
       "html": "<button class=\"ds-filter-pill\" type=\"button\">Stories</button>",
-      "css": ".ds-filter-pill { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.2 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.4 0.016 55); border-radius: 9999px; padding: 6px 12px; cursor: pointer; } .ds-filter-pill:hover { border-color: oklch(0.5 0.02 55); } .ds-filter-pill:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-filter-pill { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.2 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.4 0.016 55); border-radius: 9999px; padding: 6px 12px; cursor: pointer; } .ds-filter-pill:hover { border-color: oklch(0.5 0.02 55); } .ds-filter-pill:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Region Jump",
@@ -265,7 +350,7 @@
       "refersTo": "region-jump",
       "description": "Drenched explore jump chip in chapter color.",
       "html": "<a class=\"ds-region-jump\" href=\"#\">South America</a>",
-      "css": ".ds-region-jump { display: inline-flex; align-items: center; font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; padding: 8px 14px; text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-region-jump:hover { opacity: 0.9; } .ds-region-jump:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-region-jump { display: inline-flex; align-items: center; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; padding: 8px 14px; text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-region-jump:hover { opacity: 0.9; } .ds-region-jump:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Poster Wordmark",
@@ -281,7 +366,7 @@
       "refersTo": "surface-card",
       "description": "Home chapter tile with watermark number and poster place name.",
       "html": "<a class=\"ds-region-tile\" href=\"#\"><span class=\"ds-region-tile__n\" aria-hidden=\"true\">01</span><p class=\"ds-stamp\">Chapter 01</p><h3 class=\"ds-region-tile__name\">South America</h3><p class=\"ds-region-tile__tag\">Andean ridges, jungle rivers, sun-drenched coasts.</p><span class=\"ds-stamp\">Explore →</span></a>",
-      "css": ".ds-region-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 16rem; padding: 1.25rem; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; text-decoration: none; overflow: hidden; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-region-tile:hover { transform: translateY(-1rem); } } .ds-region-tile__n { position: absolute; top: -0.35rem; right: -0.1rem; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 5.5rem; line-height: 1; opacity: 0.14; } .ds-region-tile__name { position: relative; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; } .ds-region-tile__tag { position: relative; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.95rem; line-height: 1.35; max-width: 24ch; opacity: 0.9; } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }"
+      "css": ".ds-region-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 16rem; padding: 1.25rem; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; text-decoration: none; overflow: hidden; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-region-tile:hover { transform: translateY(-1rem); } } .ds-region-tile__n { position: absolute; top: -0.35rem; right: -0.1rem; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 5.5rem; line-height: 1; opacity: 0.14; } .ds-region-tile__name { position: relative; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; } .ds-region-tile__tag { position: relative; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.95rem; line-height: 1.35; max-width: 24ch; opacity: 0.9; } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }"
     },
     {
       "name": "Photo Card",
@@ -289,28 +374,45 @@
       "refersTo": "surface-card",
       "description": "Signature film-frame article card; shell scales 1.04 on pointer hover.",
       "html": "<a class=\"ds-photo-card\" href=\"#\"><span class=\"ds-photo-card__shell\"><span class=\"ds-photo-card__img\" role=\"img\" aria-label=\"Mountain trail\"></span></span><div class=\"ds-photo-card__copy\"><span class=\"ds-photo-card__tick\"></span><p class=\"ds-stamp\">Story · South America</p><h3 class=\"ds-photo-card__title\">Salkantay trek to Machu Picchu</h3><p class=\"ds-stamp\">Peru</p></div></a>",
-      "css": ".ds-photo-card { position: relative; display: block; aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; text-decoration: none; color: oklch(0.98 0.008 75); } .ds-photo-card__shell { position: absolute; inset: 0; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-photo-card:hover .ds-photo-card__shell { transform: scale(1.04); } } .ds-photo-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, oklch(0.35 0.04 220), oklch(0.22 0.03 55) 55%, oklch(0.15 0.02 55)), oklch(0.28 0.04 150); } .ds-photo-card__img::after { content: \"\"; position: absolute; inset: 0; background: linear-gradient(to top, oklch(0.08 0.02 55 / 0.94) 0%, oklch(0.1 0.02 55 / 0.35) 55%, transparent 100%); } .ds-photo-card__copy { position: absolute; inset-inline: 0; bottom: 0; z-index: 1; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.15rem; } .ds-photo-card__tick { width: 3rem; height: 3px; background: oklch(0.75 0.175 155); } .ds-photo-card__title { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 0.96; letter-spacing: -0.03em; text-transform: none; } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; } .ds-photo-card:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-photo-card { position: relative; display: block; aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; text-decoration: none; color: oklch(0.98 0.008 75); box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-photo-card__shell { position: absolute; inset: 0; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-photo-card:hover .ds-photo-card__shell { transform: scale(1.04); } } .ds-photo-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, oklch(0.35 0.04 220), oklch(0.22 0.03 55) 55%, oklch(0.15 0.02 55)), oklch(0.28 0.04 150); } .ds-photo-card__img::after { content: \"\"; position: absolute; inset: 0; background: linear-gradient(to top, oklch(0.08 0.02 55 / 0.94) 0%, oklch(0.1 0.02 55 / 0.35) 55%, transparent 100%); } .ds-photo-card__copy { position: absolute; inset-inline: 0; bottom: 0; z-index: 1; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.15rem; } .ds-photo-card__tick { width: 3rem; height: 3px; background: oklch(0.75 0.175 155); } .ds-photo-card__title { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 0.96; letter-spacing: -0.03em; text-transform: none; } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; } .ds-photo-card:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Surface Card",
       "kind": "card",
       "refersTo": "surface-card",
-      "description": "Flat panel for non-photo containers.",
+      "description": "Panel for non-photo containers, with the contact shadow on the frame.",
       "html": "<div class=\"ds-surface-card\"><p class=\"ds-stamp\">Meta</p><p class=\"ds-surface-card__body\">Field notes from four regions.</p></div>",
-      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 8px; padding: 1.5rem; } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 8px; padding: 1.5rem; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+    },
+    {
+      "name": "Passport die",
+      "kind": "custom",
+      "refersTo": "stamp",
+      "description": "Inked rubber stamp for a country visit. Production component is PassportStamp.astro: turbulence ink, a small tilt, three dies. This snippet is the rect die on visa paper.",
+      "html": "<a class=\"ds-passport\" href=\"#\" aria-label=\"Peru, 2024\"><svg viewBox=\"0 0 220 136\" role=\"img\"><rect x=\"4\" y=\"4\" width=\"212\" height=\"128\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"5\"></rect><rect x=\"13\" y=\"13\" width=\"194\" height=\"110\" rx=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"></rect><text x=\"110\" y=\"42\" text-anchor=\"middle\">PERU</text><text class=\"ds-passport__year\" x=\"110\" y=\"96\" text-anchor=\"middle\">2024</text></svg></a>",
+      "css": ".ds-passport { display: inline-block; width: 8.5rem; padding: 1.25rem; color: oklch(0.46 0.15 155); background: oklch(0.93 0.025 82); border-radius: 6px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); text-decoration: none; transform: rotate(-6deg); } .ds-passport svg { display: block; width: 100%; height: auto; } .ds-passport text { fill: currentColor; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.28em; } .ds-passport__year { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 800; font-size: 40px; letter-spacing: 0.02em; } .ds-passport:hover { opacity: 0.88; } .ds-passport:focus-visible { outline: 2px solid oklch(0.32 0.03 60); outline-offset: 4px; }"
+    },
+    {
+      "name": "Atlas",
+      "kind": "custom",
+      "refersTo": "surface-card",
+      "description": "Cartographic frame: traced country edge, chapter ink, contact shadow. Paper ground shown; film ground is oklch(0.21 0.013 55).",
+      "html": "<figure class=\"ds-atlas\"><svg viewBox=\"0 0 320 180\" role=\"img\" aria-label=\"Country outline\"><path d=\"M40 110 C70 40 120 30 160 55 C200 30 260 48 280 100 C250 140 180 150 140 130 C90 150 50 140 40 110 Z\" fill=\"oklch(0.83 0.14 42 / 0.18)\" stroke=\"oklch(0.5 0.16 35)\" stroke-width=\"2\"></path><circle cx=\"168\" cy=\"78\" r=\"4\" fill=\"oklch(0.5 0.16 35)\"></circle></svg></figure>",
+      "css": ".ds-atlas { margin: 0; width: 20rem; background: oklch(0.97 0.007 95); border: 1px solid oklch(0.87 0.012 85); border-radius: 8px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); overflow: hidden; } .ds-atlas svg { display: block; width: 100%; height: auto; }"
     }
   ],
   "narrative": {
     "northStar": "Kodachrome Expedition",
-    "overview": "House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them.\n\nThis file covers housemoldovan.com (apps/en). The Romanian hiking sister site has its own context in apps/ro. Shared token foundation; separate identity.\n\nMotion is choreographed but respectful via the named role system in apps/en/src/styles/app.css. This system rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead. The one sanctioned blur is the `.stamp-badge` kicker over photography.\n\nGlobal chrome is theme-dependent — Saffron Gold `oklch(0.88 0.2 86)` on the film-night canvas, Terracotta `oklch(0.74 0.18 35)` on the light paper canvas — not the pale-lemon hue-98 value still sitting in the `@theme` fallback.",
+    "overview": "House Moldovan reads like a film-night travel journal. Photography leads. Condensed travel-poster type sets place names. Two printed inserts sit inside that evening: a passport of inked rubber stamps on visa paper, and an atlas of traced countries, route strokes, and chapter-colored pins. Both take a short contact shadow. The page around them stays typeset. Density is expedition-editorial: not a dashboard, and not a sketchbook.\n\nThis file covers housemoldovan.com (apps/en). The Romanian hiking sister site has its own context in apps/ro. Shared token foundation; separate identity.\n\nMotion is choreographed but respectful via the named role system in apps/en/src/styles/app.css. This system rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, magazine layouts that shout type where photographs should lead, and sketchbook travel blogs. The one sanctioned blur is the `.stamp-badge` kicker over photography.\n\nGlobal chrome is theme-dependent: Saffron Gold `oklch(0.88 0.2 86)` on the film-night canvas, Terracotta on the light paper canvas — not the pale-lemon hue-98 value still sitting in the `@theme` fallback.",
     "keyCharacteristics": [
       "Film-night warm-neutral canvas tuned so photography pops on phone or laptop",
       "Photography-first heroes with light top veils and deep bottom scrims",
-      "Condensed Big Shoulders Display + Bricolage UI/prose headings + Nunito body",
-      "Passport-stamp micro labels in JetBrains Mono; solid accent .stamp-badge--accent hero kickers, frosted .stamp-badge on cards",
-      "One global chrome accent per theme (saffron hue 86 on dark, terracotta hue 35 on light) for wayfinding; four chapter colors for place",
+      "Condensed Big Shoulders Display + Bricolage for UI, prose headings, and micro labels + Nunito body",
+      "Uppercase Bricolage micro labels; solid accent .stamp-badge--accent hero kickers, frosted .stamp-badge on cards",
+      "Inked passport dies only where a visit is the point; atlas maps stay cartographic",
+      "One global chrome accent per theme (saffron hue 86 on dark, terracotta on light) for wayfinding; four chapter colors for place",
       "Region-as-chapter color system with watermark chapter numbers on home tiles",
-      "Sharp film-frame corners (2px) on photo cards; tonal layering over heavy shadows",
+      "Sharp film-frame corners (2px) on photo cards; contact shadow on cards, maps, photos, and the passport",
       "Asymmetric rhythm grids, not uniform card templates",
       "Role-based cinema motion; pointer-only photo hover",
       "WCAG 2.1 AA target"
@@ -342,13 +444,28 @@
         "section": "typography"
       },
       {
-        "name": "The Stamp Is Metadata Rule",
-        "body": "Uppercase mono stamps carry type, region, dates, and wayfinding. Never use stamp style for sentences or body copy.",
+        "name": "The Micro Label Is Metadata Rule",
+        "body": "Uppercase Bricolage labels (.stamp, .micro, .stamp-badge) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.",
+        "section": "typography"
+      },
+      {
+        "name": "The Die Is an Object Rule",
+        "body": "PassportStamp is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Bricolage; the year is Big Shoulders. Use it where a visit is the point.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Script Rule",
+        "body": "No handwritten or script typeface. Irregularity belongs in the die's ink filter and tilt.",
         "section": "typography"
       },
       {
         "name": "The Flat Page Rule",
-        "body": "Article prose and explore lists sit flat on the film surface. Shadow appears only when a panel detaches (dropdown, mobile menu).",
+        "body": "Article prose and explore lists sit flat on the film surface. Maps, cards, plain images, and the passport take shadow-rest on the frame. Chrome panels that detach (dropdown, mobile menu) use Lift.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Printed Insert Rule",
+        "body": "The passport and the atlas are physical objects on the film page. They share a country's ink. They do not restyle the canvas, the type, or the chrome. Passport paper stays paper in both themes. Atlas ground follows the theme: paper by day, film at night.",
         "section": "elevation"
       },
       {
@@ -375,7 +492,9 @@
       "Do use OKLCH tokens from `app.css`; tint every neutral toward warm film hue ~55–75.",
       "Do honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.",
       "Do use motion tokens and role classes from `app.css`; put photo hover on the cover shell, not the fading img.",
-      "Do cap prose at 68ch; use stamp/micro style only for metadata.",
+      "Do cap prose at 68ch; use micro-label style only for metadata.",
+      "Do keep the passport and the atlas as printed inserts: regional ink, one contact shadow on the frame, typeset page around them.",
+      "Do use PassportStamp for a visit, and .stamp / .stamp-badge for metadata. They are different objects.",
       "Do write descriptive alt text on informative travel photography."
     ],
     "donts": [
@@ -392,7 +511,11 @@
       "Don't invent ad hoc hover scales or durations (no `scale-[1.03]` / `duration-500` one-offs); use `--motion-photo-scale` and the duration ladder.",
       "Don't wrap chrome (e.g. MetaBar) in scroll reveals; reserve `.motion-reveal*` for content and media that earn attention.",
       "Don't nest cards. One surface level per grouping.",
-      "Don't revive /ro subpath links; the sister site is a separate origin."
+      "Don't revive /ro subpath links; the sister site is a separate origin.",
+      "Don't add a handwritten or script typeface. The handmade signal is the passport die's ink and tilt.",
+      "Don't turn the atlas into a sketch map. Coastlines, borders, and routes stay cartographic.",
+      "Don't drop the contact shadow from cards, maps, photos, or the passport, and don't thicken it into a floating stack.",
+      "Don't call micro labels and passport dies by the same name in new UI. Labels are metadata. Dies are visits."
     ]
   }
 }

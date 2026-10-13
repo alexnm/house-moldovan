@@ -1,6 +1,6 @@
 ---
 name: House Moldovan
-description: A film-night photographic travel journal with travel-poster type and saturated regional chapters.
+description: A film-night photographic travel journal with travel-poster type, inked passport stamps, and an atlas.
 colors:
   accent-saffron: "oklch(0.88 0.2 86)"
   accent-saffron-ink: "oklch(0.5 0.2 86)"
@@ -17,6 +17,11 @@ colors:
   surface-raised: "oklch(0.2 0.016 55)"
   line-soft: "oklch(0.28 0.014 55)"
   line-strong: "oklch(0.4 0.016 55)"
+  passport-paper: "oklch(0.93 0.025 82)"
+  passport-paper-edge: "oklch(0.83 0.03 75)"
+  passport-ink: "oklch(0.32 0.03 60)"
+  map-paper: "oklch(0.97 0.007 95)"
+  map-film: "oklch(0.21 0.013 55)"
   region-south-america: "oklch(0.75 0.175 155)"
   region-asia: "oklch(0.9 0.19 85)"
   region-middle-east: "oklch(0.75 0.19 35)"
@@ -46,7 +51,7 @@ typography:
     fontWeight: 400
     lineHeight: 1.72
   label:
-    fontFamily: '"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace'
+    fontFamily: '"Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif'
     fontSize: "0.7rem"
     fontWeight: 400
     lineHeight: 1.4
@@ -122,22 +127,24 @@ components:
 
 **Creative North Star: "Kodachrome Expedition"**
 
-House Moldovan reads like a film-night travel journal stamped with place names: deep warm-neutral blacks that let photography blaze, condensed travel-poster display type, and passport-style micro labels. Density is expedition-editorial, not dashboard. The UI frames images and prose; it never competes with them. Brand and region names arrive as luggage-tag signals; story titles stay readable in mixed case.
+House Moldovan reads like a film-night travel journal. Photography leads. Condensed travel-poster type sets place names. Two printed inserts sit inside that evening: a passport of inked rubber stamps on visa paper, and an atlas of traced countries, route strokes, and chapter-colored pins. Both take a short contact shadow. The page around them stays typeset. Density is expedition-editorial: not a dashboard, and not a sketchbook. The UI frames images and prose; it never competes with them. Brand and region names arrive as luggage-tag signals; story titles stay readable in mixed case.
 
 This document covers the English journal at `housemoldovan.com` (`apps/en`). The Romanian hiking sister site has its own design context in `apps/ro/DESIGN.md`. The apps share a token foundation (body type, nav/footer shell, heading scale, theme), but they are **not one visual product**.
 
 Motion is **choreographed but respectful**: a named role system in `apps/en/src/styles/app.css` (`motion-reveal`, `motion-reveal-media`, `motion-parallax`, `motion-hover-*`, enter/stagger utilities) with a duration ladder (`--duration-micro` 200ms through `--duration-enter` 900ms) and shared distances (`--motion-photo-scale` 1.04, lifts, reveal offsets). Scroll timelines sit behind `@supports (animation-timeline: view())`. Easing is cinematic (exponential ease-out), never bounce or elastic. `prefers-reduced-motion` is role-based: kill ambient travel (parallax, reveal slide, hover lift/scale); keep short opacity for image load and chrome. Spacing uses a three-tier rhythm (tight / standard / chapter) via tokens; prefer `.section`, `.section-y*`, and `--grid-gap` over ad hoc margins.
 
-This system explicitly rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, and magazine layouts that shout type where photographs should lead. Blur has exactly one sanctioned home: the `.stamp-badge` kicker that sits over photography (see The One Blur Rule).
+This system explicitly rejects generic AI travel-blog templates, frosted-glass page and nav chrome, Fraunces-and-gradient cosplay, brochure tourism, influencer metric heroes, magazine layouts that shout type where photographs should lead, and sketchbook travel blogs (script headings, wobbly illustrated coastlines, scrapbook paper as the page). Blur has exactly one sanctioned home: the `.stamp-badge` kicker that sits over photography (see The One Blur Rule).
 
 **Key Characteristics:**
 
 - Film-night warm-neutral canvas tuned so photography pops on phone or laptop
 - Photography-first heroes with light top veils and deep bottom scrims (not heavy flat overlays)
-- Condensed Big Shoulders Display (uppercase for brand, sections, place names) + Bricolage UI/prose headings + Nunito body
-- Passport-stamp micro labels (`.stamp` / `.micro`) in JetBrains Mono; solid accent `.stamp-badge--accent` hero kickers, frosted `.stamp-badge` on cards
+- Condensed Big Shoulders Display (uppercase for brand and region names) + Bricolage for UI, prose headings, and micro labels + Nunito body
+- Micro labels (`.stamp` / `.micro`) in uppercase Bricolage; solid accent `.stamp-badge--accent` hero kickers, frosted `.stamp-badge` on cards
+- Inked passport dies (`PassportStamp`) only where a visit is the point: eroded ink, a small tilt, regional color, three shapes
+- Atlas maps: traced country edge, route stroke, chapter-colored pins; paper by day, film at night
 - Region-as-chapter color system with watermark chapter numbers on home tiles
-- Sharp film-frame corners (2px) on photo cards; tonal layering over heavy shadows
+- Sharp film-frame corners (2px) on photo cards; contact shadow (`--shadow-rest`) on cards, maps, and photos
 - Asymmetric rhythm grids, not uniform card templates
 - Role-based cinema motion (tokenized durations/distances; pointer-only photo hover)
 - WCAG 2.1 AA target: visible focus rings, informative image alt text, keyboard-accessible controls
@@ -190,9 +197,10 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 **Display Font:** Big Shoulders Display Variable  
 **UI / Prose Heading Font:** Bricolage Grotesque Variable  
 **Body Font:** Nunito Variable (Nunito, system-ui, sans-serif)  
-**Label Font:** JetBrains Mono Variable (monospace, uppercase stamp / micro labels)
+**Label Font:** Bricolage Grotesque Variable (uppercase micro labels)  
+**Code Font:** JetBrains Mono Variable, prose `code` only
 
-**Character:** Condensed travel-poster display with a warm humanist body. Body prose caps at **68ch** (`--container-prose`).
+**Character:** Condensed travel-poster display with a warm humanist body. Body prose caps at **68ch** (`--container-prose`). There is no script and no handwritten face. The handmade signal lives in the passport die's ink, not in the type.
 
 ### Hierarchy
 
@@ -200,7 +208,7 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 - **Headline / Section** (700, `clamp(2rem–3.25rem)`, line-height 0.94): `.section-heading`. Region chapter names use `.region-name` (uppercase).
 - **Title** (Bricolage 600, ~1.3rem): Prose `h2`/`h3`; photo card titles use Display at card scale, mixed case.
 - **Body** (Nunito 400, 1.125rem, line-height 1.72): Article prose. Max **68ch**.
-- **Stamp / Micro** (JetBrains Mono, 0.68–0.72rem, letter-spacing 0.12em, uppercase): Kickers (`.stamp-badge` on photos, `.micro` on neutral), nav links, meta.
+- **Micro label** (Bricolage, 0.68–0.72rem, letter-spacing 0.12em, uppercase): Kickers (`.stamp-badge` on photos, `.stamp` / `.micro` on neutral) and metadata. Navigation uses Bricolage at body size (`.nav-link`), not this micro style.
 
 ### Named Rules
 
@@ -208,23 +216,29 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 
 **The Display Owns the Fold Rule.** One display-scale headline per viewport fold. Do not stack multiple poster-scale headings without a photo or section break between them.
 
-**The Stamp Is Metadata Rule.** Uppercase mono stamps carry type, region, dates, and wayfinding. Never use stamp style for sentences or body copy.
+**The Micro Label Is Metadata Rule.** Uppercase Bricolage labels (`.stamp`, `.micro`, `.stamp-badge`) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.
+
+**The Die Is an Object Rule.** `PassportStamp` is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Bricolage; the year is Big Shoulders. Use it where a visit is the point (the about passport, a country arrival). Do not restyle headings, cards, or chrome into stamp lettering.
+
+**The No Script Rule.** No handwritten or script typeface. Irregularity belongs in the die's ink filter and tilt.
 
 ## 4. Elevation
 
-This system prefers **tonal layering** and **photo contrast** over shadow stacks. Depth comes from surface steps (`surface` → `surface-2` → `surface-raised`), film-frame photo edges, and gradient scrims, not floating cards everywhere.
+Prints sit on the page. Cards, maps, photos, and the passport take a short contact shadow so they read as objects. Chrome still separates by tonal steps (`surface` → `surface-2` → `surface-raised`), film-frame edges, and gradient scrims. Heroes, article prose, and explore lists stay flat.
 
 ### Shadow Vocabulary
 
-- **Rest** (`shadow-rest`, `0 3px 8px -5px oklch(0 0 0 / 0.6)`): Contact shadow for maps, cards, and plain images. Add the utility on the frame. A map inside a card does not also take it.
+- **Rest** (`--shadow-rest`, `1px 2px 8px -5px oklch(0 0 0 / 0.6)`): Contact shadow for maps, cards, plain images, and the passport. Add `shadow-rest` on the frame. A map inside a card does not also take it.
 - **Lift** (`0 12px 30px -12px oklch(0 0 0 / 0.4)`): Mobile nav dropdown panel, elevated menus.
 - **Deep** (`0 30px 80px -30px oklch(0 0 0 / 0.6)`): Available but rare; not the default card treatment.
 
-Photo cards keep gradient scrims and a short accent tick (not a full-width chrome bar). The rest shadow sits on the card frame. Full-bleed heroes stay unshadowed.
+Photo cards keep gradient scrims and a short accent tick (not a full-width chrome bar). The rest shadow sits on the card frame. Full-bleed heroes stay unshadowed. Do not grow this shadow into a floating stack or a hard offset print shadow.
 
 ### Named Rules
 
-**The Flat Page Rule.** Article prose and explore lists sit flat on the film surface. Maps, cards, and plain images take `shadow-rest` on the element. Chrome panels that detach (dropdown, mobile menu) use Lift.
+**The Flat Page Rule.** Article prose and explore lists sit flat on the film surface. Maps, cards, plain images, and the passport take `shadow-rest` on the frame. Chrome panels that detach (dropdown, mobile menu) use Lift.
+
+**The Printed Insert Rule.** The passport and the atlas are physical objects on the film page. They share a country's ink. They do not restyle the canvas, the type, or the chrome. Passport paper stays paper in both themes (`oklch(0.93 0.025 82)`). Atlas ground follows the theme: `map-paper` by day, `map-film` at night.
 
 **The Transform-Only Motion Rule.** Parallax, hover scale, and reveals use `transform` and `opacity`. Never animate width, height, or layout properties. Honor `prefers-reduced-motion`.
 
@@ -237,7 +251,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 ### Navigation
 
 - **Style:** Fixed top bar; transparent over heroes, solid when scrolled (`.site-nav.is-solid`). Never frosted and never bordered: the bar fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer, so the bar separates tonally instead of by a hairline. Identical shell to the RO nav; only type and accent differ.
-- **Typography:** `.micro.link-accent` for primary links; `.display` uppercase wordmark (~1.65rem).
+- **Typography:** `.nav-link` in Bricolage at body size for primary links; `.display` uppercase wordmark (~1.65rem). Micro labels stay off the nav.
 - **Hover / Active:** Accent underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
 - **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-lg`.
 - **Dropdown (desktop):** `surface-2` panel; region names in regional accent color.
@@ -250,10 +264,29 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 - **Hover / Active:** `ink` text; underline full width. Transition `--duration-ui` (280ms) `--ease-cinema`.
 - **Dim variant:** `.link-accent--dim` starts at `ink-dim`.
 
-### Stamps (`.stamp` / `.micro`)
+### Micro labels (`.stamp` / `.micro`)
 
-- **Style:** JetBrains Mono, uppercase, wide tracking (0.12em). Used on photos and neutral UI for metadata.
+- **Style:** Bricolage, uppercase, wide tracking (0.12em). Metadata only: type, region, dates, wayfinding.
 - **On scrims:** Where a gradient read layer already exists (card title blocks, region tiles), bare `.stamp` text is enough.
+- **Not a die:** This is luggage-tag type. The inked passport stamp is a separate component.
+
+### Passport die (`PassportStamp`)
+
+- **Role:** A rubber stamp for a country visit. Used on the about passport and where an arrival is the point. Each die links to its country.
+- **Shapes:** `rect`, `oval`, `round`. Cycle them so a page of stamps does not repeat one die.
+- **Ink:** `currentColor`, eroded with a turbulence filter and a slight displacement. Opacity about 0.9. Small tilts (a few degrees either way) so neighbours do not look machine-placed. Seed the filter so adjacent stamps differ.
+- **Type inside the die:** Bricolage 700 for the country line; Big Shoulders 800 for the year. Local names stamp beside the English one only when they read as a different name.
+- **Color:** On passport paper, regional ink uses the light-theme chapter inks (jade, saffron, terracotta, cobalt). Default paper ink is `oklch(0.32 0.03 60)`.
+- **Page:** Visa paper `oklch(0.93 0.025 82)`, edge `oklch(0.83 0.03 75)`, faint guilloche. The paper does not switch with the theme. The whole passport takes one `shadow-rest`.
+- **Don't:** Use the die as a heading style, a card kicker, or a nav treatment. Don't add a script face to make it feel more handmade.
+
+### Atlas
+
+- **Role:** Wayfinding. Country hubs, region hubs, and itinerary routes. A reader should be able to find the place.
+- **Drawing:** Traced country edge, a warm glaze on the subject country, neighbours sunk under a wash, route as a single stroke, pins in the chapter color. Natural Earth shapes for itinerary maps; Voyager tiles where a street-level basemap is the point.
+- **Ground:** `oklch(0.97 0.007 95)` on the paper theme, `oklch(0.21 0.013 55)` on film. Pins brighten on the night basemap so they hold.
+- **Frame:** `shadow-rest` on the map frame. A map inside a card does not take a second shadow. Full-bleed route figures skip the extra chrome.
+- **Don't:** Restyle the atlas as a hand-lettered illustration or a wobbly sketch coastline. The drawing is the border and the route, in the same ink family as that country's stamp.
 
 ### Kicker Badge (`.stamp-badge`)
 
@@ -336,7 +369,9 @@ Concrete guardrails derived from `apps/en/PRODUCT.md` and the implemented Kodach
 - **Do** use OKLCH tokens from `apps/en/src/styles/app.css`; tint every neutral toward warm film hue ~55–75.
 - **Do** honor `prefers-reduced-motion` via the role-based block: no parallax/hover travel; reveals and hero enters collapse to a short fade; keep cover/LQIP and chrome opacity transitions.
 - **Do** use motion tokens and role classes from `app.css`; put photo hover on the cover shell, not the fading img.
-- **Do** cap prose at 68ch; use stamp/micro style only for metadata.
+- **Do** cap prose at 68ch; use micro-label style only for metadata.
+- **Do** keep the passport and the atlas as printed inserts: regional ink, one contact shadow on the frame, typeset page around them.
+- **Do** use `PassportStamp` for a visit, and `.stamp` / `.stamp-badge` for metadata. They are different objects.
 - **Do** write descriptive alt text on informative travel photography.
 
 ### Don't:
@@ -355,3 +390,7 @@ Concrete guardrails derived from `apps/en/PRODUCT.md` and the implemented Kodach
 - **Don't** wrap chrome (e.g. MetaBar) in scroll reveals; reserve `.motion-reveal*` for content and media that earn attention.
 - **Don't** nest cards. One surface level per grouping.
 - **Don't** revive `/ro` subpath links; the sister site is a separate origin.
+- **Don't** add a handwritten or script typeface. The handmade signal is the passport die's ink and tilt.
+- **Don't** turn the atlas into a sketch map. Coastlines, borders, and routes stay cartographic.
+- **Don't** drop the contact shadow from cards, maps, photos, or the passport, and don't thicken it into a floating stack.
+- **Don't** call micro labels and passport dies by the same name in new UI. Labels are metadata. Dies are visits.

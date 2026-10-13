@@ -24,7 +24,7 @@ Success looks like: a reader finds a useful, memorable piece about a place, unde
 
 **Voice:** first-person, conversational, fellow-traveler energy ("Hi there fellow travelers!"). Practical when it matters (months, routes, tips), never corporate or influencer-performative.
 
-**Emotional goals:** wanderlust with substance; the feeling of flipping through a well-edited travel magazine on a dark evening, not scrolling a template blog. Region color and cinematic motion should feel intentional, not decorative.
+**Emotional goals:** wanderlust with substance; the feeling of flipping through a well-edited travel magazine on a dark evening, not scrolling a template blog. Region color and cinematic motion should feel intentional, not decorative. The passport and the atlas are objects you open inside that evening: inked stamps on visa paper, a traced map you can actually use. They do not restyle the magazine around them.
 
 **References (directional, not copies):** Condé Nast Traveler photo essays for photography-first pacing; personal travel blogs with strong author voice; region-as-chapter organization like a well-made atlas you actually read.
 
@@ -34,15 +34,17 @@ Success looks like: a reader finds a useful, memorable piece about a place, unde
 - Brochure tourism sites: superlatives, "hidden gem" filler, no author presence.
 - Influencer layouts: engagement bait, metric heroes, modal newsletter popups.
 - Magazine cosplay without photography: big display type and drop caps where the images should lead.
+- Sketchbook travel blogs: handwritten headings, wobbly illustrated coastlines, scrapbook paper as the page background.
 - Treating this journal and the Romanian hiking sister site as one visual product (they share infrastructure, not identity).
 
 ## Design Principles
 
 1. **Photography is the headline.** Layout, type, and motion frame the images; they do not compete with them.
-2. **Place-first wayfinding.** Region → country → note is the mental model. Navigation and explore surfaces should reinforce geography, not arbitrary categories.
+2. **Place-first wayfinding.** Region → country → note is the mental model. Navigation, the atlas, and explore surfaces should reinforce geography, not arbitrary categories.
 3. **Personal, not promotional.** Write like travelers sharing what they saw, not a brand selling destinations.
 4. **Committed regional identity.** Each region earns its own color and mood; the system should feel like four chapters of one journal, not one neutral skin.
 5. **Craft over template.** Scroll rhythm, asymmetric grids, and restrained motion are welcome when they serve reading; default patterns (card grids, glass chrome, side-stripe accents) are not.
+6. **Printed inserts, typeset page.** The passport and the atlas are physical objects on a photographic page. They share a country's ink and sit with a short contact shadow. Headings, navigation, and body stay in the journal's type. Handwritten display type does not join the system.
 
 ## Accessibility & Inclusion
 
