@@ -218,7 +218,7 @@
       },
       "title": {
         "displayName": "UI / Prose Title",
-        "purpose": "Bricolage for prose h3 and UI titles; card story titles use Display mixed case."
+        "purpose": "Big Shoulders for article headings (prose h2–h4), mixed case. Card story titles use Display at card scale."
       },
       "body": {
         "displayName": "Body",
@@ -226,7 +226,7 @@
       },
       "label": {
         "displayName": "Micro label",
-        "purpose": "Bricolage uppercase metadata on photos and neutral UI. Not the inked passport die, and not navigation."
+        "purpose": "Nunito uppercase metadata on photos and neutral UI. Not the inked passport die, and not navigation."
       }
     },
     "shadows": [
@@ -318,23 +318,23 @@
       "refersTo": "link-accent",
       "description": "Nav and footer wayfinding with ember underline sweep.",
       "html": "<a class=\"ds-link-accent\" href=\"#\">Explore</a>",
-      "css": ".ds-link-accent { position: relative; display: inline-block; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.9 0.014 75); text-decoration: none; padding-bottom: 3px; transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent::after { content: \"\"; position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: oklch(0.88 0.2 86); transform: scaleX(0); transform-origin: left; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent:hover { color: oklch(0.96 0.012 75); } .ds-link-accent:hover::after { transform: scaleX(1); } .ds-link-accent:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-link-accent { position: relative; display: inline-block; font-family: \"Nunito Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.9 0.014 75); text-decoration: none; padding-bottom: 3px; transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent::after { content: \"\"; position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: oklch(0.88 0.2 86); transform: scaleX(0); transform-origin: left; transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-link-accent:hover { color: oklch(0.96 0.012 75); } .ds-link-accent:hover::after { transform: scaleX(1); } .ds-link-accent:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Micro label",
       "kind": "chip",
       "refersTo": "stamp",
-      "description": "Uppercase Bricolage metadata for kickers and photo labels. Not the inked passport die.",
+      "description": "Uppercase Nunito metadata for kickers and photo labels. Not the inked passport die.",
       "html": "<span class=\"ds-stamp\">Spotlight · Europe</span>",
-      "css": ".ds-stamp { font-family: \"Bricolage Grotesque Variable\", \"Bricolage Grotesque\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+      "css": ".ds-stamp { font-family: \"Nunito Variable\", \"Nunito\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
     },
     {
       "name": "Kicker Badge",
       "kind": "chip",
       "refersTo": "stamp-badge",
-      "description": "The one frosted surface: Bricolage micro label over photography, used on cards and photo grids. The accent variant fills with the chrome accent (saffron on dark, terracotta on light), drops the blur, and is mandatory for every full-bleed hero kicker.",
+      "description": "The one frosted surface: Nunito micro label over photography, used on cards and photo grids. The accent variant fills with the chrome accent (saffron on dark, terracotta on light), drops the blur, and is mandatory for every full-bleed hero kicker.",
       "html": "<span class=\"ds-stamp-badge\">Spotlight</span> <span class=\"ds-stamp-badge ds-stamp-badge--accent\">Travel journal</span>",
-      "css": ".ds-stamp-badge { display: inline-flex; align-items: center; max-width: min(100%, 22rem); padding: 0.35rem 0.55rem; border-radius: 2px; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; background: oklch(0.22 0.016 55 / 0.42); color: oklch(0.98 0.008 75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-stamp-badge--accent { background: oklch(0.88 0.2 86); color: oklch(0.22 0.04 86); -webkit-backdrop-filter: none; backdrop-filter: none; } a.ds-stamp-badge:hover { opacity: 0.88; }"
+      "css": ".ds-stamp-badge { display: inline-flex; align-items: center; max-width: min(100%, 22rem); padding: 0.35rem 0.55rem; border-radius: 2px; font-family: \"Nunito Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.5; background: oklch(0.22 0.016 55 / 0.42); color: oklch(0.98 0.008 75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-stamp-badge--accent { background: oklch(0.88 0.2 86); color: oklch(0.22 0.04 86); -webkit-backdrop-filter: none; backdrop-filter: none; } a.ds-stamp-badge:hover { opacity: 0.88; }"
     },
     {
       "name": "Filter Pill Active",
@@ -342,7 +342,7 @@
       "refersTo": "filter-pill",
       "description": "Journal type filter selected state.",
       "html": "<button class=\"ds-filter-pill\" type=\"button\">Stories</button>",
-      "css": ".ds-filter-pill { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.2 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.4 0.016 55); border-radius: 9999px; padding: 6px 12px; cursor: pointer; } .ds-filter-pill:hover { border-color: oklch(0.5 0.02 55); } .ds-filter-pill:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-filter-pill { font-family: \"Nunito Variable\", sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.2 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.4 0.016 55); border-radius: 9999px; padding: 6px 12px; cursor: pointer; } .ds-filter-pill:hover { border-color: oklch(0.5 0.02 55); } .ds-filter-pill:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Region Jump",
@@ -350,7 +350,7 @@
       "refersTo": "region-jump",
       "description": "Drenched explore jump chip in chapter color.",
       "html": "<a class=\"ds-region-jump\" href=\"#\">South America</a>",
-      "css": ".ds-region-jump { display: inline-flex; align-items: center; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; padding: 8px 14px; text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-region-jump:hover { opacity: 0.9; } .ds-region-jump:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-region-jump { display: inline-flex; align-items: center; font-family: \"Nunito Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; padding: 8px 14px; text-decoration: none; transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-region-jump:hover { opacity: 0.9; } .ds-region-jump:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Poster Wordmark",
@@ -366,7 +366,7 @@
       "refersTo": "surface-card",
       "description": "Home chapter tile with watermark number and poster place name.",
       "html": "<a class=\"ds-region-tile\" href=\"#\"><span class=\"ds-region-tile__n\" aria-hidden=\"true\">01</span><p class=\"ds-stamp\">Chapter 01</p><h3 class=\"ds-region-tile__name\">South America</h3><p class=\"ds-region-tile__tag\">Andean ridges, jungle rivers, sun-drenched coasts.</p><span class=\"ds-stamp\">Explore →</span></a>",
-      "css": ".ds-region-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 16rem; padding: 1.25rem; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; text-decoration: none; overflow: hidden; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-region-tile:hover { transform: translateY(-1rem); } } .ds-region-tile__n { position: absolute; top: -0.35rem; right: -0.1rem; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 5.5rem; line-height: 1; opacity: 0.14; } .ds-region-tile__name { position: relative; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; } .ds-region-tile__tag { position: relative; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.95rem; line-height: 1.35; max-width: 24ch; opacity: 0.9; } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }"
+      "css": ".ds-region-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 16rem; padding: 1.25rem; background: oklch(0.75 0.175 155); color: oklch(0.16 0.04 155); border-radius: 2px; text-decoration: none; overflow: hidden; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-region-tile:hover { transform: translateY(-1rem); } } .ds-region-tile__n { position: absolute; top: -0.35rem; right: -0.1rem; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 5.5rem; line-height: 1; opacity: 0.14; } .ds-region-tile__name { position: relative; font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; } .ds-region-tile__tag { position: relative; font-family: \"Nunito Variable\", sans-serif; font-size: 0.95rem; line-height: 1.35; max-width: 24ch; opacity: 0.9; } .ds-stamp { font-family: \"Nunito Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }"
     },
     {
       "name": "Photo Card",
@@ -374,7 +374,7 @@
       "refersTo": "surface-card",
       "description": "Signature film-frame article card; shell scales 1.04 on pointer hover.",
       "html": "<a class=\"ds-photo-card\" href=\"#\"><span class=\"ds-photo-card__shell\"><span class=\"ds-photo-card__img\" role=\"img\" aria-label=\"Mountain trail\"></span></span><div class=\"ds-photo-card__copy\"><span class=\"ds-photo-card__tick\"></span><p class=\"ds-stamp\">Story · South America</p><h3 class=\"ds-photo-card__title\">Salkantay trek to Machu Picchu</h3><p class=\"ds-stamp\">Peru</p></div></a>",
-      "css": ".ds-photo-card { position: relative; display: block; aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; text-decoration: none; color: oklch(0.98 0.008 75); box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-photo-card__shell { position: absolute; inset: 0; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-photo-card:hover .ds-photo-card__shell { transform: scale(1.04); } } .ds-photo-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, oklch(0.35 0.04 220), oklch(0.22 0.03 55) 55%, oklch(0.15 0.02 55)), oklch(0.28 0.04 150); } .ds-photo-card__img::after { content: \"\"; position: absolute; inset: 0; background: linear-gradient(to top, oklch(0.08 0.02 55 / 0.94) 0%, oklch(0.1 0.02 55 / 0.35) 55%, transparent 100%); } .ds-photo-card__copy { position: absolute; inset-inline: 0; bottom: 0; z-index: 1; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.15rem; } .ds-photo-card__tick { width: 3rem; height: 3px; background: oklch(0.75 0.175 155); } .ds-photo-card__title { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 0.96; letter-spacing: -0.03em; text-transform: none; } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; } .ds-photo-card:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
+      "css": ".ds-photo-card { position: relative; display: block; aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; text-decoration: none; color: oklch(0.98 0.008 75); box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-photo-card__shell { position: absolute; inset: 0; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1); } @media (hover: hover) and (pointer: fine) { .ds-photo-card:hover .ds-photo-card__shell { transform: scale(1.04); } } .ds-photo-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, oklch(0.35 0.04 220), oklch(0.22 0.03 55) 55%, oklch(0.15 0.02 55)), oklch(0.28 0.04 150); } .ds-photo-card__img::after { content: \"\"; position: absolute; inset: 0; background: linear-gradient(to top, oklch(0.08 0.02 55 / 0.94) 0%, oklch(0.1 0.02 55 / 0.35) 55%, transparent 100%); } .ds-photo-card__copy { position: absolute; inset-inline: 0; bottom: 0; z-index: 1; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.15rem; } .ds-photo-card__tick { width: 3rem; height: 3px; background: oklch(0.75 0.175 155); } .ds-photo-card__title { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 0.96; letter-spacing: -0.03em; text-transform: none; } .ds-stamp { font-family: \"Nunito Variable\", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; } .ds-photo-card:focus-visible { outline: 2px solid oklch(0.88 0.2 86); outline-offset: 3px; }"
     },
     {
       "name": "Surface Card",
@@ -382,7 +382,7 @@
       "refersTo": "surface-card",
       "description": "Panel for non-photo containers, with the contact shadow on the frame.",
       "html": "<div class=\"ds-surface-card\"><p class=\"ds-stamp\">Meta</p><p class=\"ds-surface-card__body\">Field notes from four regions.</p></div>",
-      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 4px; padding: 1.5rem; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 4px; padding: 1.5rem; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: \"Nunito Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
     },
     {
       "name": "Passport die",
@@ -390,7 +390,7 @@
       "refersTo": "stamp",
       "description": "Inked rubber stamp for a country visit. Production component is PassportStamp.astro: turbulence ink, a small tilt, three dies. This snippet is the rect die on visa paper.",
       "html": "<a class=\"ds-passport\" href=\"#\" aria-label=\"Peru, 2024\"><svg viewBox=\"0 0 220 136\" role=\"img\"><rect x=\"4\" y=\"4\" width=\"212\" height=\"128\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"5\"></rect><rect x=\"13\" y=\"13\" width=\"194\" height=\"110\" rx=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"></rect><text x=\"110\" y=\"42\" text-anchor=\"middle\">PERU</text><text class=\"ds-passport__year\" x=\"110\" y=\"96\" text-anchor=\"middle\">2024</text></svg></a>",
-      "css": ".ds-passport { display: inline-block; width: 8.5rem; padding: 1.25rem; color: oklch(0.46 0.15 155); background: oklch(0.93 0.025 82); border-radius: 6px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); text-decoration: none; transform: rotate(-6deg); } .ds-passport svg { display: block; width: 100%; height: auto; } .ds-passport text { fill: currentColor; font-family: \"Bricolage Grotesque Variable\", sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.28em; } .ds-passport__year { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 800; font-size: 40px; letter-spacing: 0.02em; } .ds-passport:hover { opacity: 0.88; } .ds-passport:focus-visible { outline: 2px solid oklch(0.32 0.03 60); outline-offset: 4px; }"
+      "css": ".ds-passport { display: inline-block; width: 8.5rem; padding: 1.25rem; color: oklch(0.46 0.15 155); background: oklch(0.93 0.025 82); border-radius: 6px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); text-decoration: none; transform: rotate(-6deg); } .ds-passport svg { display: block; width: 100%; height: auto; } .ds-passport text { fill: currentColor; font-family: \"Nunito Variable\", sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.28em; } .ds-passport__year { font-family: \"Big Shoulders Display Variable\", sans-serif; font-weight: 800; font-size: 40px; letter-spacing: 0.02em; } .ds-passport:hover { opacity: 0.88; } .ds-passport:focus-visible { outline: 2px solid oklch(0.32 0.03 60); outline-offset: 4px; }"
     },
     {
       "name": "Atlas",
@@ -407,8 +407,8 @@
     "keyCharacteristics": [
       "Film-night warm-neutral canvas tuned so photography pops on phone or laptop",
       "Photography-first heroes with light top veils and deep bottom scrims",
-      "Condensed Big Shoulders Display + Bricolage for UI, prose headings, and micro labels + Nunito body",
-      "Uppercase Bricolage micro labels; solid accent .stamp-badge--accent hero kickers, frosted .stamp-badge on cards",
+      "Condensed Big Shoulders Display for headings, including article prose, plus Nunito for all text",
+      "Uppercase Nunito micro labels; solid accent .stamp-badge--accent hero kickers, frosted .stamp-badge on cards",
       "Inked passport dies only where a visit is the point; atlas maps stay cartographic",
       "One global chrome accent per theme (saffron hue 86 on dark, terracotta on light) for wayfinding; four chapter colors for place",
       "Region-as-chapter color system with watermark chapter numbers on home tiles",
@@ -445,12 +445,12 @@
       },
       {
         "name": "The Micro Label Is Metadata Rule",
-        "body": "Uppercase Bricolage labels (.stamp, .micro, .stamp-badge) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.",
+        "body": "Uppercase Nunito labels (.stamp, .micro, .stamp-badge) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.",
         "section": "typography"
       },
       {
         "name": "The Die Is an Object Rule",
-        "body": "PassportStamp is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Bricolage; the year is Big Shoulders. Use it where a visit is the point.",
+        "body": "PassportStamp is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Nunito; the year is Big Shoulders. Use it where a visit is the point.",
         "section": "typography"
       },
       {

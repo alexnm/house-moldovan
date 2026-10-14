@@ -1,60 +1,149 @@
-.map-hub-index {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* Shared chrome for RegionMapHub and CountryMapHub.
+   The card is exactly the heading plus ten list rows; the eleventh row scrolls. */
 
-  @media (width >= 960px) {
-    position: sticky;
-    top: 6.5rem;
-  }
+.map-hub-stage {
+  --map-hub-row: 3rem;
+  --map-hub-rows: 10;
+  --map-hub-title-size: clamp(2rem, 1.35rem + 2.2vw, 2.75rem);
+  --map-hub-head-pad-start: clamp(1.25rem, 2.5vw, 1.65rem);
+  --map-hub-head-pad-end: clamp(0.85rem, 2vw, 1.1rem);
+  --map-hub-head: calc(
+    var(--map-hub-head-pad-start) + (var(--map-hub-title-size) * 0.95) +
+      var(--map-hub-head-pad-end) + 1px
+  );
+
+  display: grid;
+  grid-template-columns: minmax(25rem, 34%) minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  height: calc(var(--map-hub-head) + (var(--map-hub-row) * var(--map-hub-rows)));
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-surface-2);
+  box-shadow: var(--shadow-rest);
+}
+
+/* Neutral outline only on the paper canvas; dark mode relies on tonal lift. */
+html[data-theme="light"] .map-hub-stage {
+  outline: 1px solid var(--color-line);
+  outline-offset: -1px;
+}
+
+.map-hub-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  height: var(--map-hub-head);
+  padding: var(--map-hub-head-pad-start) clamp(1.25rem, 2.5vw, 1.65rem)
+    var(--map-hub-head-pad-end);
+  border-bottom: 1px solid var(--color-line);
+  overflow: hidden;
+}
+
+.map-hub-title {
+  margin: 0;
+  font-size: var(--map-hub-title-size);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .map-hub-list {
-  margin: 0.75rem 0 0;
+  flex: none;
+  height: calc(var(--map-hub-row) * var(--map-hub-rows));
+  margin: 0;
   padding: 0;
+  overflow-y: auto;
   list-style: none;
-  border-top: 1px solid var(--color-line);
 }
 
 .map-hub-list li {
+  box-sizing: border-box;
+  height: var(--map-hub-row);
   border-bottom: 1px solid var(--color-line);
+}
+
+.map-hub-list li:last-child {
+  border-bottom-color: transparent;
 }
 
 .map-hub-item {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  grid-template-columns: 2.25rem 1fr;
-  gap: 0.65rem;
+  gap: 0.75rem;
   width: 100%;
-  padding-block: 0.7rem;
+  height: 100%;
+  padding-inline: clamp(1.25rem, 2.5vw, 1.65rem);
   border: 0;
   background: transparent;
   color: var(--color-ink-dim);
   text-align: start;
   cursor: pointer;
-  transition: color var(--duration-ui) var(--ease-cinema);
+  transition:
+    background-color var(--duration-ui) var(--ease-cinema),
+    color var(--duration-ui) var(--ease-cinema);
 }
 
 .map-hub-item:hover,
 .map-hub-item.is-active {
   color: var(--color-ink);
+  background: color-mix(in oklch, var(--color-ink) 5%, transparent);
 }
 
-.map-hub-num {
-  color: var(--color-accent-ink);
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  line-height: 1.6;
+.map-hub-item.is-active {
+  background: color-mix(in oklch, var(--color-ink) 6%, transparent);
 }
 
 .map-hub-item-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
   font-family: var(--font-sans);
   font-size: 1.05rem;
   font-weight: 500;
   line-height: 1.3;
 }
 
-.map-hub-item.is-active-place {
-  color: var(--color-accent-ink);
+.map-hub-item-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-hub-item-arrow {
+  color: var(--color-ink-faint);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1;
+  transition:
+    transform var(--duration-ui) var(--ease-cinema),
+    color var(--duration-ui) var(--ease-cinema);
+}
+
+.map-hub-item:hover .map-hub-item-arrow,
+.map-hub-item.is-active .map-hub-item-arrow {
+  color: var(--color-ink-dim);
+  transform: translateX(0.28rem);
+}
+
+@media (width < 720px) {
+  .map-hub-stage {
+    display: block;
+    height: auto;
+  }
+
+  .map-hub-head {
+    height: auto;
+  }
+
+  .map-hub-list {
+    height: auto;
+    overflow: visible;
+  }
 }

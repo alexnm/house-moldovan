@@ -9,9 +9,9 @@
   --font-display:
     "Big Shoulders Display Variable", "Big Shoulders Display", ui-sans-serif,
     system-ui, sans-serif;
+  /* Text face. `font-sans` stays as the utility name; it is Nunito, same as body. */
   --font-sans:
-    "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif,
-    system-ui, sans-serif;
+    "Nunito Variable", "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-body:
     "Nunito Variable", "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono:
@@ -614,7 +614,7 @@
     line-height: 1.2;
   }
 
-  /* Primary wayfinding — Bricolage, not passport-stamp micro */
+  /* Primary wayfinding — Nunito at body size, not passport-stamp micro */
   .nav-link {
     font-family: var(--font-sans);
     font-size: 1rem;
@@ -729,20 +729,21 @@
     margin-top: 0;
   }
 
-  /* Keep anchored headings clear of the fixed site nav. */
+  /* Article headings use the poster face. Mixed case so day titles stay readable. */
   .prose-body :is(h2, h3, h4) {
     scroll-margin-top: 7rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-wrap: balance;
+    color: var(--color-ink);
   }
 
   .prose-body h2 {
-    font-family: var(--font-sans);
-    font-weight: 650;
     font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.15rem);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
     margin-top: 2.4em;
     margin-bottom: 0.6em;
-    color: var(--color-ink);
   }
 
   .prose-body h2:first-child {
@@ -761,11 +762,15 @@
   }
 
   .prose-body h3 {
-    font-family: var(--font-sans);
-    font-weight: 600;
     font-size: 1.4rem;
     margin-top: 1.8em;
     margin-bottom: 0.4em;
+  }
+
+  .prose-body h4 {
+    font-size: 1.2rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.35em;
   }
 
   .prose-body a {
@@ -776,7 +781,7 @@
   }
 
   .prose-body blockquote {
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-style: italic;
     font-weight: 500;
     font-size: 1.35rem;
@@ -1227,16 +1232,17 @@
     letter-spacing: -0.035em;
   }
 
+  .prose-body :is(h2, h3, h4) {
+    text-transform: none;
+    letter-spacing: -0.03em;
+  }
+
   .prose-body h2 {
     font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.15rem);
-    text-transform: none;
-    letter-spacing: -0.02em;
   }
 
   .prose-body h3 {
     font-size: 1.4rem;
-    font-weight: 600;
-    text-transform: none;
   }
 
   .link-accent::after {

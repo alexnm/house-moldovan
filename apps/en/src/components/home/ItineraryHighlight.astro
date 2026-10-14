@@ -22,7 +22,7 @@ const countryLine = countries.map((c) => `${c.flag} ${c.name}`).join(" · ");
 <li class="motion-reveal-media">
   <a
     href={href}
-    class="itinerary-card group relative flex aspect-square flex-col overflow-hidden rounded shadow-rest text-photo-ink md:aspect-[6/5] xl:aspect-[8/5]"
+    class="itinerary-card group relative flex aspect-square flex-col overflow-hidden rounded text-photo-ink shadow-rest md:aspect-[6/5] xl:aspect-[8/5]"
     style={accent ? cardAccentStyle(accent) : undefined}
   >
     <CoverImage
@@ -48,9 +48,7 @@ const countryLine = countries.map((c) => `${c.flag} ${c.name}`).join(" · ");
       >
         {title}
       </h3>
-      <p
-        class="mt-3 max-w-[32ch] text-[0.95rem] leading-snug text-pretty text-photo-ink"
-      >
+      <p class="mt-3 max-w-[32ch] leading-snug text-pretty text-photo-ink">
         {countryLine}
       </p>
     </div>

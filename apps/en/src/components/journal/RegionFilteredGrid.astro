@@ -63,8 +63,11 @@ const total = articles.length;
 
     {
       showJournalLink && (
-        <a href="/journal" class="micro link-accent link-accent--dim">
-          {en.journal.seeEntire}
+        <a
+          href="/journal"
+          class="link-more link-accent link-accent--dim region-filter__more shrink-0"
+        >
+          {en.journal.seeEntire} →
         </a>
       )
     }
@@ -94,6 +97,10 @@ const total = articles.length;
     justify-content: space-between;
     gap: 1rem 2rem;
     margin-bottom: var(--space-block, 1.5rem);
+  }
+
+  .region-filter__more {
+    margin-inline-start: auto;
   }
 
   .region-filter__chips {

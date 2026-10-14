@@ -65,7 +65,10 @@ const noteStamps = regionNoteStamps(countries.map((c) => c.country));
           <section class="section">
             <NoteFromUs
               kicker={en.region.editorialKicker}
-              cta={{ href: "/about", label: en.authorNote.aboutCta }}
+              cta={{
+                href: "/about#passport",
+                label: en.home.about.passportCta,
+              }}
               stamps={noteStamps}
             >
               {editorial.map((html) => (

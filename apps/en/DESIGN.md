@@ -40,18 +40,18 @@ typography:
     lineHeight: 0.94
     letterSpacing: "-0.035em"
   title:
-    fontFamily: '"Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif'
+    fontFamily: '"Big Shoulders Display Variable", "Big Shoulders Display", ui-sans-serif, system-ui, sans-serif'
     fontSize: "1.3rem"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.02em"
+    fontWeight: 700
+    lineHeight: 1.05
+    letterSpacing: "-0.03em"
   body:
     fontFamily: '"Nunito Variable", "Nunito", ui-sans-serif, system-ui, sans-serif'
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.72
   label:
-    fontFamily: '"Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif'
+    fontFamily: '"Nunito Variable", "Nunito", ui-sans-serif, system-ui, sans-serif'
     fontSize: "0.7rem"
     fontWeight: 400
     lineHeight: 1.4
@@ -139,8 +139,8 @@ This system explicitly rejects generic AI travel-blog templates, frosted-glass p
 
 - Film-night warm-neutral canvas tuned so photography pops on phone or laptop
 - Photography-first heroes with light top veils and deep bottom scrims (not heavy flat overlays)
-- Condensed Big Shoulders Display (uppercase for brand and region names) + Bricolage for UI, prose headings, and micro labels + Nunito body
-- Micro labels (`.stamp` / `.micro`) in uppercase Bricolage; solid accent `.stamp-badge--accent` hero kickers, frosted `.stamp-badge` on cards
+- Condensed Big Shoulders Display for headings (uppercase for brand and region names; mixed case elsewhere, including article prose) + Nunito for all text
+- Micro labels (`.stamp` / `.micro`) in uppercase Nunito; solid accent `.stamp-badge--accent` hero kickers, frosted `.stamp-badge` on cards
 - Inked passport dies (`PassportStamp`) only where a visit is the point: eroded ink, a small tilt, regional color, three shapes
 - Atlas maps: traced country edge, route stroke, chapter-colored pins; paper by day, film at night
 - Region-as-chapter color system with watermark chapter numbers on home tiles
@@ -194,10 +194,9 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 
 ## 3. Typography
 
-**Display Font:** Big Shoulders Display Variable  
-**UI / Prose Heading Font:** Bricolage Grotesque Variable  
-**Body Font:** Nunito Variable (Nunito, system-ui, sans-serif)  
-**Label Font:** Bricolage Grotesque Variable (uppercase micro labels)  
+**Display Font:** Big Shoulders Display Variable (headings, including article prose)  
+**Body Font:** Nunito Variable (Nunito, system-ui, sans-serif) for all text  
+**Label Font:** Nunito Variable (uppercase micro labels)  
 **Code Font:** JetBrains Mono Variable, prose `code` only
 
 **Character:** Condensed travel-poster display with a warm humanist body. Body prose caps at **68ch** (`--container-prose`). There is no script and no handwritten face. The handmade signal lives in the passport die's ink, not in the type.
@@ -206,9 +205,9 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 
 - **Display / Page title** (700, `clamp(2.75rem–6.5rem)`, line-height 0.9, tracking −0.04em): `.page-title`, mixed case.
 - **Headline / Section** (700, `clamp(2rem–3.25rem)`, line-height 0.94): `.section-heading`. Region chapter names use `.region-name` (uppercase).
-- **Title** (Bricolage 600, ~1.3rem): Prose `h2`/`h3`; photo card titles use Display at card scale, mixed case.
-- **Body** (Nunito 400, 1.125rem, line-height 1.72): Article prose. Max **68ch**.
-- **Micro label** (Bricolage, 0.68–0.72rem, letter-spacing 0.12em, uppercase): Kickers (`.stamp-badge` on photos, `.stamp` / `.micro` on neutral) and metadata. Navigation uses Bricolage at body size (`.nav-link`), not this micro style.
+- **Title** (Big Shoulders 700, mixed case): Prose `h2`/`h3`/`h4`; photo card titles use Display at card scale.
+- **Body** (Nunito 400, 1.125rem, line-height 1.72): Article prose and all other text. Max **68ch**.
+- **Micro label** (Nunito, 0.68–0.72rem, letter-spacing 0.12em, uppercase): Kickers (`.stamp-badge` on photos, `.stamp` / `.micro` on neutral) and metadata. Navigation uses Nunito at body size (`.nav-link`), not this micro style.
 
 ### Named Rules
 
@@ -216,9 +215,9 @@ Each region derives accent ink for text on drenched tiles. Card photo washes use
 
 **The Display Owns the Fold Rule.** One display-scale headline per viewport fold. Do not stack multiple poster-scale headings without a photo or section break between them.
 
-**The Micro Label Is Metadata Rule.** Uppercase Bricolage labels (`.stamp`, `.micro`, `.stamp-badge`) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.
+**The Micro Label Is Metadata Rule.** Uppercase Nunito labels (`.stamp`, `.micro`, `.stamp-badge`) carry type, region, dates, and wayfinding. Never use that style for sentences, body copy, or navigation.
 
-**The Die Is an Object Rule.** `PassportStamp` is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Bricolage; the year is Big Shoulders. Use it where a visit is the point (the about passport, a country arrival). Do not restyle headings, cards, or chrome into stamp lettering.
+**The Die Is an Object Rule.** `PassportStamp` is a printed object, not a type style: eroded ink, a wobble, a small tilt, three dies (rect, oval, round). Caps are Nunito; the year is Big Shoulders. Use it where a visit is the point (the about passport, a country arrival). Do not restyle headings, cards, or chrome into stamp lettering.
 
 **The No Script Rule.** No handwritten or script typeface. Irregularity belongs in the die's ink filter and tilt.
 
@@ -251,7 +250,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 ### Navigation
 
 - **Style:** Fixed top bar; transparent over heroes, solid when scrolled (`.site-nav.is-solid`). Never frosted and never bordered: the bar fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer, so the bar separates tonally instead of by a hairline. Identical shell to the RO nav; only type and accent differ.
-- **Typography:** `.nav-link` in Bricolage at body size for primary links; `.display` uppercase wordmark (~1.65rem). Micro labels stay off the nav.
+- **Typography:** `.nav-link` in Nunito at body size for the wordmark and primary links. Micro labels stay off the nav.
 - **Hover / Active:** Accent underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
 - **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-sm`.
 - **Dropdown (desktop):** `surface-2` panel; region names in regional accent color.
@@ -266,7 +265,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 
 ### Micro labels (`.stamp` / `.micro`)
 
-- **Style:** Bricolage, uppercase, wide tracking (0.12em). Metadata only: type, region, dates, wayfinding.
+- **Style:** Nunito, uppercase, wide tracking (0.12em). Metadata only: type, region, dates, wayfinding.
 - **On scrims:** Where a gradient read layer already exists (card title blocks, region tiles), bare `.stamp` text is enough.
 - **Not a die:** This is luggage-tag type. The inked passport stamp is a separate component.
 
@@ -275,7 +274,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 - **Role:** A rubber stamp for a country visit. Used on the about passport and where an arrival is the point. Each die links to its country.
 - **Shapes:** `rect`, `oval`, `round`. Cycle them so a page of stamps does not repeat one die.
 - **Ink:** `currentColor`, eroded with a turbulence filter and a slight displacement. Opacity about 0.9. Small tilts (a few degrees either way) so neighbours do not look machine-placed. Seed the filter so adjacent stamps differ.
-- **Type inside the die:** Bricolage 700 for the country line; Big Shoulders 800 for the year. Local names stamp beside the English one only when they read as a different name.
+- **Type inside the die:** Nunito 700 for the country line; Big Shoulders 800 for the year. Local names stamp beside the English one only when they read as a different name.
 - **Color:** On passport paper, regional ink uses the light-theme chapter inks (jade, saffron, terracotta, cobalt). Default paper ink is `oklch(0.32 0.03 60)`.
 - **Page:** Visa paper `oklch(0.93 0.025 82)`, edge `oklch(0.83 0.03 75)`, faint guilloche. The paper does not switch with the theme. The whole passport takes one `shadow-rest`.
 - **Don't:** Use the die as a heading style, a card kicker, or a nav treatment. Don't add a script face to make it feel more handmade.
@@ -316,7 +315,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 
 - **Drenched tiles:** `aspect-4/5` panels in regional accent + derived ink text.
 - **Watermark:** Giant chapter number (`01`–`04`) at low opacity.
-- **Type:** Uppercase condensed region name; Bricolage/sans tagline.
+- **Type:** Uppercase condensed region name; Nunito tagline.
 - **Enter:** `.motion-reveal-media` on each list item.
 - **Hover:** `.motion-hover-lift-strong` (`--motion-lift-strong` 1rem) + `.motion-hover-chevron`; pointer-fine only.
 
@@ -341,11 +340,11 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 ### Explore region jumps
 
 - **Style:** Drenched regional `.stamp-badge--accent` chips scoped by `.accent-scope`; opaque fill, no blur.
-- **Section heads:** Uppercase condensed region name in regional color; sans tagline.
+- **Section heads:** Uppercase condensed region name in regional color; Nunito tagline.
 
 ### Prose (`.prose-body`)
 
-- **Headings:** Bricolage, mixed case.
+- **Headings:** Big Shoulders, mixed case. Body, quotes, and captions stay Nunito.
 - **Links:** Saffron underline via `background-image` (3px).
 - **Blockquotes:** Sans italic, opening quote in saffron, no side-stripe border.
 - **Figures:** Slight radius (`6px`) and `shadow-rest` on the photo only. The caption sits outside the shadow. Paired figures shadow each photo, not the pair.

@@ -58,7 +58,7 @@ const regionSections = regions
                     <svg
                       class="explore-region__shape motion-hover-media"
                       viewBox={shape.viewBox}
-                      preserveAspectRatio="xMidYMin meet"
+                      preserveAspectRatio="xMidYMid meet"
                       aria-hidden="true"
                       focusable="false"
                     >
@@ -139,7 +139,6 @@ const regionSections = regions
     isolation: isolate;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     height: 100%;
     aspect-ratio: 1;
     /* Same insets as the country card's text block (px-4 pb-4 md:px-5 md:pb-5). */
@@ -156,16 +155,14 @@ const regionSections = regions
     }
   }
 
-  /* Silhouette spans the card width inside the padding, anchored to the
-     top (text sits at the bottom, as on a country card); zooms on hover
-     like the photo on a country card. */
+  /* Silhouette fills the space above the text (card width inside the
+     padding) and sits centred in it; zooms on hover like the photo on a
+     country card. */
   .explore-region__shape {
-    position: absolute;
-    inset-inline: var(--region-pad);
-    top: var(--region-pad);
-    z-index: -1;
-    width: calc(100% - 2 * var(--region-pad));
-    height: 55%;
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    margin-bottom: var(--region-pad);
     pointer-events: none;
   }
 

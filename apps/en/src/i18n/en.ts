@@ -118,7 +118,6 @@ export const en = {
     featuredStory: "Featured story",
     editorialKicker: "A note from us",
     mapHeading: "Find destinations",
-    mapHint: "Drag the map to look around. Tap a country name to open it",
     backToRegion: (name: string) => `Back to ${name}`,
     allCountries: "All countries",
     exploreCountry: (name: string) => `Explore ${name}`,

@@ -8,16 +8,9 @@ interface Props {
   summary: string;
   /** Short first-person note from the authors, shown beside the title. */
   note: string;
-  /** Link after the signature; defaults to the About page. */
-  link?: { href: string; label: string; external?: boolean };
 }
 
-const {
-  title,
-  summary,
-  note,
-  link = { href: "/about", label: en.authorNote.aboutCta },
-} = Astro.props;
+const { title, summary, note } = Astro.props;
 ---
 
 <section class="pad-canvas mx-auto max-w-canvas pt-20 @md:pt-28">
@@ -56,15 +49,6 @@ const {
           <span class="journal-index-note__signature"
             >— {en.authorNote.signature}</span
           >
-          <a
-            href={link.href}
-            class="journal-index-note__link"
-            {...link.external
-              ? { target: "_blank", rel: "noopener noreferrer" }
-              : {}}
-          >
-            {link.label}
-          </a>
         </figcaption>
       </div>
     </figure>

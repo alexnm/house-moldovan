@@ -50,7 +50,7 @@ export function distinctLocalName(
   return levenshtein(a, b) > 2 ? local.trim() : undefined;
 }
 
-// Advances measured from Bricolage Grotesque 700 (em units), rounded.
+// Advances measured from Nunito 700 (em units), rounded.
 const NARROW = /[IJijlrtf.,:;'ʻ‘’!|·-]/u;
 const WIDE = /[MWmw]/u;
 
