@@ -1,13 +1,15 @@
 ---
 name: South America
-tagline: Lost civilizations, wonderful nature and warm people that make you feel at home.
+tagline: Lost civilizations, wonderful nature and warm people that make
 accent: jade
 order: 4
 images:
-  - ../../assets/peru/machu-picchu.JPG
-  - ../../assets/argentina/iguazu-bossetti.jpg
+  - ../../assets/argentina/iguazu-upper-circuit.jpg
+  - ../../assets/peru/machu-picchu-different-angle.JPG
   - ../../assets/chile/valparaiso-de-mi-amor.jpg
   - ../../assets/argentina/laguna-de-los-tres.jpg
+banner: ../../assets/chile/torres-del-paine.jpg
+bannerLocation: Torres del Paine National Park, Chile
 ---
 
 South America quickly became one of our favorite regions — not because any single country stole the show, but because the whole continent feels like a sequence of impossible landscapes stitched together.

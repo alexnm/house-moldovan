@@ -85,7 +85,7 @@ components:
   surface-card:
     backgroundColor: "{colors.surface-panel}"
     textColor: "{colors.ink-warm}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     padding: "1.5rem"
   range-tile:
     backgroundColor: "{colors.range-sky}"

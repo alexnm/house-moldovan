@@ -44,9 +44,11 @@ const { sections, class: className } = Astro.props;
   .section-nav__link {
     display: inline-flex;
     align-items: center;
+    box-sizing: border-box;
     gap: 0.4rem;
-    padding: 0.45rem 0.75rem;
-    border-radius: 999px;
+    height: 2rem;
+    padding: 0 0.7rem;
+    border-radius: 2px;
     font-family: var(--font-sans);
     font-size: 0.68rem;
     letter-spacing: var(--tracking-microcaps);

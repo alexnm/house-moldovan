@@ -26,7 +26,7 @@ const { line, gpxHref, difficulty } = Astro.props;
     </a>
   </figcaption>
   <div
-    class="hike-route-map isolate z-0 h-[min(22rem,55vh)] w-full overflow-hidden rounded-lg border border-line"
+    class="hike-route-map isolate z-0 h-[min(22rem,55vh)] w-full overflow-hidden rounded-sm border border-line"
     data-line={JSON.stringify(line)}
     data-ink={difficultyColor(difficulty)}
   >

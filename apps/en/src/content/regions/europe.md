@@ -1,13 +1,15 @@
 ---
 name: Europe
-tagline: Cobblestone old towns, grand cathedrals, royal palaces and alpine mountain trails.
+tagline: Cobblestone old towns, grand cathedrals, royal palaces and alpine
 accent: cobalt
 order: 2
 images:
+  - ../../assets/italy/laghi-di-fusine.JPG
   - ../../assets/germany/neuschwanstein.jpg
-  - ../../assets/belgium/ghent-graselai.JPG
-  - ../../assets/italy/dolomites-sella.JPG
+  - ../../assets/belgium/ghent-canal.JPG
   - ../../assets/spain/sevilla-cover.JPG
+banner: ../../assets/italy/firenze.JPG
+bannerLocation: Florence, Italy
 ---
 
 Europe is our home continent and our most visited region. Sometimes we tend to underestimate it — until a cobblestone alley, a cathedral spire, or an alpine ridge reminds us why we keep visiting the countries around us.

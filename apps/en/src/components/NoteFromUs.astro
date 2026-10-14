@@ -1,0 +1,312 @@
+---
+/**
+ * Authors' note: portrait, kicker, optional heading, body slot, signature,
+ * and a bottom-right call to action. Passport stamps sit in a narrow column
+ * on wide screens.
+ */
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import PassportStamp from "~/components/country/PassportStamp.astro";
+import { en } from "~/i18n/en";
+import type { NoteStamp } from "~/lib/noteStamps";
+import portrait from "~/assets/about/alex-mela.JPG";
+
+interface Cta {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  kicker: string;
+  /** Omitted on the about and region notes. */
+  heading?: string;
+  cta: Cta;
+  stamps?: NoteStamp[];
+}
+
+const { kicker, heading, cta, stamps = [] } = Astro.props;
+
+const VARIANTS = ["round", "rect", "oval", "rect"] as const;
+const TILTS = [-9, 6, -4, 10] as const;
+---
+
+<figure
+  class:list={[
+    "note-from-us",
+    "motion-reveal",
+    "shadow-rest",
+    stamps.length > 0 && "note-from-us--stamped",
+  ]}
+>
+  <div class="note-from-us__portrait">
+    <div class="note-from-us__clip">
+      <CoverImage
+        src={portrait}
+        alt={en.home.about.portraitAlt}
+        widths={[160, 240, 320]}
+        sizes="9rem"
+        format="avif"
+        quality={82}
+        placeholder="blur"
+        wrapperClass="absolute inset-0"
+        class="h-full w-full object-cover object-[center_28%]"
+      />
+    </div>
+  </div>
+
+  <div class="note-from-us__body">
+    <p class="stamp note-from-us__kicker">{kicker}</p>
+    {
+      heading && (
+        <h2 class="display section-heading note-from-us__heading">{heading}</h2>
+      )
+    }
+    <blockquote class="note-from-us__text">
+      <slot />
+    </blockquote>
+    <figcaption class="note-from-us__caption">
+      <span>— {en.authorNote.signature}</span>
+      <a href={cta.href} class="link-more link-accent link-accent--dim">
+        {cta.label} →
+      </a>
+    </figcaption>
+  </div>
+
+  {
+    stamps.length > 0 && (
+      <ul class="note-from-us__stamps" aria-hidden="true">
+        {stamps.map((stamp, i) => (
+          <li
+            class="note-from-us__stamp"
+            style={stamp.ink ? `color: ${stamp.ink}` : undefined}
+          >
+            <PassportStamp
+              id={stamp.id}
+              variant={VARIANTS[i % VARIANTS.length]!}
+              country={stamp.country}
+              localName={stamp.localName}
+              forceLocalName={stamp.forceLocalName}
+              year={stamp.year}
+              label={stamp.label}
+              rotate={TILTS[i % TILTS.length]!}
+              seed={11 + i * 13}
+            />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</figure>
+
+<style>
+  .note-from-us {
+    --note-bg: var(--color-surface-2);
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    margin: 0;
+    overflow: hidden;
+    padding: clamp(1.5rem, 4vw, 3.25rem);
+    border-radius: 4px;
+    border-left: 4px solid var(--color-accent);
+    background: var(--note-bg);
+
+    @media (width >= 768px) {
+      gap: 2.25rem;
+    }
+  }
+
+  /* Room for stamps to sit off-axis without lining up in columns. */
+  .note-from-us--stamped {
+    @media (width >= 1100px) {
+      grid-template-columns: auto minmax(0, 1fr) 19.5rem;
+    }
+  }
+
+  :global(html[data-theme="light"]) .note-from-us {
+    border: 1px solid var(--color-line);
+    border-left: 4px solid var(--color-accent);
+  }
+
+  .note-from-us__portrait {
+    position: relative;
+    width: 4.5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 4px var(--note-bg),
+      0 0 0 5px var(--color-line-strong);
+
+    @media (width >= 768px) {
+      width: 7rem;
+    }
+  }
+
+  .note-from-us__clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  .note-from-us__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .note-from-us__kicker {
+    margin: 0;
+    color: var(--color-accent-ink);
+  }
+
+  .note-from-us__heading {
+    margin: 0;
+  }
+
+  .note-from-us__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 92ch;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    text-wrap: pretty;
+  }
+
+  .note-from-us__text :global(p) {
+    margin: 0;
+  }
+
+  .note-from-us__text :global(a) {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* Signature left, call to action flush with the paragraphs' right edge. */
+  .note-from-us__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    color: var(--color-ink);
+  }
+
+  /* Stamps beside the note; a loose row below it on narrower screens. */
+  .note-from-us__stamps {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-accent-ink);
+    pointer-events: none;
+
+    @media (width >= 1100px) {
+      position: relative;
+      grid-column: 3;
+      display: block;
+      align-self: stretch;
+    }
+  }
+
+  /* Hand-placed, not a grid: each index has its own spot down the card. */
+  .note-from-us__stamp {
+    @media (width >= 1100px) {
+      position: absolute;
+    }
+  }
+
+  .note-from-us__stamp:nth-child(1) {
+    @media (width >= 1100px) {
+      top: 0;
+      left: 1.35rem;
+    }
+  }
+
+  .note-from-us__stamp:nth-child(2) {
+    @media (width >= 1100px) {
+      top: 22%;
+      left: 46%;
+    }
+  }
+
+  .note-from-us__stamp:nth-child(3) {
+    @media (width >= 1100px) {
+      top: 50%;
+      left: 0;
+    }
+  }
+
+  .note-from-us__stamp:nth-child(4) {
+    @media (width >= 1100px) {
+      bottom: 0;
+      left: 28%;
+    }
+  }
+
+  /* Below sm the portrait joins the signature row. */
+  @media (width < 640px) {
+    .note-from-us {
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 0.75rem;
+      row-gap: 1rem;
+      align-items: center;
+    }
+
+    .note-from-us__body {
+      display: contents;
+    }
+
+    .note-from-us__kicker,
+    .note-from-us__heading,
+    .note-from-us__text {
+      grid-column: 1 / -1;
+    }
+
+    .note-from-us__kicker {
+      order: 1;
+    }
+
+    .note-from-us__heading {
+      order: 2;
+    }
+
+    .note-from-us__text {
+      order: 3;
+    }
+
+    .note-from-us__portrait {
+      order: 4;
+      width: 3.5rem;
+      align-self: center;
+      box-shadow:
+        0 0 0 3px var(--note-bg),
+        0 0 0 4px var(--color-line-strong);
+    }
+
+    .note-from-us__caption {
+      order: 5;
+      align-self: center;
+      align-items: center;
+    }
+
+    .note-from-us__stamps {
+      order: 6;
+      align-self: stretch;
+    }
+  }
+</style>

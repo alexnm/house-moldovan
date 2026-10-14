@@ -1,9 +1,15 @@
 ---
+/**
+ * Explore: one block per region. The first row is a full-colour region card
+ * (name, description, faint continent silhouette) next to a wide banner photo;
+ * the region's countries follow on the same grid.
+ */
+import CoverImage from "@shared/components/media/CoverImage.astro";
 import CountryCard from "~/components/home/CountryCard.astro";
 import { placeShortName } from "~/lib/articlePlaces";
-import { en } from "~/i18n/en";
 import { placeThumbnailForCountry } from "~/lib/placeCover";
 import { regionIdFromPlace, type RegionEntry } from "~/lib/regions";
+import { regionSilhouette } from "~/lib/regionSilhouette";
 import type { CollectionEntry } from "astro:content";
 import type { AnyEnArticle } from "~/lib/content";
 
@@ -15,9 +21,13 @@ export interface Props {
 
 const { regions, places, feed } = Astro.props;
 
+const PIN_GLYPH =
+  "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
+
 const regionSections = regions
   .map((region) => ({
     region,
+    shape: regionSilhouette(region.id),
     countries: places
       .filter((p) => regionIdFromPlace(p) === region.id)
       .sort((a, b) => a.data.name.localeCompare(b.data.name)),
@@ -27,65 +37,231 @@ const regionSections = regions
 
 {
   regionSections.length > 0 && (
-    <>
-      <div class="section section-y-lg section-stack pt-4 md:pt-6">
-        {regionSections.map(({ region, countries }) => {
-          const { accent, name, tagline, order } = region.data;
-          return (
-            <section
-              class="motion-reveal accent-scope scroll-mt-28"
-              id={`region-${region.id}`}
-              data-accent={accent}
-            >
-              <header class="section-header flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
-                <div class="min-w-0">
-                  <p class="micro mb-2 text-accent-ink">
-                    {en.region.chapter(order)}
-                  </p>
-                  <h2 class="display section-heading text-balance">
-                    <a
-                      href={`/explore/region/${region.id}`}
-                      class="duration-ui text-accent-ink transition-opacity ease-cinema hover:opacity-85"
-                    >
-                      {name}
-                    </a>
-                  </h2>
-                  <p class="mt-3 max-w-prose font-sans text-lg leading-snug text-pretty text-ink-dim">
-                    {tagline}
-                  </p>
-                </div>
+    <div class="section section-y-lg section-stack pt-4 md:pt-6">
+      {regionSections.map(({ region, shape, countries }) => {
+        const { accent, name, tagline, banner, bannerLocation } = region.data;
+        const href = `/explore/region/${region.id}`;
+        return (
+          <section
+            class="accent-scope scroll-mt-28"
+            id={`region-${region.id}`}
+            data-accent={accent}
+            aria-labelledby={`region-${region.id}-name`}
+          >
+            <ul class="grid-countries">
+              <li class="motion-reveal-media">
                 <a
-                  href={`/explore/region/${region.id}`}
-                  class="link-more link-accent link-accent--dim hidden shrink-0 sm:inline"
+                  href={href}
+                  class="explore-region accent-drenched group shadow-rest"
                 >
-                  {en.explore.viewRegion(name)} →
+                  {shape && (
+                    <svg
+                      class="explore-region__shape motion-hover-media"
+                      viewBox={shape.viewBox}
+                      preserveAspectRatio="xMidYMin meet"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d={shape.land}
+                        fill="currentColor"
+                        fill-opacity="0.13"
+                      />
+                    </svg>
+                  )}
+                  <h2
+                    id={`region-${region.id}-name`}
+                    class="display explore-region__name"
+                  >
+                    {name}
+                  </h2>
+                  <p class="explore-region__tagline">{tagline}</p>
                 </a>
-              </header>
+              </li>
 
-              <ul class="grid-countries">
-                {countries.map((country) => (
-                  <CountryCard
-                    href={`/explore/${country.id}`}
-                    name={placeShortName(country)}
-                    flag={country.data.flag}
-                    tagline={country.data.tagline}
-                    image={placeThumbnailForCountry(country, feed)}
-                    imageAlt={`Scenes from ${country.data.name}`}
-                    accent={accent}
-                  />
-                ))}
-              </ul>
+              {banner && (
+                <li class="explore-banner motion-reveal-media" aria-hidden="true">
+                  <figure class="explore-banner__frame shadow-rest">
+                    <CoverImage
+                      src={banner}
+                      alt=""
+                      widths={[640, 960, 1280, 1600, 2000]}
+                      sizes="(min-width: 1280px) 75vw, (min-width: 1024px) 66vw, (min-width: 640px) 50vw, 100vw"
+                      format="avif"
+                      quality={80}
+                      loading="lazy"
+                      wrapperClass="absolute inset-0"
+                      class="h-full w-full object-cover"
+                    />
+                    {bannerLocation && (
+                      <>
+                        <div class="explore-banner__scrim" />
+                        <figcaption class="explore-banner__location">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="explore-banner__pin"
+                          >
+                            <path d={PIN_GLYPH} />
+                          </svg>
+                          {bannerLocation}
+                        </figcaption>
+                      </>
+                    )}
+                  </figure>
+                </li>
+              )}
 
-              <a
-                href={`/explore/region/${region.id}`}
-                class="link-more link-accent link-accent--dim mt-(--space-block) inline-block sm:hidden"
-              >
-                {en.explore.viewRegion(name)} →
-              </a>
-            </section>
-          );
-        })}
-      </div>
-    </>
+              {countries.map((country) => (
+                <CountryCard
+                  href={`/explore/${country.id}`}
+                  name={placeShortName(country)}
+                  flag={country.data.flag}
+                  tagline={country.data.tagline}
+                  image={placeThumbnailForCountry(country, feed)}
+                  imageAlt={`Scenes from ${country.data.name}`}
+                  accent={accent}
+                />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
   )
 }
+
+<style>
+  /* Region card: same footprint as a country card, drenched in the region
+     colour, silhouette as a faint watermark in the corner. */
+  .explore-region {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    aspect-ratio: 1;
+    /* Same insets as the country card's text block (px-4 pb-4 md:px-5 md:pb-5). */
+    --region-pad: calc(var(--spacing) * 4);
+    padding: var(--region-pad);
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: var(--radius-sm, 4px);
+    text-decoration: none;
+
+    @media (width >= 768px) {
+      aspect-ratio: 4 / 5;
+      --region-pad: calc(var(--spacing) * 5);
+    }
+  }
+
+  /* Silhouette spans the card width inside the padding, anchored to the
+     top (text sits at the bottom, as on a country card); zooms on hover
+     like the photo on a country card. */
+  .explore-region__shape {
+    position: absolute;
+    inset-inline: var(--region-pad);
+    top: var(--region-pad);
+    z-index: -1;
+    width: calc(100% - 2 * var(--region-pad));
+    height: 55%;
+    pointer-events: none;
+  }
+
+  /* Name and tagline: same type as the country card title and tagline. */
+  .explore-region__name {
+    margin: 0;
+    font-size: clamp(2.35rem, 3vw, 2.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .explore-region__tagline {
+    margin: 0.75rem 0 0;
+    max-width: 32ch;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    line-height: 1.375;
+    text-wrap: pretty;
+  }
+
+  /* Banner: fills the rest of the first row (1 column of 2, 2 of 3, 3 of 4),
+     at the region card's height. Its own full-width row on phones. */
+  .explore-banner {
+    min-width: 0;
+
+    @media (width >= 640px) {
+      grid-column: span 1;
+    }
+
+    @media (width >= 1024px) {
+      grid-column: span 2;
+    }
+
+    @media (width >= 1280px) {
+      grid-column: span 3;
+    }
+  }
+
+  .explore-banner__frame {
+    position: relative;
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-sm, 4px);
+
+    @media (width < 640px) {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .explore-banner__frame :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  /* Location caption: same treatment as the country highlights. */
+  .explore-banner__scrim {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 1;
+    height: 30%;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--color-photo-scrim) 70%, transparent),
+      color-mix(in oklch, var(--color-photo-scrim) 40%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .explore-banner__location {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.65rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-photo-ink);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: var(--tracking-microcaps);
+    line-height: 1.35;
+    text-transform: uppercase;
+    text-shadow: 0 1px 10px
+      color-mix(in oklch, var(--color-photo-scrim) 55%, transparent);
+  }
+
+  .explore-banner__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-0.06em);
+  }
+</style>

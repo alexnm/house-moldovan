@@ -6,8 +6,8 @@ region: south-america
 tagline: Patagonian ice, Andean peaks, and tango nights in Buenos Aires.
 showMap: true
 cover: ../../assets/argentina/laguna-de-los-tres.jpg
-coverLocation: Fitz Roy, El Chaltén
-thumbnail: ../../assets/argentina/laguna-de-los-tres.jpg
+coverLocation: Laguna de los Tres, El Chaltén
+thumbnail: ../../assets/argentina/iguazu-argentina.jpg
 locations:
   - id: buenos-aires
     name: "Buenos Aires"

@@ -111,9 +111,7 @@ export const en = {
     highlightsLabel: (name: string) => `Highlights from ${name}`,
   },
   region: {
-    /** Meta label on articles (not the chapter stamp). */
     kicker: "Region",
-    chapter: (order: number) => `Chapter - 0${order}`,
     countriesHeading: "Explore countries",
     routesHeading: "Routes across borders",
     guideHeading: "Travel guide",
@@ -141,21 +139,10 @@ export const en = {
       journal: "The journal",
       sister: "Pe creste",
     },
-    facts: {
-      basedIn: "Based in",
-      basedInValue: "Romania",
-      since: "Travelling since",
-      countries: "Countries",
-      countriesValue: "40+",
-      copilot: "Travelling with Edi since",
-      copilotValue: "2024",
-    },
     contactSheetLabel: "Us, on the road",
     passport: {
       kicker: "Our passport",
       heading: (firstYear: number) => `Travelling since ${firstYear}`,
-      summary:
-        "Every trip we've written about here, stamped with the year we went. Each stamp opens the country.",
       pageLabel: "Visas",
       years: "Years",
       stamps: "Stamps",

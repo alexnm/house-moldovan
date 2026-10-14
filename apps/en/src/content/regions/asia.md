@@ -1,14 +1,16 @@
 ---
 name: Asia
-tagline: Neon megacities, ancient temples and cultures and paradise tropical beaches.
+tagline: Neon megacities, ancient temples and cultures and paradise
 accent: saffron
 order: 1
 featured: da-nang-vietnam-beach-guide
 images:
+  - ../../assets/cambodia/angkor-wat.JPG
   - ../../assets/hong-kong/victoria-peak-dusk.JPG
   - ../../assets/singapore/gardens-by-the-bay-day.JPG
   - ../../assets/japan/kyoto-fushimi-inari.JPG
-  - ../../assets/cambodia/angkor-wat-temple.JPG
+banner: ../../assets/singapore/gardens-by-the-bay-day.JPG
+bannerLocation: Gardens by the Bay, Singapore
 ---
 
 It is hard to travel through Asia and not feel overwhelmed. After all, more than 50% of the world population lives here. Huge cities, ancient temples and cultures and tropical islands, there's something here for every kind of traveller. We did several long trips to Asia but still have a long list of places we want to see.

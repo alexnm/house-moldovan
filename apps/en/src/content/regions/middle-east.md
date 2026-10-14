@@ -1,13 +1,15 @@
 ---
 name: Middle East
-tagline: Ancient desert temples, rich cultural heritage and some of the best food in the world.
+tagline: Ancient desert temples, rich cultural heritage and some of the
 accent: terracotta
 order: 3
 images:
+  - ../../assets/jordan/petra-royal-tombs-2.jpg
   - ../../assets/jordan/petra-camel.jpg
-  - ../../assets/uae/dubai-downtown.JPG
-  - ../../assets/jordan/wadi-rum-2.jpg
+  - ../../assets/uae/dubai-cover.JPG
   - ../../assets/israel/jerusalem-dome-of-the-rock.jpg
+banner: ../../assets/israel/jerusalem-panorama.jpg
+bannerLocation: Jerusalem, Israel
 ---
 
 The Middle East is a complicated region where ancient history and modern architecture sit side by side — sometimes in the same skyline. We have only visited twice, but both trips left a lasting impression, and we would return in a heartbeat.

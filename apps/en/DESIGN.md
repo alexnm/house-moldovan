@@ -97,7 +97,7 @@ components:
   surface-card:
     backgroundColor: "{colors.surface-panel}"
     textColor: "{colors.ink-warm}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     padding: "1.5rem"
   region-jump:
     backgroundColor: "{colors.region-south-america}"
@@ -253,7 +253,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 - **Style:** Fixed top bar; transparent over heroes, solid when scrolled (`.site-nav.is-solid`). Never frosted and never bordered: the bar fades an opaque `--color-surface-2` panel in via `::before`, one step above the canvas and the same panel level as the footer, so the bar separates tonally instead of by a hairline. Identical shell to the RO nav; only type and accent differ.
 - **Typography:** `.nav-link` in Bricolage at body size for primary links; `.display` uppercase wordmark (~1.65rem). Micro labels stay off the nav.
 - **Hover / Active:** Accent underline sweeps left→right via `scaleX` on `::after` (3px); active adds `.is-active` and full ink.
-- **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-lg`.
+- **Mobile:** `details/summary` menu control (`rounded-full border`); panel uses `surface-2`, `shadow-lift`, `rounded-sm`.
 - **Dropdown (desktop):** `surface-2` panel; region names in regional accent color.
 - **Sister site:** RO promo in nav/footer/about is optional and currently commented out; when enabled, absolute URL to `pecreste.ro` (working name _Pe creastă_).
 
@@ -353,7 +353,7 @@ Photo cards keep gradient scrims and a short accent tick (not a full-width chrom
 
 ### Surface Cards
 
-- **Shape:** `rounded-lg` (8px), full border `border-line`.
+- **Shape:** `rounded-sm` (4px), full border `border-line`.
 - **Background:** `surface-2`; `shadow-rest` on the frame.
 
 ## 6. Do's and Don'ts

@@ -50,6 +50,10 @@ const regions = defineCollection({
       images: z.array(image()).min(1),
       /** Story pinned as the region's featured story. Falls back to the latest story in the region. */
       featured: reference("stories").optional(),
+      /** Wide photo beside the region card on the Explore page. */
+      banner: image().optional(),
+      /** Where the banner was taken, e.g. "Gardens by the Bay, Singapore". */
+      bannerLocation: z.string().optional(),
     }),
 });
 

@@ -382,7 +382,7 @@
       "refersTo": "surface-card",
       "description": "Panel for non-photo containers, with the contact shadow on the frame.",
       "html": "<div class=\"ds-surface-card\"><p class=\"ds-stamp\">Meta</p><p class=\"ds-surface-card__body\">Field notes from four regions.</p></div>",
-      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 8px; padding: 1.5rem; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
+      "css": ".ds-surface-card { background: oklch(0.18 0.016 55); color: oklch(0.96 0.012 75); border: 1px solid oklch(0.28 0.014 55); border-radius: 4px; padding: 1.5rem; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); } .ds-surface-card__body { margin-top: 0.5rem; font-family: \"Nunito Variable\", sans-serif; font-size: 1.0625rem; line-height: 1.6; color: oklch(0.8 0.012 75); } .ds-stamp { font-family: \"Bricolage Grotesque Variable\", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.8 0.012 75); }"
     },
     {
       "name": "Passport die",
@@ -398,7 +398,7 @@
       "refersTo": "surface-card",
       "description": "Cartographic frame: traced country edge, chapter ink, contact shadow. Paper ground shown; film ground is oklch(0.21 0.013 55).",
       "html": "<figure class=\"ds-atlas\"><svg viewBox=\"0 0 320 180\" role=\"img\" aria-label=\"Country outline\"><path d=\"M40 110 C70 40 120 30 160 55 C200 30 260 48 280 100 C250 140 180 150 140 130 C90 150 50 140 40 110 Z\" fill=\"oklch(0.83 0.14 42 / 0.18)\" stroke=\"oklch(0.5 0.16 35)\" stroke-width=\"2\"></path><circle cx=\"168\" cy=\"78\" r=\"4\" fill=\"oklch(0.5 0.16 35)\"></circle></svg></figure>",
-      "css": ".ds-atlas { margin: 0; width: 20rem; background: oklch(0.97 0.007 95); border: 1px solid oklch(0.87 0.012 85); border-radius: 8px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); overflow: hidden; } .ds-atlas svg { display: block; width: 100%; height: auto; }"
+      "css": ".ds-atlas { margin: 0; width: 20rem; background: oklch(0.97 0.007 95); border: 1px solid oklch(0.87 0.012 85); border-radius: 4px; box-shadow: 1px 2px 8px -5px oklch(0 0 0 / 0.6); overflow: hidden; } .ds-atlas svg { display: block; width: 100%; height: auto; }"
     }
   ],
   "narrative": {

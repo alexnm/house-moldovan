@@ -3,12 +3,13 @@ import type { GetStaticPaths } from "astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import RegionHero from "~/components/home/RegionHero.astro";
 import RegionGuide from "~/components/region/RegionGuide.astro";
-import RegionEditorial from "~/components/region/RegionEditorial.astro";
+import NoteFromUs from "~/components/NoteFromUs.astro";
 import RegionMapHub from "~/components/region/RegionMapHub.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import { en } from "~/i18n/en";
 import { getAllRegions } from "~/lib/regions";
 import { loadRegionPage } from "~/lib/regionPage";
+import { regionNoteStamps } from "~/lib/noteStamps";
 import { regionOgPath } from "~/lib/ogPaths";
 
 export const getStaticPaths = (async () => {
@@ -35,6 +36,8 @@ const {
   locationPins,
   atlas,
 } = page;
+
+const noteStamps = regionNoteStamps(countries.map((c) => c.country));
 ---
 
 <BaseLayout
@@ -59,10 +62,17 @@ const {
       />
       {
         editorial.length > 0 && (
-          <RegionEditorial
-            paragraphs={editorial}
-            countries={countries.map((c) => c.country)}
-          />
+          <section class="section">
+            <NoteFromUs
+              kicker={en.region.editorialKicker}
+              cta={{ href: "/about", label: en.authorNote.aboutCta }}
+              stamps={noteStamps}
+            >
+              {editorial.map((html) => (
+                <Fragment set:html={html} />
+              ))}
+            </NoteFromUs>
+          </section>
         )
       }
 
