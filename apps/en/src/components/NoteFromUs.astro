@@ -19,11 +19,10 @@ interface Props {
   kicker: string;
   /** Omitted on the about and region notes. */
   heading?: string;
-  cta: Cta;
   stamps?: NoteStamp[];
 }
 
-const { kicker, heading, cta, stamps = [] } = Astro.props;
+const { kicker, heading, stamps = [] } = Astro.props;
 
 const VARIANTS = ["round", "rect", "oval", "rect"] as const;
 const TILTS = [-9, 6, -4, 10] as const;
@@ -65,9 +64,6 @@ const TILTS = [-9, 6, -4, 10] as const;
     </blockquote>
     <figcaption class="note-from-us__caption">
       <span>— {en.authorNote.signature}</span>
-      <a href={cta.href} class="link-more link-accent link-accent--dim">
-        {cta.label} →
-      </a>
     </figcaption>
   </div>
 

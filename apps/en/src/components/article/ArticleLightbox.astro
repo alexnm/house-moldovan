@@ -93,6 +93,14 @@ const { title } = Astro.props;
     margin: 0;
     padding: 0;
     border: 0;
+    /* Always a dark film canvas, so captions stay light in the light theme. */
+    color-scheme: dark;
+    --color-ink: oklch(0.96 0.012 75);
+    --color-ink-dim: oklch(0.8 0.012 75);
+    --color-ink-faint: oklch(0.7 0.014 75);
+    --color-surface: oklch(0.13 0.006 255);
+    --color-surface-2: oklch(0.19 0.006 255);
+    --color-line-strong: oklch(0.4 0.016 255);
     background: oklch(0.1 0.01 55);
     color: var(--color-ink);
     overflow: hidden;

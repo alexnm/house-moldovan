@@ -5,6 +5,7 @@ import type { SectionLink } from "@shared/components/article/SectionNavigation.a
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import AboutContactSheet from "~/components/about/AboutContactSheet.astro";
+import AboutIntro from "~/components/about/AboutIntro.astro";
 import NoteFromUs from "~/components/NoteFromUs.astro";
 import PassportPages from "~/components/about/PassportPages.astro";
 import { en } from "~/i18n/en";
@@ -92,28 +93,8 @@ const noteTypes = [
   />
 
   <section id="us" class="section section-y-lg scroll-mt-20">
-    <NoteFromUs
-      kicker={en.region.editorialKicker}
-      cta={{ href: "#passport", label: en.home.about.passportCta }}
-      stamps={stamps}
-    >
-      <p>
-        Hi there, fellow travelers! We are Mela and Alex, the two people behind
-        House Moldovan. We are based in Romania and we've been travelling
-        together since 2012.
-      </p>
-      <p>
-        We visited over 40 countries and are eager to share our experiences
-        with you. 👶 Edi is our little travel companion and he's been part of
-        our travels since 2024.
-      </p>
-      <p>
-        We started this site to keep our travel writing and photography in one
-        place: honest impressions from the trips we took, organized so you can <a
-          href="/explore">browse by region</a
-        > or follow along in
-        <a href="/journal">the journal</a>.
-      </p>
+    <NoteFromUs kicker={en.region.editorialKicker} stamps={stamps}>
+      <AboutIntro />
     </NoteFromUs>
 
     <div class="about-sheet">
@@ -257,5 +238,4 @@ const noteTypes = [
     object-fit: cover;
     object-position: left center;
   }
-
 </style>

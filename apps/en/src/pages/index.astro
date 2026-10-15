@@ -5,6 +5,7 @@ import BaseLayout from "~/layouts/BaseLayout.astro";
 import RegionStrip from "~/components/home/RegionStrip.astro";
 import FeaturedCountries from "~/components/home/FeaturedCountries.astro";
 import RecentNotes from "~/components/home/RecentNotes.astro";
+import AboutIntro from "~/components/about/AboutIntro.astro";
 import NoteFromUs from "~/components/NoteFromUs.astro";
 import { en } from "~/i18n/en";
 import { getEnFeed } from "~/lib/content";
@@ -70,26 +71,9 @@ const [feed, stamps] = await Promise.all([getEnFeed(), homeNoteStamps()]);
     <NoteFromUs
       kicker={en.home.about.editorialKicker}
       heading={en.home.about.heading}
-      cta={{ href: "/about#passport", label: en.home.about.passportCta }}
       stamps={stamps}
     >
-      <p>
-        Hi there, fellow travelers! We are Mela and Alex, the two people behind
-        House Moldovan. We are based in Romania and we've been travelling
-        together since 2012.
-      </p>
-      <p>
-        We visited over 40 countries and are eager to share our experiences
-        with you. 👶 Edi is our little travel companion and he's been part of
-        our travels since 2024.
-      </p>
-      <p>
-        We started this site to keep our travel writing and photography in one
-        place: honest impressions from the trips we took, organized so you can <a
-          href="/explore">browse by region</a
-        > or follow along in
-        <a href="/journal">the journal</a>.
-      </p>
+      <AboutIntro />
     </NoteFromUs>
   </section>
 
