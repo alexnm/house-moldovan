@@ -3,7 +3,7 @@ name: Argentina
 flag: 🇦🇷
 localName: "Argentina"
 region: south-america
-tagline: Patagonian ice, Andean peaks, and tango nights in Buenos Aires.
+tagline: A vast country with a huge diversity of landscapes and sights
 showMap: true
 cover: ../../assets/argentina/laguna-de-los-tres.jpg
 coverLocation: Laguna de los Tres, El Chaltén

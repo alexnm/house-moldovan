@@ -3,7 +3,7 @@ name: Malaysia
 flag: 🇲🇾
 localName: "Malaysia"
 region: asia
-tagline: An off the beaten path authentic Southeast Asian experience.
+tagline: An off the beaten path authentic Southeast Asian experience
 showMap: true
 cover: ../../assets/malaysia/kl-klcc.JPG
 coverLocation: Petronas Towers, Kuala Lumpur

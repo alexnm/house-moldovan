@@ -3,7 +3,7 @@ name: Belgium
 flag: 🇧🇪
 localName: "België"
 region: europe
-tagline: Canal-side cities, medieval squares, and beer that slows the afternoon.
+tagline: Picture perfect medieval cities and delicious chocolate
 showMap: true
 cover: ../../assets/belgium/bruges-canal.JPG
 coverLocation: belgium/bruges

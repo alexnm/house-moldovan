@@ -9,12 +9,14 @@ import RegionDossier from "./RegionDossier.astro";
 import RegionFeaturedStory from "./RegionFeaturedStory.astro";
 
 export interface Props {
+  /** Visible heading above the guide, e.g. "Where to start in Asia". */
+  heading?: string;
   dossier: RegionDossierItem[];
   featuredStory?: FeaturedStoryData;
   accent: Accent;
 }
 
-const { dossier, featuredStory } = Astro.props;
+const { heading, dossier, featuredStory } = Astro.props;
 const hasDossier = dossier.length > 0;
 const isSingle = !hasDossier || !featuredStory;
 ---
@@ -23,14 +25,20 @@ const isSingle = !hasDossier || !featuredStory;
   id="guide"
   class:list={["section", "region-guide", { "region-guide--single": isSingle }]}
 >
-  <h2 class="sr-only">
-    {en.region.guideHeading}
-  </h2>
+  {
+    heading ? (
+      <header class="section-header">
+        <h2 class="display section-heading">{heading}</h2>
+      </header>
+    ) : (
+      <h2 class="sr-only">{en.region.guideHeading}</h2>
+    )
+  }
 
   <div class="region-guide__grid">
     {
       featuredStory && (
-        <div class="region-guide__featured motion-reveal-media">
+        <div class="region-guide__featured">
           <RegionFeaturedStory
             href={featuredStory.href}
             title={featuredStory.title}

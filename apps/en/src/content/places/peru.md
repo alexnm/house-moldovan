@@ -3,10 +3,11 @@ name: Peru
 flag: 🇵🇪
 localName: "Perú"
 region: south-america
-tagline: High-altitude trails, Inca stones, and the Andes holding up the sky.
+tagline: A country that outgrows its famous landmark offering a rich experience to all travellers
 showMap: true
 cover: ../../assets/peru/machu-picchu.jpg
 coverLocation: peru/machu-picchu
+thumbnail: ../../assets/peru/machu-picchu-sunrise.JPG
 locations:
   - id: lima
     name: "Lima"

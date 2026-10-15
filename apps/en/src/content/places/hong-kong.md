@@ -3,7 +3,7 @@ name: Hong Kong
 flag: 🇭🇰
 localName: "香港"
 region: asia
-tagline: Neon harbors, busy markets and green peaks.
+tagline: A chaotic urban jungle with unique history and distinct identity
 thumbnail: ../../assets/hong-kong/victoria-harbour.jpeg
 cover: ../../assets/hong-kong/victoria-harbour.jpeg
 coverLocation: Victoria Harbour
@@ -34,7 +34,7 @@ locations:
     image: ../../assets/hong-kong/wong-tai-sin.jpeg
     lat: 22.3429
     lng: 114.1934
-headline: A unique destination in Asia
+headline: A place with a distinct identity
 facts:
   population: 7.5 million
   capital: Hong Kong (SAR of China)

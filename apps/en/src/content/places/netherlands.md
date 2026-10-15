@@ -3,7 +3,7 @@ name: Netherlands
 flag: 🇳🇱
 localName: "Nederland"
 region: europe
-tagline: Flowers, windmills and cheese, in the country reclaimed from the sea.
+tagline: A country reclaimed from the sea with a unique culture and resilient spirit
 showMap: true
 cover: ../../assets/netherlands/amsterdam.JPG
 coverLocation: netherlands/amsterdam

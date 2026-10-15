@@ -4,8 +4,9 @@ flag: 🇺🇿
 localName: "Oʻzbekiston"
 stampLocalName: true
 region: asia
-tagline: Silk Road tiles, blue domes, and bazaars scented with spice and sun.
+tagline: Marvel at the crafsmanship of the tile work and the architecture on the Silk Road
 showMap: true
+thumbnail: ../../assets/uzbekistan/registan-3.jpg
 cover: ../../assets/uzbekistan/khiva-from-above.jpg
 coverLocation: uzbekistan/khiva
 locations:

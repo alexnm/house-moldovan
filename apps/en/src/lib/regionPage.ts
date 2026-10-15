@@ -174,8 +174,6 @@ export type RegionPageData = {
   name: string;
   tagline: string;
   accent: Accent;
-  order: number;
-  images: ImageMetadata[];
   countries: RegionCountry[];
   dossier: RegionDossierItem[];
   featuredStory?: RegionFeaturedStory;
@@ -293,8 +291,6 @@ export async function loadRegionPage(
     name: region.data.name,
     tagline: region.data.tagline,
     accent,
-    order: region.data.order,
-    images: region.data.images,
     countries,
     dossier,
     featuredStory,

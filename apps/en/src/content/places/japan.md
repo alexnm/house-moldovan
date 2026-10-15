@@ -3,7 +3,7 @@ name: Japan
 flag: 🇯🇵
 localName: "日本"
 region: asia
-tagline: Cherry-blossom, zen gardens and a unique mix of modernity and tradition.
+tagline: The island archipelago that blends modernity and tradition
 showMap: true
 thumbnail: ../../assets/japan/himeji.JPG
 cover: ../../assets/japan/tokyo-nakameguro.JPG

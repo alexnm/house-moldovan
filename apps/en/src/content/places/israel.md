@@ -3,7 +3,7 @@ name: Israel
 flag: 🇮🇱
 localName: "ישראל"
 region: middle-east
-tagline: Ancient history and religious sites in the Holy Land.
+tagline: Ancient history and religious sites in the Holy Land
 showMap: true
 cover: ../../assets/israel/haifa.jpg
 coverLocation: Ba'hai Gardens, Haifa

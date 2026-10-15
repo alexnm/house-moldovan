@@ -19,7 +19,7 @@ export const GET: APIRoute = async ({ props }) => {
   };
   const background = await loadOgRegionBackground(
     region.data.accent,
-    region.data.images,
+    region.id,
   );
 
   const png = await renderOg({

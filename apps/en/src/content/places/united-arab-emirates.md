@@ -4,7 +4,7 @@ shortName: UAE
 flag: 🇦🇪
 localName: "الإمارات"
 region: middle-east
-tagline: Desert ambition, glass towers, and engineered coastlines.
+tagline: The country that has no limits on imagination and engineering ambitions
 showMap: false
 cover: ../../assets/uae/abu-dhabi.JPG
 coverLocation: Dubai Marina

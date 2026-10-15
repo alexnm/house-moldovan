@@ -1,15 +1,43 @@
 ---
 name: South America
-tagline: Lost civilizations, wonderful nature and warm people that make
+tagline: Where we fell in love with the people and the landscapes
 accent: jade
 order: 4
-images:
-  - ../../assets/argentina/iguazu-upper-circuit.jpg
-  - ../../assets/peru/machu-picchu-different-angle.JPG
-  - ../../assets/chile/valparaiso-de-mi-amor.jpg
-  - ../../assets/argentina/laguna-de-los-tres.jpg
+cardImage: ../../assets/argentina/iguazu-upper-circuit.jpg
 banner: ../../assets/chile/torres-del-paine.jpg
 bannerLocation: Torres del Paine National Park, Chile
+heroShift: 80
+highlights:
+  - place: Machu Picchu
+    country: Peru
+    image: ../../assets/peru/machu-picchu.JPG
+    coords: [-13.1631, -72.545]
+    photoOffset: [50, -203]
+  - place: Huacachina
+    country: Peru
+    image: ../../assets/peru/huacachina.JPG
+    coords: [-14.0875, -75.7626]
+    photoOffset: [-213, -161]
+  - place: Iguazú
+    country: Argentina
+    image: ../../assets/argentina/iguazu-falls.jpg
+    coords: [-25.6953, -54.4367]
+    photoOffset: [40, -163]
+  - place: Buenos Aires
+    country: Argentina
+    image: ../../assets/argentina/buenos-aires-casa-rosada.jpg
+    coords: [-34.6037, -58.3816]
+    photoOffset: [33, 31]
+  - place: El Chaltén
+    country: Argentina
+    image: ../../assets/argentina/laguna-de-los-tres.jpg
+    coords: [-49.3315, -72.8863]
+    photoOffset: [-207, -72]
+  - place: Valparaíso
+    country: Chile
+    image: ../../assets/chile/valparaiso-puerto-principal.jpg
+    coords: [-33.0472, -71.6127]
+    photoOffset: [-208, -153]
 ---
 
 South America quickly became one of our favorite regions — not because any single country stole the show, but because the whole continent feels like a sequence of impossible landscapes stitched together.

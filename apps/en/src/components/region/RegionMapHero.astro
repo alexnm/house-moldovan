@@ -1,0 +1,502 @@
+---
+/**
+ * Region hero: the region's silhouette as a map in the region colour, with a
+ * photo pinned to each highlighted place (desktop), or just pins and place
+ * names (phone). Photo positions are worked out at build time in
+ * `regionHeroLayout`, on a fixed design stage, and rendered in percentages.
+ */
+import type { ImageMetadata } from "astro";
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import ArticleLightbox from "~/components/article/ArticleLightbox.astro";
+import { en } from "~/i18n/en";
+import { lightboxSources } from "~/lib/assetImages";
+import type { Accent } from "@shared/lib/accent";
+import { regionMapSilhouette } from "~/lib/regionSilhouette";
+import {
+  desktopLayout,
+  phoneLayout,
+  LABEL_SIZE_PX,
+  MAX_BLEED,
+  PRINT_W,
+  STAGE_H,
+  STAGE_W,
+} from "~/lib/regionHeroLayout";
+
+export type RegionHighlight = {
+  place: string;
+  country?: string;
+  image: ImageMetadata;
+  coords: [number, number];
+  photoOffset?: [number, number];
+};
+
+export interface Props {
+  regionId: string;
+  name: string;
+  tagline: string;
+  accent: Accent;
+  highlights: RegionHighlight[];
+  /** Slide the desktop map (stage px), keeping the photo layout. */
+  heroShift?: number;
+  heroShiftY?: number;
+  /** Link to the next region, shown bottom-right on desktop. */
+  next?: { href: string; name: string };
+}
+
+const {
+  regionId,
+  name,
+  tagline,
+  accent,
+  highlights = [],
+  heroShift,
+  heroShiftY,
+  next,
+} = Astro.props;
+
+const sil = regionMapSilhouette(regionId);
+const places = highlights.map((h) => ({
+  place: h.place,
+  coords: h.coords,
+  photoOffset: h.photoOffset,
+}));
+const desk = sil
+  ? desktopLayout(regionId, name, sil, places, { x: heroShift, y: heroShiftY })
+  : undefined;
+const phone = sil ? phoneLayout(sil, places) : undefined;
+const slides = await Promise.all(
+  highlights.map((h) => lightboxSources(h.image)),
+);
+
+const pctW = (v: number) => `${((v / STAGE_W) * 100).toFixed(3)}%`;
+const pctH = (v: number) => `${((v / STAGE_H) * 100).toFixed(3)}%`;
+const caption = (h: RegionHighlight) =>
+  h.country ? `${h.place}, ${h.country}` : h.place;
+
+const PIN_GLYPH =
+  "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
+
+/* Hovering a photo turns its leader solid and grows its pin. */
+const hoverCss = highlights
+  .map(
+    (_, i) =>
+      `.region-hero__stage:has(.region-hero__print[data-i="${i}"]:is(:hover,:focus-visible)) .region-hero__leaders line[data-i="${i}"]{stroke-dasharray:none}` +
+      `.region-hero__stage:has(.region-hero__print[data-i="${i}"]:is(:hover,:focus-visible)) .region-hero__leaders circle[data-i="${i}"]{r:10}`,
+  )
+  .join("");
+
+const phoneBox =
+  phone && sil
+    ? `${(-phone.pad.left).toFixed(1)} 0 ${(sil.width + phone.pad.left + phone.pad.right).toFixed(1)} ${sil.height}`
+    : undefined;
+---
+
+<section
+  class="accent-scope region-hero"
+  data-accent={accent}
+  data-nav-hero
+  data-nav-hero-accent
+>
+  <div class="region-hero__band accent-drenched">
+    <div class="section region-hero__frame">
+      <div class="region-hero__stage">
+        {
+          sil && desk && (
+            <>
+              <svg
+                class="region-hero__land"
+                viewBox={sil.viewBox}
+                style={`left:${pctW(desk.map.x)};top:${pctH(desk.map.y)};width:${pctW(desk.map.w)}`}
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d={sil.land} fill="currentColor" fill-opacity="0.17" />
+              </svg>
+
+              <svg
+                class="region-hero__leaders"
+                viewBox={`0 0 ${STAGE_W} ${STAGE_H + MAX_BLEED}`}
+                aria-hidden="true"
+                focusable="false"
+              >
+                {desk.prints.map((p, i) => (
+                  <line
+                    data-i={i}
+                    x1={p.pin[0].toFixed(1)}
+                    y1={p.pin[1].toFixed(1)}
+                    x2={p.anchor[0].toFixed(1)}
+                    y2={p.anchor[1].toFixed(1)}
+                  />
+                ))}
+                {desk.prints.map((p, i) => (
+                  <circle
+                    data-i={i}
+                    cx={p.pin[0].toFixed(1)}
+                    cy={p.pin[1].toFixed(1)}
+                    r="6"
+                  />
+                ))}
+              </svg>
+
+              {highlights.map((h, i) => {
+                const p = desk.prints[i]!;
+                return (
+                  <button
+                    type="button"
+                    class="region-hero__print"
+                    data-i={i}
+                    style={`left:${pctW(p.x)};top:${pctH(p.y)};width:${pctW(PRINT_W)}`}
+                    aria-label={en.article.openPhoto(caption(h))}
+                    data-lightbox-item
+                    data-full={slides[i]!.full}
+                    data-thumb={slides[i]!.thumb}
+                    data-caption={caption(h)}
+                    data-alt={caption(h)}
+                  >
+                    <CoverImage
+                      src={h.image}
+                      alt=""
+                      widths={[240, 360, 480]}
+                      sizes="(min-width: 1024px) 14vw, 1px"
+                      format="avif"
+                      quality={80}
+                      loading="lazy"
+                      wrapperClass="absolute inset-0"
+                      class="h-full w-full object-cover"
+                    />
+                    <span class="region-hero__scrim" aria-hidden="true" />
+                    <span class="region-hero__location">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        class="region-hero__pin"
+                      >
+                        <path d={PIN_GLYPH} />
+                      </svg>
+                      {caption(h)}
+                    </span>
+                  </button>
+                );
+              })}
+            </>
+          )
+        }
+
+        {
+          sil && phone && phoneBox && (
+            <svg
+              class="region-hero__phone-map"
+              viewBox={phoneBox}
+              role="img"
+              aria-label={`Map of ${name}: ${highlights.map((h) => h.place).join(", ")}`}
+            >
+              <path d={sil.land} fill="currentColor" fill-opacity="0.17" />
+              {phone.pins.map(([x, y]) => (
+                <circle
+                  class="region-hero__phone-dot"
+                  cx={x.toFixed(1)}
+                  cy={y.toFixed(1)}
+                  r={(5 * phone.unit).toFixed(2)}
+                  stroke-width={(2 * phone.unit).toFixed(2)}
+                />
+              ))}
+              {phone.labels.map((l) => (
+                <text
+                  class="region-hero__phone-label"
+                  x={l.x.toFixed(1)}
+                  y={l.y.toFixed(1)}
+                  font-size={(LABEL_SIZE_PX * phone.unit).toFixed(2)}
+                  letter-spacing={(1 * phone.unit).toFixed(2)}
+                  stroke-width={(3 * phone.unit).toFixed(2)}
+                >
+                  {l.text}
+                </text>
+              ))}
+            </svg>
+          )
+        }
+      </div>
+
+      <div class="region-hero__copy">
+        <h1 class="region-hero__name region-name display animate-cinema-rise">
+          {name}
+        </h1>
+        <p class="region-hero__tag motion-stagger animate-cinema-fade">
+          {tagline}
+        </p>
+      </div>
+
+      {
+        next && desk && (
+          <a href={next.href} class="region-hero__next stamp">
+            {en.region.nextRegion(next.name)}
+            <span aria-hidden="true"> →</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    desk && desk.bleed > 0 && (
+      <div class="section region-hero__bleed" aria-hidden="true">
+        <div class="region-hero__bleed-measure">
+          <div style={`--bleed:${(desk.bleed / STAGE_W).toFixed(4)}`} />
+        </div>
+      </div>
+    )
+  }
+</section>
+
+{highlights.length > 0 && <ArticleLightbox title={name} />}
+
+<Fragment set:html={`<style>${hoverCss}</style>`} />
+
+<style>
+  .region-hero__band {
+    position: relative;
+    isolation: isolate;
+    padding-block: 5.5rem 2.5rem;
+
+    /* Desktop: fill the screen down to the fold. */
+    @media (width >= 1024px) {
+      display: flex;
+      flex-direction: column;
+      min-height: min(100svh, 60rem);
+      padding-block: 4.5rem 2rem;
+    }
+  }
+
+  /* Phone and tablet: map with pins and place names, then the name. */
+  .region-hero__land,
+  .region-hero__leaders,
+  .region-hero__print,
+  .region-hero__next,
+  .region-hero__bleed {
+    display: none;
+  }
+
+  .region-hero__phone-map {
+    display: block;
+    width: 100%;
+    max-width: 30rem;
+    height: auto;
+    overflow: visible;
+  }
+
+  .region-hero__phone-dot {
+    fill: currentColor;
+    stroke: var(--accent-base);
+  }
+
+  .region-hero__phone-label {
+    fill: currentColor;
+    stroke: var(--accent-base);
+    paint-order: stroke;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .region-hero__copy {
+    margin-top: 1.5rem;
+  }
+
+  .region-hero__name {
+    font-size: clamp(4.25rem, 14vw, 9.5rem);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .region-hero__tag {
+    margin-top: 1rem;
+    max-width: 32ch;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 0.9rem + 0.45vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.35;
+    opacity: 0.9;
+  }
+
+  /* Desktop: the design stage, scaled to the content column. */
+  @media (width >= 1024px) {
+    /* The map is centred in the space under the nav; the name stays
+       anchored to the bottom of the band, near the fold. */
+    .region-hero__frame {
+      position: relative;
+      container-type: inline-size;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .region-hero__stage {
+      position: relative;
+      container-type: inline-size;
+      aspect-ratio: 1312 / 700;
+    }
+
+    .region-hero__phone-map {
+      display: none;
+    }
+
+    .region-hero__land {
+      position: absolute;
+      display: block;
+      height: auto;
+      pointer-events: none;
+    }
+
+    .region-hero__leaders {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .region-hero__leaders line {
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-dasharray: 3 4;
+      vector-effect: non-scaling-stroke;
+      opacity: 0.7;
+    }
+
+    .region-hero__leaders circle {
+      fill: currentColor;
+      stroke: var(--accent-base);
+      stroke-width: 3;
+      vector-effect: non-scaling-stroke;
+      transition: r var(--duration-media, 0.3s) var(--ease-cinema, ease);
+    }
+
+    .region-hero__print {
+      position: absolute;
+      z-index: 2;
+      display: block;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: zoom-in;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 2px;
+      box-shadow:
+        0 4px 14px oklch(0 0 0 / 0.14),
+        0 22px 48px -14px oklch(0 0 0 / 0.38);
+    }
+
+    .region-hero__print :global(img) {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .region-hero__print:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    .region-hero__copy {
+      position: absolute;
+      left: var(--space-canvas-x-md);
+      bottom: 0.5rem;
+      z-index: 2;
+      width: calc(440 / 1312 * 100cqw);
+      margin: 0;
+    }
+
+    .region-hero__name {
+      font-size: calc(168 / 1312 * 100cqw);
+    }
+
+    /* Desktop only, like the photos: bottom-right, level with the name. */
+    .region-hero__next {
+      position: absolute;
+      right: var(--space-canvas-x-md);
+      bottom: 0.5rem;
+      z-index: 2;
+      display: inline-block;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .region-hero__next span {
+      display: inline-block;
+      transition: transform var(--duration-media, 0.3s) var(--ease-cinema, ease);
+    }
+
+    .region-hero__next:hover span {
+      transform: translateX(3px);
+    }
+
+    .region-hero__tag {
+      font-size: max(1rem, calc(20 / 1312 * 100cqw));
+    }
+
+    .region-hero__bleed {
+      display: block;
+    }
+
+    .region-hero__bleed-measure {
+      container-type: inline-size;
+    }
+
+    .region-hero__bleed-measure > div {
+      height: calc(var(--bleed) * 100cqw);
+    }
+  }
+
+  /* Location caption: same treatment as the country highlights. */
+  .region-hero__scrim {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 1;
+    height: 45%;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklch, var(--color-photo-scrim) 70%, transparent),
+      color-mix(in oklch, var(--color-photo-scrim) 40%, transparent),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .region-hero__location {
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.4rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.2rem;
+    color: var(--color-photo-ink);
+    font-weight: 700;
+    font-family: var(--font-sans);
+    font-size: 0.5rem;
+    letter-spacing: var(--tracking-microcaps);
+    line-height: 1.3;
+    text-transform: uppercase;
+    text-align: left;
+    text-shadow: 0 1px 10px
+      color-mix(in oklch, var(--color-photo-scrim) 55%, transparent);
+  }
+
+  .region-hero__pin {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+  }
+</style>

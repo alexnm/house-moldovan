@@ -3,7 +3,7 @@ name: Austria
 flag: 🇦🇹
 localName: "Österreich"
 region: europe
-tagline: Imperial cities, quaint villages, blue lakes and high-alpine passes.
+tagline: Beautiful alpine scenery sprinkled with rich history and culture
 draft: false
 showMap: true
 cover: ../../assets/austria/salzburg-cover.jpeg

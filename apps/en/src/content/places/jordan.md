@@ -3,7 +3,7 @@ name: Jordan
 flag: 🇯🇴
 localName: "الأردن"
 region: middle-east
-tagline: Rose-red Petra, Wadi Rum silence, and desert stars after sunset.
+tagline: A desert kingdom that offers an authentic travel experience
 showMap: true
 cover: ../../assets/jordan/wadi-rum-2.jpg
 coverLocation: jordan/wadi-rum

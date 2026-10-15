@@ -350,7 +350,7 @@ const PIN_GLYPH =
 
   .country-hub__article-title {
     font-family: var(--font-sans);
-    font-size: 0.98rem;
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1.25;
     transition: color var(--duration-ui) var(--ease-cinema);
@@ -474,7 +474,9 @@ const PIN_GLYPH =
         mapShell.addEventListener("locations-map:ready", () => {
           if (!selected) return;
           mapShell.dispatchEvent(
-            new CustomEvent("locations-map:focus", { detail: { id: selected } }),
+            new CustomEvent("locations-map:focus", {
+              detail: { id: selected },
+            }),
           );
         });
 

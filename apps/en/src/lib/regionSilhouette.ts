@@ -1,7 +1,7 @@
 /**
  * Region silhouettes for the home region tiles: the whole continent (or, for
  * the Middle East, the region) as one faint shape, without Russia. Built from the Natural Earth
- * atlas at build time and drawn in `currentColor`, so the tile decides the ink.
+ * atlas at build time (Mercator projection) and drawn in `currentColor`, so the tile decides the ink.
  */
 import world from "~/data/world-atlas.json";
 
@@ -58,12 +58,17 @@ const REGION_FRAME: Record<string, Frame> = {
 
 export type RegionSilhouette = {
   viewBox: string;
+  /** viewBox width and height. */
+  width: number;
+  height: number;
   /** Every country in the region, as one path. */
   land: string;
+  /** The same outlines as point lists in viewBox units (for hit-testing). */
+  rings: [number, number][][];
+  /** Projects a latitude/longitude into viewBox units. */
+  project: (lat: number, lng: number) => [number, number];
 };
 
-const SIZE = 200;
-const MIN_STEP = 1.5; // drop points closer than this (in viewBox units)
 const MIN_AREA = 0.25; // drop islands smaller than this (square degrees)
 
 function ringArea(ring: Ring): number {
@@ -111,8 +116,27 @@ function clipRing(ring: Ring, [s, w, n, e]: Frame): Ring {
 
 const cache = new Map<string, RegionSilhouette | undefined>();
 
+/** Small silhouette for cards and tiles (200 units on the long side). */
 export function regionSilhouette(regionId: string): RegionSilhouette | undefined {
-  if (cache.has(regionId)) return cache.get(regionId);
+  return buildSilhouette(regionId, 200, 1.5);
+}
+
+/** Detailed silhouette for the region hero map (1000 units on the long side). */
+export function regionMapSilhouette(regionId: string): RegionSilhouette | undefined {
+  return buildSilhouette(regionId, 1000, 2.5);
+}
+
+/**
+ * @param size length of the long side, in viewBox units
+ * @param minStep drop points closer than this (in viewBox units)
+ */
+function buildSilhouette(
+  regionId: string,
+  size: number,
+  minStep: number,
+): RegionSilhouette | undefined {
+  const key = `${regionId}:${size}`;
+  if (cache.has(key)) return cache.get(key);
 
   const members = REGION_MEMBERS[regionId];
   const frame = REGION_FRAME[regionId];
@@ -137,7 +161,7 @@ export function regionSilhouette(regionId: string): RegionSilhouette | undefined
     }
   }
   if (rings.length === 0) {
-    cache.set(regionId, undefined);
+    cache.set(key, undefined);
     return undefined;
   }
 
@@ -148,31 +172,41 @@ export function regionSilhouette(regionId: string): RegionSilhouette | undefined
       w = Math.min(w, lng); e = Math.max(e, lng);
     }
   }
-  // Equirectangular, x squeezed by cos(mid-latitude) so shapes aren't stretched.
-  const kx = Math.cos((((s + n) / 2) * Math.PI) / 180);
-  const width = (e - w) * kx;
-  const height = n - s;
-  const scale = SIZE / Math.max(width, height);
-  const x = (lng: number) => (lng - w) * kx * scale;
-  const y = (lat: number) => (n - lat) * scale;
+  // Mercator, like web maps: local shapes stay true (Spain looks like Spain),
+  // high latitudes are enlarged. y is in "degree" units so it matches x.
+  const mercY = (lat: number) =>
+    (Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)) * 180) / Math.PI;
+  const width = e - w;
+  const height = mercY(n) - mercY(s);
+  const scale = size / Math.max(width, height);
+  const x = (lng: number) => (lng - w) * scale;
+  const y = (lat: number) => (mercY(n) - mercY(lat)) * scale;
 
-  const toPath = (ring: Ring): string => {
+  const simplified: [number, number][][] = [];
+  for (const ring of rings) {
     const pts: [number, number][] = [];
     for (const [lat, lng] of ring) {
       const p: [number, number] = [x(lng), y(lat)];
       const last = pts[pts.length - 1];
-      if (!last || Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) >= MIN_STEP) {
+      if (!last || Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) >= minStep) {
         pts.push(p);
       }
     }
-    if (pts.length < 3) return "";
-    return `M${pts.map(([px, py]) => `${Math.round(px)} ${Math.round(py)}`).join("L")}Z`;
-  };
+    if (pts.length >= 3) simplified.push(pts);
+  }
+  const toPath = (pts: [number, number][]): string =>
+    `M${pts.map(([px, py]) => `${Math.round(px)} ${Math.round(py)}`).join("L")}Z`;
 
+  const vw = Math.round(width * scale);
+  const vh = Math.round(height * scale);
   const result: RegionSilhouette = {
-    viewBox: `0 0 ${Math.round(width * scale)} ${Math.round(height * scale)}`,
-    land: rings.map(toPath).join(""),
+    viewBox: `0 0 ${vw} ${vh}`,
+    width: vw,
+    height: vh,
+    land: simplified.map(toPath).join(""),
+    rings: simplified,
+    project: (lat, lng) => [x(lng), y(lat)],
   };
-  cache.set(regionId, result);
+  cache.set(key, result);
   return result;
 }

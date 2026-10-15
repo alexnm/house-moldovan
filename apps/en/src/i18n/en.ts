@@ -115,6 +115,8 @@ export const en = {
     countriesHeading: "Explore countries",
     routesHeading: "Routes across borders",
     guideHeading: "Travel guide",
+    guideTitle: (name: string) => `Where to start in ${name}`,
+    nextRegion: (name: string) => `Next: ${name}`,
     featuredStory: "Featured story",
     editorialKicker: "A note from us",
     mapHeading: "Find destinations",
@@ -164,7 +166,8 @@ export const en = {
       },
       spotlights: {
         title: "Spotlights",
-        description: "Photo-first pieces that capture a mood or a single day.",
+        description:
+          "Photo-first pieces that capture a mood or a single day of travel.",
         href: "/spotlights",
         cta: "Browse spotlights",
       },

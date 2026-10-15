@@ -3,7 +3,7 @@ name: Brazil
 flag: 🇧🇷
 localName: "Brasil"
 region: south-america
-tagline: Thundering falls, tropical forests and cities that never quite sleep.
+tagline: The powerhouse of South America is a unique travel destination
 showMap: true
 cover: ../../assets/brazil/iguazu-brasil.jpg
 coverLocation: brazil/iguacu-falls

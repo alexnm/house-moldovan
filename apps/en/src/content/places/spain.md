@@ -3,7 +3,7 @@ name: Spain
 flag: 🇪🇸
 localName: "España"
 region: europe
-tagline: Golden sunsets, colorful cities and ever smiling faces that warm your heart.
+tagline: Where time slows down on the colorful cities and coastal towns
 showMap: true
 cover: ../../assets/spain/sevilla-cover.JPG
 coverLocation: Plaza de España, Sevilla

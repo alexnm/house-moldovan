@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import RegionHero from "~/components/home/RegionHero.astro";
+import RegionMapHero from "~/components/region/RegionMapHero.astro";
 import RegionGuide from "~/components/region/RegionGuide.astro";
 import NoteFromUs from "~/components/NoteFromUs.astro";
 import RegionMapHub from "~/components/region/RegionMapHub.astro";
@@ -26,8 +26,6 @@ const {
   name,
   tagline,
   accent,
-  order,
-  images,
   countries,
   dossier,
   featuredStory,
@@ -38,6 +36,10 @@ const {
 } = page;
 
 const noteStamps = regionNoteStamps(countries.map((c) => c.country));
+
+const allRegions = await getAllRegions();
+const here = allRegions.findIndex((r) => r.id === page.region.id);
+const nextRegion = allRegions.length > 1 ? allRegions[(here + 1) % allRegions.length] : undefined;
 ---
 
 <BaseLayout
@@ -46,16 +48,20 @@ const noteStamps = regionNoteStamps(countries.map((c) => c.country));
   ogImage={regionOgPath(page.region.id)}
 >
   <div class="place-rhythm">
-    <RegionHero
+    <RegionMapHero
+      regionId={page.region.id}
       name={name}
       tagline={tagline}
-      order={order}
       accent={accent}
-      images={images}
+      highlights={page.region.data.highlights ?? []}
+      heroShift={page.region.data.heroShift}
+      heroShiftY={page.region.data.heroShiftY}
+      next={nextRegion ? { href: `/explore/region/${nextRegion.id}`, name: nextRegion.data.name } : undefined}
     />
 
     <div class="accent-scope" data-accent={accent}>
       <RegionGuide
+        heading={en.region.guideTitle(name)}
         dossier={dossier}
         featuredStory={featuredStory}
         accent={accent}

@@ -21,7 +21,7 @@ const regions = await getAllRegions();
   <ul class="grid-tiles">
     {
       regions.map((r) => {
-        const cover = r.data.images[0];
+        const cover = r.data.cardImage;
         const shape = regionSilhouette(r.id);
         return (
           <li class="motion-reveal-media">
@@ -63,7 +63,7 @@ const regions = await getAllRegions();
                 <h3 class="display region-name text-[clamp(2.4rem,3.5vw,3.25rem)] leading-[0.9] tracking-[-0.035em] text-balance">
                   {r.data.name}
                 </h3>
-                <p class="mt-3 max-w-[26ch] font-sans text-base leading-snug text-pretty opacity-90">
+                <p class="mt-3 max-w-[32ch] font-sans text-sm leading-snug font-medium tracking-[-0.005em] text-balance opacity-90">
                   {r.data.tagline}
                 </p>
               </div>

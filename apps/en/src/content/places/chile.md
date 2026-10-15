@@ -3,7 +3,7 @@ name: Chile
 flag: 🇨🇱
 localName: "Chile"
 region: south-america
-tagline: Andean spine, desert valleys, and a capital framed by snow peaks.
+tagline: It's hard to find a country that has such a diverse array of landscapes and climates
 showMap: true
 cover: ../../assets/chile/torres-del-paine-cuernos.jpg
 coverLocation: chile/torres-del-paine

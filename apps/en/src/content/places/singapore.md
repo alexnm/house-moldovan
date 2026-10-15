@@ -3,7 +3,7 @@ name: Singapore
 flag: 🇸🇬
 localName: "新加坡"
 region: asia
-tagline: Garden towers, hawker halls, and a harbor where worlds converge.
+tagline: A city-state that transformed itself in just a few decades
 thumbnail: ../../assets/singapore/gardens-by-the-bay.jpg
 cover: ../../assets/singapore/gardens-by-the-bay-day.JPG
 coverLocation: Gardens by the Bay

@@ -3,7 +3,7 @@ name: France
 flag: 🇫🇷
 localName: "France"
 region: europe
-tagline: Imposing cathedrals and quaint villages with a touch of Mediterranean flair.
+tagline: A country where each region rewards you in a different way
 showMap: true
 thumbnail: ../../assets/france/paris-eiffel.JPG
 cover: ../../assets/france/paris-st-chapelle.JPG

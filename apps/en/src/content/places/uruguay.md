@@ -3,7 +3,7 @@ name: Uruguay
 flag: 🇺🇾
 localName: "Uruguay"
 region: south-america
-tagline: A small country with a big heart, hidden between Argentina and Brazil.
+tagline: A small country with a big heart, hidden between Argentina and Brazil
 showMap: false
 cover: ../../assets/uruguay/colonia-calle-de-suspiros.jpg
 coverLocation: uruguay/colonia-del-sacramento

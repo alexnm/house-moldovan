@@ -4,7 +4,7 @@ flag: 🇻🇳
 localName: "Việt Nam"
 stampLocalName: true
 region: asia
-tagline: Rice fields, sunny beaches and bustling cities.
+tagline: A country of contrasts where you always come back for more
 showMap: true
 cover: ../../assets/vietnam/buddha-mekong.jpg
 coverLocation: Vinh Tràng Temple, My Tho

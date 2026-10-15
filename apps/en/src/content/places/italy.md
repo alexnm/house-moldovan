@@ -3,7 +3,7 @@ name: Italy
 flag: 🇮🇹
 localName: "Italia"
 region: europe
-tagline: Roman ruins, hill towns, Dolomite ridges and food in between.
+tagline: No other country in Europe packs so much beauty and so many different sights
 showMap: true
 cover: ../../assets/italy/cinque-terre-manarola.jpg
 coverLocation: Manarola, Cinque Terre

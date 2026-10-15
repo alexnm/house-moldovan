@@ -1,18 +1,51 @@
 ---
 name: Europe
-tagline: Cobblestone old towns, grand cathedrals, royal palaces and alpine
+tagline: Our home continent we still discover with each new trip
 accent: cobalt
 order: 2
-images:
-  - ../../assets/italy/laghi-di-fusine.JPG
-  - ../../assets/germany/neuschwanstein.jpg
-  - ../../assets/belgium/ghent-canal.JPG
-  - ../../assets/spain/sevilla-cover.JPG
+cardImage: ../../assets/italy/laghi-di-fusine.JPG
 banner: ../../assets/italy/firenze.JPG
 bannerLocation: Florence, Italy
+heroShiftY: -40
+highlights:
+  - place: Val Gardena
+    country: Italy
+    image: ../../assets/italy/dolomites-seceda.JPG
+    coords: [46.6167, 12.0667]
+    photoOffset: [-93, -300]
+  - place: Bled
+    country: Slovenia
+    image: ../../assets/slovenia/bled.JPG
+    coords: [46.3683, 14.1146]
+    photoOffset: [100, -50]
+  - place: Barcelona
+    country: Spain
+    image: ../../assets/spain/barcelona-milla.JPG
+    coords: [41.3874, 2.1686]
+    photoOffset: [-213, 41]
+  - place: Ghent
+    country: Belgium
+    image: ../../assets/belgium/ghent-gravensteen.JPG
+    coords: [51.0543, 3.7174]
+    photoOffset: [-219, -176]
+  - place: Kraków
+    country: Poland
+    image: ../../assets/poland/krakow.JPG
+    coords: [50.0614, 19.9366]
+    photoOffset: [58, -188]
+  - place: Strasbourg
+    country: France
+    image: ../../assets/france/strasbourg-cathedral-new.JPG
+    coords: [48.5734, 7.7521]
+    photoOffset: [-300, -55]
+  - place: Firenze
+    country: Italy
+    image: ../../assets/italy/firenze-duomo.JPG
+    coords: [43.7731, 11.256]
+    photoOffset: [-75, 55]
 ---
 
-Europe is our home continent and our most visited region. Sometimes we tend to underestimate it — until a cobblestone alley, a cathedral spire, or an alpine ridge reminds us why we keep visiting the countries around us.
+Europe is our home continent and our most visited region. Sometimes we tend to underestimate it, until a cobblestone alley, a cathedral spire, or the majestic alpine ridges remind us why we keep visiting this continent.
 
 From the rugged peaks of the Alps to picture-perfect medieval towns and the grand capitals of old empires, Europe is packing so many sights and experiences that it is hard to get bored.
 

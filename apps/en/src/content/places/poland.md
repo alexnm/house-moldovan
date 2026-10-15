@@ -3,11 +3,11 @@ name: Poland
 flag: 🇵🇱
 localName: "Polska"
 region: europe
-tagline: Market squares, brick churches, and cities rebuilt with stubborn grace.
+tagline: Beautiful cities and friendly people await you in this corner of Europe
 showMap: true
 cover: ../../assets/poland/warsaw.JPG
 coverLocation: poland/warsaw
-thumbnail: ../../assets/poland/krakow.JPG
+thumbnail: ../../assets/poland/warsaw.JPG
 locations:
   - id: krakow
     name: "Kraków"

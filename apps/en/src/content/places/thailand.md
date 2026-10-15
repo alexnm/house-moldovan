@@ -3,7 +3,7 @@ name: Thailand
 flag: 🇹🇭
 localName: "ไทย"
 region: asia
-tagline: Golden temples, island beaches, and street food at every corner.
+tagline: The land of smiles, sunny beaches and golden temples
 showMap: false
 cover: ../../assets/thailand/pileh-lagoon-2.JPG
 coverLocation: Pileh Lagoon, Phi Phi Islands
@@ -18,7 +18,7 @@ locations:
     image: ../../assets/thailand/maya-bay.JPG
     lat: 7.7407
     lng: 98.7784
-headline: Golden temples, island beaches, and street food at every corner
+headline: The land of smiles, sunny beaches and golden temples
 facts:
   population: 66 million
   capital: Bangkok

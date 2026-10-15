@@ -80,7 +80,10 @@ const regionSections = regions
               </li>
 
               {banner && (
-                <li class="explore-banner motion-reveal-media" aria-hidden="true">
+                <li
+                  class="explore-banner motion-reveal-media"
+                  aria-hidden="true"
+                >
                   <figure class="explore-banner__frame shadow-rest">
                     <CoverImage
                       src={banner}
@@ -178,10 +181,10 @@ const regionSections = regions
   .explore-region__tagline {
     margin: 0.75rem 0 0;
     max-width: 32ch;
+    text-wrap: balance;
     font-family: var(--font-sans);
     font-size: 0.95rem;
     line-height: 1.375;
-    text-wrap: pretty;
   }
 
   /* Banner: fills the rest of the first row (1 column of 2, 2 of 3, 3 of 4),

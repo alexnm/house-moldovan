@@ -3,7 +3,7 @@ name: Cambodia
 flag: 🇰🇭
 localName: "កម្ពុជា"
 region: asia
-tagline: Temple dawn at Angkor, river life, and history carved in stone.
+tagline: Where you go for Angkor Wat but you stay for the people and the culture
 showMap: true
 cover: ../../assets/cambodia/angkor-wat.jpg
 coverLocation: cambodia/angkor-wat
