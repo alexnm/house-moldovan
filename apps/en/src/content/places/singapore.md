@@ -4,6 +4,9 @@ flag: 🇸🇬
 localName: "新加坡"
 region: asia
 tagline: A city-state that transformed itself in just a few decades
+bestTime:
+  - months: [2, 3, 4]
+    label: dry season
 thumbnail: ../../assets/singapore/gardens-by-the-bay.jpg
 cover: ../../assets/singapore/gardens-by-the-bay-day.JPG
 coverLocation: Gardens by the Bay
@@ -55,7 +58,6 @@ facts:
   plugType: Type G · 230V
   driving: left
   bestFor: [Food, Nightlife, Culture]
-  bestTime: February–April, the driest months
 visits:
   - year: 2023
   - year: 2026

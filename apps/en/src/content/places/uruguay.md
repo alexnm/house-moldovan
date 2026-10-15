@@ -4,6 +4,9 @@ flag: 🇺🇾
 localName: "Uruguay"
 region: south-america
 tagline: A small country with a big heart, hidden between Argentina and Brazil
+bestTime:
+  - months: [10, 11, 12, 1, 2, 3, 4]
+    label: pleasant summer time
 showMap: false
 cover: ../../assets/uruguay/colonia-calle-de-suspiros.jpg
 coverLocation: uruguay/colonia-del-sacramento
@@ -29,7 +32,6 @@ facts:
   plugType: Type C / F / L · 220V
   driving: right
   bestFor: [Beaches, Food, Wine, Slow travel]
-  bestTime: December–March for the beaches · spring and autumn for Montevideo
 visits:
   - year: 2019
 ---

@@ -4,6 +4,9 @@ flag: 🇧🇪
 localName: "België"
 region: europe
 tagline: Picture perfect medieval cities and delicious chocolate
+bestTime:
+  - months: [5, 6, 7, 8, 9]
+    label: city breaks & festivals
 showMap: true
 cover: ../../assets/belgium/bruges-canal.JPG
 coverLocation: belgium/bruges
@@ -47,7 +50,6 @@ facts:
   plugType: Type C / E · 230V
   driving: right
   bestFor: [Cities, Architecture, Chocolate]
-  bestTime: April–June, September–October
 visits:
   - year: 2013
     label: Interrail trip

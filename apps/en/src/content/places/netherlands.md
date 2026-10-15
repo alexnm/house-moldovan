@@ -4,6 +4,11 @@ flag: 🇳🇱
 localName: "Nederland"
 region: europe
 tagline: A country reclaimed from the sea with a unique culture and resilient spirit
+bestTime:
+  - months: [4, 5]
+    label: tulip season & King's Day
+  - months: [6, 7, 8]
+    label: pleasant summer weather
 showMap: true
 cover: ../../assets/netherlands/amsterdam.JPG
 coverLocation: netherlands/amsterdam
@@ -67,7 +72,6 @@ facts:
   plugType: Type C / F · 230V
   driving: right
   bestFor: [Cities, Cycling, Flowers, Museums]
-  bestTime: Mid-April–May, when the tulips bloom
 visits:
   - year: 2013
     label: Interrail

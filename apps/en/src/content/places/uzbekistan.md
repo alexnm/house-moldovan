@@ -5,6 +5,9 @@ localName: "Oʻzbekiston"
 stampLocalName: true
 region: asia
 tagline: Marvel at the crafsmanship of the tile work and the architecture on the Silk Road
+bestTime:
+  - months: [4, 5, 9, 10]
+    label: spring & autumn
 showMap: true
 thumbnail: ../../assets/uzbekistan/registan-3.jpg
 cover: ../../assets/uzbekistan/khiva-from-above.jpg
@@ -47,7 +50,6 @@ facts:
   plugType: Type C / F · 220V
   driving: right
   bestFor: [History, Architecture, Culture]
-  bestTime: April–May, September–October
 snapshots:
   - image: ../../assets/uzbekistan/samarkand-2.jpg
     location: Shah-i-Zinda, Samarkand

@@ -93,6 +93,21 @@ const places = defineCollection({
     /** One-line hook, e.g. on country cards and headers. */
     tagline: z.string(),
     accent: z.enum(ACCENTS).optional(),
+    /**
+     * When we'd go. One entry per window, e.g. sakura and autumn leaves, or the
+     * south and the north. `months` are 1–12 in any order (a window can wrap
+     * the new year: [11, 12, 1, 2]); `label` says what the window is for.
+     * Shown as "March–April, sakura" on the country page and drives the
+     * "Where to go now" pages.
+     */
+    bestTime: z
+      .array(
+        z.object({
+          months: z.array(z.number().int().min(1).max(12)).min(1),
+          label: z.string().min(1).optional(),
+        }),
+      )
+      .default([]),
     /** Relative to the place file, e.g. `../../assets/japan/cover.jpg`. Hero / landscape. */
     cover: z.string().optional(),
     /** Cover photo location: a location id (`jordan/wadi-rum`) or a display override when the shot has no catalog entry. */
@@ -120,7 +135,6 @@ const places = defineCollection({
         driving: z.enum(["left", "right"]),
         /** A few trip categories, e.g. ["Food", "Hiking", "Cities"]. */
         bestFor: z.array(z.string().min(1)).max(5),
-        bestTime: z.string().min(1),
       })
       .partial()
       .default({}),

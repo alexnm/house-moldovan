@@ -4,6 +4,9 @@ flag: 🇹🇭
 localName: "ไทย"
 region: asia
 tagline: The land of smiles, sunny beaches and golden temples
+bestTime:
+  - months: [11, 12, 1, 2, 3]
+    label: Phuket
 showMap: false
 cover: ../../assets/thailand/pileh-lagoon-2.JPG
 coverLocation: Pileh Lagoon, Phi Phi Islands
@@ -28,7 +31,6 @@ facts:
   plugType: Type A / B / C / O · 230V
   driving: left
   bestFor: [Food, Beaches, Temples, Islands]
-  bestTime: November–March, the cool dry season
 visits:
   - year: 2023
 ---

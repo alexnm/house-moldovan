@@ -4,6 +4,9 @@ flag: 🇲🇾
 localName: "Malaysia"
 region: asia
 tagline: An off the beaten path authentic Southeast Asian experience
+bestTime:
+  - months: [12, 1, 2]
+    label: Malay Peninsula
 showMap: true
 cover: ../../assets/malaysia/kl-klcc.JPG
 coverLocation: Petronas Towers, Kuala Lumpur
@@ -52,7 +55,6 @@ facts:
   plugType: Type G · 240V
   driving: left
   bestFor: [Food, Cities, Nature, Street art]
-  bestTime: December–February for the Malay Peninsula, March–October for the Borneo region
 visits:
   - year: 2023
 ---

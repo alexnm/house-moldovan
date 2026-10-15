@@ -4,6 +4,11 @@ flag: 🇪🇸
 localName: "España"
 region: europe
 tagline: Where time slows down on the colorful cities and coastal towns
+bestTime:
+  - months: [4, 5, 9, 10]
+    label: cities and continental Spain
+  - months: [11, 12, 1, 2, 3]
+    label: Canary Islands
 showMap: true
 cover: ../../assets/spain/sevilla-cover.JPG
 coverLocation: Plaza de España, Sevilla
@@ -71,7 +76,6 @@ facts:
   plugType: Type C / F · 230V
   driving: right
   bestFor: [Food, Cities, Beaches, Architecture]
-  bestTime: April–June, September–October · Canaries all year
 visits:
   - year: 2012
     label: Barcelona

@@ -4,6 +4,9 @@ flag: 🇯🇴
 localName: "الأردن"
 region: middle-east
 tagline: A desert kingdom that offers an authentic travel experience
+bestTime:
+  - months: [3, 4, 9, 10]
+    label: dry season at Petra
 showMap: true
 cover: ../../assets/jordan/wadi-rum-2.jpg
 coverLocation: jordan/wadi-rum
@@ -41,7 +44,6 @@ facts:
   plugType: Type C / D / F / G · 230V
   driving: right
   bestFor: [History, Desert, Adventure]
-  bestTime: March–May, September–November
 visits:
   - year: 2020
 ---

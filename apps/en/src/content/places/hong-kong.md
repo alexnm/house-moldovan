@@ -4,9 +4,12 @@ flag: 🇭🇰
 localName: "香港"
 region: asia
 tagline: A chaotic urban jungle with unique history and distinct identity
+bestTime:
+  - months: [3, 4, 5, 9, 10, 11]
+    label: clear, dry days
 thumbnail: ../../assets/hong-kong/victoria-harbour.jpeg
-cover: ../../assets/hong-kong/victoria-harbour.jpeg
-coverLocation: Victoria Harbour
+cover: ../../assets/hong-kong/victoria-peak.JPG
+coverLocation: Victoria Peak
 showMap: false
 locations:
   - id: kowloon
@@ -44,7 +47,6 @@ facts:
   plugType: Type G · 220V
   driving: left
   bestFor: [City break, Food, Night views]
-  bestTime: October–December, clear and dry
 snapshots:
   - image: ../../assets/hong-kong/tram.JPG
     location: hong-kong-island

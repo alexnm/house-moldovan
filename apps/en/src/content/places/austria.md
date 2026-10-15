@@ -4,6 +4,11 @@ flag: 🇦🇹
 localName: "Österreich"
 region: europe
 tagline: Beautiful alpine scenery sprinkled with rich history and culture
+bestTime:
+  - months: [6, 7, 8, 9]
+    label: Hiking in the Alps
+  - months: [12]
+    label: Christmas markets
 draft: false
 showMap: true
 cover: ../../assets/austria/salzburg-cover.jpeg
@@ -62,7 +67,6 @@ facts:
   plugType: Type C / F · 230V
   driving: right
   bestFor: [Cities, Nature, Art]
-  bestTime: June–September for the Alps · December for Christmas markets
 snapshots:
   - image: ../../assets/austria/hallstatt.JPG
     location: hallstatt

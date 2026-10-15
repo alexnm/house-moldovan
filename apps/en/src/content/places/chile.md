@@ -4,6 +4,11 @@ flag: 🇨🇱
 localName: "Chile"
 region: south-america
 tagline: It's hard to find a country that has such a diverse array of landscapes and climates
+bestTime:
+  - months: [10, 11, 12, 1, 2, 3, 4]
+    label: Santiago & Central Chile
+  - months: [12, 1, 2]
+    label: Chilean Patagonia
 showMap: true
 cover: ../../assets/chile/torres-del-paine-cuernos.jpg
 coverLocation: chile/torres-del-paine
@@ -53,7 +58,6 @@ facts:
   plugType: Type C / L · 220V
   driving: right
   bestFor: [Hiking, Mountains, Nature]
-  bestTime: October–April · December–February for Patagonia
 visits:
   - year: 2019
 ---

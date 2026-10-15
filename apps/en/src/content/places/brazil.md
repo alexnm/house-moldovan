@@ -24,7 +24,6 @@ facts:
   plugType: Type C / N · 127V / 220V
   driving: right
   bestFor: [Beaches, Nature, Cities, Food]
-  bestTime: May–October, the drier months · Iguazú all year
 visits:
   - year: 2019
 ---

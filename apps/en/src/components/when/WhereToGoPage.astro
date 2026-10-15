@@ -1,0 +1,554 @@
+---
+/**
+ * "Where to go now" for one month: photo hero with in-season counts per
+ * region, a month picker, the countries at their best, where they are on the
+ * region silhouettes, what comes into season next, and the authors' note.
+ */
+import Hero from "@shared/components/article/Hero.astro";
+import CoverImage from "@shared/components/media/CoverImage.astro";
+import CountryCard from "~/components/home/CountryCard.astro";
+import NoteFromUs from "~/components/NoteFromUs.astro";
+import { cardAccentStyle } from "@shared/lib/accent";
+import { en } from "~/i18n/en";
+import { regionNoteStamps } from "~/lib/noteStamps";
+import {
+  monthHref,
+  monthShort,
+  monthName,
+  type MonthPage,
+} from "~/lib/whenToGo";
+
+interface Props {
+  page: MonthPage;
+}
+
+const { page } = Astro.props;
+const t = en.when;
+const maxCount = Math.max(1, ...page.counts);
+const stamps = regionNoteStamps(page.places);
+const regionsWithCount = page.regions.filter((r) => r.inSeason.length > 0);
+---
+
+<div class="place-rhythm">
+  {
+    page.hero && (
+      <Hero
+        image={page.hero.image}
+        alt={page.hero.alt}
+        title={t.title(page.name)}
+        meta={t.sub(page.countries.length, page.totalCountries)}
+        location={page.hero.location}
+        transitionName="hero-when"
+      >
+        <ul
+          slot="kicker"
+          class="flex flex-wrap items-center gap-2"
+          aria-label={t.regionsNav}
+        >
+          {regionsWithCount.map((region) => (
+            <li>
+              <a
+                href="#where"
+                class="stamp-badge stamp-badge--accent accent-scope"
+                data-accent={region.accent}
+              >
+                {region.name} · {region.inSeason.length}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Hero>
+    )
+  }
+
+  <section class="section">
+    <header
+      class="section-header flex flex-wrap items-end justify-between gap-4"
+    >
+      <div>
+        <p class="micro text-accent-ink">{t.pickerKicker}</p>
+        <h2 class="display section-heading mt-2">{t.pickerHeading}</h2>
+      </div>
+    </header>
+    <nav class="when-months" aria-label={t.pickerLabel} data-when-months>
+      {
+        page.counts.map((count, i) => {
+          const month = i + 1;
+          const current = month === page.month;
+          return (
+            <a
+              href={monthHref(month)}
+              class:list={["when-month", current && "is-current"]}
+              aria-current={current ? "page" : undefined}
+              aria-label={`${monthName(month)}, ${t.places(count)}`}
+              data-month={month}
+            >
+              <span>
+                <span class="display when-month__name">
+                  {monthShort(month)}
+                </span>
+                <span class="when-month__now" hidden>
+                  {t.thisMonth}
+                </span>
+              </span>
+              <span>
+                <span class="when-month__bar" aria-hidden="true">
+                  <i
+                    style={`width: ${Math.round((count / maxCount) * 100)}%`}
+                  />
+                </span>
+                <small>{t.places(count)}</small>
+              </span>
+            </a>
+          );
+        })
+      }
+    </nav>
+  </section>
+
+  {
+    page.countries.length > 0 && (
+      <section class="section">
+        <header class="section-header">
+          <p class="micro text-accent-ink">
+            {t.countriesKicker(page.countries.length, page.totalCountries)}
+          </p>
+          <h2 class="display section-heading mt-2">
+            {t.countriesHeading(page.name)}
+          </h2>
+        </header>
+        <ul class="grid-countries">
+          {page.countries.map((c) => (
+            <CountryCard
+              href={c.href}
+              name={c.name}
+              flag={c.flag}
+              tagline={c.seasonLabel ?? c.tagline}
+              image={c.image}
+              imageAlt={`Scenes from ${c.name}`}
+              accent={c.accent}
+              regionLabel={c.regionName}
+            />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section scroll-mt-28" id="where">
+    <header
+      class="section-header flex flex-wrap items-end justify-between gap-4"
+    >
+      <div>
+        <p class="micro text-accent-ink">{t.mapKicker}</p>
+        <h2 class="display section-heading mt-2">{t.mapHeading}</h2>
+        <p class="mt-3 max-w-[56ch] text-ink-dim">{t.mapLede(page.name)}</p>
+      </div>
+      <a
+        href="/explore"
+        class="link-more link-accent link-accent--dim shrink-0"
+      >
+        {t.allRegions} →
+      </a>
+    </header>
+    <ul class="grid-tiles">
+      {
+        page.regions.map((region) => (
+          <li>
+            <a
+              href={region.href}
+              class="when-region accent-scope accent-drenched shadow-rest"
+              data-accent={region.accent}
+            >
+              {region.shape && (
+                <svg
+                  class="when-region__map"
+                  viewBox={region.shape.viewBox}
+                  preserveAspectRatio="xMidYMid meet"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d={region.shape.land}
+                    fill="currentColor"
+                    fill-opacity="0.16"
+                  />
+                  {region.dots
+                    .filter((d) => !d.on)
+                    .map((d) => (
+                      <circle
+                        cx={(d.x / 100) * region.shape!.width}
+                        cy={(d.y / 100) * region.shape!.height}
+                        r="3.2"
+                        fill="currentColor"
+                        fill-opacity="0.4"
+                      />
+                    ))}
+                  {region.dots
+                    .filter((d) => d.on)
+                    .map((d) => (
+                      <circle
+                        cx={(d.x / 100) * region.shape!.width}
+                        cy={(d.y / 100) * region.shape!.height}
+                        r="5"
+                        fill="currentColor"
+                        class="when-region__dot"
+                      >
+                        <title>{d.name}</title>
+                      </circle>
+                    ))}
+                </svg>
+              )}
+              <p class="when-region__count">
+                {t.inSeasonOf(region.inSeason.length, region.total)}
+              </p>
+              <h3 class="display when-region__name">{region.name}</h3>
+              <p class="when-region__list">
+                {region.inSeason.length > 0
+                  ? region.inSeason.map((c) => c.name).join(", ")
+                  : t.nothingInSeason}
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    page.comingUp.length > 0 && (
+      <section class="section">
+        <header class="section-header flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="micro text-accent-ink">{t.nextKicker}</p>
+            <h2 class="display section-heading mt-2">
+              {t.nextHeading(page.next.name)}
+            </h2>
+          </div>
+          <a
+            href={page.next.href}
+            class="link-more link-accent link-accent--dim shrink-0"
+          >
+            {t.seeMonth(page.next.name)} →
+          </a>
+        </header>
+        <ul class="when-rows">
+          {page.comingUp.map((c) => (
+            <li>
+              <a href={c.href} class="when-row group">
+                <span class="when-row__photo">
+                  {c.image && (
+                    <CoverImage
+                      src={c.image}
+                      alt=""
+                      widths={[240, 360]}
+                      sizes="10rem"
+                      format="avif"
+                      quality={75}
+                      wrapperClass="motion-hover-media absolute inset-0"
+                      class="h-full w-full object-cover"
+                    />
+                  )}
+                </span>
+                <span class="when-row__text">
+                  <span
+                    class="when-row__tick"
+                    style={cardAccentStyle(c.accent)}
+                    aria-hidden="true"
+                  />
+                  <span class="stamp">{c.regionName}</span>
+                  <span class="display when-row__name">
+                    <span aria-hidden="true">{c.flag}</span>
+                    <span>{c.name}</span>
+                  </span>
+                  {c.bestTime && (
+                    <span class="when-row__best">{t.best(c.bestTime)}</span>
+                  )}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <NoteFromUs kicker={t.noteKicker} heading={t.noteHeading} stamps={stamps}>
+      {t.noteBody.map((p) => <p>{p}</p>)}
+    </NoteFromUs>
+  </section>
+</div>
+
+<script>
+  // Pages are built ahead of time, so mark the visitor's own month here.
+  function markThisMonth() {
+    const month = new Date().getMonth() + 1;
+    document
+      .querySelectorAll<HTMLElement>(
+        `[data-when-months] [data-month="${month}"] .when-month__now`,
+      )
+      .forEach((el) => el.removeAttribute("hidden"));
+
+    // On phones the picker scrolls sideways: bring the page's month into view.
+    const rail = document.querySelector<HTMLElement>("[data-when-months]");
+    const current = rail?.querySelector<HTMLElement>(".is-current");
+    if (rail && current && rail.scrollWidth > rail.clientWidth) {
+      rail.scrollLeft =
+        current.offsetLeft - (rail.clientWidth - current.offsetWidth) / 2;
+    }
+  }
+  markThisMonth();
+  document.addEventListener("astro:page-load", markThisMonth);
+</script>
+
+<style>
+  /* Month picker: twelve tiles in a row; scrolls sideways on phones. */
+  .when-months {
+    position: relative;
+    display: flex;
+    gap: var(--grid-gap-compact);
+    overflow-x: auto;
+    margin-inline: calc(var(--space-canvas-x) * -1);
+    padding-inline: var(--space-canvas-x);
+    scrollbar-width: none;
+
+    @media (width >= 1024px) {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+  }
+
+  .when-month {
+    flex: 0 0 5.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 6.75rem;
+    padding: 0.7rem;
+    border-radius: 4px;
+    background: var(--color-surface-2);
+    color: var(--color-ink-dim);
+    text-decoration: none;
+    transition: background-color var(--duration-ui) var(--ease-cinema);
+
+    @media (width >= 1024px) {
+      height: 8.25rem;
+      padding: 0.75rem;
+    }
+  }
+
+  .when-month:hover {
+    background: color-mix(
+      in oklch,
+      var(--color-surface-2),
+      var(--color-ink) 6%
+    );
+  }
+
+  .when-month__name {
+    display: block;
+    font-size: 1.65rem;
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: var(--color-ink);
+
+    @media (width >= 1024px) {
+      font-size: 2.1rem;
+    }
+  }
+
+  .when-month__now {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: var(--tracking-microcaps);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.8;
+  }
+
+  .when-month__now[hidden] {
+    display: none;
+  }
+
+  .when-month__bar {
+    display: block;
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: color-mix(in oklch, currentColor 14%, transparent);
+  }
+
+  .when-month__bar i {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--color-accent-ink);
+  }
+
+  .when-month small {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .when-month.is-current {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .when-month.is-current .when-month__name {
+    color: var(--color-on-accent);
+  }
+
+  .when-month.is-current .when-month__bar i {
+    background: var(--color-on-accent);
+  }
+
+  /* Region tiles: the silhouette with a dot per country, bright when in season. */
+  .when-region {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 15rem;
+    height: 100%;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow: hidden;
+    text-decoration: none;
+
+    @media (width >= 768px) {
+      min-height: 20.5rem;
+      padding: 1.25rem;
+    }
+  }
+
+  .when-region__map {
+    position: absolute;
+    inset: 1rem 1rem 6.5rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 7.5rem);
+    overflow: visible;
+
+    @media (width >= 768px) {
+      inset: 1.25rem 1.25rem 7.5rem;
+      width: calc(100% - 2.5rem);
+      height: calc(100% - 8.75rem);
+    }
+  }
+
+  .when-region__dot {
+    stroke: var(--accent-base);
+    stroke-width: 2.4;
+    paint-order: stroke;
+  }
+
+  .when-region__count {
+    position: relative;
+    margin: 0 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: var(--tracking-microcaps);
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .when-region__name {
+    position: relative;
+    margin: 0;
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.4rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .when-region__list {
+    position: relative;
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  /* Coming up next month: compact rows, photo on the left. */
+  .when-rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grid-gap-compact);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (width >= 768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .when-row {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    min-height: 6rem;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+    text-decoration: none;
+
+    @media (width >= 768px) {
+      grid-template-columns: 9.5rem minmax(0, 1fr);
+      gap: 1.15rem;
+      min-height: 7.5rem;
+    }
+  }
+
+  .when-row__photo {
+    position: relative;
+    align-self: stretch;
+    overflow: hidden;
+  }
+
+  .when-row__photo :global(img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .when-row__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.85rem 1rem 0.85rem 0;
+  }
+
+  .when-row__tick {
+    display: block;
+    width: 2.25rem;
+    height: 3px;
+    margin-bottom: 0.15rem;
+    background: var(--card-accent);
+  }
+
+  .when-row__name {
+    display: flex;
+    gap: 0.5rem;
+    font-size: clamp(1.4rem, 1.1rem + 0.8vw, 1.75rem);
+    line-height: 0.95;
+  }
+
+  .when-row__best {
+    white-space: pre-line;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--color-ink-dim);
+  }
+</style>

@@ -13,9 +13,12 @@ export interface Props {
   imageAlt?: string;
   /** Named regional accent for the photo color wash. */
   accent?: Accent;
+  /** Continent above the name, under an accent tick (as on article cards). */
+  regionLabel?: string;
 }
 
-const { href, name, flag, tagline, image, imageAlt, accent } = Astro.props;
+const { href, name, flag, tagline, image, imageAlt, accent, regionLabel } =
+  Astro.props;
 const alt = imageAlt ?? `Scenes from ${name}`;
 const onPhoto = image != null;
 ---
@@ -51,6 +54,18 @@ const onPhoto = image != null;
     }
 
     <div class="relative z-10 mt-auto px-4 pb-4 md:px-5 md:pb-5">
+      {
+        regionLabel && (
+          <>
+            <div
+              class="h-1 w-12"
+              style="background: var(--card-accent, var(--color-accent))"
+              aria-hidden="true"
+            />
+            <p class="stamp mt-3 mb-2">{regionLabel}</p>
+          </>
+        )
+      }
       <h3
         class="display photo-title-shadow flex flex-wrap items-baseline gap-x-2 text-[clamp(2.35rem,3vw,2.75rem)] leading-[0.9] tracking-[-0.035em] text-balance"
         class:list={[!onPhoto && "text-ink"]}
@@ -59,7 +74,7 @@ const onPhoto = image != null;
         <span>{name}</span>
       </h3>
       <p
-        class="mt-3 max-w-[36ch] font-sans text-sm leading-snug text-balance"
+        class="mt-3 max-w-[36ch] font-sans text-sm leading-snug text-balance whitespace-pre-line"
         class:list={[onPhoto ? "text-photo-ink/85" : "text-ink-dim"]}
       >
         {tagline}

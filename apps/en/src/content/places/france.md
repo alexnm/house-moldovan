@@ -4,6 +4,11 @@ flag: 🇫🇷
 localName: "France"
 region: europe
 tagline: A country where each region rewards you in a different way
+bestTime:
+  - months: [4, 5, 6, 9, 10]
+    label: Paris & the Côte d'Azur
+  - months: [11, 12]
+    label: Christmas markets in Alsace
 showMap: true
 thumbnail: ../../assets/france/paris-eiffel.JPG
 cover: ../../assets/france/paris-st-chapelle.JPG
@@ -46,7 +51,6 @@ facts:
   plugType: Type C / E · 230V
   driving: right
   bestFor: [Architecture, Food, Museums]
-  bestTime: April–June, September–October
 snapshots:
   - image: ../../assets/france/paris-eiffel.JPG
     location: Paris, Eiffel Tower

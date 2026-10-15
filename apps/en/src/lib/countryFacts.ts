@@ -1,5 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { en } from "~/i18n/en";
+import { formatBestTime, type BestTimeWindow } from "~/lib/bestTime";
 
 export interface CountryFact {
   label: string;
@@ -13,10 +14,14 @@ type Facts = CollectionEntry<"places">["data"]["facts"];
 /**
  * Standard country facts in their fixed display order. Region is always
  * derived from the place's region; fields left out of the frontmatter are
- * skipped. Returns an empty list when no fact is authored, so a country
+ * skipped. Best time comes from the place's `bestTime` windows. Returns an empty list when no fact is authored, so a country
  * without facts doesn't show a lone "Region" row.
  */
-export function countryFacts(facts: Facts, regionName: string): CountryFact[] {
+export function countryFacts(
+  facts: Facts,
+  regionName: string,
+  bestTime: BestTimeWindow[] = [],
+): CountryFact[] {
   const t = en.places.facts;
   const rows: [string, string | undefined, boolean?][] = [
     [t.population, facts.population],
@@ -31,7 +36,7 @@ export function countryFacts(facts: Facts, regionName: string): CountryFact[] {
       facts.bestFor?.length ? facts.bestFor.join(" · ") : undefined,
       true,
     ],
-    [t.bestTime, facts.bestTime, true],
+    [t.bestTime, formatBestTime(bestTime), true],
   ];
   const authored = rows
     .filter((row): row is [string, string, boolean?] => Boolean(row[1]))

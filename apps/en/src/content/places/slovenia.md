@@ -4,6 +4,9 @@ flag: 🇸🇮
 localName: "Slovenija"
 region: europe
 tagline: The country of emerald lakes and turquoise rivers that carve the  Julian Alps
+bestTime:
+  - months: [7, 8, 9]
+    label: hiking in the Julian Alps
 draft: false
 showMap: true
 cover: ../../assets/slovenia/bled-castle.JPG
@@ -52,7 +55,6 @@ facts:
   plugType: Type C / F · 230V
   driving: right
   bestFor: [Hiking, Nature, Road trips]
-  bestTime: May–September
 snapshots:
   - image: ../../assets/slovenia/pericnik.JPG
     location: Pericnik Waterfall

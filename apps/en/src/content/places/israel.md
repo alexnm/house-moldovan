@@ -4,6 +4,9 @@ flag: 🇮🇱
 localName: "ישראל"
 region: middle-east
 tagline: Ancient history and religious sites in the Holy Land
+bestTime:
+  - months: [3, 4, 5, 9, 10, 11]
+    label: spring & autumn
 showMap: true
 cover: ../../assets/israel/haifa.jpg
 coverLocation: Ba'hai Gardens, Haifa
@@ -56,7 +59,6 @@ facts:
   plugType: Type C / H · 230V
   driving: right
   bestFor: [History, Religious sites, Food]
-  bestTime: March–May, September–November
 snapshots:
   - image: ../../assets/israel/jerusalem-via-dolorosa.jpg
     location: Via Dolorosa, Jerusalem

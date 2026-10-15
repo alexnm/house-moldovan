@@ -4,6 +4,11 @@ flag: 🇮🇹
 localName: "Italia"
 region: europe
 tagline: No other country in Europe packs so much beauty and so many different sights
+bestTime:
+  - months: [4, 5, 6, 9, 10]
+    label: cities and the countryside
+  - months: [7, 8, 9]
+    label: hiking in the Dolomites
 showMap: true
 cover: ../../assets/italy/cinque-terre-manarola.jpg
 coverLocation: Manarola, Cinque Terre
@@ -83,7 +88,6 @@ facts:
   plugType: Type C / F / L · 230V
   driving: right
   bestFor: [Food, Art, Hiking, Cities]
-  bestTime: April–June, September–October · July–September for Dolomite hikes
 visits:
   - year: 2015
     label: "Toscana"

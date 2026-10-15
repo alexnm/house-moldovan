@@ -4,6 +4,11 @@ flag: 🇵🇱
 localName: "Polska"
 region: europe
 tagline: Beautiful cities and friendly people await you in this corner of Europe
+bestTime:
+  - months: [5, 6, 7, 8, 9]
+    label: pleasant summer time
+  - months: [12]
+    label: Christmas markets
 showMap: true
 cover: ../../assets/poland/warsaw.JPG
 coverLocation: poland/warsaw
@@ -44,7 +49,6 @@ facts:
   plugType: Type C / E · 230V
   driving: right
   bestFor: [Cities, History, Architecture]
-  bestTime: May–September · December for Christmas markets
 snapshots:
   - image: ../../assets/poland/krakow-church.JPG
     location: krakow

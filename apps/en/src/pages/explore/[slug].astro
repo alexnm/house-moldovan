@@ -105,7 +105,11 @@ const sections: SectionLink[] = [
           localName={country.data.localName}
           forceLocalName={country.data.stampLocalName}
           headline={country.data.headline}
-          facts={countryFacts(country.data.facts, region.data.name)}
+          facts={countryFacts(
+            country.data.facts,
+            region.data.name,
+            country.data.bestTime,
+          )}
           visits={country.data.visits}
           stopCount={showMap ? locations.length : 0}
           articleCount={entries.length}

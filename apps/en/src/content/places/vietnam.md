@@ -5,6 +5,11 @@ localName: "Việt Nam"
 stampLocalName: true
 region: asia
 tagline: A country of contrasts where you always come back for more
+bestTime:
+  - months: [12, 1, 2, 3, 4]
+    label: South & Central Vietnam
+  - months: [3, 4, 9, 10, 11]
+    label: North Vietnam
 showMap: true
 cover: ../../assets/vietnam/buddha-mekong.jpg
 coverLocation: Vinh Tràng Temple, My Tho
@@ -76,7 +81,6 @@ facts:
   plugType: Type A / C · 220V
   driving: right
   bestFor: [Food, Beaches, Culture, Nature]
-  bestTime: February-April for the south, November-February for the north
 visits:
   - year: 2018
   - year: 2026

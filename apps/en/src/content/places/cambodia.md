@@ -4,6 +4,9 @@ flag: 🇰🇭
 localName: "កម្ពុជា"
 region: asia
 tagline: Where you go for Angkor Wat but you stay for the people and the culture
+bestTime:
+  - months: [11, 12, 1, 2]
+    label: the dry season at Angkor Wat
 showMap: true
 cover: ../../assets/cambodia/angkor-wat.jpg
 coverLocation: cambodia/angkor-wat
@@ -45,7 +48,6 @@ facts:
   plugType: Type A / C / G · 230V
   driving: right
   bestFor: [Temples, History, Culture]
-  bestTime: November–March, the cool dry season
 visits:
   - year: 2018
 ---

@@ -1,0 +1,20 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import WhereToGoPage from "~/components/when/WhereToGoPage.astro";
+import { en } from "~/i18n/en";
+import { MONTHS, loadMonthPage, monthFromSlug } from "~/lib/whenToGo";
+
+export const getStaticPaths = (() =>
+  MONTHS.map((month) => ({ params: { month } }))) satisfies GetStaticPaths;
+
+const month = monthFromSlug(Astro.params.month!)!;
+const page = await loadMonthPage(month);
+---
+
+<BaseLayout
+  title={`${en.when.title(page.name)} · ${en.siteName}`}
+  description={en.when.sub(page.countries.length, page.totalCountries)}
+>
+  <WhereToGoPage page={page} />
+</BaseLayout>

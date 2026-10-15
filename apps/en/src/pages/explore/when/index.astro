@@ -1,0 +1,25 @@
+---
+/**
+ * /explore/when opens on the current month. The site is static, so this
+ * builds the month of the build and a small script moves visitors on to
+ * their own month when it differs.
+ */
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import WhereToGoPage from "~/components/when/WhereToGoPage.astro";
+import { en } from "~/i18n/en";
+import { MONTHS, loadMonthPage } from "~/lib/whenToGo";
+
+const month = new Date().getMonth() + 1;
+const page = await loadMonthPage(month);
+---
+
+<BaseLayout
+  title={`${en.when.title(page.name)} · ${en.siteName}`}
+  description={en.when.sub(page.countries.length, page.totalCountries)}
+>
+  <script is:inline define:vars={{ months: MONTHS, built: month }}>
+    const now = new Date().getMonth() + 1;
+    if (now !== built) location.replace(`/explore/when/${months[now - 1]}`);
+  </script>
+  <WhereToGoPage page={page} />
+</BaseLayout>

@@ -4,6 +4,9 @@ flag: 🇵🇪
 localName: "Perú"
 region: south-america
 tagline: A country that outgrows its famous landmark offering a rich experience to all travellers
+bestTime:
+  - months: [5, 6, 7, 8, 9, 10]
+    label: the dry season in the Andes
 showMap: true
 cover: ../../assets/peru/machu-picchu.jpg
 coverLocation: peru/machu-picchu
@@ -83,7 +86,6 @@ facts:
   plugType: Type A / C · 220V
   driving: right
   bestFor: [Hiking, History, Food]
-  bestTime: May–October, the dry season in the Andes
 visits:
   - year: 2022
 ---

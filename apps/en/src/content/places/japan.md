@@ -4,6 +4,11 @@ flag: 🇯🇵
 localName: "日本"
 region: asia
 tagline: The island archipelago that blends modernity and tradition
+bestTime:
+  - months: [3, 4]
+    label: cherry blossom season
+  - months: [10, 11]
+    label: autumn leaves
 showMap: true
 thumbnail: ../../assets/japan/himeji.JPG
 cover: ../../assets/japan/tokyo-nakameguro.JPG
@@ -82,7 +87,6 @@ facts:
   plugType: Type A / B · 100V
   driving: left
   bestFor: [Food, Culture, Cities, Temples]
-  bestTime: Late March–April for sakura · Oct–Nov for autumn leaves
 visits:
   - year: 2017
     label: Sakura

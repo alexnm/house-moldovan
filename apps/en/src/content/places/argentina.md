@@ -4,6 +4,13 @@ flag: 🇦🇷
 localName: "Argentina"
 region: south-america
 tagline: A vast country with a huge diversity of landscapes and sights
+bestTime:
+  - months: [10, 11, 12, 1, 2, 3, 4]
+    label: Buenos Aires
+  - months: [4, 5, 9, 10]
+    label: Iguazú Falls
+  - months: [12, 1, 2]
+    label: Patagonia
 showMap: true
 cover: ../../assets/argentina/laguna-de-los-tres.jpg
 coverLocation: Laguna de los Tres, El Chaltén
@@ -63,7 +70,6 @@ facts:
   plugType: Type C / I · 220V
   driving: right
   bestFor: [Hiking, Nature, Cities, Food]
-  bestTime: October–April for Patagonia · Iguazú all year
 visits:
   - year: 2019
     label: Ruta 40

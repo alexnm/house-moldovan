@@ -5,6 +5,9 @@ flag: 🇦🇪
 localName: "الإمارات"
 region: middle-east
 tagline: The country that has no limits on imagination and engineering ambitions
+bestTime:
+  - months: [11, 12, 1, 2, 3]
+    label: the cooler months in Dubai
 showMap: false
 cover: ../../assets/uae/abu-dhabi.JPG
 coverLocation: Dubai Marina
@@ -29,7 +32,6 @@ facts:
   plugType: Type G · 230V
   driving: right
   bestFor: [Cities, Architecture, Desert, Shopping]
-  bestTime: November–March, before the summer heat
 visits:
   - year: 2025
     label: Dubai

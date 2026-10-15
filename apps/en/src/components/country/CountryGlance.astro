@@ -77,8 +77,7 @@ const visitCount = visits.length;
  * narrow, so they overlap on x, and the offset keeps each year in the clear.
  * A pair only gets a small nudge — they sit apart instead of stacking.
  */
-const stampFan =
-  visitCount >= 5 ? 4.5 : visitCount >= 3 ? 1.75 : 0.7;
+const stampFan = visitCount >= 5 ? 4.5 : visitCount >= 3 ? 1.75 : 0.7;
 const liftPhase = stampHash % 2;
 
 function stampLift(index: number): number {
@@ -343,6 +342,8 @@ const hasAside = facts.length > 0 || stamps.length > 0;
 
   .country-glance__fact-value {
     margin: 0.25rem 0 0;
+    /* Best time lists one window per line. */
+    white-space: pre-line;
     font-weight: 600;
     line-height: 1.35;
     color: var(--color-ink);
@@ -415,9 +416,7 @@ const hasAside = facts.length > 0 || stamps.length > 0;
   .country-glance__stamps--spread .country-glance__stamp {
     position: absolute;
     bottom: var(--stamp-lift, 0);
-    left: calc(
-      var(--i) / max(var(--n) - 1, 1) * (100% - var(--stamp-slot))
-    );
+    left: calc(var(--i) / max(var(--n) - 1, 1) * (100% - var(--stamp-slot)));
     z-index: var(--i);
     margin-bottom: 0;
   }
