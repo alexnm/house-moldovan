@@ -894,6 +894,24 @@
     font-size: 0.95em;
     line-height: 1.65;
     color: var(--color-ink);
+
+    /* Phones: drop the icon so the text gets the full width; tighter padding. */
+    @media (width < 640px) {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0.9rem 1rem 1rem;
+
+      & .info__icon {
+        display: none;
+      }
+
+      & .info__label {
+        line-height: 1.4;
+      }
+
+      & .info__content {
+        margin-top: 0.35rem;
+      }
+    }
   }
 
   .prose-body .info__icon {
@@ -940,6 +958,10 @@
     font-size: 0.95em;
     line-height: 1.55;
     color: var(--color-ink);
+
+    @media (width < 640px) {
+      padding: 0.9rem 1rem 1rem;
+    }
   }
 
   .prose-body .list-card--places {
