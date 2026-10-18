@@ -3,7 +3,7 @@ name: Asia
 tagline: Our favorite winter getaway, where ancient cultures meet tropical weather
 accent: saffron
 order: 1
-featured: da-nang-vietnam-beach-guide
+featured: kyoto-travel-guide
 cardImage: ../../assets/cambodia/angkor-wat.JPG
 banner: ../../assets/singapore/gardens-by-the-bay-day.JPG
 bannerLocation: Gardens by the Bay, Singapore

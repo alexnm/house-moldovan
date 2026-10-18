@@ -12,7 +12,7 @@ bestTime:
 showMap: true
 cover: ../../assets/italy/cinque-terre-manarola.jpg
 coverLocation: Manarola, Cinque Terre
-thumbnail: ../../assets/italy/cinque-terre-riomaggiore.jpg
+thumbnail: ../../assets/italy/firenze-2.JPG
 locations:
   - id: roma
     name: "Roma"

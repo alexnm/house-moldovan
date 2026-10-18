@@ -16,7 +16,7 @@ thumbnail: ../../assets/poland/warsaw.JPG
 locations:
   - id: krakow
     name: "Kraków"
-    image: ../../assets/poland/krakow.JPG
+    image: ../../assets/poland/krakow-square.JPG
     lat: 50.0616
     lng: 19.9373
   - id: wroclaw
@@ -29,6 +29,11 @@ locations:
     image: ../../assets/poland/gdansk.JPG
     lat: 54.3489
     lng: 18.6533
+  - id: malbork-castle
+    name: "Malbork Castle"
+    image: ../../assets/poland/malbork.JPG
+    lat: 54.0397
+    lng: 19.0278
   - id: torun
     name: "Toruń"
     image: ../../assets/poland/torun-copernicus.JPG

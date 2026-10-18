@@ -10,7 +10,7 @@ bestTime:
   - months: [10, 11]
     label: autumn leaves
 showMap: true
-thumbnail: ../../assets/japan/himeji.JPG
+thumbnail: ../../assets/japan/matsumoto.JPG
 cover: ../../assets/japan/tokyo-nakameguro.JPG
 coverLocation: Nakameguro, Tokyo
 snapshots:
@@ -22,19 +22,19 @@ snapshots:
     location: Japanese Alps
   - image: ../../assets/japan/osaka-dotonbori-2.JPG
     location: Dotonbori, Osaka
-  - image: ../../assets/japan/himeji.JPG
+  - image: ../../assets/japan/himeji-3.JPG
     location: Himeji Castle
 locations:
   - id: tokyo
     name: "Tokyo"
     summary: "One of the biggest cities in the world, Tokyo is a sprawling metropolis that blends traditional and modern architecture. The city is split into multiple wards, each with its unique character like: Shinjuku, Shibuya, Akihabara or Ginza."
-    image: ../../assets/japan/tokyo-panoramic.JPG
+    image: ../../assets/japan/tokyo-shinjuku.jpg
     lat: 35.6762
     lng: 139.6503
   - id: kyoto
     name: "Kyoto"
     summary: "The old capital of Japan is known for its traditional temples, gardens and ryokans. It's the perfect place to experience the roots of the Japanese culture, from zen buddhism and tea ceremonies to the world of geishas."
-    image: ../../assets/japan/kyoto-golden-pavilion.JPG
+    image: ../../assets/japan/kyoto-golden-temple.JPG
     lat: 35.0116
     lng: 135.7681
   - id: himeji
@@ -54,7 +54,7 @@ locations:
     lng: 135.8048
   - id: osaka
     name: "Osaka"
-    image: ../../assets/japan/osaka-dotonbori.JPG
+    image: ../../assets/japan/osaka-dotonbori-3.JPG
     lat: 34.6937
     lng: 135.5023
   - id: takayama

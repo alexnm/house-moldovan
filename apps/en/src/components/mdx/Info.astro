@@ -1,13 +1,29 @@
 ---
-type Props = {
-  type: "tip" | "warning";
-};
-
-const { type } = Astro.props;
+import { en } from "~/i18n/en";
 ---
 
-<div class:list={["info", type]}>
-  <div class="info__content">
-    <slot />
+<aside class="info surface-card rounded-sm shadow-rest">
+  <span class="info__icon" aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path
+        d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"
+      />
+    </svg>
+  </span>
+  <div class="info__body">
+    <span class="info__label micro">{en.article.goodToKnow}</span>
+    <div class="info__content">
+      <slot />
+    </div>
   </div>
-</div>
+</aside>

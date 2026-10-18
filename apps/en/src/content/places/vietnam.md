@@ -17,7 +17,7 @@ thumbnail: ../../assets/vietnam/hoi-an-boat.JPG
 locations:
   - id: hanoi
     name: "Hanoi"
-    image: ../../assets/vietnam/hanoi-ho-chi-minh.JPG
+    image: ../../assets/vietnam/hanoi-street.JPG
     lat: 21.0278
     lng: 105.8342
   - id: sapa
@@ -69,8 +69,8 @@ snapshots:
     location: sapa
   - image: ../../assets/vietnam/da-nang-beach.JPG
     location: My Khe Beach, Da Nang
-  - image: ../../assets/vietnam/hanoi-ho-chi-minh.JPG
-    location: Ho Chi Minh Memorial, Hanoi
+  - image: ../../assets/vietnam/hanoi-street.JPG
+    location: French Quarter, Hanoi
 headline: Grab a coconut water and relax
 facts:
   population: 101 million

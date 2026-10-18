@@ -43,7 +43,7 @@
   --color-terracotta: oklch(0.83 0.19 42);
   --color-cobalt: oklch(0.81 0.18 255);
 
-  --image-filter: contrast(1.1) sepia(0.1);
+  --image-filter: saturate(1.12) contrast(1.04) brightness(0.98);
 
   --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-cinema-fast: cubic-bezier(0.22, 1, 0.36, 1);
@@ -182,6 +182,8 @@
     --color-terracotta-ink: oklch(0.83 0.1 42);
     --color-cobalt-ink: oklch(0.81 0.1 255);
     --color-accent-ink: var(--color-accent);
+
+    --image-filter: saturate(1.12) contrast(1.04) brightness(0.98);
   }
 
   :root[data-theme="light"] {
@@ -210,6 +212,8 @@
     --color-saffron-ink: oklch(0.53 0.16 85);
     --color-terracotta-ink: oklch(0.5 0.16 35);
     --color-cobalt-ink: oklch(0.46 0.13 250);
+
+    --image-filter: saturate(1.15) contrast(1.08) brightness(1.03);
   }
 
   html {
@@ -366,7 +370,7 @@
   }
 
   .hero-summary {
-    max-width: 40ch;
+    max-width: 46ch;
     font-family: var(--font-sans);
     font-size: clamp(1rem, 0.9rem + 0.45vw, 1.3rem);
     font-weight: 420;
@@ -762,7 +766,7 @@
   }
 
   .prose-body h3 {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     margin-top: 1.8em;
     margin-bottom: 0.4em;
   }
@@ -880,51 +884,129 @@
     min-width: 0;
   }
 
+  /* Callout card (<Info>): same surface, radius and shadow as the article cards. */
   .prose-body .info {
-    background: color-mix(in oklch, var(--color-accent-ink) 10%, transparent);
-    padding: 0.8em 1em;
-    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 2.125rem minmax(0, 1fr);
+    column-gap: 0.875rem;
+    margin-block: 1.6em;
+    padding: 1.1rem 1.35rem 1.2rem;
     font-size: 0.95em;
-    margin-top: 1.4em;
-    margin-bottom: 1.4em;
-    line-height: 1.2;
+    line-height: 1.65;
     color: var(--color-ink);
+  }
+
+  .prose-body .info__icon {
+    display: grid;
+    place-items: center;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    color: var(--color-accent-ink);
+
+    & svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
+
+  .prose-body .info__label {
+    display: block;
+    line-height: 2.125rem;
+    font-weight: 800;
+    color: var(--color-accent-ink);
+  }
+
+  .prose-body .info__content {
+    margin-top: 0.1rem;
+
+    & :where(p) {
+      margin: 0;
+    }
+
+    & :where(p + p) {
+      margin-top: 0.75em;
+    }
+  }
+
+  /* List card (<ListCard type="places|learn|pack">): same shell as the callout.
+     The markdown list inside gets a per-type marker in the icon column:
+     check by default (pack), pin for places, arrow for learn. */
+  .prose-body .list-card {
+    --list-card-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    margin-block: 1.6em;
+    padding: 1.1rem 1.35rem 1.15rem;
+    font-size: 0.95em;
+    line-height: 1.55;
+    color: var(--color-ink);
+  }
+
+  .prose-body .list-card--places {
+    --list-card-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z'/%3E%3Ccircle cx='12' cy='9.5' r='2.5'/%3E%3C/svg%3E");
+  }
+
+  .prose-body .list-card--learn {
+    --list-card-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m13 6 6 6-6 6'/%3E%3C/svg%3E");
+  }
+
+  .prose-body .list-card__header {
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    gap: 0.875rem;
+  }
 
-    &.tip::before,
-    &.warning::before {
-      content: "";
-      background-color: var(--color-accent-ink);
-      width: 1.2em;
-      height: 1.2em;
-      flex-shrink: 0;
-      -webkit-mask-repeat: no-repeat;
-      -webkit-mask-position: center;
-      -webkit-mask-size: contain;
-      mask-repeat: no-repeat;
-      mask-position: center;
-      mask-size: contain;
+  .prose-body .list-card__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    color: var(--color-accent-ink);
+
+    & svg {
+      width: 1.125rem;
+      height: 1.125rem;
     }
+  }
 
-    &.tip::before {
-      -webkit-mask-image: url("/icons/info-tip.svg");
-      mask-image: url("/icons/info-tip.svg");
-    }
+  .prose-body .list-card__label {
+    font-weight: 800;
+    color: var(--color-accent-ink);
+  }
 
-    &.warning::before {
-      -webkit-mask-image: url("/icons/info-warning.svg");
-      mask-image: url("/icons/info-warning.svg");
-    }
+  .prose-body .list-card__content {
+    margin-top: 0.6rem;
 
-    .info__content :where(p) {
+    & :where(ul, ol) {
+      list-style: none;
       margin: 0;
-      display: inline;
+      padding: 0;
     }
 
-    .info__content :where(p + p)::before {
-      content: " ";
+    /* Marker sits in a column as wide as the header icon (2.125rem + 0.875rem gap). */
+    & :where(li) {
+      position: relative;
+      margin: 0;
+      padding: 0.25rem 0 0.25rem 3rem;
+    }
+
+    & :where(li)::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.25rem;
+      width: 2.125rem;
+      height: 1.55em;
+      background-color: var(--color-accent-ink);
+      -webkit-mask: var(--list-card-marker) center / 1.125rem no-repeat;
+      mask: var(--list-card-marker) center / 1.125rem no-repeat;
+    }
+
+    & :where(li > p) {
+      margin: 0;
     }
   }
 
@@ -1242,7 +1324,7 @@
   }
 
   .prose-body h3 {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
   .link-accent::after {

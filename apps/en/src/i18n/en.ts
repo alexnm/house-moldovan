@@ -224,6 +224,12 @@ export const en = {
     readingTime: "Reading time",
     minutesRead: (n: number) => `${n} min`,
     storyCard: "Story at a glance",
+    goodToKnow: "Good to know",
+    listCard: {
+      places: "Recommended places & activities",
+      learn: "Learn more",
+      pack: "What to pack",
+    },
     days: (n: number) => (n === 1 ? "1 day" : `${n} days`),
     country: "Country",
     countries: "Countries",
