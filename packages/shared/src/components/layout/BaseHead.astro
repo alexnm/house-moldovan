@@ -31,7 +31,7 @@ const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const canonicalUrl =
   canonical ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const og = ogImage ?? `${siteUrl}/og/default.png`;
-const ogLocale = locale === "ro" ? "ro_RO" : "en_GB";
+const ogLocale = locale === "ro" ? "ro_RO" : "en_US";
 ---
 
 <meta charset="utf-8" />

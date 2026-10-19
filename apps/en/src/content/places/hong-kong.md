@@ -62,7 +62,7 @@ visits:
   - year: 2026
 ---
 
-Hong Kong is a city of contrasts. Skyscrapers rise straight out of the harbour, green peaks loom over the financial district, and the streets of Kowloon are as chaotic and lively as any in Asia. A British colony until 1997, it still feels like a country within a country, closer to Singapore than to mainland China.
+Hong Kong is a city of contrasts. Skyscrapers rise straight out of the harbor, green peaks loom over the financial district, and the streets of Kowloon are as chaotic and lively as any in Asia. A British colony until 1997, it still feels like a country within a country, closer to Singapore than to mainland China.
 
 Hong Kong was a long time bucket list destination for us, and we finally made it there on our 2026 trip to Asia. We spent [three days in the city](/stories/hong-kong-3-days), riding the old trams across Hong Kong Island, watching the sunset from Victoria Peak and getting lost in the chaos of Kowloon. It did not disappoint.
 

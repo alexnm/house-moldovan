@@ -25,7 +25,7 @@ locations:
     lng: 60.3619
   - id: bukhara
     name: "Bukhara"
-    summary: "Living in the shadow of Samarkand, Bukhara is a city of mosques, madrasas and markets. This used to be one of the most important cities on the Silk Road. Today, it's a UNESCO World Heritage site and while Samarkand draws the crowds, Bukhara rewards the traveller that takes the time to explore its quieter corners."
+    summary: "Living in the shadow of Samarkand, Bukhara is a city of mosques, madrasas and markets. This used to be one of the most important cities on the Silk Road. Today, it's a UNESCO World Heritage site and while Samarkand draws the crowds, Bukhara rewards the traveler that takes the time to explore its quieter corners."
     image: ../../assets/uzbekistan/bukhara.jpg
     lat: 39.7747
     lng: 64.4286
@@ -66,7 +66,7 @@ visits:
   - year: 2019
 ---
 
-For centuries, the cities of Uzbekistan were the beating heart of the Silk Road. Today, the blue domes, tiled madrasas and busy bazaars of Samarkand, Bukhara and Khiva make it one of the most fascinating destinations in Central Asia, in a country that only recently opened up to foreign travellers.
+For centuries, the cities of Uzbekistan were the beating heart of the Silk Road. Today, the blue domes, tiled madrasas and busy bazaars of Samarkand, Bukhara and Khiva make it one of the most fascinating destinations in Central Asia, in a country that only recently opened up to foreign travelers.
 
 One of the most interesting countries we visited, Uzbekistan still lives in the shadow of its past glory. The cities here used to be the most important stops on the famous Silk Road.
 

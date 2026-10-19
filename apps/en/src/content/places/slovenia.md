@@ -57,7 +57,7 @@ facts:
   bestFor: [Hiking, Nature, Road trips]
 snapshots:
   - image: ../../assets/slovenia/pericnik.JPG
-    location: Pericnik Waterfall
+    location: Peričnik Waterfall
   - image: ../../assets/slovenia/bled-mala-osojnica.JPG
     location: bled
   - image: ../../assets/slovenia/vintgar-gorge-waterfall.JPG
@@ -77,4 +77,4 @@ Slovenia is a small country with an outsized amount of nature. Emerald rivers, a
 
 For a country of this size, Slovenia really is a paradise for hikers, nature lovers and people who enjoy road trips. We crossed the country multiple times on our way to the Dolomites and we had a quick stop in Bled a few years ago, but the highlight was our 2026 visit when we spent a week in Kranjska Gora hiking on some of the most beautiful trails in Europe.
 
-Lake Bled is the postcard image of Slovenia, and it's every bit as pretty as in the pictures you see online. But then there's the **Soča Valley**, where the river runs an unreal shade of turquoise. Then you have a ton of waterfalls caves and gorges to explore around the jagged peaks of the Julian Alps.
+Lake Bled is the postcard image of Slovenia, and it's every bit as pretty as in the pictures you see online. But then there's the **Soča Valley**, where the river runs an unreal shade of turquoise. Then you have a ton of waterfalls, caves and gorges to explore around the jagged peaks of the Julian Alps.

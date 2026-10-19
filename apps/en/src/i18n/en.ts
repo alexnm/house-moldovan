@@ -1,7 +1,7 @@
 export const en = {
   locale: "en" as const,
   htmlLang: "en",
-  intlLocale: "en-GB",
+  intlLocale: "en-US",
   siteName: "House Moldovan",
   description:
     "A photographic travel journal with stories, itineraries and spotlights from our travels around the world",
@@ -163,8 +163,10 @@ export const en = {
   },
   about: {
     title: "About",
+    description:
+      "Meet Mela, Alex and little Edi, the Romania-based family behind House Moldovan, traveling together since 2012 and sharing stories, itineraries and photo spotlights from the road.",
     kicker: "About",
-    heroTitle: "House Moldovan",
+    heroTitle: "Mela, Alex & Edi",
     heroSummary: "A few words about us and our travel journal",
     sections: {
       passport: "Our passport",
@@ -174,7 +176,7 @@ export const en = {
     contactSheetLabel: "Us, on the road",
     passport: {
       kicker: "Our passport",
-      heading: (firstYear: number) => `Travelling since ${firstYear}`,
+      heading: (firstYear: number) => `Traveling since ${firstYear}`,
       pageLabel: "Visas",
       years: "Years",
       stamps: "Stamps",

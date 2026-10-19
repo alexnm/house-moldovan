@@ -23,7 +23,7 @@ locations:
     lng: 16.3738
   - id: salzburg
     name: "Salzburg"
-    summary: "The city of Mozart, the birthplace of the Sound of Music and an excellent base for exploring the central part of the country as well as neighbouring Bavaria."
+    summary: "The city of Mozart, the birthplace of the Sound of Music and an excellent base for exploring the central part of the country as well as neighboring Bavaria."
     image: ../../assets/austria/salzburg-garden.JPG
     lat: 47.8095
     lng: 13.055

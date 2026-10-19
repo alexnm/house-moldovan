@@ -59,9 +59,9 @@ visits:
   - year: 2023
 ---
 
-Malaysia is somewhat eclipsed by its more touristy neighbours like Thailand, Indonesia or Vietnam. And indeed the tourism sector is not as developed as in other countries in South East Asia. But Malaysia really has a lot to offer to all types of travellers.
+Malaysia is somewhat eclipsed by its more touristy neighbors like Thailand, Indonesia or Vietnam. And indeed the tourism sector is not as developed as in other countries in South East Asia. But Malaysia really has a lot to offer to all types of travelers.
 
-From the dizying heights of Kuala Lumpur's skyline, to the cool temperatures of the Cameron Highlands and the colonial charm and [street art](/spotlights/penang-street-art) of Penang, there is something in Malaysia for every kind of traveller.
+From the dizying heights of Kuala Lumpur's skyline, to the cool temperatures of the Cameron Highlands and the colonial charm and [street art](/spotlights/penang-street-art) of Penang, there is something in Malaysia for every kind of traveler.
 
 It was somewhat surprising for us that the tourism industry is underdeveloper here compared to other countries in the region like Thailand or Vietnam. But that also makes the whole experience more authentic and gives it less of a commercial feel.
 

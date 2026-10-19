@@ -71,10 +71,10 @@ visits:
     label: "Kraków"
 ---
 
-Poland is one of the most underrated countries in Europe. Its beautiful medieval cities share a common look, with grand market squares, brick churches and colourful townhouses, many of them painstakingly rebuilt after the Second World War.
+Poland is one of the most underrated countries in Europe. Its beautiful medieval cities share a common look, with grand market squares, brick churches and colorful townhouses, many of them painstakingly rebuilt after the Second World War.
 
 A country that was split for centuries, then brutally invaded in turns by Nazi Germany and the Soviet Union, yet emerged with a strong identity and the determination to rebuild itself.
 
-**Kraków** is the city most people know and visit, but we found **[Wrocław](/stories/wroclaw-travel-guide)** to be the real hidden gem, with its German influenced architecture and beatiful townhouses. Further north, the Hanseatic waterfront city of **Gdańsk** and the medieval small town of **Toruń** complete our list of [favourite Polish cities](/spotlights/polish-city-squares).
+**Kraków** is the city most people know and visit, but we found **[Wrocław](/stories/wroclaw-travel-guide)** to be the real hidden gem, with its German influenced architecture and beatiful townhouses. Further north, the Hanseatic waterfront city of **Gdańsk** and the medieval small town of **Toruń** complete our list of [favorite Polish cities](/spotlights/polish-city-squares).
 
 Today, Poland is a country on the rise, with a strong economy and a growing tourism industry. But don't expect to see the level of crowds you might find in other more popular spots in Europe. Which is making Poland a perfect destination for a city break or a longer road trip.

@@ -69,4 +69,4 @@ This city is unlike any other place in Southeast Asia. It's a melting pot of cul
 
 Singapore is one of those cities that hits you immediately — spotless streets, tropical heat, and a skyline that looks like it was designed for [night photography](/spotlights/singapore-by-night). The famous Marina Bay Sands towers and Gardens by the Bay achiveved world-wide landmark recognition, merely years after being built.
 
-Beyond the modern skyline, Singapore packs a lot of green parks and animal sanctuaries and a few [historical neighbourhoods](/stories/historic-districts-of-singapore) that tell the story of the city from different perspectives. And of course the different cultures that call Singapore home are well represented in the food and architecture of the city.
+Beyond the modern skyline, Singapore packs a lot of green parks and animal sanctuaries and a few [historical neighborhoods](/stories/historic-districts-of-singapore) that tell the story of the city from different perspectives. And of course the different cultures that call Singapore home are well represented in the food and architecture of the city.

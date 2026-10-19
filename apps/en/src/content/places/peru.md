@@ -3,7 +3,7 @@ name: Peru
 flag: 🇵🇪
 localName: "Perú"
 region: south-america
-tagline: A country that outgrows its famous sight offering a rich experience to everyone
+tagline: A country that goes beyond its famous sights, offering a rich experience to everyone
 bestTime:
   - months: [5, 6, 7, 8, 9, 10]
     label: the dry season in the Andes

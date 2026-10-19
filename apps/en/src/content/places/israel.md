@@ -78,4 +78,4 @@ Israel packs thousands of years of history into a very small territory. Holy sit
 
 Israel was the main destination during our [10 day trip to the Middle East](/itineraries/israel-jordan-10-days) in early 2020. We split our time between laid-back **Tel Aviv**, the historic towns along the northern coast like Acre and Caesarea, and [Jerusalem](/spotlights/jerusalem-holy-city).
 
-It is unfortunate that this part of the world is riddled with conflict and violence. We've travelled through Israel and Palestine during our 2020 trip to the Middle East and while tension always existed in the past years, we found the people to be warm and welcoming. True peace is hard to achieve but we hope it can be done one day, as this whole region has so much to offer.
+It is unfortunate that this part of the world is riddled with conflict and violence. We've traveled through Israel and Palestine during our 2020 trip to the Middle East and while tension always existed in the past years, we found the people to be warm and welcoming. True peace is hard to achieve but we hope it can be done one day, as this whole region has so much to offer.

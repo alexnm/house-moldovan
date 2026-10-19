@@ -79,6 +79,6 @@ Argentina is a huge country with so much to offer. From the urban vibes of Bueno
 
 Argentina was the first country we visited in South America and it was love at first sight. It's hard to comprehend the sheer size of the country just by looking at a map. It's the eighth largest in the world by land area and offers a huge diversity of landscapes and cultures.
 
-Buenos Aires is one of the [most vibrant cities](/spotlights/colors-tango-and-football) in South America, with wide avenues, great food, and diverse neighbourhoods that can take days to explore. [Iguazú Falls](/stories/iguazu-falls-argentina-vs-brazil), shared with Brazil, are one of the most impressive natural wonders in the world.
+Buenos Aires is one of the [most vibrant cities](/spotlights/colors-tango-and-football) in South America, with wide avenues, great food, and diverse neighborhoods that can take days to explore. [Iguazú Falls](/stories/iguazu-falls-argentina-vs-brazil), shared with Brazil, are one of the most impressive natural wonders in the world.
 
 But for us, the magic happened in Patagonia. [El Chaltén](/stories/el-chalten-argentina) is the go to destination for hikers and nature lovers. The glaciers, the forests and the mountains are absolutely breathtaking and the remote location makes it a memory that will last a lifetime.

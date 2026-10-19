@@ -94,6 +94,6 @@ visits:
 
 The country of the rising sun is known for its unique culture and history and for its modern technology that seamlessly blends with the traditional way of living. Each year in March and April, the cherry blossom season blooms in Japan, turning the streets and parks into a sea of pink.
 
-Our trip in Japan back in 2017 was the first time we stepped outside of Europe. And it proved to be a fundamental shift in how we see the world. Since then we visited so many more countries outside of Europe, but Japan still has a special place in our hearts.
+Our trip in Japan back in 2017 was the first time we stepped outside of Europe. And it proved to be a fundamental shift in how we see the world. Since then we have visited so many more countries outside of Europe, but Japan still has a special place in our hearts.
 
 While the classic Japan tour includes places around Tokyo, Mount Fuji and the temples of Kyoto, we really recommend venturing outside of the main tourist areas to experience a more authentic Japan. Be aware that the sakura season varies year to year and the cities tend to be overcrowded during this period.

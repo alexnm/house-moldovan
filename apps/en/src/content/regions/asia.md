@@ -43,7 +43,7 @@ highlights:
     photoOffset: [-120, -220]
 ---
 
-It is hard to travel through Asia and not feel overwhelmed. After all, more than 50% of the world population lives here. Huge cities, ancient temples and cultures and tropical islands, there's something here for every kind of traveller. We did several long trips to Asia but still have a long list of places we want to see.
+It is hard to travel through Asia and not feel overwhelmed. After all, more than 50% of the world population lives here. Huge cities, ancient temples and cultures and tropical islands, there's something here for every kind of traveler. We did several long trips to Asia but still have a long list of places we want to see.
 
 Some of our strongest memories are tied to this part of the world. [Hong Kong](/stories/hong-kong-3-days) and [Singapore](/stories/historic-districts-of-singapore) are two of the best cities to sample the entire region in just a few days and we really recommend them to anyone visiting Asia.
 
