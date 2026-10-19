@@ -380,8 +380,18 @@ const PHONE_MAP_W = 328;
 const PHONE_MAP_MAX_H = 300;
 const LABEL_PX = 10;
 const LABEL_CHAR_PX = 6.9;
+/** Matches `letter-spacing` on `.region-hero__phone-label`. */
+const LABEL_TRACKING_PX = 1;
+/** Clear space from the pin centre to the near side of the label. */
+const LABEL_GAP_PX = 10;
 
-export type PhoneLabel = { x: number; y: number; text: string };
+export type PhoneLabel = {
+  x: number;
+  y: number;
+  text: string;
+  /** `end` when the label sits left of its pin, so the gap does not depend on text width. */
+  anchor: "start" | "end";
+};
 export type PhoneLayout = {
   /** Pins and labels in silhouette viewBox units. */
   pins: [number, number][];
@@ -409,7 +419,7 @@ export function phoneLayout(sil: RegionSilhouette, places: HeroPlace[]): PhoneLa
 
   const overlaps = (a: Rect, b: Rect) =>
     !(a[2] + 2 < b[0] || b[2] + 2 < a[0] || a[3] < b[1] || b[3] < a[1]);
-  const placed: { text: string; extra: number; rect: Rect }[] = [];
+  const placed: { text: string; extra: number; rect: Rect; anchor: "start" | "end" }[] = [];
   let minX = 0, maxX = mapW;
   for (const g of groups) {
     const xs = g.map((i) => px[i]![0]);
@@ -417,20 +427,27 @@ export function phoneLayout(sil: RegionSilhouette, places: HeroPlace[]): PhoneLa
     const cy = ys.reduce((a, b) => a + b, 0) / ys.length;
     const cx = xs.reduce((a, b) => a + b, 0) / xs.length;
     const text = places[g[0]!]!.place.toUpperCase();
-    const lw = (text.length + (g.length > 1 ? 3 : 0)) * LABEL_CHAR_PX + 4;
+    const chars = text.length + (g.length > 1 ? 3 : 0);
+    // Slack covers wide capitals (M, W) so a left label's box reaches its real left edge.
+    const lw = chars * LABEL_CHAR_PX + Math.max(0, chars - 1) * LABEL_TRACKING_PX + 4;
     const sides = cx >= mid ? [true, false] : [false, true];
-    const opts: Rect[] = [];
+    const opts: { rect: Rect; anchor: "start" | "end" }[] = [];
     for (const right of sides) {
       for (const dy of [0, -12, 12, -22, 22]) {
-        const x0 = right ? Math.max(...xs) + 10 : Math.min(...xs) - 10 - lw;
-        opts.push([x0, cy - 8 + dy, x0 + lw, cy + 8 + dy]);
+        const x0 = right ? Math.max(...xs) + LABEL_GAP_PX : Math.min(...xs) - LABEL_GAP_PX - lw;
+        opts.push({
+          rect: [x0, cy - 8 + dy, x0 + lw, cy + 8 + dy],
+          anchor: right ? "start" : "end",
+        });
       }
     }
     const others = px.filter((_, i) => !g.includes(i));
     const free = (r: Rect) =>
       !placed.some((l) => overlaps(r, l.rect)) &&
       !others.some(([qx, qy]) => overlaps(r, [qx - 6, qy - 6, qx + 6, qy + 6]));
-    const pick = opts.find(free) ?? opts.find((r) => !placed.some((l) => overlaps(r, l.rect)));
+    const pick =
+      opts.find((o) => free(o.rect)) ??
+      opts.find((o) => !placed.some((l) => overlaps(o.rect, l.rect)));
     if (!pick) {
       const near = placed.reduce((a, b) =>
         Math.abs((a.rect[1] + a.rect[3]) / 2 - cy) < Math.abs((b.rect[1] + b.rect[3]) / 2 - cy) ? a : b,
@@ -438,14 +455,17 @@ export function phoneLayout(sil: RegionSilhouette, places: HeroPlace[]): PhoneLa
       near.extra += g.length;
       continue;
     }
-    minX = Math.min(minX, pick[0]);
-    maxX = Math.max(maxX, pick[2]);
-    placed.push({ text, extra: g.length - 1, rect: pick });
+    minX = Math.min(minX, pick.rect[0]);
+    maxX = Math.max(maxX, pick.rect[2]);
+    placed.push({ text, extra: g.length - 1, rect: pick.rect, anchor: pick.anchor });
   }
   const labels = placed.map((l) => ({
-    x: l.rect[0] / k,
+    // Left labels are anchored on the edge facing the pin, so a wide word
+    // grows away from the dot instead of into it.
+    x: (l.anchor === "end" ? l.rect[2] : l.rect[0]) / k,
     y: (l.rect[1] + 12) / k,
     text: l.extra ? `${l.text} +${l.extra}` : l.text,
+    anchor: l.anchor,
   }));
   return {
     pins,
